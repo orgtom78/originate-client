@@ -34,13 +34,12 @@ function App() {
     setIsAuthenticating(false);
   }
 
+
   return (
-    <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       {routing}
     </ThemeProvider>
-    </AppContext.Provider>
   );
 };
 
