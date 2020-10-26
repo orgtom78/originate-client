@@ -16,7 +16,6 @@ const routes = [
     path: 'app',
     element: <DashboardLayout />,
     children: [
-      { path: '/', element: <Navigate to="/app/account" />  },
       { path: 'account', element: <AccountView /> },
       { path: 'customers', element: <CustomerListView /> },
       { path: 'dashboard', element: <DashboardView /> },

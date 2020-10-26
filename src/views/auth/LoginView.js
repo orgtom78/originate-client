@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Auth } from "aws-amplify";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -26,21 +26,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function LoginView() {
+export default function LoginView(){
   const classes = useStyles();
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-    try {
-      await Auth.signIn(email, password);
-      alert("Logged in");
-    } catch (e) {
-      alert(e.message);
-    }
-  }
 
   return (
     <Page
@@ -55,23 +43,27 @@ export default function LoginView() {
       >
         <Container maxWidth="sm">
           <Formik
-            initialValues={{
-              email: '',
-              password: ''
-            }}
+          initialValues={{
+            email: '',
+            password: ''
+          }}
             validationSchema={Yup.object().shape({
               email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
               password: Yup.string().max(255).required('Password is required')
             })}
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
-            }}
+            onSubmit={async (values) => { try {
+              await Auth.signIn(values.email, values.password);
+             
+              navigate('/app/dashboard', { replace: true });;
+            } catch (e) {
+              alert(e.message);
+            }}}
           >
             {({
               errors,
               handleBlur,
-              handleChange,
               handleSubmit,
+              handleChange,
               isSubmitting,
               touched,
               values
@@ -148,9 +140,9 @@ export default function LoginView() {
                   margin="normal"
                   name="email"
                   onBlur={handleBlur}
-                  onChange={e => setEmail(e.target.value)}
+                  onChange={handleChange}
                   type="email"
-                  value={email}
+                  value={values.email}
                   variant="outlined"
                 />
                 <TextField
@@ -161,9 +153,9 @@ export default function LoginView() {
                   margin="normal"
                   name="password"
                   onBlur={handleBlur}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={handleChange}
                   type="password"
-                  value={password}
+                  value={values.password}
                   variant="outlined"
                 />
                 <Box my={2}>
@@ -173,7 +165,6 @@ export default function LoginView() {
                     fullWidth
                     size="large"
                     type="submit"
-                    onClick={handleSubmit}
                     variant="contained"
                   >
                     Sign in now
@@ -201,5 +192,4 @@ export default function LoginView() {
     </Page>
   );
 };
-
 

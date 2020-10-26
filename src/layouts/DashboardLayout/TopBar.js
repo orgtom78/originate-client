@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Auth } from "aws-amplify";
+import { Link as RouterLink, useNavigate} from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -15,6 +16,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
+import { AppContext } from "src/libs/contextLib.js";
+import { onError } from "src/libs/errorLib.js";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -31,6 +34,17 @@ const TopBar = ({
 }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
+  const navigate = useNavigate();
+
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+
+  console.log(isAuthenticated)
+  
+  async function handleLogout() {
+    await Auth.signOut();
+    userHasAuthenticated(false);
+    navigate('/login');
+  }
 
   return (
     <AppBar
@@ -53,7 +67,7 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit" href="/login" >
+          <IconButton color="inherit" onClick={handleLogout} >
             <InputIcon />
           </IconButton>
         </Hidden>
