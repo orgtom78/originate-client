@@ -15,4 +15,10 @@ yarn-debug.log*
 yarn-error.log*
 
 .config.js
-/config.js
+/config.js 
+src/config.js 
+
+#Visual Studio stuff
+lib/*.lib
+*.ncb
+*.suo
