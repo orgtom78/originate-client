@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Auth } from "aws-amplify";
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -28,7 +28,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginView(){
   const classes = useStyles();
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
   const navigate = useNavigate();
+
+  console.log(isAuthenticated);
 
   return (
     <Page
@@ -53,11 +56,13 @@ export default function LoginView(){
             })}
             onSubmit={async (values) => { try {
               await Auth.signIn(values.email, values.password);
-             
-              navigate('/app/dashboard', { replace: true });;
+              userHasAuthenticated(true); 
+              navigate('/');
+              window.location.reload(true)
             } catch (e) {
               alert(e.message);
-            }}}
+            }
+          }}
           >
             {({
               errors,

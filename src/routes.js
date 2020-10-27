@@ -11,30 +11,31 @@ import ProductListView from 'src/views/product/ProductListView';
 import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/views/settings/SettingsView';
 
-const routes = [
-  {
+  const routes = (isAuthenticated) =>
+  [{
     path: 'app',
-    element: <DashboardLayout />,
+    element: !isAuthenticated ? <MainLayout /> : <DashboardLayout />,
     children: [
-      { path: 'account', element: <AccountView /> },
-      { path: 'customers', element: <CustomerListView /> },
-      { path: 'dashboard', element: <DashboardView /> },
-      { path: 'products', element: <ProductListView /> },
-      { path: 'settings', element: <SettingsView /> },
+      { path: '', element: !isAuthenticated ? <LoginView /> : <AccountView /> },
+      { path: 'account', element: !isAuthenticated ? <LoginView /> : <AccountView /> },
+      { path: 'customers', element: !isAuthenticated ? <LoginView /> : <CustomerListView /> },
+      { path: 'dashboard', element: !isAuthenticated ? <LoginView /> : <DashboardView /> },
+      { path: 'products', element: !isAuthenticated ? <LoginView /> : <ProductListView /> },
+      { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },
   {
     path: '/',
-    element: <MainLayout />,
+    element: !isAuthenticated ? <MainLayout /> : <DashboardLayout />,
     children: [
-      { path: 'login', element: <LoginView /> },
-      { path: 'register', element: <RegisterView /> },
+      { path: 'login', element: !isAuthenticated ? <LoginView /> : <AccountView /> },
+      { path: 'register', element: !isAuthenticated ? <RegisterView /> : <AccountView /> },
       { path: '404', element: <NotFoundView /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '/', element: !isAuthenticated ? <LoginView /> : <AccountView />},
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }
-];
+]
 
 export default routes;

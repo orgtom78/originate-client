@@ -1,7 +1,6 @@
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import React, { useState, useEffect } from 'react';
 import { Auth } from "aws-amplify";
-import { AppContext } from "./libs/contextLib";
 import { onError } from "./libs/errorLib";
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
@@ -11,10 +10,9 @@ import theme from 'src/theme';
 import routes from 'src/routes';
 
 function App() {
-  const routing = useRoutes(routes);
-
-  const [isAuthenticating, setIsAuthenticating] = useState(true);
-  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [isAuthenticated, userHasAuthenticated] = useState();
+  console.log(isAuthenticated)
+  const routing = useRoutes(routes(isAuthenticated));
 
   useEffect(() => {
     onLoad();
@@ -30,10 +28,7 @@ function App() {
         onError(e);
       }
     }
-
-    setIsAuthenticating(false);
   }
-
 
   return (
     <ThemeProvider theme={theme}>

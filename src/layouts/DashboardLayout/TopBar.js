@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Auth } from "aws-amplify";
-import { Link as RouterLink, useNavigate} from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -16,8 +16,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
 import Logo from 'src/components/Logo';
-import { AppContext } from "src/libs/contextLib.js";
-import { onError } from "src/libs/errorLib.js";
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -36,14 +34,15 @@ const TopBar = ({
   const [notifications] = useState([]);
   const navigate = useNavigate();
 
-  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const [isAuthenticated, userHasAuthenticated] = useState();
 
   console.log(isAuthenticated)
   
   async function handleLogout() {
     await Auth.signOut();
     userHasAuthenticated(false);
-    navigate('/login');
+    navigate('/');
+    window.location.reload(true);
   }
 
   return (
