@@ -94,7 +94,7 @@ const Results = ({ className, customers, ...rest }) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Buyer's Name
                 </TableCell>
                 <TableCell>
                   Email
@@ -106,7 +106,7 @@ const Results = ({ className, customers, ...rest }) => {
                   Phone
                 </TableCell>
                 <TableCell>
-                  Registration date
+                  Payment date
                 </TableCell>
               </TableRow>
             </TableHead>

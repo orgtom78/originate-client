@@ -11,7 +11,6 @@ import routes from 'src/routes';
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState();
-  console.log(isAuthenticated)
   const routing = useRoutes(routes(isAuthenticated));
 
   useEffect(() => {

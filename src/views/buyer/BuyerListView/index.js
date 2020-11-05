@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductList = () => {
+const BuyerList = () => {
   const classes = useStyles();
   const [products] = useState(data);
 
@@ -71,4 +71,4 @@ const ProductList = () => {
   );
 };
 
-export default ProductList;
+export default BuyerList;

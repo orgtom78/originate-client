@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
+import { Auth } from "aws-amplify";
 import {
   Box,
   Button,
@@ -14,6 +15,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
+import { onError } from "src/libs/errorLib";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,6 +31,8 @@ export default function RegisterView () {
   const classes = useStyles();
   const [newUser, setNewUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
 function renderForm(){
   return (
@@ -47,20 +51,30 @@ function renderForm(){
             initialValues={{
               email: '',
               password: '',
+              confirmpassword:'',
               policy: false
             }}
             validationSchema={
               Yup.object().shape({
                 email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
                 password: Yup.string().max(255).required('password is required'),
+                confirmpassword: Yup.string().oneOf([Yup.ref('password'), null], 'Passwords must match'),
                 policy: Yup.boolean().oneOf([true], 'This field must be checked')
               })
             }
-            onSubmit={(event) => {
-              event.preventDefault();
+            onSubmit={async(values) => {
               setIsLoading(true);
-              setNewUser("test");
-              setIsLoading(false);
+              try {
+                const newUser = await Auth.signUp({
+                  username: values.email,
+                  password: values.password,
+                });
+                setIsLoading(false);
+                setNewUser(newUser);
+              } catch (e) {
+                onError(e);
+                setIsLoading(false);
+              }
             }}
           >
             {({
@@ -85,7 +99,7 @@ function renderForm(){
                     gutterBottom
                     variant="body2"
                   >
-                    Use your email to create new account
+                    Use your email to create a new account
                   </Typography>
                 </Box>
                 <TextField
@@ -112,6 +126,19 @@ function renderForm(){
                   onChange={handleChange}
                   type="password"
                   value={values.password}
+                  variant="outlined"
+                />
+                <TextField
+                  error={Boolean(touched.confirmpassword && errors.confirmpassword)}
+                  fullWidth
+                  helperText={touched.confirmpassword && errors.confirmpassword}
+                  label="Confirm Password"
+                  margin="normal"
+                  name="confirmpassword"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  type="password"
+                  value={values.confirmpassword}
                   variant="outlined"
                 />
                 <Box
@@ -195,17 +222,26 @@ function renderForm(){
           <Container maxWidth="sm">
             <Formik
               initialValues={{
-                ConfirmonCode: '',
-                policy: false
+                ConfirmationCode: '',
+                policy: false,
               }}
               validationSchema={
                 Yup.object().shape({
-                  eConfirmationCode: Yup.string().ConfirmonCode('Must be valid').max(255).required('Code is required'),
+                  ConfirmationCode: Yup.string().max(255).required('Code is required')
                 })
               }
-              onSubmit={(event) => {
-                event.preventDefault();
-                setIsLoading(true);  
+              onSubmit={async (values) => {
+                setIsLoading(true);
+                try {
+                  await Auth.confirmSignUp(values.email, values.ConfirmationCode);
+                  await Auth.signIn(values.email, values.password);
+                  userHasAuthenticated(true);
+                  navigate("/");
+                  window.location.reload(true);
+                } catch (e) {
+                  onError(e);
+                  setIsLoading(false);
+                }
               }}
             >
               {({
@@ -227,17 +263,17 @@ function renderForm(){
                     </Typography>
                   </Box>
                   <TextField
-                    error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.ConfirmationCode && errors.ConfirmationCode)}
                     fullWidth
-                    helperText={touched.ConfirmonCode && errors.ConfirmonCode}
+                    helperText={touched.ConfirmationCode && errors.ConfirmationCode}
                     label="Confirmation Code"
                     margin="normal"
                     name="ConfirmationCode"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type="tel"
-                    value={values.ConfirmonCode}
-                    variant="outlined"
+                    type='hidden'
+                    value={values.ConfirmationCode}
+                    variant="outlined" 
                   />
                   <Box my={2}>
                     <Button
@@ -257,14 +293,13 @@ function renderForm(){
           </Container>
         </Box>
       </Page>
-    );}
-  
+    );
+  }
 
   return (
     <div className="Signup">
       {newUser === null ? renderForm() : renderConfirmationForm()}
     </div>
   );
-
-};
+}
 

@@ -101,7 +101,7 @@ const LatestOrders = ({ className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Latest Orders" />
+      <CardHeader title="Latest Limits" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
@@ -109,10 +109,10 @@ const LatestOrders = ({ className, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell>
-                  Order Ref
+                  Ref
                 </TableCell>
                 <TableCell>
-                  Customer
+                  Buyer
                 </TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip

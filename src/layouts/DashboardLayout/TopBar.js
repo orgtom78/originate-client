@@ -35,8 +35,6 @@ const TopBar = ({
   const navigate = useNavigate();
 
   const [isAuthenticated, userHasAuthenticated] = useState();
-
-  console.log(isAuthenticated)
   
   async function handleLogout() {
     await Auth.signOut();

@@ -52,13 +52,13 @@ const Budget = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              BUDGET
+              AVAILABLE LIMITS
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              $24,000
+              $0
             </Typography>
           </Grid>
           <Grid item>
@@ -77,7 +77,7 @@ const Budget = ({ className, ...rest }) => {
             className={classes.differenceValue}
             variant="body2"
           >
-            12%
+            0%
           </Typography>
           <Typography
             color="textSecondary"
