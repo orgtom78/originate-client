@@ -22,3 +22,5 @@ src/config.js
 lib/*.lib
 *.ncb
 *.suo
+.vscode
+/.vscode
