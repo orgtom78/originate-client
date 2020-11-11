@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import moment from 'moment';
 import {
@@ -13,31 +12,54 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
+import { API, graphqlOperation } from "aws-amplify";
+import * as queries from 'src/graphql/queries.js';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-7'
-};
+export  default  function Profile({ className, ...rest }){
+const [company_name, setCompany_name] = useState('');
+const [company_address_city, setCompany_address_city] = useState('');
+const [company_avatar, setCompany_avatar] = useState('');
+const [company_timezone, setCompany_timezone] = useState('');
+const [company_country, setCompany_country] = useState('');
+const [company_industry, setCompany_industry] = useState('')
 
-const useStyles = makeStyles(() => ({
-  root: {},
-  avatar: {
-    height: 100,
-    width: 100
+  const useStyles = makeStyles(() => ({
+    root: {},
+    avatar: {
+      height: 100,
+      width: 100
+    }
+  }));
+  const classes = useStyles()
+
+  async function user() {
+  const user = await loadCompany()
+  const city = user.company_address_city
+  const country = user.company_country
+  const industry = user.company_industry
+  const name = user.company_name
+  const avatar = 'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'
+  const timezone = 'GTM-7'
+  setCompany_name(name)
+  setCompany_address_city(city)
+  setCompany_country(country)
+  setCompany_industry(industry)
+  setCompany_timezone(timezone)
+  setCompany_avatar(avatar)
+ }user();
+
+ async function loadCompany() {
+  let filter = { userId: {eq:'dcd44927-2efd-4fc0-b955-0c676d04f738'}};
+    const { data: { listsCompany: { items: itemsPage1, nextToken } } } = await API.graphql(graphqlOperation(queries.listsCompany, { filter: filter }));
+    const n  = { data: { listsCompany: { items: itemsPage1, nextToken }}};
+    const company = n.data.listsCompany.items[0]
+    return company
   }
-}));
-
-const Profile = ({ className, ...rest }) => {
-  const classes = useStyles();
 
   return (
     <Card
-      className={clsx(classes.root, className)}
-      {...rest}
+    className={clsx(classes.root, className)}
+    {...rest}
     >
       <CardContent>
         <Box
@@ -47,27 +69,27 @@ const Profile = ({ className, ...rest }) => {
         >
           <Avatar
             className={classes.avatar}
-            src={user.avatar}
+            src={company_avatar}
           />
           <Typography
             color="textPrimary"
             gutterBottom
             variant="h3"
           >
-            {user.name}
+            {company_name}
           </Typography>
           <Typography
             color="textSecondary"
             variant="body1"
           >
-            {`${user.city} ${user.country}`}
+            {`${company_address_city} ${company_country}`}
           </Typography>
           <Typography
             className={classes.dateText}
             color="textSecondary"
             variant="body1"
           >
-            {`${moment().format('hh:mm A')} ${user.timezone}`}
+            {`${moment().format('hh:mm A')} ${company_timezone}`}
           </Typography>
         </Box>
       </CardContent>
@@ -78,15 +100,9 @@ const Profile = ({ className, ...rest }) => {
           fullWidth
           variant="text"
         >
-          Upload picture
+          Upload company logo
         </Button>
       </CardActions>
     </Card>
   );
-};
-
-Profile.propTypes = {
-  className: PropTypes.string
-};
-
-export default Profile;
+}

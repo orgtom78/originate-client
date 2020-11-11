@@ -1,0 +1,789 @@
+﻿type Company {
+	companyId: String
+	company_address_city: String
+	company_address_number: String
+	company_address_postalcode: String
+	company_address_refinment: String
+	company_country: String
+	company_director_appointment_date: String
+	company_director_country_of_residence: String
+	company_director_date_of_birth: String
+	company_director_email: String
+	company_director_id_attachment: String
+	company_director_id_expiry_date: String
+	company_director_id_issue_date: String
+	company_director_id_issuer_country: String
+	company_director_id_issuer_state: String
+	company_director_id_number: String
+	company_director_id_type: String
+	company_director_jobtitle: String
+	company_director_name: String
+	company_director_nationality: String
+	company_director_pep_status: String
+	company_director_phone_number: String
+	company_director_poa_attachment: String
+	company_director_ubo_status: String
+	company_industry: String
+	company_industry_code: String
+	company_name: String
+	company_register_number: String
+	company_trading_name: String
+	company_type: String
+	company_ubo_appointment_date: String
+	company_ubo_country_of_residence: String
+	company_ubo_date_of_birth: String
+	company_ubo_email: String
+	company_ubo_id_attachment: String
+	company_ubo_id_expiry_date: String
+	company_ubo_id_issue_date: String
+	company_ubo_id_issuer_country: String
+	company_ubo_id_issuer_state: String
+	company_ubo_id_number: String
+	company_ubo_id_type: String
+	company_ubo_jobtitle: String
+	company_ubo_name: String
+	company_ubo_nationality: String
+	company_ubo_ownership_percentage: String
+	company_ubo_pep_status: String
+	company_ubo_phone_number: String
+	company_ubo_poa_attachment: String
+	company_website: String
+	companyaddress_street: String
+	createdAt: String
+	date_of_incorporation: String
+	registration_cert_attachment: String
+	sortkey: String!
+	userId: String!
+}
+
+type CompanyBank {
+	account_statement_attachment: String
+	balance: String
+	balance_available: String
+	bank_account_name: String
+	bank_account_number: String
+	bank_account_sortcode: String
+	bank_address_city: String
+	bank_address_number: String
+	bank_address_postalcode: String
+	bank_address_refinment: String
+	bank_address_street: String
+	bank_branch: String
+	bank_country: String
+	bank_name: String
+	bank_routing_number: String
+	bic_swift_code: String
+	createdAt: String
+	iban: String
+	iso_currency_code: String
+	overdraft: String
+	payments_incoming: String
+	payments_outgoing: String
+	pre_auth_amount: String
+	reporting_end_date: String
+	reporting_start_date: String
+	sortkey: String!
+	userId: String!
+}
+
+type CompanyBankConnection {
+	items: [CompanyBank]
+	nextToken: String
+}
+
+type CompanyConnection {
+	items: [Company]
+	nextToken: String
+}
+
+type CompanyFinancials {
+	accounts_payable: String
+	accounts_receivable: String
+	cash: String
+	createdAt: String
+	ebit: String
+	equity_book_value: String
+	equity_market_value: String
+	financial_accounts_attachment: String
+	financialsId: String
+	interest_expenses: String
+	inventory: String
+	net_profit: String
+	reporting_period: String
+	retained_earnings: String
+	sales: String
+	short_term_debt: String
+	sortkey: String!
+	total_assets: String
+	total_liabilities: String
+	userId: String!
+	working_capital: String
+}
+
+type CompanyFinancialsConnection {
+	items: [CompanyFinancials]
+	nextToken: String
+}
+
+type CompanyTransaction {
+	authorized_date: String
+	category: String
+	createdAt: String
+	iso_currency_code: String
+	location: String
+	merchant_name: String
+	payment_channel: String
+	pending: String
+	pending_transactionId: String
+	recipient_account_name: String
+	recipient_bank_account_number: String
+	recipient_bank_account_sortcode: String
+	recipient_bank_address_city: String
+	recipient_bank_address_number: String
+	recipient_bank_address_postalcode: String
+	recipient_bank_address_refinment: String
+	recipient_bank_address_street: String
+	recipient_bank_branch: String
+	recipient_bank_country: String
+	recipient_bank_name: String
+	recipient_bank_routing_number: String
+	recipient_bic_swift_code: String
+	recipient_iban: String
+	recipientaccountId: String
+	sender_account_name: String
+	sender_bank_account_number: String
+	sender_bank_account_sortcode: String
+	sender_bank_branch: String
+	sender_bank_name: String
+	sender_bank_routing_number: String
+	sender_bic_swift_code: String
+	sender_iban: String
+	senderaccountId: String
+	sortkey: String!
+	transaction_code: String
+	transaction_date: String
+	transaction_description: String
+	transaction_exchange_rate: String
+	transaction_exchange_rate_fee: String
+	transaction_source_amount: String
+	transaction_source_currency: String
+	transaction_status: String
+	transaction_target_amount: String
+	transaction_target_currency: String
+	userId: String!
+}
+
+type CompanyTransactionConnection {
+	items: [CompanyTransaction]
+	nextToken: String
+}
+
+input CreateCompanyBankInput {
+	account_statement_attachment: String
+	balance: String
+	balance_available: String
+	bank_account_name: String
+	bank_account_number: String
+	bank_account_sortcode: String
+	bank_address_city: String
+	bank_address_number: String
+	bank_address_postalcode: String
+	bank_address_refinment: String
+	bank_address_street: String
+	bank_branch: String
+	bank_country: String
+	bank_name: String
+	bank_routing_number: String
+	bic_swift_code: String
+	iban: String
+	iso_currency_code: String
+	overdraft: String
+	payments_incoming: String
+	payments_outgoing: String
+	pre_auth_amount: String
+	reporting_end_date: String
+	reporting_start_date: String
+	userId: String!
+}
+
+input CreateCompanyFinancialsInput {
+	accounts_payable: String
+	accounts_receivable: String
+	cash: String
+	ebit: String
+	equity_book_value: String
+	equity_market_value: String
+	financial_accounts_attachment: String
+	interest_expenses: String
+	inventory: String
+	net_profit: String
+	reporting_period: String
+	retained_earnings: String
+	sales: String
+	short_term_debt: String
+	total_assets: String
+	total_liabilities: String
+	userId: String!
+	working_capital: String
+}
+
+input CreateCompanyInput {
+	companyId: String
+	company_address_city: String
+	company_address_number: String
+	company_address_postalcode: String
+	company_address_refinment: String
+	company_country: String
+	company_director_appointment_date: String
+	company_director_country_of_residence: String
+	company_director_date_of_birth: String
+	company_director_email: String
+	company_director_id_attachment: String
+	company_director_id_expiry_date: String
+	company_director_id_issue_date: String
+	company_director_id_issuer_country: String
+	company_director_id_issuer_state: String
+	company_director_id_number: String
+	company_director_id_type: String
+	company_director_jobtitle: String
+	company_director_name: String
+	company_director_nationality: String
+	company_director_pep_status: String
+	company_director_phone_number: String
+	company_director_poa_attachment: String
+	company_director_ubo_status: String
+	company_industry: String
+	company_industry_code: String
+	company_name: String
+	company_register_number: String
+	company_trading_name: String
+	company_type: String
+	company_ubo_appointment_date: String
+	company_ubo_country_of_residence: String
+	company_ubo_date_of_birth: String
+	company_ubo_email: String
+	company_ubo_id_attachment: String
+	company_ubo_id_expiry_date: String
+	company_ubo_id_issue_date: String
+	company_ubo_id_issuer_country: String
+	company_ubo_id_issuer_state: String
+	company_ubo_id_number: String
+	company_ubo_id_type: String
+	company_ubo_jobtitle: String
+	company_ubo_name: String
+	company_ubo_nationality: String
+	company_ubo_ownership_percentage: String
+	company_ubo_pep_status: String
+	company_ubo_phone_number: String
+	company_ubo_poa_attachment: String
+	company_website: String
+	companyaddress_street: String
+	date_of_incorporation: String
+	registration_cert_attachment: String
+	userId: String!
+}
+
+input CreateCompanyTransactionInput {
+	authorized_date: String
+	category: String
+	iso_currency_code: String
+	location: String
+	merchant_name: String
+	payment_channel: String
+	pending: String
+	pending_transactionId: String
+	recipient_account_name: String
+	recipient_bank_account_number: String
+	recipient_bank_account_sortcode: String
+	recipient_bank_address_city: String
+	recipient_bank_address_number: String
+	recipient_bank_address_postalcode: String
+	recipient_bank_address_refinment: String
+	recipient_bank_address_street: String
+	recipient_bank_branch: String
+	recipient_bank_country: String
+	recipient_bank_name: String
+	recipient_bank_routing_number: String
+	recipient_bic_swift_code: String
+	recipient_iban: String
+	recipientaccountId: String
+	sender_account_name: String
+	sender_bank_account_number: String
+	sender_bank_account_sortcode: String
+	sender_bank_branch: String
+	sender_bank_name: String
+	sender_bank_routing_number: String
+	sender_bic_swift_code: String
+	sender_iban: String
+	senderaccountId: String
+	transaction_code: String
+	transaction_date: String
+	transaction_description: String
+	transaction_exchange_rate: String
+	transaction_exchange_rate_fee: String
+	transaction_source_amount: String
+	transaction_source_currency: String
+	transaction_status: String
+	transaction_target_amount: String
+	transaction_target_currency: String
+	userId: String!
+}
+
+input CreateOriginateInput {
+	sortkey: String!
+	userId: String!
+}
+
+input CreateProjectInput {
+	buyer_address_city: String
+	buyer_address_number: String
+	buyer_address_postalcode: String
+	buyer_address_refinment: String
+	buyer_address_street: String
+	buyer_company_name: String
+	buyer_country: String
+	buyer_rating: String
+	currency: String
+	insurance_name: String
+	insurance_rating: String
+	insurance_status: String
+	loan_amount: String
+	loan_attachment: String
+	loan_collateral: String
+	loan_covenants: String
+	loan_fees: String
+	loan_purpose: String
+	loan_rate: String
+	loan_type: String
+	next_year_projected_transaction_amount: String
+	payment_terms: String
+	previous_year_transaction_amount: String
+	purchase_order_amount: String
+	purchase_order_attachment: String
+	purchase_order_date: String
+	reporting_year: String
+	reporting_year_transaction_amount: String
+	sales_contract_attachment: String
+	sold_goods_description: String
+	title: String
+	userId: String!
+}
+
+input DeleteCompanyBankInput {
+	sortkey: String!
+	userId: String!
+}
+
+input DeleteCompanyFinancialsInput {
+	sortkey: String!
+	userId: String!
+}
+
+input DeleteCompanyInput {
+	sortkey: String!
+	userId: String!
+}
+
+input DeleteCompanyTransactionInput {
+	sortkey: String!
+	userId: String!
+}
+
+input DeleteOriginateInput {
+	sortkey: String!
+	userId: String!
+}
+
+input DeleteProjectInput {
+	sortkey: String!
+	userId: String!
+}
+
+type Mutation {
+	createCompany(input: CreateCompanyInput!): Company
+	createCompanyBank(input: CreateCompanyBankInput!): CompanyBank
+	createCompanyFinancials(input: CreateCompanyFinancialsInput!): CompanyFinancials
+	createCompanyTransaction(input: CreateCompanyTransactionInput!): CompanyTransaction
+	createProject(input: CreateProjectInput!): Project
+	deleteCompany(input: DeleteCompanyInput!): Company
+	deleteCompanyBank(input: DeleteCompanyBankInput!): CompanyBank
+	deleteCompanyFinancials(input: DeleteCompanyFinancialsInput!): CompanyFinancials
+	deleteCompanyTransaction(input: DeleteCompanyTransactionInput!): CompanyTransaction
+	deleteProject(input: DeleteProjectInput!): Project
+	updateCompany(input: UpdateCompanyInput!): Company
+	updateCompanyBank(input: UpdateCompanyBankInput!): CompanyBank
+	updateCompanyFinancials(input: UpdateCompanyFinancialsInput!): CompanyFinancials
+	updateCompanyTransaction(input: UpdateCompanyTransactionInput!): CompanyTransaction
+	updateProject(input: UpdateProjectInput!): Project
+	createOriginate(input: CreateOriginateInput!): Originate
+	updateOriginate(input: UpdateOriginateInput!): Originate
+	deleteOriginate(input: DeleteOriginateInput!): Originate
+}
+
+type Originate {
+	sortkey: String!
+	userId: String!
+}
+
+type OriginateConnection {
+	items: [Originate]
+	nextToken: String
+}
+
+type Project {
+	buyerId: String
+	buyer_address_city: String
+	buyer_address_number: String
+	buyer_address_postalcode: String
+	buyer_address_refinment: String
+	buyer_address_street: String
+	buyer_company_name: String
+	buyer_country: String
+	buyer_rating: String
+	createdAt: String
+	currency: String
+	insurance_name: String
+	insurance_rating: String
+	insurance_status: String
+	loan_amount: String
+	loan_attachment: String
+	loan_collateral: String
+	loan_covenants: String
+	loan_fees: String
+	loan_purpose: String
+	loan_rate: String
+	loan_type: String
+	next_year_projected_transaction_amount: String
+	payment_terms: String
+	previous_year_transaction_amount: String
+	projectId: String
+	purchase_order_amount: String
+	purchase_order_attachment: String
+	purchase_order_date: String
+	reporting_year: String
+	reporting_year_transaction_amount: String
+	sales_contract_attachment: String
+	sold_goods_description: String
+	sortkey: String!
+	title: String
+	userId: String!
+}
+
+type ProjectConnection {
+	items: [Project]
+	nextToken: String
+}
+
+type Query {
+	getCompany(sortkey: String!, userId: String!): Company
+	getCompanyBank(sortkey: String!, userId: String!): CompanyBank
+	getCompanyFinancials(sortkey: String!, userId: String!): CompanyFinancials
+	getCompanyTransaction(sortkey: String!, userId: String!): CompanyTransaction
+	getProject(sortkey: String!, userId: String!): Project
+	listsCompany(filter: TableFilterInput, limit: Int, nextToken: String): CompanyConnection
+	listsCompanyBank(filter: TableFilterInput, limit: Int, nextToken: String): CompanyBankConnection
+	listsCompanyFinancials(filter: TableFilterInput, limit: Int, nextToken: String): CompanyFinancialsConnection
+	listsCompanyTransaction(filter: TableFilterInput, limit: Int, nextToken: String): CompanyTransactionConnection
+	listsProject(filter: TableFilterInput, limit: Int, nextToken: String): ProjectConnection
+	getOriginate(userId: String!, sortkey: String!): Originate
+	listOriginates(filter: TableOriginateFilterInput, limit: Int, nextToken: String): OriginateConnection
+}
+
+type Subscription {
+	onCreateCompany(sortkey: String, userId: String): Company
+		@aws_subscribe(mutations: ["createCompany"])
+	onCreateCompanyBank(sortkey: String, userId: String): CompanyBank
+		@aws_subscribe(mutations: ["createCompanyBank"])
+	onCreateCompanyFinancials(sortkey: String, userId: String): CompanyFinancials
+		@aws_subscribe(mutations: ["createCompanyFinancials"])
+	onCreateProject(sortkey: String, userId: String): Project
+		@aws_subscribe(mutations: ["createProject"])
+	onDeleteCompany(sortkey: String, userId: String): Company
+		@aws_subscribe(mutations: ["deleteCompany"])
+	onDeleteCompanyBank(sortkey: String, userId: String): CompanyBank
+		@aws_subscribe(mutations: ["deleteCompanyBank"])
+	onDeleteCompanyFinancials(sortkey: String, userId: String): CompanyFinancials
+		@aws_subscribe(mutations: ["deleteCompanyFinancials"])
+	onDeleteProject(sortkey: String, userId: String): Project
+		@aws_subscribe(mutations: ["deleteProject"])
+	onUpdateCompany(sortkey: String, userId: String): Company
+		@aws_subscribe(mutations: ["updateCompany"])
+	onUpdateCompanyBank(sortkey: String, userId: String): CompanyBank
+		@aws_subscribe(mutations: ["updateCompanyBank"])
+	onUpdateCompanyFinancials(sortkey: String, userId: String): CompanyFinancials
+		@aws_subscribe(mutations: ["updateCompanyFinancials"])
+	onUpdateProject(sortkey: String, userId: String): Project
+		@aws_subscribe(mutations: ["updateProject"])
+	onCreateOriginate(sortkey: String, userId: String): Originate
+		@aws_subscribe(mutations: ["createOriginate"])
+	onUpdateOriginate(sortkey: String, userId: String): Originate
+		@aws_subscribe(mutations: ["updateOriginate"])
+	onDeleteOriginate(sortkey: String, userId: String): Originate
+		@aws_subscribe(mutations: ["deleteOriginate"])
+}
+
+input TableBooleanFilterInput {
+	eq: Boolean
+	ne: Boolean
+}
+
+input TableFilterInput {
+	sortkey: TableStringFilterInput
+	userId: TableStringFilterInput
+}
+
+input TableFloatFilterInput {
+	between: [Float]
+	contains: Float
+	eq: Float
+	ge: Float
+	gt: Float
+	le: Float
+	lt: Float
+	ne: Float
+	notContains: Float
+}
+
+input TableIDFilterInput {
+	beginsWith: ID
+	between: [ID]
+	contains: ID
+	eq: ID
+	ge: ID
+	gt: ID
+	le: ID
+	lt: ID
+	ne: ID
+	notContains: ID
+}
+
+input TableIntFilterInput {
+	between: [Int]
+	contains: Int
+	eq: Int
+	ge: Int
+	gt: Int
+	le: Int
+	lt: Int
+	ne: Int
+	notContains: Int
+}
+
+input TableOriginateFilterInput {
+	sortkey: TableStringFilterInput
+	userId: TableStringFilterInput
+}
+
+input TableStringFilterInput {
+	beginsWith: String
+	between: [String]
+	contains: String
+	eq: String
+	ge: String
+	gt: String
+	le: String
+	lt: String
+	ne: String
+	notContains: String
+}
+
+input UpdateCompanyBankInput {
+	account_statement_attachment: String
+	balance: String
+	balance_available: String
+	bank_account_name: String
+	bank_account_number: String
+	bank_account_sortcode: String
+	bank_address_city: String
+	bank_address_number: String
+	bank_address_postalcode: String
+	bank_address_refinment: String
+	bank_address_street: String
+	bank_branch: String
+	bank_country: String
+	bank_name: String
+	bank_routing_number: String
+	bic_swift_code: String
+	iban: String
+	iso_currency_code: String
+	overdraft: String
+	payments_incoming: String
+	payments_outgoing: String
+	pre_auth_amount: String
+	reporting_end_date: String
+	reporting_start_date: String
+	sortkey: String!
+	userId: String!
+}
+
+input UpdateCompanyFinancialsInput {
+	accounts_payable: String
+	accounts_receivable: String
+	cash: String
+	ebit: String
+	equity_book_value: String
+	equity_market_value: String
+	financial_accounts_attachment: String
+	interest_expenses: String
+	inventory: String
+	net_profit: String
+	reporting_period: String
+	retained_earnings: String
+	sales: String
+	short_term_debt: String
+	sortkey: String!
+	total_assets: String
+	total_liabilities: String
+	userId: String!
+	working_capital: String
+}
+
+input UpdateCompanyInput {
+	company_address_city: String
+	company_address_number: String
+	company_address_postalcode: String
+	company_address_refinment: String
+	company_country: String
+	company_director_appointment_date: String
+	company_director_country_of_residence: String
+	company_director_date_of_birth: String
+	company_director_email: String
+	company_director_id_attachment: String
+	company_director_id_expiry_date: String
+	company_director_id_issue_date: String
+	company_director_id_issuer_country: String
+	company_director_id_issuer_state: String
+	company_director_id_number: String
+	company_director_id_type: String
+	company_director_jobtitle: String
+	company_director_name: String
+	company_director_nationality: String
+	company_director_pep_status: String
+	company_director_phone_number: String
+	company_director_poa_attachment: String
+	company_director_ubo_status: String
+	company_industry: String
+	company_industry_code: String
+	company_name: String
+	company_register_number: String
+	company_trading_name: String
+	company_type: String
+	company_ubo_appointment_date: String
+	company_ubo_country_of_residence: String
+	company_ubo_date_of_birth: String
+	company_ubo_email: String
+	company_ubo_id_attachment: String
+	company_ubo_id_expiry_date: String
+	company_ubo_id_issue_date: String
+	company_ubo_id_issuer_country: String
+	company_ubo_id_issuer_state: String
+	company_ubo_id_number: String
+	company_ubo_id_type: String
+	company_ubo_jobtitle: String
+	company_ubo_name: String
+	company_ubo_nationality: String
+	company_ubo_ownership_percentage: String
+	company_ubo_pep_status: String
+	company_ubo_phone_number: String
+	company_ubo_poa_attachment: String
+	company_website: String
+	companyaddress_street: String
+	date_of_incorporation: String
+	registration_cert_attachment: String
+	sortkey: String!
+	userId: String!
+}
+
+input UpdateCompanyTransactionInput {
+	authorized_date: String
+	category: String
+	iso_currency_code: String
+	location: String
+	merchant_name: String
+	payment_channel: String
+	pending: String
+	pending_transactionId: String
+	recipient_account_name: String
+	recipient_bank_account_number: String
+	recipient_bank_account_sortcode: String
+	recipient_bank_address_city: String
+	recipient_bank_address_number: String
+	recipient_bank_address_postalcode: String
+	recipient_bank_address_refinment: String
+	recipient_bank_address_street: String
+	recipient_bank_branch: String
+	recipient_bank_country: String
+	recipient_bank_name: String
+	recipient_bank_routing_number: String
+	recipient_bic_swift_code: String
+	recipient_iban: String
+	recipientaccountId: String
+	sender_account_name: String
+	sender_bank_account_number: String
+	sender_bank_account_sortcode: String
+	sender_bank_branch: String
+	sender_bank_name: String
+	sender_bank_routing_number: String
+	sender_bic_swift_code: String
+	sender_iban: String
+	senderaccountId: String
+	sortkey: String!
+	transaction_code: String
+	transaction_date: String
+	transaction_description: String
+	transaction_exchange_rate: String
+	transaction_exchange_rate_fee: String
+	transaction_source_amount: String
+	transaction_source_currency: String
+	transaction_status: String
+	transaction_target_amount: String
+	transaction_target_currency: String
+	userId: String!
+}
+
+input UpdateOriginateInput {
+	sortkey: String!
+	userId: String!
+}
+
+input UpdateProjectInput {
+	buyer_address_city: String
+	buyer_address_number: String
+	buyer_address_postalcode: String
+	buyer_address_refinment: String
+	buyer_address_street: String
+	buyer_company_name: String
+	buyer_country: String
+	buyer_rating: String
+	currency: String
+	insurance_name: String
+	insurance_rating: String
+	insurance_status: String
+	loan_amount: String
+	loan_attachment: String
+	loan_collateral: String
+	loan_covenants: String
+	loan_fees: String
+	loan_purpose: String
+	loan_rate: String
+	loan_type: String
+	next_year_projected_transaction_amount: String
+	payment_terms: String
+	previous_year_transaction_amount: String
+	purchase_order_amount: String
+	purchase_order_attachment: String
+	purchase_order_date: String
+	reporting_year: String
+	reporting_year_transaction_amount: String
+	sales_contract_attachment: String
+	sold_goods_description: String
+	sortkey: String!
+	title: String
+	userId: String!
+}
+
+schema {
+	query: Query
+	mutation: Mutation
+	subscription: Subscription
+}

@@ -1,197 +1,149 @@
 import React, { useState } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
 import {
-  Box,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
   Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  TextField,
-  makeStyles
+  Container,
+  makeStyles,
+  Typography 
 } from '@material-ui/core';
+import { Formik, Form } from 'formik';
+import { Auth,  API, graphqlOperation } from "aws-amplify";
+import { onError } from "src/libs/errorLib.js";
+import * as mutations from 'src/graphql/mutations.js';
 
-const states = [
-  {
-    value: 'alabama',
-    label: 'Alabama'
-  },
-  {
-    value: 'new-york',
-    label: 'New York'
-  },
-  {
-    value: 'san-francisco',
-    label: 'San Francisco'
+import Page from 'src/components/Page';
+
+import AddressForm from './Forms/AddressForm';
+import ShareholderForm from './Forms/ShareholderForm';
+import FinancialsForm from './Forms/FinancialsForm';
+
+import validationSchema from './FormModel/validationSchema';
+import NewAccountFormModel from './FormModel/NewAccountFormModel';
+import formInitialValues from './FormModel/formInitialValues';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.dark,
+    minHeight: '100%',
+    paddingBottom: theme.spacing(3),
+    paddingTop: theme.spacing(3)
   }
-];
-
-const useStyles = makeStyles(() => ({
-  root: {}
 }));
 
-const ProfileDetails = ({ className, ...rest }) => {
-  const classes = useStyles();
-  const [values, setValues] = useState({
-    firstName: 'Katarina',
-    lastName: 'Smith',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+const { formId, formField } = NewAccountFormModel;
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+export default function NewAccount() {
+  const classes = useStyles();
+  const currentValidationSchema = validationSchema;
+
+
+  function _sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function _submitForm(values, actions) {
+    await _sleep(1000);
+    try {
+      let user = await Auth.currentAuthenticatedUser();
+      const { attributes = {} } = user;
+      const userId = attributes['sub'];
+      const company_name = values['company_name'];
+      const company_address_city = values['company_address_city'];
+      const company_address_postalcode = values['company_address_postalcode'];
+      const company_country = values['company_country'];
+      const company_industry = values['company_industry'];
+      const date_of_incorporation = values['date_of_incorporation'];
+
+      await createCompany({
+        userId,
+        company_name,
+        company_address_city,
+        company_address_postalcode,
+        company_country,
+        company_industry,
+        date_of_incorporation,
+      }); 
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  function createCompany(input) {
+    return API.graphql(graphqlOperation(mutations.createCompany,
+      {input: input}
+    ))
   };
 
+  function _handleSubmit(values, actions) {
+      _submitForm(values, actions);
+      console.log(values);
+      console.log(actions)
+  }
+  console.log(_handleSubmit);
+
   return (
-    <form
-      autoComplete="off"
-      noValidate
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <Card>
-        <CardHeader
-          subheader="The information can be edited"
-          title="Profile"
-        />
-        <Divider />
-        <CardContent>
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                helperText="Please specify the first name"
-                label="First name"
-                name="firstName"
-                onChange={handleChange}
-                required
-                value={values.firstName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Last name"
-                name="lastName"
-                onChange={handleChange}
-                required
-                value={values.lastName}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Phone Number"
-                name="phone"
-                onChange={handleChange}
-                type="number"
-                value={values.phone}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Select State"
-                name="state"
-                onChange={handleChange}
-                required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
-                variant="outlined"
-              >
-                {states.map((option) => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
-              </TextField>
-            </Grid>
-          </Grid>
-        </CardContent>
-        <Divider />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          p={2}
+    <Container maxWidth="lg">
+    <React.Fragment>
+    <Accordion defaultExpanded={true}>
+        <AccordionSummary
+          aria-controls="panel1a-content"
+          id="panel1a-header"
         >
-          <Button
-            color="primary"
-            variant="contained"
+          <Typography className={classes.heading}>Company Details</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Formik
+            initialValues={formInitialValues}
+            validationSchema={currentValidationSchema}
+            onSubmit={_handleSubmit}
           >
-            Save details
-          </Button>
-        </Box>
-      </Card>
-    </form>
+              <Form id={formId}>
+                <AddressForm  formField={formField}/>
+              </Form>
+          </Formik>
+        </AccordionDetails>
+        </Accordion>
+        <Accordion>
+        <AccordionSummary
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Company Shareholders</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Formik
+            initialValues={formInitialValues}
+            validationSchema={currentValidationSchema}
+            onSubmit={_handleSubmit}
+          >
+              <Form id={formId}>
+                <ShareholderForm  formField={formField}/>
+              </Form>
+          </Formik>
+        </AccordionDetails>
+        </Accordion>
+        <Accordion>
+        <AccordionSummary
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+          <Typography className={classes.heading}>Company Financials</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Formik
+            initialValues={formInitialValues}
+            validationSchema={currentValidationSchema}
+            onSubmit={_handleSubmit}
+          >
+              <Form id={formId}>
+                <FinancialsForm  formField={formField}/>
+              </Form>
+          </Formik>
+        </AccordionDetails>
+        </Accordion>
+      </React.Fragment>
+    </Container>
   );
-};
-
-ProfileDetails.propTypes = {
-  className: PropTypes.string
-};
-
-export default ProfileDetails;
+}

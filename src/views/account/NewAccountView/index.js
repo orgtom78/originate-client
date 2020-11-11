@@ -14,6 +14,7 @@ import { Formik, Form } from 'formik';
 import { Auth,  API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from 'uuid';
 import { onError } from "src/libs/errorLib.js";
+import * as mutations from 'src/graphql/mutations.js';
 
 import Page from 'src/components/Page';
 
@@ -65,25 +66,44 @@ export default function NewAccount() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     alert(JSON.stringify(values, null, 2));
-
     try {
       let user = await Auth.currentAuthenticatedUser();
       const { attributes = {} } = user;
       const userId = attributes['sub'];
       console.log(userId);
       const companyId = uuid();
-      /**await createCompany({ 
+      const company_name = values['company_name'];
+      const company_address_city = values['company_address_city'];
+      const company_address_postalcode = values['company_address_postalcode'];
+      const company_country = values['company_country'];
+      const company_industry = values['company_industry'];
+      const date_of_incorporation = values['date_of_incorporation'];
+      const registration_cert_attachment = values['registration_cert_attachment'];
+
+      await createCompany({
         userId,
-        companyId,}); **/
+        companyId,
+        company_name,
+        company_address_city,
+        company_address_postalcode,
+        company_country,
+        company_industry,
+        date_of_incorporation,
+        registration_cert_attachment
+      }); 
     } catch (e) {
       onError(e);
     }
 
     actions.setSubmitting(false);
-
     setActiveStep(activeStep + 1);
   }
 
+  function createCompany(input) {
+    return API.graphql(graphqlOperation(mutations.createCompany,
+      {input: input}
+    ))
+  };
 
   function _handleSubmit(values, actions) {
     if (isLastStep) {

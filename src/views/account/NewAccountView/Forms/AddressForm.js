@@ -203,21 +203,6 @@ export default function AddressForm(props) {
               ) 
               }
             </Grid>
-            <Grid item xs={12}>
-              <CheckboxField name={termsandconditions.name} />
-              <Typography color="textSecondary" variant="body1">
-                I have read the{" "}
-                <Link
-                  color="primary"
-                  component={RouterLink}
-                  to="https://originatecapital.co/terms-and-conditions/"
-                  underline="always"
-                  variant="h6"
-                >
-                  Terms and Conditions
-                </Link>
-              </Typography>
-            </Grid>
           </Grid>
         </CardContent>
       </Card>
