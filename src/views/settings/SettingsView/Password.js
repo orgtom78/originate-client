@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Auth } from "aws-amplify";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -11,6 +12,7 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
+import LoaderButton from "src/components/LoaderButton.js";
 
 const useStyles = makeStyles(({
   root: {}
@@ -22,13 +24,30 @@ const Password = ({ className, ...rest }) => {
     password: '',
     confirm: ''
   });
+  const [isChanging, setIsChanging] = useState(false);
 
-  const handleChange = (event) => {
+  const handleChange = async (event) => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
     });
   };
+
+  async function updatepw() {
+    setIsChanging(true);
+    try {
+      const currentUser = await Auth.currentAuthenticatedUser();
+      await Auth.changePassword(
+        currentUser,
+        values.oldpassword,
+        values.password
+      );
+      }
+      catch (e) {
+        alert(e.message);
+        setIsChanging(false);
+      }
+    };
 
   return (
     <form
@@ -46,6 +65,16 @@ const Password = ({ className, ...rest }) => {
             fullWidth
             label="Password"
             margin="normal"
+            name="oldpassword"
+            onChange={handleChange}
+            type="password"
+            value={values.oldpassword}
+            variant="outlined"
+          />
+          <TextField
+            fullWidth
+            label="New password"
+            margin="normal"
             name="password"
             onChange={handleChange}
             type="password"
@@ -59,7 +88,7 @@ const Password = ({ className, ...rest }) => {
             name="confirm"
             onChange={handleChange}
             type="password"
-            value={values.confirm}
+            value={values.confirmpassword}
             variant="outlined"
           />
         </CardContent>
@@ -69,12 +98,15 @@ const Password = ({ className, ...rest }) => {
           justifyContent="flex-end"
           p={2}
         >
-          <Button
+          <LoaderButton
             color="primary"
             variant="contained"
+            disabled={isChanging}
+            loading={isChanging}
+            onClick={updatepw}
           >
             Update
-          </Button>
+          </LoaderButton>
         </Box>
       </Card>
     </form>

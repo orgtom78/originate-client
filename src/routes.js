@@ -21,8 +21,8 @@ import NewBuyerView from 'src/views/buyer/NewBuyerView';
     children: [
       { path: '', element: !isAuthenticated ? <LoginView /> : <AccountView /> },
       { path: 'account', element: !isAuthenticated ? <LoginView /> : <AccountView /> },
-      { path: 'transactions', element: !isAuthenticated ? <LoginView /> : <TransactionListView /> },
-      { path: 'newtransaction', element: !isAuthenticated ? <LoginView /> : <NewTransactionView /> },
+      { path: 'transactions', element: !isAuthenticated ? <LoginView /> : <TransactionListView />  },
+      { path: 'newtransaction/:id', element: !isAuthenticated ? <LoginView /> : <NewTransactionView />  },
       { path: 'dashboard', element: !isAuthenticated ? <LoginView /> : <DashboardView /> },
       { path: 'buyers', element: !isAuthenticated ? <LoginView /> : <BuyerListView /> },
       { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },

@@ -6,6 +6,7 @@ import * as serviceWorker from './serviceWorker';
 import { initSentry } from './libs/errorLib';
 import App from './App';
 import config from './config';
+import { UserProvider } from 'src/components/usercontext.js';
 
 initSentry();
 
@@ -30,9 +31,11 @@ Amplify.configure({
 });
 
 ReactDOM.render((
+  <UserProvider>
   <BrowserRouter>
     <App />
   </BrowserRouter>
+  </UserProvider>
 ), document.getElementById('root'));
 
 serviceWorker.unregister();

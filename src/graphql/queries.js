@@ -1,70 +1,41 @@
 /* eslint-disable */
 // this is an auto generated file. This will be overwritten
 
-export const getCompany = /* GraphQL */ `
-  query GetCompany($sortkey: String!, $userId: String!) {
-    getCompany(sortkey: $sortkey, userId: $userId) {
-      companyId
-      company_address_city
-      company_address_number
-      company_address_postalcode
-      company_address_refinment
-      company_country
-      company_director_appointment_date
-      company_director_country_of_residence
-      company_director_date_of_birth
-      company_director_email
-      company_director_id_attachment
-      company_director_id_expiry_date
-      company_director_id_issue_date
-      company_director_id_issuer_country
-      company_director_id_issuer_state
-      company_director_id_number
-      company_director_id_type
-      company_director_jobtitle
-      company_director_name
-      company_director_nationality
-      company_director_pep_status
-      company_director_phone_number
-      company_director_poa_attachment
-      company_director_ubo_status
-      company_industry
-      company_industry_code
-      company_name
-      company_register_number
-      company_trading_name
-      company_type
-      company_ubo_appointment_date
-      company_ubo_country_of_residence
-      company_ubo_date_of_birth
-      company_ubo_email
-      company_ubo_id_attachment
-      company_ubo_id_expiry_date
-      company_ubo_id_issue_date
-      company_ubo_id_issuer_country
-      company_ubo_id_issuer_state
-      company_ubo_id_number
-      company_ubo_id_type
-      company_ubo_jobtitle
-      company_ubo_name
-      company_ubo_nationality
-      company_ubo_ownership_percentage
-      company_ubo_pep_status
-      company_ubo_phone_number
-      company_ubo_poa_attachment
-      company_website
-      companyaddress_street
+export const getSupplier = /* GraphQL */ `
+  query GetSupplier($sortkey: String!, $userId: String!) {
+    getSupplier(sortkey: $sortkey, userId: $userId) {
+      supplierId
+      supplier_address_city
+      supplier_address_number
+      supplier_address_postalcode
+      supplier_address_refinment
+      supplier_articles_of_association_attachment
+      supplier_shareholder_list_attachment
+      supplier_director_list_attachment
+      supplier_country
+      supplier_industry
+      supplier_industry_code
+      supplier_logo
+      supplier_name
+      supplier_register_number
+      supplier_trading_name
+      supplier_type
+      supplier_website
+      supplier_address_street
       createdAt
-      date_of_incorporation
-      registration_cert_attachment
+      supplier_date_of_incorporation
+      supplier_registration_cert_attachment
       sortkey
       userId
     }
   }
 `;
-export const getCompanyBank = /* GraphQL */ `
-  query GetCompanyBank($sortkey: String!, $userId: String!) {
-    getCompanyBank(sortkey: $sortkey, userId: $userId) {
+export const getBank = /* GraphQL */ `
+  query GetBank($sortkey: String!, $userId: String!) {
+    getBank(sortkey: $sortkey, userId: $userId) {
+      bankId
+      buyerId
+      supplierId
       account_statement_attachment
       balance
       balance_available
@@ -95,9 +66,12 @@ export const getCompanyBank = /* GraphQL */ `
     }
   }
 `;
-export const getCompanyFinancials = /* GraphQL */ `
-  query GetCompanyFinancials($sortkey: String!, $userId: String!) {
-    getCompanyFinancials(sortkey: $sortkey, userId: $userId) {
+export const getFinancials = /* GraphQL */ `
+  query GetFinancials($sortkey: String!, $userId: String!) {
+    getFinancials(sortkey: $sortkey, userId: $userId) {
+      financialsId
+      supplierId
+      buyerId
       accounts_payable
       accounts_receivable
       cash
@@ -105,35 +79,37 @@ export const getCompanyFinancials = /* GraphQL */ `
       ebit
       equity_book_value
       equity_market_value
-      financial_accounts_attachment
-      financialsId
+      financials_attachment
       interest_expenses
       inventory
       net_profit
-      reporting_period
+      financials_rating
+      financials_reporting_period
       retained_earnings
       sales
       short_term_debt
-      sortkey
       total_assets
       total_liabilities
-      userId
       working_capital
+      financials_status
+      userId
+      sortkey
     }
   }
 `;
-export const getCompanyTransaction = /* GraphQL */ `
-  query GetCompanyTransaction($sortkey: String!, $userId: String!) {
-    getCompanyTransaction(sortkey: $sortkey, userId: $userId) {
+export const getTransaction = /* GraphQL */ `
+  query GetTransaction($sortkey: String!, $userId: String!) {
+    getTransaction(sortkey: $sortkey, userId: $userId) {
+      transactionId
+      buyerId
+      supplierId
       authorized_date
       category
-      createdAt
       iso_currency_code
       location
       merchant_name
       payment_channel
       pending
-      pending_transactionId
       recipient_account_name
       recipient_bank_account_number
       recipient_bank_account_sortcode
@@ -158,7 +134,6 @@ export const getCompanyTransaction = /* GraphQL */ `
       sender_bic_swift_code
       sender_iban
       senderaccountId
-      sortkey
       transaction_code
       transaction_date
       transaction_description
@@ -170,112 +145,174 @@ export const getCompanyTransaction = /* GraphQL */ `
       transaction_target_amount
       transaction_target_currency
       userId
+      sortkey
     }
   }
 `;
-export const getProject = /* GraphQL */ `
-  query GetProject($sortkey: String!, $userId: String!) {
-    getProject(sortkey: $sortkey, userId: $userId) {
+export const getBuyer = /* GraphQL */ `
+  query GetBuyer($sortkey: String!, $userId: String!) {
+    getBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
+      supplierId
       buyer_address_city
       buyer_address_number
       buyer_address_postalcode
       buyer_address_refinment
       buyer_address_street
-      buyer_company_name
+      buyer_name
       buyer_country
-      buyer_rating
+      buyer_website
       createdAt
-      currency
-      insurance_name
-      insurance_rating
-      insurance_status
-      loan_amount
-      loan_attachment
-      loan_collateral
-      loan_covenants
-      loan_fees
-      loan_purpose
-      loan_rate
-      loan_type
-      next_year_projected_transaction_amount
-      payment_terms
-      previous_year_transaction_amount
-      projectId
-      purchase_order_amount
-      purchase_order_attachment
-      purchase_order_date
-      reporting_year
-      reporting_year_transaction_amount
-      sales_contract_attachment
-      sold_goods_description
+      buyer_currency
+      buyer_insurance_name
+      buyer_insurance_rating
+      buyer_insurance_status
+      buyer_loan_amount
+      buyer_one_off_ipu_attachment
+      buyer_loan_collateral
+      buyer_loan_covenants
+      buyer_loan_transaction_fee
+      buyer_loan_discount_fee
+      buyer_loan_purpose
+      buyer_loan_rate
+      buyer_loan_type
+      buyer_next_year_projected_transaction_amount
+      buyer_payment_terms
+      buyer_previous_year_transaction_amount
+      buyer_reporting_year
+      buyer_reporting_year_transaction_amount
+      buyer_sample_trading_docs_attachment
+      buyer_sold_goods_description
+      buyer_status
       sortkey
-      title
       userId
     }
   }
 `;
-export const listsCompany = /* GraphQL */ `
-  query ListsCompany(
+export const getDirector = /* GraphQL */ `
+  query GetDirector($sortkey: String!, $userId: String!) {
+    getDirector(sortkey: $sortkey, userId: $userId) {
+      directorId
+      supplierId
+      buyerId
+      director_appointment_date
+      director_country_of_residence
+      director_date_of_birth
+      director_email
+      director_id_attachment
+      director_id_expiry_date
+      director_id_issue_date
+      director_id_issuer_country
+      director_id_issuer_state
+      director_id_number
+      director_id_type
+      director_jobtitle
+      director_name
+      director_nationality
+      director_pep_status
+      director_phone_number
+      director_poa_attachment
+      director_ubo_status
+      createdAt
+      director_status
+      sortkey
+      userId
+    }
+  }
+`;
+export const getUbo = /* GraphQL */ `
+  query GetUbo($sortkey: String!, $userId: String!) {
+    getUBO(sortkey: $sortkey, userId: $userId) {
+      uboId
+      supplierId
+      buyerId
+      ubo_appointment_date
+      ubo_country_of_residence
+      ubo_date_of_birth
+      ubo_email
+      ubo_id_attachment
+      ubo_id_expiry_date
+      ubo_id_issue_date
+      ubo_id_issuer_country
+      ubo_id_issuer_state
+      ubo_id_number
+      ubo_id_type
+      ubo_jobtitle
+      ubo_name
+      ubo_nationality
+      ubo_ownership_percentage
+      ubo_pep_status
+      ubo_phone_number
+      ubo_poa_attachment
+      createdAt
+      ubo_status
+      sortkey
+      userId
+    }
+  }
+`;
+export const getRequest = /* GraphQL */ `
+  query GetRequest($sortkey: String!, $userId: String!) {
+    getRequest(sortkey: $sortkey, userId: $userId) {
+      requestId
+      buyerId
+      supplierId
+      buyer_name
+      purchase_order_amount
+      purchase_order_attachment
+      purchase_order_date
+      sold_goods_description
+      invoice_amount
+      invoice_currency
+      invoice_date
+      invoice_due_date
+      invoice_attachment
+      offer_notice_attachment
+      ipu_attachment
+      cargo_insurance_name
+      cargo_insurance_attachment
+      bill_of_lading_no
+      bill_of_lading_attachment
+      container_no
+      packing_list_attachment
+      createdAt
+      request_status
+      sortkey
+      userId
+    }
+  }
+`;
+export const listsDirector = /* GraphQL */ `
+  query ListsDirector(
     $filter: TableFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listsCompany(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listsDirector(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
-        companyId
-        company_address_city
-        company_address_number
-        company_address_postalcode
-        company_address_refinment
-        company_country
-        company_director_appointment_date
-        company_director_country_of_residence
-        company_director_date_of_birth
-        company_director_email
-        company_director_id_attachment
-        company_director_id_expiry_date
-        company_director_id_issue_date
-        company_director_id_issuer_country
-        company_director_id_issuer_state
-        company_director_id_number
-        company_director_id_type
-        company_director_jobtitle
-        company_director_name
-        company_director_nationality
-        company_director_pep_status
-        company_director_phone_number
-        company_director_poa_attachment
-        company_director_ubo_status
-        company_industry
-        company_industry_code
-        company_name
-        company_register_number
-        company_trading_name
-        company_type
-        company_ubo_appointment_date
-        company_ubo_country_of_residence
-        company_ubo_date_of_birth
-        company_ubo_email
-        company_ubo_id_attachment
-        company_ubo_id_expiry_date
-        company_ubo_id_issue_date
-        company_ubo_id_issuer_country
-        company_ubo_id_issuer_state
-        company_ubo_id_number
-        company_ubo_id_type
-        company_ubo_jobtitle
-        company_ubo_name
-        company_ubo_nationality
-        company_ubo_ownership_percentage
-        company_ubo_pep_status
-        company_ubo_phone_number
-        company_ubo_poa_attachment
-        company_website
-        companyaddress_street
+        directorId
+        supplierId
+        buyerId
+        director_appointment_date
+        director_country_of_residence
+        director_date_of_birth
+        director_email
+        director_id_attachment
+        director_id_expiry_date
+        director_id_issue_date
+        director_id_issuer_country
+        director_id_issuer_state
+        director_id_number
+        director_id_type
+        director_jobtitle
+        director_name
+        director_nationality
+        director_pep_status
+        director_phone_number
+        director_poa_attachment
+        director_ubo_status
         createdAt
-        date_of_incorporation
-        registration_cert_attachment
+        director_status
         sortkey
         userId
       }
@@ -283,14 +320,121 @@ export const listsCompany = /* GraphQL */ `
     }
   }
 `;
-export const listsCompanyBank = /* GraphQL */ `
-  query ListsCompanyBank(
+export const listsUbo = /* GraphQL */ `
+  query ListsUbo($filter: TableFilterInput, $limit: Int, $nextToken: String) {
+    listsUBO(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        uboId
+        supplierId
+        buyerId
+        ubo_appointment_date
+        ubo_country_of_residence
+        ubo_date_of_birth
+        ubo_email
+        ubo_id_attachment
+        ubo_id_expiry_date
+        ubo_id_issue_date
+        ubo_id_issuer_country
+        ubo_id_issuer_state
+        ubo_id_number
+        ubo_id_type
+        ubo_jobtitle
+        ubo_name
+        ubo_nationality
+        ubo_ownership_percentage
+        ubo_pep_status
+        ubo_phone_number
+        ubo_poa_attachment
+        createdAt
+        ubo_status
+        sortkey
+        userId
+      }
+      nextToken
+    }
+  }
+`;
+export const listsRequest = /* GraphQL */ `
+  query ListsRequest(
     $filter: TableFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listsCompanyBank(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    listsRequest(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        requestId
+        buyerId
+        supplierId
+        buyer_name
+        purchase_order_amount
+        purchase_order_attachment
+        purchase_order_date
+        sold_goods_description
+        invoice_amount
+        invoice_currency
+        invoice_date
+        invoice_due_date
+        invoice_attachment
+        offer_notice_attachment
+        ipu_attachment
+        cargo_insurance_name
+        cargo_insurance_attachment
+        bill_of_lading_no
+        bill_of_lading_attachment
+        container_no
+        packing_list_attachment
+        createdAt
+        request_status
+        sortkey
+        userId
+      }
+      nextToken
+    }
+  }
+`;
+export const listsSupplier = /* GraphQL */ `
+  query ListsSupplier(
+    $filter: TableFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listsSupplier(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        supplierId
+        supplier_address_city
+        supplier_address_number
+        supplier_address_postalcode
+        supplier_address_refinment
+        supplier_articles_of_association_attachment
+        supplier_shareholder_list_attachment
+        supplier_director_list_attachment
+        supplier_country
+        supplier_industry
+        supplier_industry_code
+        supplier_logo
+        supplier_name
+        supplier_register_number
+        supplier_trading_name
+        supplier_type
+        supplier_website
+        supplier_address_street
+        createdAt
+        supplier_date_of_incorporation
+        supplier_registration_cert_attachment
+        sortkey
+        userId
+      }
+      nextToken
+    }
+  }
+`;
+export const listsBank = /* GraphQL */ `
+  query ListsBank($filter: TableFilterInput, $limit: Int, $nextToken: String) {
+    listsBank(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        bankId
+        buyerId
+        supplierId
         account_statement_attachment
         balance
         balance_available
@@ -323,18 +467,17 @@ export const listsCompanyBank = /* GraphQL */ `
     }
   }
 `;
-export const listsCompanyFinancials = /* GraphQL */ `
-  query ListsCompanyFinancials(
+export const listsFinancials = /* GraphQL */ `
+  query ListsFinancials(
     $filter: TableFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listsCompanyFinancials(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listsFinancials(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        financialsId
+        supplierId
+        buyerId
         accounts_payable
         accounts_receivable
         cash
@@ -342,46 +485,44 @@ export const listsCompanyFinancials = /* GraphQL */ `
         ebit
         equity_book_value
         equity_market_value
-        financial_accounts_attachment
-        financialsId
+        financials_attachment
         interest_expenses
         inventory
         net_profit
-        reporting_period
+        financials_rating
+        financials_reporting_period
         retained_earnings
         sales
         short_term_debt
-        sortkey
         total_assets
         total_liabilities
-        userId
         working_capital
+        financials_status
+        userId
+        sortkey
       }
       nextToken
     }
   }
 `;
-export const listsCompanyTransaction = /* GraphQL */ `
-  query ListsCompanyTransaction(
+export const listsTransaction = /* GraphQL */ `
+  query ListsTransaction(
     $filter: TableFilterInput
     $limit: Int
     $nextToken: String
   ) {
-    listsCompanyTransaction(
-      filter: $filter
-      limit: $limit
-      nextToken: $nextToken
-    ) {
+    listsTransaction(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
+        transactionId
+        buyerId
+        supplierId
         authorized_date
         category
-        createdAt
         iso_currency_code
         location
         merchant_name
         payment_channel
         pending
-        pending_transactionId
         recipient_account_name
         recipient_bank_account_number
         recipient_bank_account_sortcode
@@ -406,7 +547,6 @@ export const listsCompanyTransaction = /* GraphQL */ `
         sender_bic_swift_code
         sender_iban
         senderaccountId
-        sortkey
         transaction_code
         transaction_date
         transaction_description
@@ -418,54 +558,49 @@ export const listsCompanyTransaction = /* GraphQL */ `
         transaction_target_amount
         transaction_target_currency
         userId
+        sortkey
       }
       nextToken
     }
   }
 `;
-export const listsProject = /* GraphQL */ `
-  query ListsProject(
-    $filter: TableFilterInput
-    $limit: Int
-    $nextToken: String
-  ) {
-    listsProject(filter: $filter, limit: $limit, nextToken: $nextToken) {
+export const listsBuyer = /* GraphQL */ `
+  query ListsBuyer($filter: TableFilterInput, $limit: Int, $nextToken: String) {
+    listsBuyer(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         buyerId
+        supplierId
         buyer_address_city
         buyer_address_number
         buyer_address_postalcode
         buyer_address_refinment
         buyer_address_street
-        buyer_company_name
+        buyer_name
         buyer_country
-        buyer_rating
+        buyer_website
         createdAt
-        currency
-        insurance_name
-        insurance_rating
-        insurance_status
-        loan_amount
-        loan_attachment
-        loan_collateral
-        loan_covenants
-        loan_fees
-        loan_purpose
-        loan_rate
-        loan_type
-        next_year_projected_transaction_amount
-        payment_terms
-        previous_year_transaction_amount
-        projectId
-        purchase_order_amount
-        purchase_order_attachment
-        purchase_order_date
-        reporting_year
-        reporting_year_transaction_amount
-        sales_contract_attachment
-        sold_goods_description
+        buyer_currency
+        buyer_insurance_name
+        buyer_insurance_rating
+        buyer_insurance_status
+        buyer_loan_amount
+        buyer_one_off_ipu_attachment
+        buyer_loan_collateral
+        buyer_loan_covenants
+        buyer_loan_transaction_fee
+        buyer_loan_discount_fee
+        buyer_loan_purpose
+        buyer_loan_rate
+        buyer_loan_type
+        buyer_next_year_projected_transaction_amount
+        buyer_payment_terms
+        buyer_previous_year_transaction_amount
+        buyer_reporting_year
+        buyer_reporting_year_transaction_amount
+        buyer_sample_trading_docs_attachment
+        buyer_sold_goods_description
+        buyer_status
         sortkey
-        title
         userId
       }
       nextToken

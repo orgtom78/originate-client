@@ -1,36 +1,30 @@
-import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import { Auth } from "aws-amplify";
 import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
-  Button,
   Divider,
   Drawer,
   Hidden,
+  Button,
   List,
   Typography,
   makeStyles
 } from '@material-ui/core';
 import {
-  AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
-  Lock as LockIcon,
   Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
-  Users as UsersIcon,
+  LogOut as LogoutIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon
 } from 'react-feather';
 import NavItem from './NavItem';
-
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith'
-};
+import { Storage } from "aws-amplify";
+import { useUser } from "src/components/usercontext.js";
 
 const items = [
   {
@@ -49,14 +43,9 @@ const items = [
     title: 'New Buyer'
   },
   {
-    href: '/app/products',
-    icon: UsersIcon,
-    title: 'Approved Buyers'
-  },
-  {
-    href: '/app/newtransaction',
+    href: '/app/buyers',
     icon: DollarSignIcon,
-    title: 'Payout request'
+    title: 'Payout Request'
   },
   {
     href: '/app/transactions',
@@ -67,7 +56,7 @@ const items = [
     href: '/app/settings',
     icon: SettingsIcon,
     title: 'Settings'
-  }
+  },
 ];
 
 const useStyles = makeStyles(() => ({
@@ -89,6 +78,15 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const navigate = useNavigate();
+  const [isAuthenticated, userHasAuthenticated] = useState();
+
+  async function handleLogout() {
+    await Auth.signOut();
+    userHasAuthenticated(false);
+    navigate('/');
+    window.location.reload(true);
+  }
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -96,6 +94,34 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
+
+  const [avatar, setAvatar] = useState("");
+  const [supplier_name, setSupplier_name] = useState("");
+  const [supplier_country, setSupplier_country] = useState("");
+  const [supplier_industry, setSupplier_industry] = useState("");
+  const [supplier_logo, setSupplier_logo] = useState("");
+  const context = useUser();
+
+  React.useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const {
+        supplier_name,
+        supplier_country,
+        supplier_industry,
+        supplier_logo,
+      } = data;
+      setSupplier_name(supplier_name);
+      setSupplier_country(supplier_country);
+      setSupplier_industry(supplier_industry);
+      setSupplier_logo(supplier_logo);
+      const z = await Storage.vault.get(supplier_logo);
+      setAvatar(z);
+    }
+    onLoad();
+  }, [context]);
+
 
   const content = (
     <Box
@@ -112,7 +138,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         <Avatar
           className={classes.avatar}
           component={RouterLink}
-          src={user.avatar}
+          src={avatar}
           to="/app/account"
         />
         <Typography
@@ -120,13 +146,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           color="textPrimary"
           variant="h5"
         >
-          {user.name}
+          {supplier_name}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {user.jobTitle}
+          {supplier_country}
         </Typography>
       </Box>
       <Divider />

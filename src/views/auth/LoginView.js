@@ -31,8 +31,6 @@ export default function LoginView(){
   const [isAuthenticated, userHasAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  console.log(isAuthenticated);
-
   return (
     <Page
       className={classes.root}
@@ -86,7 +84,7 @@ export default function LoginView(){
                     gutterBottom
                     variant="body2"
                   >
-                    Sign in on the internal platform
+                    Sign in and manage your credit limits 
                   </Typography>
                 </Box>
                 <Grid

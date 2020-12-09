@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ className, product, ...rest }) => {
+const ProductCard = ({ className, buyer, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -43,8 +43,8 @@ const ProductCard = ({ className, product, ...rest }) => {
           mb={3}
         >
           <Avatar
-            alt="Product"
-            src={product.media}
+            alt="Buyer"
+            src={buyer.media}
             variant="square"
           />
         </Box>
@@ -54,14 +54,14 @@ const ProductCard = ({ className, product, ...rest }) => {
           gutterBottom
           variant="h4"
         >
-          {product.title}
+          {buyer.title}
         </Typography>
         <Typography
           align="center"
           color="textPrimary"
           variant="body1"
         >
-          {product.description}
+          {buyer.description}
         </Typography>
       </CardContent>
       <Box flexGrow={1} />
@@ -101,7 +101,7 @@ const ProductCard = ({ className, product, ...rest }) => {
               display="inline"
               variant="body2"
             >
-              {product.totalDownloads}
+              {buyer.totalDownloads}
               {' '}
               Downloads
             </Typography>

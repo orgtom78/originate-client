@@ -271,7 +271,7 @@ function renderForm(){
                     name="ConfirmationCode"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    type='hidden'
+                    type='tel'
                     value={values.ConfirmationCode}
                     variant="outlined" 
                   />

@@ -1,107 +1,175 @@
-import React, { useState } from 'react';
-import clsx from 'clsx';
-import moment from 'moment';
+import React, { useState, useEffect, useRef } from "react";
+import clsx from "clsx";
 import {
   Avatar,
   Box,
-  Button,
   Card,
   CardActions,
   CardContent,
   Divider,
   Typography,
-  makeStyles
-} from '@material-ui/core';
+  makeStyles,
+} from "@material-ui/core";
 import { API, graphqlOperation } from "aws-amplify";
-import * as queries from 'src/graphql/queries.js';
+import { useUser } from "src/components/usercontext.js";
+import { onError } from "src/libs/errorLib.js";
+import * as mutations from "src/graphql/mutations.js";
+import { Storage } from "aws-amplify";
+import LoaderButton from "src/components/LoaderButton.js";
+import { s3Upload } from "src/libs/awsLib.js";
 
-export  default  function Profile({ className, ...rest }){
-const [company_name, setCompany_name] = useState('');
-const [company_address_city, setCompany_address_city] = useState('');
-const [company_avatar, setCompany_avatar] = useState('');
-const [company_timezone, setCompany_timezone] = useState('');
-const [company_country, setCompany_country] = useState('');
-const [company_industry, setCompany_industry] = useState('')
+const useStyles = makeStyles(() => ({
+  root: {},
+  avatar: {
+    height: 100,
+    width: 100,
+  },
+}));
 
-  const useStyles = makeStyles(() => ({
-    root: {},
-    avatar: {
-      height: 100,
-      width: 100
+
+export default function Profile({ className, ...rest }) {
+  const classes = useStyles();
+  const [avatar, setAvatar] = useState("");
+  const [supplierId, setSupplierId] = useState("");
+  const [supplier_name, setSupplier_name] = useState("");
+  const [supplier_address_city, setSupplier_address_city] = useState("");
+  const [supplier_country, setSupplier_country] = useState("");
+  const [supplier_industry, setSupplier_industry] = useState("");
+  const [supplier_logo, setSupplier_logo] = useState("");
+  const [sub, setSub] = useState("");
+  const context = useUser();
+
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [uploadedFile, setUploadedFile] = useState("");
+  const file = useRef(null);
+
+  React.useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const {
+        sub,
+        supplierId,
+        supplier_logo,
+        supplier_name,
+        supplier_address_city,
+        supplier_country,
+        supplier_industry,
+      } = data;
+      setSub(sub);
+      setSupplierId(supplierId);
+      setSupplier_name(supplier_name);
+      setSupplier_address_city(supplier_address_city);
+      setSupplier_country(supplier_country);
+      setSupplier_industry(supplier_industry);
+      setSupplier_logo(supplier_logo);
+      const z = await Storage.vault.get(supplier_logo);
+      setAvatar(z);
     }
-  }));
-  const classes = useStyles()
+    onLoad();
+  }, [context]);
 
-  async function user() {
-  const user = await loadCompany()
-  const city = user.company_address_city
-  const country = user.company_country
-  const industry = user.company_industry
-  const name = user.company_name
-  const avatar = 'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'
-  const timezone = 'GTM-7'
-  setCompany_name(name)
-  setCompany_address_city(city)
-  setCompany_country(country)
-  setCompany_industry(industry)
-  setCompany_timezone(timezone)
-  setCompany_avatar(avatar)
- }user();
+  const city = supplier_address_city;
+  const country = supplier_country;
+  const industry = supplier_industry;
+  const name = supplier_name;
 
- async function loadCompany() {
-  let filter = { userId: {eq:'dcd44927-2efd-4fc0-b955-0c676d04f738'}};
-    const { data: { listsCompany: { items: itemsPage1, nextToken } } } = await API.graphql(graphqlOperation(queries.listsCompany, { filter: filter }));
-    const n  = { data: { listsCompany: { items: itemsPage1, nextToken }}};
-    const company = n.data.listsCompany.items[0]
-    return company
+  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
+
+  useEffect(() => {
+    if (uploadedFile) {
+      async function geturl() {
+        const u = await Storage.vault.get(uploadedFile);
+        setSupplier_logo(uploadedFile);
+        setAvatar(u);
+      }
+      geturl();
+    }
+  }, [uploadedFile]);
+
+  function handleFileChange(event) {
+    file.current = event.target.files[0];
+    const a = file.current;
+    if(a){
+    deleteold();
+    handleLogoSubmit(a);
+  }
+  }
+
+  async function deleteold() {
+    await Storage.vault.remove(supplier_logo);
+  }
+
+  async function handleLogoSubmit(a) {
+    setSuccess(false);
+    setLoading(true);
+    try {
+      const u = a ? await s3Upload(a) : null;
+      setUploadedFile(u);
+      var supplier_logo = u;
+      const userId = sub;
+      const sortkey = supplierId;
+      await updateSupplier({
+        userId,
+        sortkey,
+        supplier_logo,
+      });
+    } catch (e) {
+      onError(e);
+    }
+    setSuccess(true);
+    setLoading(false);
+  }
+
+  function updateSupplier(input) {
+    return API.graphql(
+      graphqlOperation(mutations.updateSupplier, { input: input })
+    );
   }
 
   return (
-    <Card
-    className={clsx(classes.root, className)}
-    {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Box
-          alignItems="center"
-          display="flex"
-          flexDirection="column"
-        >
-          <Avatar
-            className={classes.avatar}
-            src={company_avatar}
-          />
-          <Typography
-            color="textPrimary"
-            gutterBottom
-            variant="h3"
-          >
-            {company_name}
+        <Box alignItems="center" display="flex" flexDirection="column">
+          <Avatar className={classes.avatar} src={avatar} />
+          <Typography color="textPrimary" gutterBottom variant="h3">
+            {name}
           </Typography>
-          <Typography
-            color="textSecondary"
-            variant="body1"
-          >
-            {`${company_address_city} ${company_country}`}
+          <Typography color="textSecondary" variant="body1">
+            {`${city} ${country}`}
           </Typography>
-          <Typography
-            className={classes.dateText}
-            color="textSecondary"
-            variant="body1"
-          >
-            {`${moment().format('hh:mm A')} ${company_timezone}`}
+          <Typography color="textSecondary" variant="body1">
+            {`${industry}`}
           </Typography>
         </Box>
       </CardContent>
       <Divider />
-      <CardActions>
-        <Button
-          color="primary"
-          fullWidth
-          variant="text"
-        >
-          Upload company logo
-        </Button>
+      <CardActions style={{ width: '100%', justifyContent: 'center'}}>
+      <Box>
+        <input
+          id="supplier_logo"
+          accept="image/*"
+          style={{ display: "none" }}
+          type="file"
+          onChange={handleFileChange}
+        />
+        <label htmlFor="supplier_logo">
+          <LoaderButton
+            id="supplier_logo"
+            color="primary"
+            variant="text"
+            fullWidth
+            component="span"
+            disabled={loading}
+            success={success}
+            loading={loading}
+          >
+            {" "}
+            Update Company Logo
+          </LoaderButton>
+        </label>
+        </Box>
       </CardActions>
     </Card>
   );

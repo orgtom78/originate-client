@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState} from 'react';
 import {
   Button,
   CircularProgress,
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import { Auth,  API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from 'uuid';
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from 'src/graphql/mutations.js';
@@ -23,7 +23,7 @@ import ShareholderForm from './Forms/ShareholderForm';
 import FinancialsForm from './Forms/FinancialsForm';
 
 import validationSchema from './FormModel/validationSchema';
-import NewAccountFormModel from './FormModel/NewAccountFormModel';
+import NewSupplierFormModel from './FormModel/NewSupplierFormModel';
 import formInitialValues from './FormModel/formInitialValues';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const steps = ['Company details', 'Shareholder details', 'Financial details'];
-const { formId, formField } = NewAccountFormModel;
+const { formId, formField } = NewSupplierFormModel;
 
 function getStepContent(step) {
   switch (step) {
@@ -51,7 +51,7 @@ function getStepContent(step) {
   }
 }
 
-export default function NewAccount() {
+export default function NewSupplier() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -65,42 +65,148 @@ export default function NewAccount() {
 
   async function _submitForm(values, actions) {
     await _sleep(1000);
-    alert(JSON.stringify(values, null, 2));
     try {
       let user = await Auth.currentAuthenticatedUser();
       const { attributes = {} } = user;
       const userId = attributes['sub'];
-      console.log(userId);
-      const companyId = uuid();
-      const company_name = values['company_name'];
-      const company_address_city = values['company_address_city'];
-      const company_address_postalcode = values['company_address_postalcode'];
-      const company_country = values['company_country'];
-      const company_industry = values['company_industry'];
-      const date_of_incorporation = values['date_of_incorporation'];
-      const registration_cert_attachment = values['registration_cert_attachment'];
+      const a = uuid();
+      const supplierId = 'supplier-'+a;
+      const supplier_logo = values['supplier_logo'];
+      const supplier_name = values['supplier_name'];
+      const supplier_type = values['supplier_type'];
+      const supplier_address_city = values['supplier_address_city'];
+      const supplier_address_street = values['supplier_address_street'];
+      const supplier_address_postalcode = values['supplier_address_postalcode'];
+      const supplier_country = values['supplier_country'];
+      const supplier_industry = values['supplier_industry'];
+      const supplier_date_of_incorporation = values['supplier_date_of_incorporation'];
+      const supplier_registration_cert_attachment = values['supplier_registration_cert_attachment'];
 
-      await createCompany({
+      const b = uuid()
+      const directorId = 'director-'+b;
+      const director_name = values['director_name'];
+      const director_email = values['director_email'];
+      const director_phone_number = values['director_phone_number'];
+      const director_id_attachment = values['director_id_attachment'];
+      const director_id_number = values['director_id_number'];
+      const director_id_type = values['director_id_type'];
+      const director_nationality = values['director_nationality'];
+      const director_poa_attachment = values['director_poa_attachment'];
+      const director_country_of_residence = values['director_country_of_residence'];
+      const director_status = 'under review';
+
+      const c =  uuid();
+      const uboId = 'ubo-'+c;
+      const ubo_name = values['ubo_name'];
+      const ubo_email = values['ubo_email'];
+      const ubo_phone_number = values['ubo_phone_number'];
+      const ubo_id_attachment = values['ubo_id_attachment'];
+      const ubo_id_number = values['ubo_id_number'];
+      const ubo_id_type = values['ubo_id_type'];
+      const ubo_nationality = values['ubo_nationality'];
+      const ubo_poa_attachment = values['ubo_poa_attachment'];
+      const ubo_country_of_residence = values['ubo_country_of_residence'];
+      const ubo_status = 'under review';
+      
+      const d = uuid();
+      const financialsId = 'financials-'+d;
+      const financials_attachment = values['financial_accounts_attachment'];
+      const financials_reporting_period = values['financials_reporting_period'];
+      const net_profit = values['net_profit'];
+      const financials_rating = values['financials_rating'];
+      const sales = values['sales'];
+      const total_assets = values['total_assets'];
+      const total_liabilities = values['total_liabilities'];
+      const ebit = values['ebit'];
+      const financials_status = 'under review';
+      
+      await createSupplier({
         userId,
-        companyId,
-        company_name,
-        company_address_city,
-        company_address_postalcode,
-        company_country,
-        company_industry,
-        date_of_incorporation,
-        registration_cert_attachment
+        supplierId,
+        supplier_logo,
+        supplier_name,
+        supplier_type,
+        supplier_date_of_incorporation,
+        supplier_address_city,
+        supplier_address_street,
+        supplier_address_postalcode,
+        supplier_country,
+        supplier_industry,
+        supplier_registration_cert_attachment,
+      });
+      
+      await createDirector({
+        userId,
+        directorId,
+        director_name,
+        director_email,
+        director_phone_number, 
+        director_id_attachment, 
+        director_id_type, 
+        director_nationality,
+        director_poa_attachment, 
+        director_country_of_residence,
+        director_status,
       }); 
+
+      await createUbo({
+        userId,
+        uboId,
+        ubo_name,
+        ubo_email,
+        ubo_phone_number, 
+        ubo_id_attachment, 
+        ubo_id_type, 
+        ubo_nationality,
+        ubo_poa_attachment, 
+        ubo_country_of_residence,
+        ubo_status,
+      }); 
+
+      await createFinancials({
+        userId,
+        financialsId,
+        supplierId,
+        ebit,
+        financials_attachment,
+        net_profit,
+        financials_rating,
+        financials_reporting_period,
+        sales,
+        total_assets,
+        total_liabilities,
+        financials_status
+      }); 
+      
+      window.location.reload(true);
+
     } catch (e) {
       onError(e);
     }
-
     actions.setSubmitting(false);
     setActiveStep(activeStep + 1);
   }
 
-  function createCompany(input) {
-    return API.graphql(graphqlOperation(mutations.createCompany,
+  function createSupplier(input) {
+    return API.graphql(graphqlOperation(mutations.createSupplier,
+      {input: input}
+    ))
+  };
+
+  function createDirector(input) {
+    return API.graphql(graphqlOperation(mutations.createDirector,
+      {input: input}
+    ))
+  };
+
+  function createUbo(input) {
+    return API.graphql(graphqlOperation(mutations.createUbo,
+      {input: input}
+    ))
+  };
+
+  function createFinancials(input) {
+    return API.graphql(graphqlOperation(mutations.createFinancials,
       {input: input}
     ))
   };
@@ -108,8 +214,6 @@ export default function NewAccount() {
   function _handleSubmit(values, actions) {
     if (isLastStep) {
       _submitForm(values, actions);
-      console.log(values);
-      console.log(actions)
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});
@@ -121,12 +225,10 @@ export default function NewAccount() {
     setActiveStep(activeStep - 1);
   }
 
-  console.log(_handleSubmit);
-
   return (
     <Page
     className={classes.root}
-    title="NewAccount"
+    title="Create your Account"
   >
     <Container maxWidth="lg">
     <React.Fragment>
