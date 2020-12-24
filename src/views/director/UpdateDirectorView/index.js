@@ -367,7 +367,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectoridSuccess(true);
     setDirectoridLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   useEffect(() => {
@@ -534,7 +534,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectorpoaSuccess(true);
     setDirectorpoaLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   return (

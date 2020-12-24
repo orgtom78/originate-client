@@ -1,14 +1,10 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
@@ -35,13 +31,14 @@ const Toolbar = ({ className, ...rest }) => {
         display="flex"
         justifyContent="flex-end"
       >
+        <Link to={`/app/newbuyer/`}>
         <Button
           color="primary"
           variant="contained"
-          href="/app/newbuyer"
         >
           Add Buyer
         </Button>
+        </Link>
       </Box>
     </div>
   );

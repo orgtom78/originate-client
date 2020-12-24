@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "date-fns";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -90,6 +91,7 @@ const type = [
 
 const SupplierForm = ({ className, ...rest }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -198,7 +200,7 @@ const SupplierForm = ({ className, ...rest }) => {
     }
     setSupplierSuccess(true);
     setSupplierLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
 
@@ -211,7 +213,6 @@ const SupplierForm = ({ className, ...rest }) => {
       await updateFinancials({
         userId,
         sortkey,
-        financialsId,
         ebit,
         financials_attachment,
         net_profit,
@@ -226,7 +227,7 @@ const SupplierForm = ({ className, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   function updateSupplier(input) {

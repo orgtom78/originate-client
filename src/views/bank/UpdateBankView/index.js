@@ -186,7 +186,6 @@ const UpdateBankForm = ({ className, ...rest }) => {
     setBankSuccess(true);
     setBankLoading(false);
     navigate("/app/account");
-    window.location.reload(true);
   }
 
   function updateBank(input) {
@@ -365,7 +364,7 @@ const UpdateBankForm = ({ className, ...rest }) => {
     }
     setAccountSuccess(true);
     setAccountLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
 

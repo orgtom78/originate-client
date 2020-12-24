@@ -1,4 +1,5 @@
 import React, { useState,  useCallback, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -7,7 +8,6 @@ import {
   Chip,
   Container,
   Checkbox,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -219,7 +219,7 @@ const DirectorListView = () => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Link href={`/app/updatedirector/${director.directorId}`}>
+                      <Link to={`/app/updatedirector/${director.directorId}`}>
                       <Avatar
                         className={classes.avatar}
                         src={director.avatarUrl}

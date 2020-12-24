@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import "date-fns";
 import {
   Accordion,
@@ -54,6 +55,7 @@ const useStyles = makeStyles(() => ({
 
 function SupplierUploads() {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [sub, setSub] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [directorId, setDirectorId] = useState("");
@@ -280,7 +282,7 @@ function SupplierUploads() {
     }
     setRegcertSuccess(true);
     setRegcertLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   useEffect(() => {
@@ -441,7 +443,7 @@ function SupplierUploads() {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   return (

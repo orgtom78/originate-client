@@ -354,7 +354,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
     setUboidSuccess(true);
     setUboidLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");
   }
 
   useEffect(() => {
@@ -515,7 +515,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
     setUbopoaSuccess(true);
     setUbopoaLoading(false);
-    window.location.reload(true);
+    navigate("/app/account");;
   }
 
   return (

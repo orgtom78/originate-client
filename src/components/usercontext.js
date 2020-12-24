@@ -187,8 +187,6 @@ export const UserProvider = ({ children }) => {
         var h = g.replaceAll('}' , '"}');
         var i = h.replaceAll('{' , '{"');
         var j = i.replace(/\s/g, '');
-        var obj = JSON.parse(j);
-        const y = obj.label;
 
         setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
@@ -201,7 +199,7 @@ export const UserProvider = ({ children }) => {
         setSupplier_website(supplier_website);
         setSupplier_address_postalcode(supplier_address_postalcode);
         setSupplier_country(z);
-        setSupplier_industry(y);
+        setSupplier_industry(j);
         setSupplier_registration_cert_attachment(supplier_registration_cert_attachment);
         setSupplier_articles_of_association_attachment(supplier_articles_of_association_attachment);
         setSupplier_director_list_attachment(supplier_director_list_attachment);
