@@ -26,34 +26,6 @@ const useStyles = makeStyles((theme) => ({
 const Dashboard = () => {
   const classes = useStyles();
 
-
-  /*
-var AWS = require('aws-sdk');
-
-function getUsers(){
-var params = {
-  UserPoolId: 'us-east-2_5NVnP7Wpx',
-  Limit: '60',
-};
-
-return new Promise((resolve, reject) => {
-  AWS.config.update({ region: 'us-east-2', 'accessKeyId': 'AKIAYWUJXSYAMBKJYX6T', 'secretAccessKey': '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' });
-    var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
-    cognitoidentityserviceprovider.listUsers(params, (err, data) => {
-        if (err) {
-            console.log(err);
-            reject(err)
-        }
-        else {
-            console.log("data", data);
-            resolve(data)
-        }
-    })
-});
-} console.log(getUsers())
-*/
-
-
   return (
     <Page
       className={classes.root}
