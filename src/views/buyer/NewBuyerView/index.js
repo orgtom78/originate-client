@@ -16,6 +16,7 @@ import { v4 as uuid } from 'uuid';
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from 'src/graphql/mutations.js';
 import { useUser } from "src/components/usercontext.js";
+import NewSupplierView from 'src/views/supplier/NewSupplierView';
 
 import Page from 'src/components/Page';
 
@@ -58,7 +59,8 @@ export default function NewAccount() {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const [sub, setSub] = useState("");
-  const [supid, setSupid] = useState("");
+  const [supid, setIdentityId] = useState("");
+  const [identityId, setSupid] = useState("");
   const context = useUser();
 
   const isLastStep = activeStep === steps.length - 1;
@@ -69,10 +71,12 @@ export default function NewAccount() {
       const data = await context;
       const {
         sub,
-        supplierId
+        supplierId,
+        identity,
       } = data;
       setSub(sub)
       setSupid(supplierId);
+      setIdentityId(identity)
     }
     onLoad();
   }, [context]);
@@ -98,7 +102,7 @@ export default function NewAccount() {
       const buyer_country = values['buyer_country'];
       const buyer_website = values['buyer_website'];
       const buyer_currency = values['buyer_currency'];
-      const buyer_loan_amount = values['buyer_loan_amount'];
+      const buyer_loan_request_amount = values['buyer_loan_request_amount'];
       const buyer_payment_terms = values['buyer_payment_terms'];
       const buyer_sample_trading_docs_attachment = values['buyer_sales_contract_attachment'];
       const buyer_sold_goods_description = values['buyer_sold_goods_description'];
@@ -112,7 +116,7 @@ export default function NewAccount() {
       const total_assets = values['total_assets'];
       const m = uuid();
       const financialsId  = 'financials-buyer'+m;
-      const financials_status = 'under review';
+      const financials_status = 'Under Review';
 
       const buyer_insurance_name = values['buyer_insurance_name'];
       const buyer_one_off_ipu_attachment = values['buyer_one_off_ipu_attachment'];
@@ -120,21 +124,23 @@ export default function NewAccount() {
       const buyer_previous_year_transaction_amount = values['buyer_previous_year_transaction_amount'];
       const buyer_reporting_year = values['buyer_reporting_year'];
       const buyer_reporting_year_transaction_amount = values['buyer_reporting_year_transaction_amount'];
-      const buyer_status = 'under review'
+      const buyer_previous_year_number_invoices = values['buyer_previous_year_number_invoices'];
+      const buyer_status = 'Under Review'
 
       await createBuyer({
         userId,
         buyerId,
         supplierId,
+        identityId,
         buyer_address_city,	
-        buyer_address_number,
         buyer_address_postalcode,
         buyer_address_street,
+        buyer_address_number,
         buyer_name,
         buyer_country,
         buyer_website,
         buyer_currency,
-        buyer_loan_amount,
+        buyer_loan_request_amount,
         buyer_payment_terms,
         buyer_sample_trading_docs_attachment,
         buyer_sold_goods_description,
@@ -144,13 +150,15 @@ export default function NewAccount() {
         buyer_previous_year_transaction_amount,
         buyer_reporting_year,
         buyer_reporting_year_transaction_amount,
-        buyer_status,
+        buyer_previous_year_number_invoices,
+        buyer_status
       });
 
       await createFinancials({
         userId,
         financialsId,
-        supplierId,
+        identityId,
+        buyerId,
         ebit,
         financials_attachment,
         net_profit,
@@ -194,6 +202,8 @@ export default function NewAccount() {
   }
 
   return (
+    <React.Fragment>
+    {supid ? (
     <Page
     className={classes.root}
     title="New Credit Limits"
@@ -256,5 +266,11 @@ export default function NewAccount() {
     </React.Fragment>
     </Container>
     </Page>
-  );
+    ) : (
+        <>
+        <NewSupplierView />
+        </>
+      )}
+      </React.Fragment>
+    );
 }

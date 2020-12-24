@@ -1,8 +1,8 @@
 export default {
   formId: 'NewBuyer',
   formField: {
-    buyer_loan_amount: {
-      name: 'buyer_loan_amount',
+    buyer_loan_request_amount: {
+      name: 'buyer_loan_request_amount',
       label: 'Desired Loan Amount*',
       requiredErrorMsg: 'Loan Amount is required'
     },
@@ -59,6 +59,7 @@ export default {
     },
     buyer_sample_trading_docs_attachment: {
       name: 'buyer_sample_trading_docs_attachment',
+      requiredErrorMsg: 'Sample Trading Documents are required',
     },
     buyer_insurance_name: {
       name: 'buyer_insurance_name',
@@ -88,6 +89,11 @@ export default {
       name: 'buyer_reporting_year_transaction_amount',
       label: 'Reporting Year Invoicing Amount*',
       requiredErrorMsg: 'Invoicing Amount is required',
+    },
+    buyer_previous_year_number_invoices: {
+      name: 'buyer_previous_year_number_invoices',
+      label: 'Previous Year Number of Invoices issued*',
+      requiredErrorMsg: 'The Number of Invoices issued in the previous year is required',
     },
     ebit: {
       name: 'ebit',
@@ -123,11 +129,6 @@ export default {
       name: 'total_assets',
       label: 'Total Assets',
       requiredErrorMsg: 'Total Assets is required',
-    },
-    total_liabilities: {
-      name: 'total_liabilities',
-      label: 'Total Liabilities',
-      requiredErrorMsg: 'Total Liabiliities is required',
     },
   }
 };

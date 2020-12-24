@@ -8,7 +8,6 @@ import {
   Divider,
   Drawer,
   Hidden,
-  Button,
   List,
   Typography,
   makeStyles
@@ -18,7 +17,6 @@ import {
   Settings as SettingsIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
-  LogOut as LogoutIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon
 } from 'react-feather';

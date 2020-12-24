@@ -31,6 +31,7 @@ import DollarAvailableIcon from "@material-ui/icons/AttachMoney";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { Percent as PercentIcon } from "react-feather";
 import { green, orange } from "@material-ui/core/colors";
+import NumberFormat from 'react-number-format';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -151,7 +152,7 @@ const BuyerList = () => {
           </MuiThemeProvider>
         </>
       );
-    } else if (buyerdata === "under review") {
+    } else if (buyerdata === "Under Review") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
@@ -226,7 +227,15 @@ const BuyerList = () => {
                               display="inline"
                               variant="body2"
                             >
-                              {buyerdata.buyer_loan_amount} Requested Limit
+                            <NumberFormat
+                            color="textPrimary"
+                            variant="h3"
+                            value={buyerdata.buyer_loan_request_amount}
+                            displayType={'text'} 
+                            thousandSeparator={true}
+                            prefix={'$'}
+                            />       
+                             <br></br>Requested Limit
                             </Typography>
                           </Grid>
                         </Grid>
@@ -245,7 +254,15 @@ const BuyerList = () => {
                               display="inline"
                               variant="body2"
                             >
-                              Approved Limit
+                            <NumberFormat
+                            color="textPrimary"
+                            variant="h3"
+                            value={buyerdata.buyer_loan_approved_amount}
+                            displayType={'text'} 
+                            thousandSeparator={true}
+                            prefix={'$'}
+                            />  
+                            <br></br>Approved Limit
                             </Typography>
                           </Grid>
                           <Grid className={classes.statsItem} item>

@@ -4,7 +4,7 @@ export default {
     invoice_attachment: {
       name: 'invoice_attachment',
       label: 'Invoice Attachment*',
-      requiredErrorMsg: 'Attachment is required'
+      requiredErrorMsg: 'Invoice is required'
     },
     purchase_order_attachment: {
       name: 'purchase_order_attachment',

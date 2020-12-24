@@ -97,7 +97,7 @@ export default function NewAccount() {
       const cargo_insurance_name = values['cargo_insurance_name'];
       const cargo_insurance_attachment = values['cargo_insurance_attachment'];
       const bill_of_lading_attachment = values['bill_of_lading_attachment'];
-      const request_status = 'under review'
+      const request_status = 'Under Review'
 
       await createRequest({
         userId,

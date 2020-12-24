@@ -12,6 +12,7 @@ export const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [sub, setSub] = useState("");
+  const [identity, setIdentity] = useState("");
 
   //supplier data:
   const [supplierId, setSupplierId] = useState("");
@@ -77,9 +78,17 @@ export const UserProvider = ({ children }) => {
       return a;
     }
 
+    async function loadIdentity() {
+      let identity = await Auth.currentUserCredentials();
+      const ident = identity.identityId
+      return ident;
+    }
+
     async function loadSupplier() {
       const id = await loadUser();
+      const ident = await loadIdentity();
       setSub(id);
+      setIdentity(ident);
       let filter = { userId: { eq: id }, sortkey: {contains: "supplier-"} };
       const { data: { listsSupplier: { items: itemsPage1, nextToken }, },
       } = await API.graphql(
@@ -92,6 +101,9 @@ export const UserProvider = ({ children }) => {
 
     async function loadDirector() {
       const id = await loadUser();
+      const ident = await loadIdentity();
+      setSub(id);
+      setIdentity(ident);
       let filter = { userId: { eq: id }, sortkey: {contains: "director-"} };
       const {
         data: {
@@ -107,6 +119,9 @@ export const UserProvider = ({ children }) => {
 
     async function loadUBO() {
       const id = await loadUser();
+      const ident = await loadIdentity();
+      setSub(id);
+      setIdentity(ident);
       let filter = { userId: { eq: id }, sortkey: {contains: "ubo-"} };
       const {
         data: {
@@ -122,6 +137,9 @@ export const UserProvider = ({ children }) => {
 
     async function loadFinancials() {
       const id = await loadUser();
+      const ident = await loadIdentity();
+      setSub(id);
+      setIdentity(ident);
       let filter = { userId: { eq: id }, sortkey: {contains: "financials-"} };
       const {
         data: {
@@ -159,12 +177,10 @@ export const UserProvider = ({ children }) => {
           supplier_shareholder_list_attachment
         } = supplierdata;
         var a = supplier_country.replaceAll('=', '":"');
-        var b = a.replaceAll(',' , '","');
-        var c = b.replaceAll('}' , '"}');
+        var c = a.replaceAll('}' , '"}');
         var d = c.replaceAll('{' , '{"');
         var e = d.replace(/\s/g, '');
-        var myobj = JSON.parse(e);
-        const z = myobj.label;
+        const z = e;
 
         var f = supplier_industry.replaceAll('=', '":"');
         var g = f.replaceAll(',' , '","');
@@ -274,6 +290,7 @@ export const UserProvider = ({ children }) => {
     () => ({
       user,
       sub,
+      identity,
       supplierId,
       supplier_logo,
       supplier_name,
@@ -323,6 +340,7 @@ export const UserProvider = ({ children }) => {
     [
       user,
       sub,
+      identity,
       supplierId,
       supplier_logo,
       supplier_name,

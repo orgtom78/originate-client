@@ -5,12 +5,14 @@ export const getSupplier = /* GraphQL */ `
   query GetSupplier($sortkey: String!, $userId: String!) {
     getSupplier(sortkey: $sortkey, userId: $userId) {
       supplierId
+      identityId
       supplier_address_city
       supplier_address_number
       supplier_address_postalcode
       supplier_address_refinment
       supplier_articles_of_association_attachment
       supplier_shareholder_list_attachment
+      supplier_description
       supplier_director_list_attachment
       supplier_country
       supplier_industry
@@ -36,6 +38,8 @@ export const getBank = /* GraphQL */ `
       bankId
       buyerId
       supplierId
+      investorId
+      identityId
       account_statement_attachment
       balance
       balance_available
@@ -51,6 +55,7 @@ export const getBank = /* GraphQL */ `
       bank_country
       bank_name
       bank_routing_number
+      bank_status
       bic_swift_code
       createdAt
       iban
@@ -72,6 +77,8 @@ export const getFinancials = /* GraphQL */ `
       financialsId
       supplierId
       buyerId
+      investorId
+      identityId
       accounts_payable
       accounts_receivable
       cash
@@ -103,6 +110,8 @@ export const getTransaction = /* GraphQL */ `
       transactionId
       buyerId
       supplierId
+      investorId
+      identityId
       authorized_date
       category
       iso_currency_code
@@ -154,6 +163,7 @@ export const getBuyer = /* GraphQL */ `
     getBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      identityId
       buyer_address_city
       buyer_address_number
       buyer_address_postalcode
@@ -164,10 +174,12 @@ export const getBuyer = /* GraphQL */ `
       buyer_website
       createdAt
       buyer_currency
+      buyer_description
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
-      buyer_loan_amount
+      buyer_loan_request_amount
+      buyer_loan_approved_amount
       buyer_one_off_ipu_attachment
       buyer_loan_collateral
       buyer_loan_covenants
@@ -177,12 +189,16 @@ export const getBuyer = /* GraphQL */ `
       buyer_loan_rate
       buyer_loan_type
       buyer_next_year_projected_transaction_amount
+      buyer_next_year_projected_number_invoices
       buyer_payment_terms
       buyer_previous_year_transaction_amount
+      buyer_previous_year_number_invoices
       buyer_reporting_year
       buyer_reporting_year_transaction_amount
+      buyer_reporting_year_number_invoices
       buyer_sample_trading_docs_attachment
       buyer_sold_goods_description
+      buyer_supplier_year_business_relation_started
       buyer_status
       sortkey
       userId
@@ -195,6 +211,8 @@ export const getDirector = /* GraphQL */ `
       directorId
       supplierId
       buyerId
+      investorId
+      identityId
       director_appointment_date
       director_country_of_residence
       director_date_of_birth
@@ -220,12 +238,44 @@ export const getDirector = /* GraphQL */ `
     }
   }
 `;
+export const getInvestor = /* GraphQL */ `
+  query GetInvestor($sortkey: String!, $userId: String!) {
+    getInvestor(sortkey: $sortkey, userId: $userId) {
+      investorId
+      identityId
+      investor_address_city
+      investor_address_number
+      investor_address_postalcode
+      investor_address_refinment
+      investor_articles_of_association_attachment
+      investor_shareholder_list_attachment
+      investor_director_list_attachment
+      investor_country
+      investor_industry
+      investor_industry_code
+      investor_logo
+      investor_name
+      investor_register_number
+      investor_trading_name
+      investor_type
+      investor_website
+      investor_address_street
+      createdAt
+      investor_date_of_incorporation
+      investor_registration_cert_attachment
+      sortkey
+      userId
+    }
+  }
+`;
 export const getUbo = /* GraphQL */ `
   query GetUbo($sortkey: String!, $userId: String!) {
     getUBO(sortkey: $sortkey, userId: $userId) {
       uboId
       supplierId
       buyerId
+      investorId
+      identityId
       ubo_appointment_date
       ubo_country_of_residence
       ubo_date_of_birth
@@ -257,6 +307,8 @@ export const getRequest = /* GraphQL */ `
       requestId
       buyerId
       supplierId
+      investorId
+      identityId
       buyer_name
       purchase_order_amount
       purchase_order_attachment
@@ -293,6 +345,8 @@ export const listsDirector = /* GraphQL */ `
         directorId
         supplierId
         buyerId
+        investorId
+        identityId
         director_appointment_date
         director_country_of_residence
         director_date_of_birth
@@ -320,6 +374,43 @@ export const listsDirector = /* GraphQL */ `
     }
   }
 `;
+export const listsInvestor = /* GraphQL */ `
+  query ListsInvestor(
+    $filter: TableFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listsInvestor(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        investorId
+        identityId
+        investor_address_city
+        investor_address_number
+        investor_address_postalcode
+        investor_address_refinment
+        investor_articles_of_association_attachment
+        investor_shareholder_list_attachment
+        investor_director_list_attachment
+        investor_country
+        investor_industry
+        investor_industry_code
+        investor_logo
+        investor_name
+        investor_register_number
+        investor_trading_name
+        investor_type
+        investor_website
+        investor_address_street
+        createdAt
+        investor_date_of_incorporation
+        investor_registration_cert_attachment
+        sortkey
+        userId
+      }
+      nextToken
+    }
+  }
+`;
 export const listsUbo = /* GraphQL */ `
   query ListsUbo($filter: TableFilterInput, $limit: Int, $nextToken: String) {
     listsUBO(filter: $filter, limit: $limit, nextToken: $nextToken) {
@@ -327,6 +418,8 @@ export const listsUbo = /* GraphQL */ `
         uboId
         supplierId
         buyerId
+        investorId
+        identityId
         ubo_appointment_date
         ubo_country_of_residence
         ubo_date_of_birth
@@ -365,6 +458,8 @@ export const listsRequest = /* GraphQL */ `
         requestId
         buyerId
         supplierId
+        investorId
+        identityId
         buyer_name
         purchase_order_amount
         purchase_order_attachment
@@ -401,12 +496,14 @@ export const listsSupplier = /* GraphQL */ `
     listsSupplier(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         supplierId
+        identityId
         supplier_address_city
         supplier_address_number
         supplier_address_postalcode
         supplier_address_refinment
         supplier_articles_of_association_attachment
         supplier_shareholder_list_attachment
+        supplier_description
         supplier_director_list_attachment
         supplier_country
         supplier_industry
@@ -435,6 +532,8 @@ export const listsBank = /* GraphQL */ `
         bankId
         buyerId
         supplierId
+        investorId
+        identityId
         account_statement_attachment
         balance
         balance_available
@@ -450,6 +549,7 @@ export const listsBank = /* GraphQL */ `
         bank_country
         bank_name
         bank_routing_number
+        bank_status
         bic_swift_code
         createdAt
         iban
@@ -478,6 +578,8 @@ export const listsFinancials = /* GraphQL */ `
         financialsId
         supplierId
         buyerId
+        investorId
+        identityId
         accounts_payable
         accounts_receivable
         cash
@@ -516,6 +618,8 @@ export const listsTransaction = /* GraphQL */ `
         transactionId
         buyerId
         supplierId
+        investorId
+        identityId
         authorized_date
         category
         iso_currency_code
@@ -570,6 +674,7 @@ export const listsBuyer = /* GraphQL */ `
       items {
         buyerId
         supplierId
+        identityId
         buyer_address_city
         buyer_address_number
         buyer_address_postalcode
@@ -580,10 +685,12 @@ export const listsBuyer = /* GraphQL */ `
         buyer_website
         createdAt
         buyer_currency
+        buyer_description
         buyer_insurance_name
         buyer_insurance_rating
         buyer_insurance_status
-        buyer_loan_amount
+        buyer_loan_request_amount
+        buyer_loan_approved_amount
         buyer_one_off_ipu_attachment
         buyer_loan_collateral
         buyer_loan_covenants
@@ -593,12 +700,16 @@ export const listsBuyer = /* GraphQL */ `
         buyer_loan_rate
         buyer_loan_type
         buyer_next_year_projected_transaction_amount
+        buyer_next_year_projected_number_invoices
         buyer_payment_terms
         buyer_previous_year_transaction_amount
+        buyer_previous_year_number_invoices
         buyer_reporting_year
         buyer_reporting_year_transaction_amount
+        buyer_reporting_year_number_invoices
         buyer_sample_trading_docs_attachment
         buyer_sold_goods_description
+        buyer_supplier_year_business_relation_started
         buyer_status
         sortkey
         userId

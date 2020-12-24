@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
-import { InputField, SelectField, UploadField } from "../FormFields";
+import { InputField, SelectField, UploadField } from "src/components/FormFields";
 import {
   Card,
   CardContent,
   Divider,
   Grid,
-  Typography,
   makeStyles,
 } from "@material-ui/core";
 import NumberFormat from 'react-number-format';
@@ -18,7 +17,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/currencies.js";
 import countries from "src/components/countries.js";
-import FormikAutocomplete from "src/views/buyer/NewBuyerView/FormFields/AutocompleteField.js";
+import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
 import { Field } from "formik";
 
 const cr = countries;
@@ -109,7 +108,7 @@ export default function BuyerAddressForm(props) {
       buyer_country,
       buyer_website,
       buyer_currency,
-      buyer_loan_amount,
+      buyer_loan_request_amount,
       buyer_payment_terms,
       buyer_sample_trading_docs_attachment,
       buyer_sold_goods_description,
@@ -118,9 +117,7 @@ export default function BuyerAddressForm(props) {
 
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  console.log(updatefields)
-  const updateregcert =
-    updatefields.values.buyer_sample_trading_docs_attachment;
+  const updateregcert = updatefields.values.buyer_sample_trading_docs_attachment;
 
   const [img, setImg] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");
@@ -212,13 +209,10 @@ export default function BuyerAddressForm(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_loan_amount.name}
-                label={buyer_loan_amount.label}
+                name={buyer_loan_request_amount.name}
+                label={buyer_loan_request_amount.label}
                 fullWidth
                 variant="outlined"
-                InputProps={{
-                  inputComponent: NumberFormatCustom,
-                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -256,8 +250,8 @@ export default function BuyerAddressForm(props) {
             <Grid item xs={12} sm={6}>
               <Field
                 name={buyer_country.name}
-                component={auto}
                 label={buyer_country.label}
+                component={auto}
                 options={cr}
                 getOptionLabel={(option) => option.label}
                 textFieldProps={{

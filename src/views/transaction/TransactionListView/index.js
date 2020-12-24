@@ -20,14 +20,13 @@ import {
 } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
-import Results from './Results';
-import Toolbar from './Toolbar';
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/usercontext.js";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
 import { green, orange } from "@material-ui/core/colors";
+import NumberFormat from 'react-number-format';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -140,7 +139,7 @@ const TransactionListView = () => {
   };
 
   function checkstatus(request) {
-    if (request === "submitted") {
+    if (request === "Submitted") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
@@ -148,7 +147,7 @@ const TransactionListView = () => {
           </MuiThemeProvider>
         </>
       );
-    } else if (request === "under review") {
+    } else if (request === "Under Review") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
@@ -243,7 +242,14 @@ const TransactionListView = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {request.invoice_amount}
+                  <NumberFormat
+                  color="textPrimary"
+                  variant="h3"
+                  value={request.invoice_amount}
+                  displayType={'text'} 
+                  thousandSeparator={true}
+                  prefix={'$'}
+                  />    
                   </TableCell>
                   <TableCell>
                     {`${request.sold_goods_description}`}

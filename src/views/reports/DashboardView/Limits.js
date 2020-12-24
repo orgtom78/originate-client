@@ -78,7 +78,7 @@ const Limits = ({ className, ...rest }) => {
 
   function addamounts() {
     if (handle) {
-      const t = request.map((request) => request.buyer_loan_amount)
+      const t = request.map((request) => request.buyer_loan_request_amount)
       var b = t.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a,0); 
       return(

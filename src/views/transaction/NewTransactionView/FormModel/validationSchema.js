@@ -21,9 +21,9 @@ const {
 
 export default [
   Yup.object().shape({
-    [invoice_attachment.name]: Yup.string(),
+    [invoice_attachment.name]: Yup.string().required(`${invoice_attachment.requiredErrorMsg}`),
     [purchase_order_attachment.name]: Yup.string(),
-    [offer_notice_attachment.name]: Yup.string(),
+    [offer_notice_attachment.name]: Yup.string().required(`${offer_notice_attachment.requiredErrorMsg}`),
     [ipu_attachment.name]: Yup.string(),
     [bill_of_lading_attachment.name]: Yup.string(), 
     [cargo_insurance_attachment.name]: Yup.string(),   

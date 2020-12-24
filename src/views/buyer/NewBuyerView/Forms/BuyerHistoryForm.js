@@ -4,7 +4,7 @@ import {
   InputField,
   DatePickerField,
   UploadField,
-} from "../FormFields";
+} from "src/components/FormFields";
 import {
   Card,
   CardContent,
@@ -66,6 +66,7 @@ const useStyles = makeStyles(() => ({
         buyer_previous_year_transaction_amount,
         buyer_reporting_year,
         buyer_reporting_year_transaction_amount,
+        buyer_previous_year_number_invoices,
       },
     } = props;
 
@@ -148,6 +149,15 @@ const useStyles = makeStyles(() => ({
         </Grid>
         <Grid item xs={12} sm={6}>
             <InputField
+              name={buyer_next_year_projected_transaction_amount.name}
+              label={buyer_next_year_projected_transaction_amount.label}
+              fullWidth
+              variant="outlined"
+            />
+          </Grid>
+
+        <Grid item xs={12} sm={6}>
+            <InputField
               name={buyer_reporting_year_transaction_amount.name}
               label={buyer_reporting_year_transaction_amount.label}
               fullWidth
@@ -164,13 +174,13 @@ const useStyles = makeStyles(() => ({
           </Grid>
           <Grid item xs={12} sm={6}>
             <InputField
-              name={buyer_next_year_projected_transaction_amount.name}
-              label={buyer_next_year_projected_transaction_amount.label}
+              name={buyer_previous_year_number_invoices.name}
+              label={buyer_previous_year_number_invoices.label}
               fullWidth
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={12} sm={12}>
+          <Grid item xs={12} sm={6}>
             <InputField
               name={buyer_insurance_name.name}
               label={buyer_insurance_name.label}

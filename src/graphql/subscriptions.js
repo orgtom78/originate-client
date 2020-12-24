@@ -5,12 +5,14 @@ export const onCreateSupplier = /* GraphQL */ `
   subscription OnCreateSupplier($sortkey: String, $userId: String) {
     onCreateSupplier(sortkey: $sortkey, userId: $userId) {
       supplierId
+      identityId
       supplier_address_city
       supplier_address_number
       supplier_address_postalcode
       supplier_address_refinment
       supplier_articles_of_association_attachment
       supplier_shareholder_list_attachment
+      supplier_description
       supplier_director_list_attachment
       supplier_country
       supplier_industry
@@ -36,6 +38,8 @@ export const onCreateBank = /* GraphQL */ `
       bankId
       buyerId
       supplierId
+      investorId
+      identityId
       account_statement_attachment
       balance
       balance_available
@@ -51,6 +55,7 @@ export const onCreateBank = /* GraphQL */ `
       bank_country
       bank_name
       bank_routing_number
+      bank_status
       bic_swift_code
       createdAt
       iban
@@ -72,6 +77,8 @@ export const onCreateFinancials = /* GraphQL */ `
       financialsId
       supplierId
       buyerId
+      investorId
+      identityId
       accounts_payable
       accounts_receivable
       cash
@@ -102,6 +109,7 @@ export const onCreateBuyer = /* GraphQL */ `
     onCreateBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      identityId
       buyer_address_city
       buyer_address_number
       buyer_address_postalcode
@@ -112,10 +120,12 @@ export const onCreateBuyer = /* GraphQL */ `
       buyer_website
       createdAt
       buyer_currency
+      buyer_description
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
-      buyer_loan_amount
+      buyer_loan_request_amount
+      buyer_loan_approved_amount
       buyer_one_off_ipu_attachment
       buyer_loan_collateral
       buyer_loan_covenants
@@ -125,12 +135,16 @@ export const onCreateBuyer = /* GraphQL */ `
       buyer_loan_rate
       buyer_loan_type
       buyer_next_year_projected_transaction_amount
+      buyer_next_year_projected_number_invoices
       buyer_payment_terms
       buyer_previous_year_transaction_amount
+      buyer_previous_year_number_invoices
       buyer_reporting_year
       buyer_reporting_year_transaction_amount
+      buyer_reporting_year_number_invoices
       buyer_sample_trading_docs_attachment
       buyer_sold_goods_description
+      buyer_supplier_year_business_relation_started
       buyer_status
       sortkey
       userId
@@ -143,6 +157,8 @@ export const onCreateDirector = /* GraphQL */ `
       directorId
       supplierId
       buyerId
+      investorId
+      identityId
       director_appointment_date
       director_country_of_residence
       director_date_of_birth
@@ -168,12 +184,44 @@ export const onCreateDirector = /* GraphQL */ `
     }
   }
 `;
+export const onCreateInvestor = /* GraphQL */ `
+  subscription OnCreateInvestor($sortkey: String, $userId: String) {
+    onCreateInvestor(sortkey: $sortkey, userId: $userId) {
+      investorId
+      identityId
+      investor_address_city
+      investor_address_number
+      investor_address_postalcode
+      investor_address_refinment
+      investor_articles_of_association_attachment
+      investor_shareholder_list_attachment
+      investor_director_list_attachment
+      investor_country
+      investor_industry
+      investor_industry_code
+      investor_logo
+      investor_name
+      investor_register_number
+      investor_trading_name
+      investor_type
+      investor_website
+      investor_address_street
+      createdAt
+      investor_date_of_incorporation
+      investor_registration_cert_attachment
+      sortkey
+      userId
+    }
+  }
+`;
 export const onCreateUbo = /* GraphQL */ `
   subscription OnCreateUbo($sortkey: String, $userId: String) {
     onCreateUBO(sortkey: $sortkey, userId: $userId) {
       uboId
       supplierId
       buyerId
+      investorId
+      identityId
       ubo_appointment_date
       ubo_country_of_residence
       ubo_date_of_birth
@@ -205,6 +253,8 @@ export const onCreateRequest = /* GraphQL */ `
       requestId
       buyerId
       supplierId
+      investorId
+      identityId
       buyer_name
       purchase_order_amount
       purchase_order_attachment
@@ -234,12 +284,14 @@ export const onDeleteSupplier = /* GraphQL */ `
   subscription OnDeleteSupplier($sortkey: String, $userId: String) {
     onDeleteSupplier(sortkey: $sortkey, userId: $userId) {
       supplierId
+      identityId
       supplier_address_city
       supplier_address_number
       supplier_address_postalcode
       supplier_address_refinment
       supplier_articles_of_association_attachment
       supplier_shareholder_list_attachment
+      supplier_description
       supplier_director_list_attachment
       supplier_country
       supplier_industry
@@ -265,6 +317,8 @@ export const onDeleteBank = /* GraphQL */ `
       bankId
       buyerId
       supplierId
+      investorId
+      identityId
       account_statement_attachment
       balance
       balance_available
@@ -280,6 +334,7 @@ export const onDeleteBank = /* GraphQL */ `
       bank_country
       bank_name
       bank_routing_number
+      bank_status
       bic_swift_code
       createdAt
       iban
@@ -301,6 +356,8 @@ export const onDeleteFinancials = /* GraphQL */ `
       financialsId
       supplierId
       buyerId
+      investorId
+      identityId
       accounts_payable
       accounts_receivable
       cash
@@ -331,6 +388,7 @@ export const onDeleteBuyer = /* GraphQL */ `
     onDeleteBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      identityId
       buyer_address_city
       buyer_address_number
       buyer_address_postalcode
@@ -341,10 +399,12 @@ export const onDeleteBuyer = /* GraphQL */ `
       buyer_website
       createdAt
       buyer_currency
+      buyer_description
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
-      buyer_loan_amount
+      buyer_loan_request_amount
+      buyer_loan_approved_amount
       buyer_one_off_ipu_attachment
       buyer_loan_collateral
       buyer_loan_covenants
@@ -354,12 +414,16 @@ export const onDeleteBuyer = /* GraphQL */ `
       buyer_loan_rate
       buyer_loan_type
       buyer_next_year_projected_transaction_amount
+      buyer_next_year_projected_number_invoices
       buyer_payment_terms
       buyer_previous_year_transaction_amount
+      buyer_previous_year_number_invoices
       buyer_reporting_year
       buyer_reporting_year_transaction_amount
+      buyer_reporting_year_number_invoices
       buyer_sample_trading_docs_attachment
       buyer_sold_goods_description
+      buyer_supplier_year_business_relation_started
       buyer_status
       sortkey
       userId
@@ -372,6 +436,8 @@ export const onDeleteDirector = /* GraphQL */ `
       directorId
       supplierId
       buyerId
+      investorId
+      identityId
       director_appointment_date
       director_country_of_residence
       director_date_of_birth
@@ -397,12 +463,44 @@ export const onDeleteDirector = /* GraphQL */ `
     }
   }
 `;
+export const onDeleteInvestor = /* GraphQL */ `
+  subscription OnDeleteInvestor($sortkey: String, $userId: String) {
+    onDeleteInvestor(sortkey: $sortkey, userId: $userId) {
+      investorId
+      identityId
+      investor_address_city
+      investor_address_number
+      investor_address_postalcode
+      investor_address_refinment
+      investor_articles_of_association_attachment
+      investor_shareholder_list_attachment
+      investor_director_list_attachment
+      investor_country
+      investor_industry
+      investor_industry_code
+      investor_logo
+      investor_name
+      investor_register_number
+      investor_trading_name
+      investor_type
+      investor_website
+      investor_address_street
+      createdAt
+      investor_date_of_incorporation
+      investor_registration_cert_attachment
+      sortkey
+      userId
+    }
+  }
+`;
 export const onDeleteUbo = /* GraphQL */ `
   subscription OnDeleteUbo($sortkey: String, $userId: String) {
     onDeleteUBO(sortkey: $sortkey, userId: $userId) {
       uboId
       supplierId
       buyerId
+      investorId
+      identityId
       ubo_appointment_date
       ubo_country_of_residence
       ubo_date_of_birth
@@ -434,6 +532,8 @@ export const onDeleteRequest = /* GraphQL */ `
       requestId
       buyerId
       supplierId
+      investorId
+      identityId
       buyer_name
       purchase_order_amount
       purchase_order_attachment
@@ -463,12 +563,14 @@ export const onUpdateSupplier = /* GraphQL */ `
   subscription OnUpdateSupplier($sortkey: String, $userId: String) {
     onUpdateSupplier(sortkey: $sortkey, userId: $userId) {
       supplierId
+      identityId
       supplier_address_city
       supplier_address_number
       supplier_address_postalcode
       supplier_address_refinment
       supplier_articles_of_association_attachment
       supplier_shareholder_list_attachment
+      supplier_description
       supplier_director_list_attachment
       supplier_country
       supplier_industry
@@ -494,6 +596,8 @@ export const onUpdateBank = /* GraphQL */ `
       bankId
       buyerId
       supplierId
+      investorId
+      identityId
       account_statement_attachment
       balance
       balance_available
@@ -509,6 +613,7 @@ export const onUpdateBank = /* GraphQL */ `
       bank_country
       bank_name
       bank_routing_number
+      bank_status
       bic_swift_code
       createdAt
       iban
@@ -530,6 +635,8 @@ export const onUpdateFinancials = /* GraphQL */ `
       financialsId
       supplierId
       buyerId
+      investorId
+      identityId
       accounts_payable
       accounts_receivable
       cash
@@ -560,6 +667,7 @@ export const onUpdateBuyer = /* GraphQL */ `
     onUpdateBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      identityId
       buyer_address_city
       buyer_address_number
       buyer_address_postalcode
@@ -570,10 +678,12 @@ export const onUpdateBuyer = /* GraphQL */ `
       buyer_website
       createdAt
       buyer_currency
+      buyer_description
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
-      buyer_loan_amount
+      buyer_loan_request_amount
+      buyer_loan_approved_amount
       buyer_one_off_ipu_attachment
       buyer_loan_collateral
       buyer_loan_covenants
@@ -583,12 +693,16 @@ export const onUpdateBuyer = /* GraphQL */ `
       buyer_loan_rate
       buyer_loan_type
       buyer_next_year_projected_transaction_amount
+      buyer_next_year_projected_number_invoices
       buyer_payment_terms
       buyer_previous_year_transaction_amount
+      buyer_previous_year_number_invoices
       buyer_reporting_year
       buyer_reporting_year_transaction_amount
+      buyer_reporting_year_number_invoices
       buyer_sample_trading_docs_attachment
       buyer_sold_goods_description
+      buyer_supplier_year_business_relation_started
       buyer_status
       sortkey
       userId
@@ -601,6 +715,8 @@ export const onUpdateDirector = /* GraphQL */ `
       directorId
       supplierId
       buyerId
+      investorId
+      identityId
       director_appointment_date
       director_country_of_residence
       director_date_of_birth
@@ -626,12 +742,44 @@ export const onUpdateDirector = /* GraphQL */ `
     }
   }
 `;
+export const onUpdateInvestor = /* GraphQL */ `
+  subscription OnUpdateInvestor($sortkey: String, $userId: String) {
+    onUpdateInvestor(sortkey: $sortkey, userId: $userId) {
+      investorId
+      identityId
+      investor_address_city
+      investor_address_number
+      investor_address_postalcode
+      investor_address_refinment
+      investor_articles_of_association_attachment
+      investor_shareholder_list_attachment
+      investor_director_list_attachment
+      investor_country
+      investor_industry
+      investor_industry_code
+      investor_logo
+      investor_name
+      investor_register_number
+      investor_trading_name
+      investor_type
+      investor_website
+      investor_address_street
+      createdAt
+      investor_date_of_incorporation
+      investor_registration_cert_attachment
+      sortkey
+      userId
+    }
+  }
+`;
 export const onUpdateUbo = /* GraphQL */ `
   subscription OnUpdateUbo($sortkey: String, $userId: String) {
     onUpdateUBO(sortkey: $sortkey, userId: $userId) {
       uboId
       supplierId
       buyerId
+      investorId
+      identityId
       ubo_appointment_date
       ubo_country_of_residence
       ubo_date_of_birth
@@ -663,6 +811,8 @@ export const onUpdateRequest = /* GraphQL */ `
       requestId
       buyerId
       supplierId
+      investorId
+      identityId
       buyer_name
       purchase_order_amount
       purchase_order_attachment

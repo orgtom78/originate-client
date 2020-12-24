@@ -79,10 +79,15 @@ function calcperecentage(){
   if (handle) {
     const p = calculateprogress();
     const app = p["Approved"]
-    const rev = p["under review"]
+    const rev = p["Under Review"]
     const sum = app + rev 
     const perc = (app / sum)*100 
-    return perc
+    if (isNaN(perc)){
+      return '100'
+    } 
+      else if (perc !=='NaN'){
+      return perc
+    } 
   } else {
     console.log("wait");
   }

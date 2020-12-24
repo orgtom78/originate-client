@@ -4,8 +4,7 @@ import {
   InputField,
   DatePickerField,
   UploadField,
-} from "../FormFields";
-import CurrencyTextField from '@unicef/material-ui-currency-textfield'
+} from "src/components/FormFields";
 import {
   Card,
   CardContent,
@@ -19,7 +18,7 @@ import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/currencies.js";
-import FormikAutocomplete from "src/views/buyer/NewBuyerView/FormFields/AutocompleteField.js";
+import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
 import { Field } from "formik";
 import { addDays, subDays } from "date-fns";
 

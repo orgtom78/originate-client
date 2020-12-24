@@ -94,7 +94,7 @@ const LatestLimits = ({ className, ...rest }) => {
           </MuiThemeProvider>
         </>
       );
-    } else if (status === "under review") {
+    } else if (status === "Under Review") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
@@ -130,7 +130,7 @@ const LatestLimits = ({ className, ...rest }) => {
                   Buyer
                 </TableCell>
                 <TableCell>
-                  Amount
+                  Requested Limit
                 </TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip
@@ -161,7 +161,7 @@ const LatestLimits = ({ className, ...rest }) => {
                   </TableCell>
                   <TableCell>
                   <NumberFormat
-                  value={limit.buyer_loan_amount}
+                  value={limit.buyer_loan_request_amount}
                   displayType={'text'} 
                   thousandSeparator={true}
                   prefix={'$'}
