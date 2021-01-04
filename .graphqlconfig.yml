@@ -2,7 +2,8 @@ projects:
   client:
     schemaPath: src/graphql/schema.json
     includes:
-      - src/graphql/**/*.js
+      - >-
+        /Users/tobiaspfuetze/Documents/VSCode/Originate/Frontend/Client/src/graphql/**/*.js
     excludes:
       - ./amplify/**
     extensions:
@@ -10,6 +11,7 @@ projects:
         codeGenTarget: javascript
         generatedFileName: ''
         docsFilePath: src/graphql
+        maxDepth: 2
 extensions:
   amplify:
     version: 3

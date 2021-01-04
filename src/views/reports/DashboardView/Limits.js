@@ -69,7 +69,7 @@ const Limits = ({ className, ...rest }) => {
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
-      console.log("test");
+      return
     } else {
       const d = request;
       return d;
@@ -85,7 +85,7 @@ const Limits = ({ className, ...rest }) => {
         sum
           )
     } else {
-      console.log("wait");
+      return
     }
   }
 

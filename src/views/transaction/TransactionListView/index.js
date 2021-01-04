@@ -81,7 +81,6 @@ const TransactionListView = () => {
     async function test() {
       const c = await getRequests();
       setRequest(c);
-      console.log(c);
     }
     test();
   }, [sub]);
@@ -95,8 +94,6 @@ const TransactionListView = () => {
     }
   }, [request]);
 
-  console.log(handler);
-  //const t = customers.map((request) => request);
 
   const handleSelectAll = (event) => {
     let newSelectedCustomerIds;

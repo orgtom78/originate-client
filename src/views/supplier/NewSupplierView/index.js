@@ -216,7 +216,7 @@ export default function NewSupplier() {
         bank_status,
       }); 
       
-      window.location.reload(true);
+      navigate('/app/account')
 
     } catch (e) {
       onError(e);

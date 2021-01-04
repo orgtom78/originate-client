@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { Link } from "react-router-dom";
 import clsx from 'clsx';
 import moment from 'moment';
-import { v4 as uuid } from 'uuid';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import PropTypes from 'prop-types';
 import {
@@ -83,7 +83,6 @@ const LatestLimits = ({ className, ...rest }) => {
       return d;
     }
   }, [limitdata]);
-  const l = limits;
   
   function checkstatus(status) {
     if (status === "submitted") {
@@ -184,15 +183,16 @@ const LatestLimits = ({ className, ...rest }) => {
         justifyContent="flex-end"
         p={2}
       >
+        <Link to={`/app/buyers`}>
         <Button
           color="primary"
           endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
-          href="/app/buyers"
         >
           View all
         </Button>
+        </Link>
       </Box>
     </Card>
   );

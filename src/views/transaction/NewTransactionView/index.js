@@ -41,10 +41,9 @@ export default function NewAccount() {
   const [sub, setSub] = useState("");
   const [supid, setSupid] = useState("");
   const [buyername, setBuyername] = useState("");
+  const [supplier_name, setSupplier_name] = useState("");
   const context = useUser();
   const { id } = useParams();
-
-  console.log(id)
 
 
   React.useEffect(() => {
@@ -53,10 +52,12 @@ export default function NewAccount() {
       const data = await context;
       const {
         sub,
-        supplierId
+        supplierId, 
+        supplier_name,
       } = data;
       setSub(sub);
       setSupid(supplierId);
+      setSupplier_name(supplier_name);
     }
     onLoad();
   }, [context]);
@@ -105,6 +106,7 @@ export default function NewAccount() {
         requestId,
         supplierId,
         buyer_name,
+        supplier_name,
         purchase_order_attachment,
         sold_goods_description,
         invoice_amount,

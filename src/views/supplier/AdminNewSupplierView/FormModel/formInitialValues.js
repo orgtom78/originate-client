@@ -1,6 +1,8 @@
 import NewSupplierFormModel from './NewSupplierFormModel';
 const {
   formField: {
+    userId,
+    identityId,
     supplier_logo,
     supplier_name,
     supplier_type,
@@ -60,6 +62,8 @@ const {
 } = NewSupplierFormModel;
 
 export default { 
+  [userId.name]: '',
+  [identityId.name]: '',
   [supplier_logo.name]: '',
   [supplier_name.name]: '',
   [supplier_trading_name.name]: '',

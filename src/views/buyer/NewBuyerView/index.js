@@ -59,8 +59,8 @@ export default function NewAccount() {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const [sub, setSub] = useState("");
-  const [supid, setIdentityId] = useState("");
-  const [identityId, setSupid] = useState("");
+  const [supid, setSupid] = useState("");
+  const [identityId, setIdentityId] = useState("");
   const context = useUser();
 
   const isLastStep = activeStep === steps.length - 1;

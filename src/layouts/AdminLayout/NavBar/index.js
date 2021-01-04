@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
@@ -13,16 +13,11 @@ import {
 } from '@material-ui/core';
 import {
   BarChart as BarChartIcon,
-  Settings as SettingsIcon,
   User as UserIcon,
-  UserPlus as UserPlusIcon,
-  LogOut as LogoutIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon
 } from 'react-feather';
 import NavItem from './NavItem';
-import { Storage } from "aws-amplify";
-import { useUser } from "src/components/usercontext.js";
 
 const items = [
   {
@@ -44,11 +39,6 @@ const items = [
     href: '/admin/transactions',
     icon: CreditCardIcon,
     title: 'Transactions'
-  },
-  {
-    href: '/admin/settings',
-    icon: SettingsIcon,
-    title: 'Settings'
   },
 ];
 
@@ -79,32 +69,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const [avatar, setAvatar] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
-  const [supplier_country, setSupplier_country] = useState("");
-  const [supplier_industry, setSupplier_industry] = useState("");
-  const [supplier_logo, setSupplier_logo] = useState("");
-  const context = useUser();
-
-  useEffect(() => {
-    // attempt to fetch the info of the user that was already logged in
-    async function onLoad() {
-      const data = await context;
-      const {
-        supplier_name,
-        supplier_country,
-        supplier_industry,
-        supplier_logo,
-      } = data;
-      setSupplier_name(supplier_name);
-      setSupplier_country(supplier_country);
-      setSupplier_industry(supplier_industry);
-      setSupplier_logo(supplier_logo);
-      const z = await Storage.vault.get(supplier_logo);
-      setAvatar(z);
-    }
-    onLoad();
-  }, [context]);
+  const avatar = 'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon';
+  const admin_name  = 'Admin';
+  const admin_country  = 'Berlin, Hong Kong, Shanghai';
 
 
   const content = (
@@ -130,13 +97,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           color="textPrimary"
           variant="h5"
         >
-          {supplier_name}
+          {admin_name}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {supplier_country}
+          {admin_country}
         </Typography>
       </Box>
       <Divider />

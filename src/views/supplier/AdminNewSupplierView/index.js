@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
-import { Auth, API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from 'uuid';
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from 'src/graphql/mutations.js';
@@ -57,8 +57,6 @@ export default function NewSupplier() {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const { id } = useParams();
-
-  console.log(id)
 
   const isLastStep = activeStep === steps.length - 1;
 
@@ -219,7 +217,7 @@ export default function NewSupplier() {
         financials_status
       }); 
       
-      window.location.reload(true);
+      navigate('/admin/suppliers')
 
     } catch (e) {
       onError(e);
@@ -269,12 +267,12 @@ export default function NewSupplier() {
   return (
     <Page
     className={classes.root}
-    title="Create your Account"
+    title="Register a new Client"
   >
     <Container maxWidth="lg">
     <React.Fragment>
       <Typography component="h1" variant="h4" align="center">
-        Register your company
+        Register a new Client
       </Typography>
       <br></br>
       <Stepper activeStep={activeStep} className={classes.stepper}>
@@ -286,7 +284,7 @@ export default function NewSupplier() {
       </Stepper>
       <React.Fragment>
         {activeStep === steps.length ? (
-          navigate('/app/account')
+          navigate('/admin/suppliers')
         ) : (
           <Formik
             initialValues={formInitialValues}

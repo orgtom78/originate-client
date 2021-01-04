@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Link as RouterLink } from "react-router-dom";
 import { InputField, SelectField, UploadField } from "src/components/FormFields";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -225,18 +226,12 @@ export default function BuyerAddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={buyer_currency.name}
-                component={auto}
                 label={buyer_currency.label}
-                options={curr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: buyer_currency.name,
-                  label: buyer_currency.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                }}
+                data={curr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -248,19 +243,12 @@ export default function BuyerAddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={buyer_country.name}
                 label={buyer_country.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: buyer_country.name,
-                  label: buyer_country.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import {
   InputField,
   DatePickerField,
@@ -123,7 +122,6 @@ export default function PayoutForm(props) {
     if (amount == null) {
       async function getvalue(){
       const z = await value;
-      console.log(z)
       return z;
     } getvalue();
     }

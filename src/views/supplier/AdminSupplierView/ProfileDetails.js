@@ -12,7 +12,7 @@ const Profile = (value) => {
     <Container maxWidth="lg">
       <SupplierForm value={value}/>
       <br></br>
-      <SupplierUploads />
+      <SupplierUploads value={value} />
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Container,
   Grid,
@@ -7,8 +7,6 @@ import {
 import Page from 'src/components/Page';
 import Profile from './Profile';
 import ProfileDetails from './ProfileDetails';
-import { useUser } from "src/components/usercontext.js";
-import NewSupplierView from 'src/views/supplier/NewSupplierView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -23,13 +21,6 @@ const useStyles = makeStyles((theme) => ({
 const Account = (value) => {
   const classes = useStyles();
   
-  const ident = value.value.userId;
-  const key = value.value.supplierId
-
-
-  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
-
-
   return (
   <React.Fragment>
     <Page
@@ -47,7 +38,7 @@ const Account = (value) => {
             md={6}
             xs={12}
           >
-            <Profile value={{ident, key}}/>
+            <Profile value={value}/>
           </Grid>
           <Grid
             item

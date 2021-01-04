@@ -55,8 +55,7 @@ export default function LoginView(){
             onSubmit={async (values) => { try {
               await Auth.signIn(values.email, values.password);
               userHasAuthenticated(true); 
-              navigate('/');
-              window.location.reload(true)
+              navigate('/app');
             } catch (e) {
               alert(e.message);
             }

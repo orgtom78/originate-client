@@ -1,4 +1,5 @@
-import React, { useState,  useCallback } from 'react';
+import React, { useState,  useCallback, useEffect } from 'react';
+import { Link } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -9,7 +10,6 @@ import {
   Container,
   Checkbox,
   Divider,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -29,6 +29,7 @@ import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from 'react-number-format';
+import AdminBuyerView from 'src/views/buyer/AdminBuyerView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -49,15 +50,20 @@ const orangeTheme = createMuiTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
-const AdminBuyerView = () => {
+const AdminBuyerListView = () => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState([]);
+  const [isclicked, setIsclicked] = useState('');
+  const [userId, setUserId] = useState('');
+  const [buyerId, setBuyerId] = useState('');
+  const [identityId, setIdentityId] = useState('');
 
   const [selectedBuyerIds, setSelectedBuyerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  React.useEffect(() => {
+
+  useEffect(() => {
     async function getBuyers() {
       let filter = { sortkey: { contains: "buyer-", notContains: "-buyer" } };
       const {
@@ -81,7 +87,6 @@ const AdminBuyerView = () => {
       return d;
     }
   }, [buyer]);
-
 
   const handleSelectAll = (event) => {
     let newSelectedBuyerIds;
@@ -151,7 +156,16 @@ const AdminBuyerView = () => {
     }
   }
 
+  function getidandident(buyerId, userId, identityId){
+   setUserId(userId);
+   setBuyerId(buyerId);
+   setIdentityId(identityId);
+   setIsclicked(true)
+  };
+
   return (
+    <React.Fragment>
+    {!isclicked ? (
     <Page
       className={clsx(classes.root)} 
       title="Buyers"
@@ -180,13 +194,13 @@ const AdminBuyerView = () => {
                   Buyer's Name
                 </TableCell>
                 <TableCell>
-                  Limit Request
+                  Country
                 </TableCell>
                 <TableCell>
-                  Industry
+                  Website
                 </TableCell>
                 <TableCell>
-                  Status
+                  Loan Request
                 </TableCell>
                 <TableCell>
                   Latest update
@@ -212,14 +226,15 @@ const AdminBuyerView = () => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Link to={`/admin/newbuyer/${buyer.buyerId}`}>
+                      
                       <Avatar
                         className={classes.avatar}
-                        src={buyer.avatarUrl}
+                        src={`${buyer.buyer_logo}`}
+                        onClick={() => getidandident(buyer.buyerId, buyer.userId, buyer.identityId)}
                       >
                         {getInitials(buyer.buyer_name)}
                       </Avatar>
-                      </Link>
+                    
                       <Typography
                         color="textPrimary"
                         variant="body1"
@@ -229,20 +244,18 @@ const AdminBuyerView = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
+                  {`${buyer.buyer_country}`}
+                  </TableCell>
+                  <TableCell>
+                    {`${buyer.buyer_website}`}
+                  </TableCell>
+                  <TableCell>
                   <NumberFormat
-                  color="textPrimary"
-                  variant="h3"
-                  value={buyer.buyer_loan_amount}
+                  value={`${buyer.buyer_loan_request_amount}`}
                   displayType={'text'} 
                   thousandSeparator={true}
                   prefix={'$'}
-                  />    
-                  </TableCell>
-                  <TableCell>
-                    {`${buyer.buyer_industry}`}
-                  </TableCell>
-                  <TableCell>
-                    {checkstatus(buyer.buyer_status)}
+                  />
                   </TableCell>
                   <TableCell>
                     {moment(buyer.createdAt).format('DD/MM/YYYY')}
@@ -266,15 +279,22 @@ const AdminBuyerView = () => {
         </Box>
         <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
+                <Link to={`/admin/newbuyer/${userId}`}>
                   <Button
-                    href="/admin/newbuyer/12"
                   >
                     Add Buyer
                   </Button>
+                  </Link>
                 </Box>
       </Container>
     </Page>
-  );
+) : (
+  <>
+  <AdminBuyerView value={{userId, buyerId, identityId}} />
+  </>
+)}
+</React.Fragment>
+  )
 };
 
-export default AdminBuyerView;
+export default AdminBuyerListView;

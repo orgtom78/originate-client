@@ -3,7 +3,7 @@ import {
   InputField,
   SelectField,
   UploadField
-} from "../FormFields";
+} from "src/components/FormFields";
 import {
   Card,
   CardContent,

@@ -7,7 +7,6 @@ import {
   Chip,
   Container,
   Checkbox,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -23,10 +22,10 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import { useUser } from "src/components/usercontext.js";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
 import { green, orange } from "@material-ui/core/colors";
+import AdminUpdateUboView from 'src/views/ubo/AdminUpdateUboView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,11 +52,13 @@ const orangeTheme = createMuiTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
-const UboListView = () => {
+const UboListView = (value) => {
   const classes = useStyles();
-  const context = useUser();
-  const sub = context.sub;
+  const sub = value.value.value.value.userId;
   const [ubo, setUbo] = useState([]);
+  const [userId, setUserId] = useState('');
+  const [uboId, setUboId] = useState('');
+  const [isclicked, setIsclicked] = useState('');
 
   const [selectedUboIds, setSelectedUboIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -75,9 +76,9 @@ const UboListView = () => {
         graphqlOperation(queries.listsUbo, { filter: filter })
       );
       const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsUBO.items;
+      const items = await n.data.listsUBO.items;
       setUbo(items);
-    }getUbos();
+    };getUbos();
   }, [sub]);
 
   const handler = useCallback(() => {
@@ -157,12 +158,20 @@ const UboListView = () => {
     }
   }
 
+  function getidandident(sortkey, userId){
+    setUserId(userId);
+    setUboId(sortkey);
+    setIsclicked(true)
+   };
+
   return (
+    <React.Fragment>
+    {!isclicked ? (
     <Page
       className={clsx(classes.root)} 
       title="Ubos"
     >
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" >
         
         <Box mt={3}>
         <Card>
@@ -219,14 +228,13 @@ const UboListView = () => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Link href={`/app/updateubo/${ubo.uboId}`}>
                       <Avatar
                         className={classes.avatar}
                         src={ubo.avatarUrl}
+                        onClick={() => getidandident(ubo.sortkey, ubo.userId)}
                       >
                         {getInitials(ubo.ubo_name)}
                       </Avatar>
-                      </Link>
                       <Typography
                         color="textPrimary"
                         variant="body1"
@@ -266,7 +274,13 @@ const UboListView = () => {
         </Box>
       </Container>
     </Page>
-  );
+  ) : (
+    <>
+    <AdminUpdateUboView value={{userId, uboId}} />
+    </>
+  )}
+  </React.Fragment>
+    )
 };
 
 export default UboListView;

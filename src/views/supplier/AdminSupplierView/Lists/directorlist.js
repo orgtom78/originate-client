@@ -159,8 +159,6 @@ const DirectorListView = (value) => {
   }
 
   function getidandident(sortkey, userId){
-    console.log(sortkey);
-    console.log(userId);
     setUserId(userId);
     setDirectorId(sortkey);
     setIsclicked(true)

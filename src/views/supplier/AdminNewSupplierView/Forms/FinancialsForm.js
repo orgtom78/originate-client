@@ -3,7 +3,7 @@ import {
   InputField,
   DatePickerField,
   UploadField,
-} from "../FormFields";
+} from "src/components/FormFields";
 import {
   Card,
   CardContent,

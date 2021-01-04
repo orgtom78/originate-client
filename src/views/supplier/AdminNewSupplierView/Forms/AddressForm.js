@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Link as RouterLink } from "react-router-dom";
 import {
   InputField,
   SelectField,
   DatePickerField,
   UploadField,
-} from "../FormFields";
+} from "src/components/FormFields";
 import {
   Card,
   CardContent,
@@ -85,6 +84,8 @@ export default function AddressForm(props) {
   const classes = useStyles();
   const {
     formField: {
+      userId,
+      identityId,
       supplier_logo,
       supplier_name,
       supplier_type,
@@ -166,6 +167,22 @@ export default function AddressForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+              <InputField
+                name={userId.name}
+                label={userId.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={identityId.name}
+                label={identityId.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={supplier_name.name}

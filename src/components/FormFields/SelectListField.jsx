@@ -10,7 +10,7 @@ import {
   FormHelperText
 } from '@material-ui/core';
 
-function SelectField(props) {
+function SelectListField(props) {
   const { label, data, ...rest } = props;
   const [field, meta] = useField(props);
   const { value: selectedValue } = field;
@@ -27,7 +27,7 @@ function SelectField(props) {
       <InputLabel>{label}</InputLabel>
       <Select {...field} value={selectedValue ? selectedValue : ''}>
         {data.map((item, index) => (
-          <MenuItem key={index} value={item.value}>
+          <MenuItem key={index} value={item.label}>
             {item.label}
           </MenuItem>
         ))}
@@ -37,12 +37,12 @@ function SelectField(props) {
   );
 }
 
-SelectField.defaultProps = {
+SelectListField.defaultProps = {
   data: []
 };
 
-SelectField.propTypes = {
+SelectListField.propTypes = {
   data: PropTypes.array.isRequired
 };
 
-export default SelectField;
+export default SelectListField;

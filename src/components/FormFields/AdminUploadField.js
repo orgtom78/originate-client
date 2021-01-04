@@ -5,10 +5,9 @@ import {
   FormControl,
   FormHelperText
 } from '@material-ui/core';
-import { s3Upload } from "src/libs/awsLib.js";
+import { Storage } from "aws-amplify";
 
-
-export default function UploadField(props) {
+export default function AdminUploadField(props) {
     const [field, meta, helper] = useField(props);
     const { touched, error } = meta;
     const { setValue } = helper;
@@ -30,10 +29,21 @@ export default function UploadField(props) {
     }
   }, 
   [value]);
+
+  async function s3Up(file) {
+    const filename = `${Date.now()}-${file.name}`.replace(/ /g,"_");
+  
+    const stored = await Storage.put(filename, file, {
+      level: 'private',
+      identityId: await props.identityId,
+      contentType: file.type,
+    });
+    return stored.key;
+  }
   
   async function _onChange(event) {
         file.current = event.target.files[0];
-        const newfile = file.current ? await s3Upload(file.current) : null;
+        const newfile = file.current ? await s3Up(file.current) : null;
         setValue(newfile);
     }  
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import "date-fns";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -13,6 +14,8 @@ import {
   Container,
   Divider,
   Grid,
+  MenuItem,
+  Select,
   TextField,
   Typography,
   makeStyles,
@@ -32,6 +35,11 @@ import { green } from "@material-ui/core/colors";
 import DirectorListView from "src/views/supplier/AdminSupplierView/Lists/directorlist.js";
 import UboListView from "src/views/supplier/AdminSupplierView/Lists/ubolist.js";
 import * as queries from "src/graphql/queries.js";
+import countries from "src/components/countries.js";
+import industries from "src/components/industries.js";
+
+const cr = countries;
+const indust = industries;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -60,7 +68,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const type = [
+  {
+    value: "Corporation",
+    label: "Corporation",
+  },
+  {
+    value: "Limited Liability",
+    label: "Limited Liability",
+  },
+  {
+    value: "Partnership",
+    label: "Partnership",
+  },
+  {
+    value: "Sole Proprietorship",
+    label: "Sole Proprietorship",
+  },
+];
+
 const SupplierForm = ({ className, value, ...rest }) => {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [userId, setUserId] = useState("");
   const [supplierId, setSupplierId] = useState("");
@@ -243,7 +271,7 @@ useEffect(() => {
     }
     setSupplierSuccess(true);
     setSupplierLoading(false);
-    window.location.reload(true);
+    navigate("/admin/suppliers");
   }
 
 
@@ -281,7 +309,7 @@ useEffect(() => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    window.location.reload(true);
+    navigate("/admin/suppliers");
   }
 
   function updateSupplier(input) {
@@ -373,17 +401,23 @@ useEffect(() => {
                         variant="outlined"
                       />
                     </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Company Type"
-                        name="supplier_type"
-                        onChange={(e) => setSupplier_type(e.target.value)}
-                        required
-                        value={supplier_type|| ''}
-                        variant="outlined"
-                      />
-                    </Grid>
+                    <Grid item xs={12} sm={6}>
+              <Select
+                fullWidth
+                label="Company Type"
+                name="supplier_type"
+                onChange={(e) => setSupplier_type(e.target.value)}
+                required
+                value={supplier_type || ""}
+                variant="outlined"
+              >
+              {type.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                </Select>
+            </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -481,18 +515,41 @@ useEffect(() => {
                       </Grid>
                     </MuiPickersUtilsProvider>
                     <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Supplier Industry"
-                        name="supplier_industry"
-                        onChange={(e) =>
-                          setSupplier_industry(e.target.value)
-                        }
-                        required
-                        value={supplier_industry|| ''}
-                        variant="outlined"
-                      />
-                    </Grid>
+                  <Select
+                    fullWidth
+                    label="Country"
+                    name="supplier_country"
+                    onChange={(e) => setSupplier_country(e.target.value)}
+                    required
+                    value={supplier_country|| ''}
+                    variant="outlined"
+                  >
+                    {cr.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Select
+                    fullWidth
+                    label="Supplier Industry"
+                    name="supplier_industry"
+                    onChange={(e) =>
+                      setSupplier_industry(e.target.value)
+                    }
+                    required
+                    value={supplier_industry|| ''}
+                    variant="outlined"
+                  >
+                    {indust.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -538,11 +595,12 @@ useEffect(() => {
                 </CardContent>
                 <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
+                <Link to={`/admin/adminnewsupplierdirector/${value.value.value.userId}`}>
                   <Button
-                    href={`/admin/newsupplierdirector/${supplierId}`}
                   >
                     Add Director
                   </Button>
+                  </Link>
                 </Box>
               </Card>
           </AccordionDetails>
@@ -561,11 +619,12 @@ useEffect(() => {
                 </CardContent>
                 <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
+                <Link to={`/admin/adminnewsupplierubo/${value.value.value.userId}`}>
                   <Button
-                    href={`/admin/newsupplierubo/${supplierId}`}
                   >
                     Add Owner
                   </Button>
+                  </Link>
                 </Box>
               </Card>
           </AccordionDetails>

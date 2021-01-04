@@ -3,6 +3,8 @@ import moment from 'moment';
 import NewSupplierFormModel from './NewSupplierFormModel';
 const {
   formField: {
+    userId,
+    identityId,
     supplier_logo,
     supplier_name,
     supplier_type,
@@ -63,6 +65,8 @@ const {
 
 export default [
   Yup.object().shape({
+    [userId.name]: Yup.string().required(`${userId.requiredErrorMsg}`),
+    [identityId.name]: Yup.string().required(`${identityId.requiredErrorMsg}`),
     [supplier_logo.name]: Yup.string(),
     [supplier_name.name]: Yup.string().required(`${supplier_name.requiredErrorMsg}`),
     [supplier_trading_name.name]: Yup.string(),

@@ -61,7 +61,7 @@ const TasksProgress = ({ className, ...rest }) => {
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
-      console.log("test");
+      return
     } else {
       const d = request;
       return d;
@@ -89,7 +89,7 @@ function calcperecentage(){
       return perc
     } 
   } else {
-    console.log("wait");
+    return
   }
 }
 

@@ -1,6 +1,16 @@
 export default {
   formId: 'NewSupplier',
   formField: {
+    userId: {
+      name: 'userId',
+      label: 'User ID',
+      requiredErrorMsg: 'Please get the userId from your admin and dont make one up!'
+    },
+    identityId: {
+      name: 'identityId',
+      label: 'Identity ID',
+      requiredErrorMsg: 'Please get the identityId from your admin and dont make one up!'
+    },
     supplier_logo: {
       name: 'supplier_logo',
       label: 'Company Logo',

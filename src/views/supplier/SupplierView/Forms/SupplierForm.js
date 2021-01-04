@@ -38,7 +38,6 @@ import UboListView from "src/views/supplier/SupplierView/Lists/ubolist.js";
 import UpdateBankView from "src/views/bank/UpdateBankView";
 import countries from "src/components/countries.js";
 import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
 
 const cr = countries;
 const auto = FormikAutocomplete;

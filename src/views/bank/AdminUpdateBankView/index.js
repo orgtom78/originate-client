@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Container,
@@ -18,29 +17,18 @@ import {
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import moment from "moment";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
+import { useUser } from "src/components/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { s3Upload } from "src/libs/awsLib.js";
 import { green } from "@material-ui/core/colors";
+import countries from "src/components/countries.js";
 
-const idtype = [
-  {
-    value: "Passport",
-    label: "Passport",
-  },
-  {
-    value: "Identification Card",
-    label: "Identification Card",
-  },
-  {
-    value: "Driver's  License",
-    label: "Driver's  License",
-  },
-];
+const cr = countries;
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,125 +70,133 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const UpdateDirectorForm = ({ className, value, ...rest }) => {
+const UpdateBankForm = ({ className, ...rest }) => {
   const classes = useStyles();
-  const { id } = useParams();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const context = useUser();
+  const sub = context.sub;
 
-  const [directorId, setDirectorId] = useState("");
-  const [director_name, setDirector_name] = useState("");
-  const [director_email, setDirector_email] = useState("");
-  const [director_phone_number, setDirector_phone_number] = useState("");
-  const [director_id_attachment, setDirector_id_attachment] = useState("");
-  const [director_id_number, setDirector_id_number] = useState("");
-  const [director_id_type, setDirector_id_type] = useState("");
-  const [director_nationality, setDirector_nationality] = useState("");
-  const [director_poa_attachment, setDirector_poa_attachment] = useState("");
-  const [director_country_of_residence, setDirector_country_of_residence] = useState("");
+  const [bankId, setBankId] = useState("");
+  const [account_statement_attachment, setAccount_statement_attachment] = useState("");
+  const [bank_account_name, setBank_account_name] = useState("");
+  const [bank_account_number, setBank_account_number] = useState("");
+  const [bank_account_sortcode, setBank_account_sortcode] = useState("");
+  const [bank_address_city, setBank_address_city] = useState("");
+  const [bank_address_number, setBank_address_number] = useState("");
+  const [bank_address_postalcode, setBank_address_postalcode] = useState("");
+  const [bank_address_street, setBank_address_street] = useState("");
+  const [bank_country, setBank_country] = useState("");
+  const [bank_name, setBank_name] = useState("");
+  const [bank_routing_number, setBank_routing_number] = useState("");
+  const [bic_swift_code, setBic_swift_code] = useState("");
+  const [iban, setIban] = useState("");
 
-  const [directorloading, setDirectorLoading] = useState(false);
-  const [directorsuccess, setDirectorSuccess] = useState(false);
+  const [accountimg, setAccountimg ] = useState('');
+  const [accountpdf, setAccountpdf ] = useState('');
 
-  const [directoridloading, setDirectoridLoading] = useState(false);
-  const [directoridsuccess, setDirectoridSuccess] = useState(false);
-  const [directorpoaloading, setDirectorpoaLoading] = useState(false);
-  const [directorpoasuccess, setDirectorpoaSuccess] = useState(false);
-
-  const [directoridimg, setDirectoridImg] = useState("");
-  const [directoridpdf, setDirectoridpdf] = useState("");
-  const [directorpoaimg, setDirectorpoaImg] = useState("");
-  const [directorpoapdf, setDirectorpoapdf] = useState("");
+  const [accountloading, setAccountLoading] = useState(false);
+  const [accountsuccess, setAccountSuccess] = useState(false);
+  const [bankloading, setBankLoading] = useState(false);
+  const [banksuccess, setBankSuccess] = useState(false);
 
   const file = useRef(null);
 
-  const directoridlabel = "director_id_attachment";
-  const directoridname = "Director ID";
-  const directorpoalabel = "director_poa_attachment";
-  const directorpoaname = "Director Proof of Address";
+  const accountlabel = "account_statement_attachment";
+  const accountname = "Bank Statement";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.directorId;
+    const sub = context.sub;
     var userId = sub;
-    var sortkey = key;
-    getDirector({ userId, sortkey });
-  }, [value.directorId, value.userId]);
+    getBank(userId);
+  }, [context]);
 
-  async function getDirector(input) {
+  async function getBank(input) {
+    let filter = { userId: { eq: input }, sortkey: { contains: "bank-supplier" } };
     try {
-      const director = await API.graphql(
-        graphqlOperation(queries.getDirector, input)
-      );
       const {
         data: {
-          getDirector: {
-            directorId,
-            director_name,
-            director_email,
-            director_phone_number,
-            director_id_attachment,
-            director_id_number,
-            director_id_type,
-            director_nationality,
-            director_poa_attachment,
-            director_country_of_residence,
-          },
+          listsBank: { items: itemsPage1, nextToken },
         },
-      } = director;
-      setDirectorId(directorId);
-      setDirector_name(director_name);
-      setDirector_email(director_email);
-      setDirector_phone_number(director_phone_number);
-      setDirector_id_attachment(director_id_attachment);
-      setDirector_id_number(director_id_number);
-      setDirector_id_type(director_id_type);
-      setDirector_nationality(director_nationality);
-      setDirector_poa_attachment(director_poa_attachment);
-      setDirector_country_of_residence(director_country_of_residence);
+      } = await API.graphql(
+        graphqlOperation(queries.listsBank, { filter: filter })
+      );
+      const n = { data: { listsBank: { items: itemsPage1, nextToken } } };
+      const bank = n.data.listsBank.items[0]; 
+      const {
+            bankId,
+            bank_name,
+            bank_account_name,
+            bank_account_number,
+            bank_account_sortcode,
+            bank_address_city,
+            bank_address_street,
+            bank_address_number,
+            bank_address_postalcode,
+            bank_country,
+            bank_routing_number,
+            bic_swift_code,
+            iban,
+            account_statement_attachment,
+      } = bank;
+      setBankId(bankId);
+      setBank_name(bank_name);
+      setBank_account_name(bank_account_name);
+      setBank_account_number(bank_account_number);
+      setBank_account_sortcode(bank_account_sortcode);
+      setBank_address_city(bank_address_city);
+      setBank_address_street(bank_address_street);
+      setBank_address_number(bank_address_number);
+      setBank_address_postalcode(bank_address_postalcode);
+      setBank_country(bank_country);
+      setBank_routing_number(bank_routing_number);
+      setBic_swift_code(bic_swift_code);
+      setIban(iban);
+      setAccount_statement_attachment(account_statement_attachment);
     } catch (err) {
       console.log("error fetching data..", err);
     }
   }
 
-  async function handleDirectorSubmit() {
-    setDirectorSuccess(false);
-    setDirectorLoading(true);
+  async function handleBankSubmit() {
+    setBankSuccess(false);
+    setBankLoading(true);
     try {
       const userId = sub;
-      const sortkey = directorId;
-      await updateDirector({
+      const sortkey = bankId;
+      await updateBank({
         userId,
         sortkey,
-        director_name,
-        director_email,
-        director_phone_number,
-        director_id_attachment,
-        director_id_number,
-        director_id_type,
-        director_nationality,
-        director_poa_attachment,
-        director_country_of_residence,
+        bank_name,
+        bank_account_name,
+        bank_account_number,
+        bank_account_sortcode,
+        bank_address_city,
+        bank_address_street,
+        bank_address_number,
+        bank_address_postalcode,
+        bank_country,
+        bank_routing_number,
+        bic_swift_code,
+        iban,
       });
     } catch (e) {
       onError(e);
     }
-    setDirectorSuccess(true);
-    setDirectorLoading(false);
-    navigate("/admin/");
+    setBankSuccess(true);
+    setBankLoading(false);
+    navigate("/app/account");
   }
 
-  function updateDirector(input) {
+  function updateBank(input) {
     return API.graphql(
-      graphqlOperation(mutations.updateDirector, { input: input })
+      graphqlOperation(mutations.updateBank, { input: input })
     );
   }
 
   useEffect(() => {
-    if (director_id_attachment) {
-      async function getdirectoridimgurl() {
-        var uploadext = director_id_attachment.split(".").pop();
+    if (account_statement_attachment) {
+      async function getbankaccountimgurl() {
+        var uploadext = account_statement_attachment.split(".").pop();
         var imageExtensions = [
           "jpg",
           "jpeg",
@@ -213,98 +209,104 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = Storage.get(director_id_attachment, {
-            level: 'private',
-            identityId: 'us-east-2:48a1d6a7-d150-4427-b40f-5b6ff3a0b23e',
-          })
-          setDirectoridImg(y);
+          var y = await Storage.vault.get(account_statement_attachment);
+          setAccountimg(y);
         }
       }
-      getdirectoridimgurl();
+      getbankaccountimgurl();
     }
-  }, [director_id_attachment, sub]);
+  }, [account_statement_attachment]);
 
   useEffect(() => {
-    if (director_id_attachment) {
-      async function getdirectoridpdfurl() {
-        var uploadext = director_id_attachment.split(".").pop();
+    if (account_statement_attachment) {
+      async function getbankidpdfurl() {
+        var uploadext = account_statement_attachment.split(".").pop();
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.get(director_id_attachment, {
-            level: 'private',
-            identityId: 'us-east-2:48a1d6a7-d150-4427-b40f-5b6ff3a0b23e',
-          })
-          setDirectoridpdf(y);
+          var y = await Storage.vault.get(account_statement_attachment);
+          setAccountpdf(y);
         }
       }
-      getdirectoridpdfurl();
+      getbankidpdfurl();
     }
-  }, [director_id_attachment, sub]);
+  }, [account_statement_attachment]);
 
-  function directoridisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-    if (regex.test(directoridimg)) {
+  function accountisimageorpdf(label, name) {
+    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    if (regex.test(accountimg)) {
       return (
         <>
-          <img className={classes.img} alt="complex" src={directoridimg} />
+        <Box display="flex" justifyContent="flex-end" p={2}>
+          <Grid container spacing={3}>
+          <Grid item md={12} xs={12}>
+          <img className={classes.img} alt="complex" src={accountimg} />
           <div>
             <input
-              id={directoridimg}
+              id={accountimg}
               accept="image/*,application/pdf"
               style={{ display: "none" }}
               type="file"
-              onChange={(event) => handledirectoridChange(event)}
+              onChange={(event) => handlebankidChange(event)}
             />
-            <label htmlFor={directoridimg}>
+            <label htmlFor={accountimg}>
               <LoaderButton
-                id={directoridimg}
+                id={accountimg}
                 fullWidth
                 component="span"
                 startIcon={<UploadIcon />}
-                disabled={directoridloading}
-                success={directoridsuccess}
-                loading={directoridloading}
+                disabled={accountloading}
+                success={accountsuccess}
+                loading={accountloading}
               >
                 {" "}
                 Update File
               </LoaderButton>
             </label>
           </div>
+          </Grid>
+          </Grid>
+          </Box>
         </>
       );
-    } else if (regex.test(directoridpdf)) {
+    } else if (regex.test(accountpdf)) {
       return (
         <>
+         <Box display="flex" justifyContent="flex-end" p={2}>
+          <Grid container spacing={3}>
+          <Grid item md={12} xs={12}>
           <iframe
             title="file"
             style={{ width: "100%", height: "100%" }}
             allowFullScreen
-            src={directoridpdf}
+            src={accountpdf}
           />
           <div>
             <input
-              id={directoridpdf}
+              id={accountpdf}
               accept="image/*,application/pdf"
               style={{ display: "none" }}
               type="file"
-              onChange={(event) => handledirectoridChange(event)}
+              onChange={(event) => handlebankidChange(event)}
             />
-            <label htmlFor={directoridpdf}>
+            <label htmlFor={accountpdf}>
               <LoaderButton
-                id={directoridpdf}
+                id={accountpdf}
                 fullWidth
                 component="span"
                 startIcon={<UploadIcon />}
-                disabled={directoridloading}
-                success={directoridsuccess}
-                loading={directoridloading}
+                disabled={accountloading}
+                success={accountsuccess}
+                loading={accountloading}
               >
                 {" "}
                 Update File
               </LoaderButton>
             </label>
           </div>
+          </Grid>
+          </Grid>
+          </Box>
         </>
       );
     } else {
@@ -316,7 +318,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
             accept="image/*,application/pdf"
             style={{ display: "none" }}
             type="file"
-            onChange={(event) => handledirectoridChange(event)}
+            onChange={(event) => handlebankidChange(event)}
           />
           <label htmlFor={label}>
             <LoaderButton
@@ -324,9 +326,9 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
               fullWidth
               component="span"
               startIcon={<UploadIcon />}
-              disabled={directoridloading}
-              success={directoridsuccess}
-              loading={directoridloading}
+              disabled={accountloading}
+              success={accountsuccess}
+              loading={accountloading}
             >
               {" "}
               {name}
@@ -337,196 +339,36 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     }
   }
 
-  function handledirectoridChange(event) {
+  function handlebankidChange(event) {
     file.current = event.target.files[0];
-    const newdirectoridfile = file.current;
-    ondirectoridChange(newdirectoridfile);
+    const newbankidfile = file.current;
+    onbankidChange(newbankidfile);
   }
 
-  async function ondirectoridChange(newfile) {
-    setDirectoridSuccess(false);
-    setDirectoridLoading(true);
+  async function onbankidChange(newfile) {
+    setAccountSuccess(false);
+    setAccountLoading(true);
     try {
       const u = newfile ? await s3Upload(newfile) : null;
-      var director_id_attachment = u;
-      const sortkey = directorId;
+      var account_statement_attachment = u;
+      const sortkey = bankId;
       const userId = sub;
-      await updateDirector({
+      await updateBank({
         sortkey,
         userId,
-        director_id_attachment,
+        account_statement_attachment,
       });
     } catch (e) {
       onError(e);
     }
-    setDirectoridSuccess(true);
-    setDirectoridLoading(false);
-    window.location.reload(true);
+    setAccountSuccess(true);
+    setAccountLoading(false);
+    navigate("/app/account");
   }
 
-  useEffect(() => {
-    if (director_poa_attachment) {
-      async function getdirectorpoaimgurl() {
-        var uploadext = director_poa_attachment.split(".").pop();
-        var imageExtensions = [
-          "jpg",
-          "jpeg",
-          "bmp",
-          "gif",
-          "png",
-          "tiff",
-          "eps",
-          "svg",
-        ];
-        var x = imageExtensions.includes(uploadext);
-        if (x === true) {
-          var y = Storage.get(director_poa_attachment, { level: sub });
-          setDirectorpoaImg(y);
-        }
-      }
-      getdirectorpoaimgurl();
-    }
-  }, [director_poa_attachment, sub]);
-
-  useEffect(() => {
-    if (director_poa_attachment) {
-      async function getdirectorpoapdfurl() {
-        var uploadext = director_poa_attachment.split(".").pop();
-        var imageExtensions = ["pdf", "PDF"];
-        var x = imageExtensions.includes(uploadext);
-        if (x === true) {
-          var y = await Storage.get(director_poa_attachment, { level: sub });
-          setDirectorpoapdf(y);
-        }
-      }
-      getdirectorpoapdfurl();
-    }
-  }, [director_poa_attachment, sub]);
-
-  function directorpoaisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
-    if (regex.test(directorpoaimg)) {
-      return (
-        <>
-          <img className={classes.img} alt="complex" src={directorpoaimg} />
-          <div>
-            <input
-              id={directorpoaimg}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handledirectorpoaChange(event)}
-            />
-            <label htmlFor={directorpoaimg}>
-              <LoaderButton
-                id={directorpoaimg}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-                disabled={directorpoaloading}
-                success={directorpoasuccess}
-                loading={directorpoaloading}
-              >
-                {" "}
-                Update File
-              </LoaderButton>
-            </label>
-          </div>
-        </>
-      );
-    } else if (regex.test(directorpoapdf)) {
-      return (
-        <>
-          <iframe
-            title="file"
-            style={{ width: "100%", height: "100%" }}
-            allowFullScreen
-            src={directorpoapdf}
-          />
-          <div>
-            <input
-              id={directorpoapdf}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handledirectorpoaChange(event)}
-            />
-            <label htmlFor={directorpoapdf}>
-              <LoaderButton
-                id={directorpoapdf}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-                disabled={directorpoaloading}
-                success={directorpoasuccess}
-                loading={directorpoaloading}
-              >
-                {" "}
-                Update File
-              </LoaderButton>
-            </label>
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <input
-            name={label}
-            id={label}
-            accept="image/*,application/pdf"
-            style={{ display: "none" }}
-            type="file"
-            onChange={(event) => handledirectorpoaChange(event)}
-          />
-          <label htmlFor={label}>
-            <LoaderButton
-              id={label}
-              fullWidth
-              component="span"
-              startIcon={<UploadIcon />}
-              disabled={directorpoaloading}
-              success={directorpoasuccess}
-              loading={directorpoaloading}
-            >
-              {" "}
-              {name}
-            </LoaderButton>
-          </label>
-        </>
-      );
-    }
-  }
-
-  function handledirectorpoaChange(event) {
-    file.current = event.target.files[0];
-    const newdirectorpoafile = file.current;
-    ondirectorpoaChange(newdirectorpoafile);
-  }
-
-  async function ondirectorpoaChange(newfile) {
-    setDirectorpoaSuccess(false);
-    setDirectorpoaLoading(true);
-    try {
-      const u = newfile ? await s3Upload(newfile) : null;
-      var director_poa_attachment = u;
-      const sortkey = directorId;
-      const userId = sub;
-      await updateDirector({
-        sortkey,
-        userId,
-        director_poa_attachment,
-      });
-    } catch (e) {
-      onError(e);
-    }
-    setDirectorpoaSuccess(true);
-    setDirectorpoaLoading(false);
-    window.location.reload(true);
-  }
 
   return (
-    <Page title="Update Director">
+    <Page title="Update Bank">
       <Container>
         <form
           autoComplete="off"
@@ -540,63 +382,129 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Director Name"
-                    name="director_name"
-                    onChange={(e) => setDirector_name(e.target.value)}
+                    label="Company Bank Name"
+                    name="bank_name"
+                    onChange={(e) => setBank_name(e.target.value)}
                     required
-                    value={director_name|| ''}
+                    value={bank_name|| ''}
                     variant="outlined"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Director Email"
-                    name="director_email"
-                    onChange={(e) => setDirector_email(e.target.value)}
+                    label="Company Bank Account Number"
+                    name="bank_account_number"
+                    onChange={(e) => setBank_account_number(e.target.value)}
                     required
-                    value={director_email|| ''}
+                    value={bank_account_number|| ''}
                     variant="outlined"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Director Phone"
-                    name="director_phone_number"
-                    onChange={(e) => setDirector_phone_number(e.target.value)}
+                    label="Company Bank Sortcode"
+                    name="bank_account_sortcode"
+                    onChange={(e) => setBank_account_sortcode(e.target.value)}
                     required
-                    value={director_phone_number|| ''}
+                    value={bank_account_sortcode|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Bank Routing Number"
+                    name="bank_routing_number"
+                    onChange={(e) => setBank_routing_number(e.target.value)}
+                    required
+                    value={bank_routing_number|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="SWIFT/BIC Code"
+                    name="bic_swift_code"
+                    onChange={(e) => setBic_swift_code(e.target.value)}
+                    required
+                    value={bic_swift_code|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="IBAN"
+                    name="iban"
+                    onChange={(e) => setIban(e.target.value)}
+                    required
+                    value={iban|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Bank City"
+                    name="bank_address_city"
+                    onChange={(e) => setBank_address_city(e.target.value)}
+                    required
+                    value={bank_address_city|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Bank Street Number"
+                    name="bank_address_number"
+                    onChange={(e) => setBank_address_number(e.target.value)}
+                    required
+                    value={bank_address_number|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Bank Street"
+                    name="bank_address_street"
+                    onChange={(e) => setBank_address_street(e.target.value)}
+                    required
+                    value={bank_address_street|| ''}
+                    variant="outlined"
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Company Bank Zipcode"
+                    name="bank_address_postalcode"
+                    onChange={(e) => setBank_address_postalcode(e.target.value)}
+                    required
+                    value={bank_address_postalcode|| ''}
                     variant="outlined"
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <Select
                     fullWidth
-                    label="Company Director ID Type"
-                    name="director_id_type"
-                    onChange={(e) => setDirector_id_type(e.target.value)}
+                    label="Bank Country"
+                    name="bank_country"
+                    onChange={(e) => setBank_country(e.target.value)}
                     required
-                    value={director_id_type|| ''}
+                    value={bank_country|| ''}
                     variant="outlined"
                   >
-                    {idtype.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
+                    {cr.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
                         {item.label}
                       </MenuItem>
                     ))}
                   </Select>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Company Director ID Number"
-                    name="director_id_number"
-                    onChange={(e) => setDirector_id_number(e.target.value)}
-                    required
-                    value={director_id_number|| ''}
-                    variant="outlined"
-                  />
                 </Grid>
               </Grid>
             </CardContent>
@@ -604,12 +512,12 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
             <Box display="flex" justifyContent="flex-end" p={2}>
               <LoaderButton
                 startIcon={<UploadIcon />}
-                disabled={directorloading}
-                success={directorsuccess}
-                loading={directorloading}
-                onClick={handleDirectorSubmit}
+                disabled={bankloading}
+                success={banksuccess}
+                loading={bankloading}
+                onClick={handleBankSubmit}
               >
-                Update Director details
+                Update Bank details
               </LoaderButton>
             </Box>
           </Card>
@@ -619,21 +527,15 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Director ID:</Typography>
-                  {directoridisimageorpdf(directoridlabel, directoridname)}
+                  <Typography>Bank Statement:</Typography>
+                  {accountisimageorpdf(accountlabel, accountname)}
                 </>
               </Grid>
-              <Grid item md={12} xs={12}>
-                <>
-                  <Typography>Director Proof of Address:</Typography>
-                  {directorpoaisimageorpdf(directorpoalabel, directorpoaname)}
-                </>
               </Grid>
-            </Grid>
-        </Box>
+            </Box>
       </Container>
     </Page>
   );
 };
 
-export default UpdateDirectorForm;
+export default UpdateBankForm;

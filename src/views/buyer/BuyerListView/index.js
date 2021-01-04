@@ -16,20 +16,16 @@ import {
   MuiThemeProvider,
   createMuiTheme,
 } from "@material-ui/core";
-
 import { Pagination } from "@material-ui/lab";
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
-import ProductCard from "./ProductCard";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/usercontext.js";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import GetAppIcon from "@material-ui/icons/GetApp";
 import DollarIcon from "@material-ui/icons/LocalAtm";
 import DollarAvailableIcon from "@material-ui/icons/AttachMoney";
 import PaymentIcon from "@material-ui/icons/Payment";
-import { Percent as PercentIcon } from "react-feather";
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from 'react-number-format';
 
@@ -140,8 +136,6 @@ const BuyerList = () => {
 
 
   */
-
-  const t = buyerdata.map((clients) => clients);
 
   function checkstatus(buyerdata) {
     if (buyerdata === "submitted") {

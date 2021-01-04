@@ -176,6 +176,7 @@ export const createRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -208,24 +209,51 @@ export const createFinancials = /* GraphQL */ `
       buyerId
       investorId
       identityId
-      accounts_payable
-      accounts_receivable
+      financials_attachment
+      balance_sheet_attachment
+      income_statement_attachment
       cash
-      createdAt
-      ebit
+      marketable_securities
+      accounts_receivable
+      inventory
+      property
+      goodwill
+      other_current_assets
+      other_non_current_assets
+      accumulated_depreciation
+      total_assets
+      short_term_debt
+      accounts_payable
+      accured_expenses
+      unearned_revenue
+      long_term_debt
+      other_current_liabilities
+      other_long_term_liabilities
+      income_tax_payable
+      dividends_payable
+      total_liabilities
+      common_stock
+      preferred_stock
+      paid_in_capital
+      retained_earnings
+      total_equity
       equity_book_value
       equity_market_value
-      financials_attachment
+      sales
+      cost_of_goods_sold
+      operating_expenses
+      marketing_expenses
+      bad_debt_expenses
+      createdAt
+      ebit
       interest_expenses
-      inventory
+      depreciation_expenses
+      sale_purchase_of_fixed_asset
+      extraordinary_income
+      tax_expenses
       net_profit
       financials_rating
       financials_reporting_period
-      retained_earnings
-      sales
-      short_term_debt
-      total_assets
-      total_liabilities
       working_capital
       financials_status
       userId
@@ -299,11 +327,15 @@ export const createBuyer = /* GraphQL */ `
       buyer_address_refinment
       buyer_address_street
       buyer_name
+      buyer_trading_name
       buyer_country
       buyer_website
       createdAt
       buyer_currency
+      buyer_date_of_incorporation
       buyer_description
+      buyer_industry
+      buyer_industry_code
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
@@ -329,6 +361,11 @@ export const createBuyer = /* GraphQL */ `
       buyer_sold_goods_description
       buyer_supplier_year_business_relation_started
       buyer_status
+      buyer_type
+      buyer_registration_cert_attachment
+      buyer_shareholder_list_attachment
+      buyer_director_list_attachment
+      buyer_articles_of_association_attachment
       sortkey
       userId
     }
@@ -439,6 +476,7 @@ export const deleteRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -541,24 +579,51 @@ export const deleteFinancials = /* GraphQL */ `
       buyerId
       investorId
       identityId
-      accounts_payable
-      accounts_receivable
+      financials_attachment
+      balance_sheet_attachment
+      income_statement_attachment
       cash
-      createdAt
-      ebit
+      marketable_securities
+      accounts_receivable
+      inventory
+      property
+      goodwill
+      other_current_assets
+      other_non_current_assets
+      accumulated_depreciation
+      total_assets
+      short_term_debt
+      accounts_payable
+      accured_expenses
+      unearned_revenue
+      long_term_debt
+      other_current_liabilities
+      other_long_term_liabilities
+      income_tax_payable
+      dividends_payable
+      total_liabilities
+      common_stock
+      preferred_stock
+      paid_in_capital
+      retained_earnings
+      total_equity
       equity_book_value
       equity_market_value
-      financials_attachment
+      sales
+      cost_of_goods_sold
+      operating_expenses
+      marketing_expenses
+      bad_debt_expenses
+      createdAt
+      ebit
       interest_expenses
-      inventory
+      depreciation_expenses
+      sale_purchase_of_fixed_asset
+      extraordinary_income
+      tax_expenses
       net_profit
       financials_rating
       financials_reporting_period
-      retained_earnings
-      sales
-      short_term_debt
-      total_assets
-      total_liabilities
       working_capital
       financials_status
       userId
@@ -632,11 +697,15 @@ export const deleteBuyer = /* GraphQL */ `
       buyer_address_refinment
       buyer_address_street
       buyer_name
+      buyer_trading_name
       buyer_country
       buyer_website
       createdAt
       buyer_currency
+      buyer_date_of_incorporation
       buyer_description
+      buyer_industry
+      buyer_industry_code
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
@@ -662,6 +731,11 @@ export const deleteBuyer = /* GraphQL */ `
       buyer_sold_goods_description
       buyer_supplier_year_business_relation_started
       buyer_status
+      buyer_type
+      buyer_registration_cert_attachment
+      buyer_shareholder_list_attachment
+      buyer_director_list_attachment
+      buyer_articles_of_association_attachment
       sortkey
       userId
     }
@@ -772,6 +846,7 @@ export const updateRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -874,24 +949,51 @@ export const updateFinancials = /* GraphQL */ `
       buyerId
       investorId
       identityId
-      accounts_payable
-      accounts_receivable
+      financials_attachment
+      balance_sheet_attachment
+      income_statement_attachment
       cash
-      createdAt
-      ebit
+      marketable_securities
+      accounts_receivable
+      inventory
+      property
+      goodwill
+      other_current_assets
+      other_non_current_assets
+      accumulated_depreciation
+      total_assets
+      short_term_debt
+      accounts_payable
+      accured_expenses
+      unearned_revenue
+      long_term_debt
+      other_current_liabilities
+      other_long_term_liabilities
+      income_tax_payable
+      dividends_payable
+      total_liabilities
+      common_stock
+      preferred_stock
+      paid_in_capital
+      retained_earnings
+      total_equity
       equity_book_value
       equity_market_value
-      financials_attachment
+      sales
+      cost_of_goods_sold
+      operating_expenses
+      marketing_expenses
+      bad_debt_expenses
+      createdAt
+      ebit
       interest_expenses
-      inventory
+      depreciation_expenses
+      sale_purchase_of_fixed_asset
+      extraordinary_income
+      tax_expenses
       net_profit
       financials_rating
       financials_reporting_period
-      retained_earnings
-      sales
-      short_term_debt
-      total_assets
-      total_liabilities
       working_capital
       financials_status
       userId
@@ -965,11 +1067,15 @@ export const updateBuyer = /* GraphQL */ `
       buyer_address_refinment
       buyer_address_street
       buyer_name
+      buyer_trading_name
       buyer_country
       buyer_website
       createdAt
       buyer_currency
+      buyer_date_of_incorporation
       buyer_description
+      buyer_industry
+      buyer_industry_code
       buyer_insurance_name
       buyer_insurance_rating
       buyer_insurance_status
@@ -995,6 +1101,11 @@ export const updateBuyer = /* GraphQL */ `
       buyer_sold_goods_description
       buyer_supplier_year_business_relation_started
       buyer_status
+      buyer_type
+      buyer_registration_cert_attachment
+      buyer_shareholder_list_attachment
+      buyer_director_list_attachment
+      buyer_articles_of_association_attachment
       sortkey
       userId
     }

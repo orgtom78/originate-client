@@ -76,7 +76,7 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
         sum
           )
     } else {
-      console.log("wait");
+      return
     }
   }
 

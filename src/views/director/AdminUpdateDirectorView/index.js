@@ -1,9 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
-  Button,
   Card,
   CardContent,
   Container,
@@ -18,13 +17,11 @@ import {
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import moment from "moment";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { s3Upload } from "src/libs/awsLib.js";
 import { green } from "@material-ui/core/colors";
 
 const idtype = [
@@ -85,10 +82,10 @@ const useStyles = makeStyles((theme) => ({
 
 const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
-  const { id } = useParams();
   const navigate = useNavigate();
   const sub = value.userId;
 
+  const [identityId, setIdentityId] = useState("");
   const [directorId, setDirectorId] = useState("");
   const [director_name, setDirector_name] = useState("");
   const [director_email, setDirector_email] = useState("");
@@ -136,6 +133,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       const {
         data: {
           getDirector: {
+            identityId,
             directorId,
             director_name,
             director_email,
@@ -149,6 +147,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           },
         },
       } = director;
+      setIdentityId(identityId);
       setDirectorId(directorId);
       setDirector_name(director_name);
       setDirector_email(director_email);
@@ -196,7 +195,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       graphqlOperation(mutations.updateDirector, { input: input })
     );
   }
-
+  
   useEffect(() => {
     if (director_id_attachment) {
       async function getdirectoridimgurl() {
@@ -213,16 +212,16 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = Storage.get(director_id_attachment, {
+          var y = await Storage.get(director_id_attachment, {
             level: 'private',
-            identityId: 'us-east-2:48a1d6a7-d150-4427-b40f-5b6ff3a0b23e',
+            identityId: identityId,
           })
           setDirectoridImg(y);
         }
       }
       getdirectoridimgurl();
     }
-  }, [director_id_attachment, sub]);
+  }, [director_id_attachment, sub, identityId]);
 
   useEffect(() => {
     if (director_id_attachment) {
@@ -233,17 +232,17 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         if (x === true) {
           var y = await Storage.get(director_id_attachment, {
             level: 'private',
-            identityId: 'us-east-2:48a1d6a7-d150-4427-b40f-5b6ff3a0b23e',
+            identityId: identityId,
           })
           setDirectoridpdf(y);
         }
       }
       getdirectoridpdfurl();
     }
-  }, [director_id_attachment, sub]);
+  }, [director_id_attachment, sub, identityId]);
 
   function directoridisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(directoridimg)) {
       return (
         <>
@@ -343,11 +342,22 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     ondirectoridChange(newdirectoridfile);
   }
 
+  async function s3Up(file) {
+    const filename = `${Date.now()}-${file.name}`.replace(/ /g,"_");
+  
+    const stored = await Storage.put(filename, file, {
+      level: 'private',
+      identityId: identityId,
+      contentType: file.type,
+    });
+    return stored.key;
+  }
+
   async function ondirectoridChange(newfile) {
     setDirectoridSuccess(false);
     setDirectoridLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile) : null;
       var director_id_attachment = u;
       const sortkey = directorId;
       const userId = sub;
@@ -361,7 +371,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     }
     setDirectoridSuccess(true);
     setDirectoridLoading(false);
-    window.location.reload(true);
+    navigate("/admin/");
   }
 
   useEffect(() => {
@@ -380,13 +390,16 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = Storage.get(director_poa_attachment, { level: sub });
+          var y = await Storage.get(director_poa_attachment, {
+            level: 'private',
+            identityId: identityId,
+          })
           setDirectorpoaImg(y);
         }
       }
       getdirectorpoaimgurl();
     }
-  }, [director_poa_attachment, sub]);
+  }, [director_poa_attachment, sub, identityId]);
 
   useEffect(() => {
     if (director_poa_attachment) {
@@ -395,16 +408,19 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.get(director_poa_attachment, { level: sub });
+          var y = await Storage.get(director_poa_attachment, {
+            level: 'private',
+            identityId: identityId,
+          })
           setDirectorpoapdf(y);
         }
       }
       getdirectorpoapdfurl();
     }
-  }, [director_poa_attachment, sub]);
+  }, [director_poa_attachment, sub, identityId]);
 
   function directorpoaisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(directorpoaimg)) {
       return (
         <>
@@ -508,7 +524,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectorpoaSuccess(false);
     setDirectorpoaLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile) : null;
       var director_poa_attachment = u;
       const sortkey = directorId;
       const userId = sub;
@@ -522,7 +538,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     }
     setDirectorpoaSuccess(true);
     setDirectorpoaLoading(false);
-    window.location.reload(true);
+    navigate("/admin/");
   }
 
   return (
@@ -615,8 +631,6 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           </Card>
         </form>
         <Divider />
-        <Box display="flex" justifyContent="flex-end" p={2}>
-            <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
                   <Typography>Director ID:</Typography>
@@ -629,8 +643,6 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
                   {directorpoaisimageorpdf(directorpoalabel, directorpoaname)}
                 </>
               </Grid>
-            </Grid>
-        </Box>
       </Container>
     </Page>
   );

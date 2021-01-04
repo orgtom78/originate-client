@@ -47,6 +47,7 @@ function App() {
   }
   else {
     let user = z.signInUserSession.accessToken.payload["cognito:groups"][0]
+    console.log(user)
     userisAdmin(true)
   }
   }settinggroup();

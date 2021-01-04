@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -28,17 +28,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function Profile({ className, ...rest }) {
+export default function Profile({ className, value, ...rest }) {
+  const supplierId = value.value.supplierId
+  const Id = value.value.userId
   const classes = useStyles();
   const [avatar, setAvatar] = useState("");
-  const [supplierId, setSupplierId] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
-  const [sub, setSub] = useState("");
-  const { id } = useParams();
+  const [identityId, setIdentityId] = useState("");
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -48,32 +48,34 @@ export default function Profile({ className, ...rest }) {
 
 
   useEffect(() => {
-    async function getSupplier(ident, key){
-      var userId = ident;
-      var sortkey = key;
+    async function getSupplier(){
+      var userId = Id;
+      var sortkey = supplierId;
       try {
       const data = await API.graphql(graphqlOperation(queries.getSupplier, { userId, sortkey }));
       const { data: { getSupplier: {
-        sub,
-        supplierId,
+        identityId,
         supplier_logo,
         supplier_name,
         supplier_address_city,
         supplier_country,
         supplier_industry,
       }}} = data;
-      setSub(sub);
-      setSupplierId(supplierId);
+      setIdentityId(identityId);
       setSupplier_name(supplier_name);
       setSupplier_address_city(supplier_address_city);
       setSupplier_country(supplier_country);
       setSupplier_industry(supplier_industry);
       setSupplier_logo(supplier_logo);
-      const z = await Storage.vault.get(supplier_logo);
+      const z = await Storage.get(supplier_logo, {
+        level: 'private',
+        identityId: identityId,
+      })
       setAvatar(z);
     } catch (err) {
       console.log("error fetching data..", err);
-    }}}, []);
+    }}getSupplier();
+  }, [Id, supplierId]);
 
   const city = supplier_address_city;
   const country = supplier_country;
@@ -113,7 +115,7 @@ export default function Profile({ className, ...rest }) {
       const u = a ? await s3Upload(a) : null;
       setUploadedFile(u);
       var supplier_logo = u;
-      const userId = sub;
+      const userId = Id;
       const sortkey = supplierId;
       await updateSupplier({
         userId,
@@ -125,6 +127,7 @@ export default function Profile({ className, ...rest }) {
     }
     setSuccess(true);
     setLoading(false);
+    navigate("/admin/suppliers");
   }
 
   function updateSupplier(input) {

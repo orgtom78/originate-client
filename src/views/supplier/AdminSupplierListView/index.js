@@ -5,11 +5,9 @@ import {
   Box,
   Button,
   Card,
-  Chip,
   Container,
   Checkbox,
   Divider,
-  Link,
   Table,
   TableBody,
   TableCell,
@@ -18,8 +16,6 @@ import {
   TableRow,
   Typography,
   makeStyles,
-  MuiThemeProvider,
-  createMuiTheme,
 } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
@@ -27,8 +23,6 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
-import { green, orange } from "@material-ui/core/colors";
-import NumberFormat from 'react-number-format';
 import AdminSupplierView from 'src/views/supplier/AdminSupplierView';
 
 const useStyles = makeStyles((theme) => ({
@@ -43,19 +37,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const greenTheme = createMuiTheme({
-  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createMuiTheme({
-  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
-
 const AdminSupplierListView = () => {
   const classes = useStyles();
   const [supplier, setSupplier] = useState([]);
   const [isclicked, setIsclicked] = useState('');
   const [userId, setUserId] = useState('');
   const [supplierId, setSupplierId] = useState('');
+  const [identityId, setIdentityId] = useState('');
 
   const [selectedSupplierIds, setSelectedSupplierIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -86,7 +74,6 @@ const AdminSupplierListView = () => {
       return d;
     }
   }, [supplier]);
-
 
   const handleSelectAll = (event) => {
     let newSelectedSupplierIds;
@@ -128,37 +115,10 @@ const AdminSupplierListView = () => {
     setPage(newPage);
   };
 
-  function checkstatus(supplier) {
-    if (supplier === "Submitted") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={supplier} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else if (supplier === "Under Review") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={supplier} color="secondary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={supplier} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    }
-  }
-
-  function getidandident(supplierId, userId){
+  function getidandident(supplierId, userId, identityId){
    setUserId(userId);
    setSupplierId(supplierId);
+   setIdentityId(identityId);
    setIsclicked(true)
   };
 
@@ -199,7 +159,7 @@ const AdminSupplierListView = () => {
                   Industry
                 </TableCell>
                 <TableCell>
-                  Status
+                  Website
                 </TableCell>
                 <TableCell>
                   Latest update
@@ -228,8 +188,8 @@ const AdminSupplierListView = () => {
                       
                       <Avatar
                         className={classes.avatar}
-                        src={supplier.supplier_logo}
-                        onClick={() => getidandident(supplier.supplierId, supplier.userId)}
+                        src={`${supplier.supplier_logo}`}
+                        onClick={() => getidandident(supplier.supplierId, supplier.userId, supplier.identityId)}
                       >
                         {getInitials(supplier.supplier_name)}
                       </Avatar>
@@ -243,20 +203,13 @@ const AdminSupplierListView = () => {
                     </Box>
                   </TableCell>
                   <TableCell>
-                  <NumberFormat
-                  color="textPrimary"
-                  variant="h3"
-                  value={supplier.supplier_country}
-                  displayType={'text'} 
-                  thousandSeparator={true}
-                  prefix={'$'}
-                  />    
+                  {`${supplier.supplier_country}`}
                   </TableCell>
                   <TableCell>
                     {`${supplier.supplier_industry}`}
                   </TableCell>
                   <TableCell>
-                    {checkstatus(supplier.supplier_status)}
+                  {`${supplier.supplier_website}`}
                   </TableCell>
                   <TableCell>
                     {moment(supplier.createdAt).format('DD/MM/YYYY')}
@@ -281,7 +234,7 @@ const AdminSupplierListView = () => {
         <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
                   <Button
-                    href="/admin/newsupplier/12"
+                    href="/admin/newsupplier"
                   >
                     Add Supplier
                   </Button>
@@ -290,7 +243,7 @@ const AdminSupplierListView = () => {
     </Page>
 ) : (
   <>
-  <AdminSupplierView value={{userId, supplierId}} />
+  <AdminSupplierView value={{userId, supplierId, identityId}} />
   </>
 )}
 </React.Fragment>

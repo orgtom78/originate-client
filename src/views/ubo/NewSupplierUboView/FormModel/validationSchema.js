@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import moment from 'moment';
 import NewSupplierUboFormModel from './NewSupplierUboFormModel';
 const {
   formField: {
