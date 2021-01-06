@@ -1,4 +1,5 @@
 import React, { useState,  useCallback, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -54,7 +55,9 @@ const orangeTheme = createMuiTheme({
 
 const UboListView = (value) => {
   const classes = useStyles();
-  const sub = value.value.value.value.userId;
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
   const [ubo, setUbo] = useState([]);
   const [userId, setUserId] = useState('');
   const [uboId, setUboId] = useState('');
@@ -66,7 +69,6 @@ const UboListView = (value) => {
 
   useEffect(() => {
     async function getUbos() {
-      const id = await sub;
       let filter = { userId: { eq: id }, sortkey: { contains: "ubo-buyer" } };
       const {
         data: {
@@ -79,7 +81,7 @@ const UboListView = (value) => {
       const items = await n.data.listsUBO.items;
       setUbo(items);
     };getUbos();
-  }, [sub]);
+  }, [id]);
 
   const handler = useCallback(() => {
     if (!ubo || !ubo.length) {

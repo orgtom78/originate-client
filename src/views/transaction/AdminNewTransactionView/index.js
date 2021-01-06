@@ -13,7 +13,6 @@ import { v4 as uuid } from 'uuid';
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from 'src/graphql/mutations.js';
 import * as queries from "src/graphql/queries.js";
-import { useUser } from "src/components/usercontext.js";
 
 import Page from 'src/components/Page';
 
@@ -43,40 +42,23 @@ export default function NewAccount() {
   const [ident, setIdent] = useState("");
   const [buyername, setBuyername] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
-  const context = useUser();
   const { id } = useParams();
+  const { buyId } = useParams();
   const requestId = 'request-'+uuid();
-
-
-  React.useEffect(() => {
-    // attempt to fetch the info of the user that was already logged in
-    async function onLoad() {
-      const data = await context;
-      const {
-        sub,
-        supplierId,
-        identityId, 
-        supplier_name,
-      } = data;
-      setSub(sub);
-      setIdent(identityId);
-      setSupid(supplierId);
-      setSupplier_name(supplier_name);
-    }
-    onLoad();
-  }, [context]);
 
   React.useEffect(() => {
   async function load(){
-  var userId = sub;
-  var sortkey = id;
+  var userId = id;
+  var sortkey = buyId;
   const buyer = await getbuyername({userId, sortkey});
-  const { data: { getBuyer: { buyer_name } } } =  buyer;
+  const { data: { getBuyer: { buyer_name, supplierId, identityId } } } = buyer;
   const buyername = await buyer_name;
+  setSupid(supplierId);
+  setIdent(identityId);
   setBuyername(buyername);
   } 
   load();
-}, [sub, id]);
+}, [id, buyId]);
 
 
   function _sleep(ms) {
@@ -86,7 +68,7 @@ export default function NewAccount() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = sub;
+      const userId = id;
       const sortkey = requestId;
       const supplierId = supid;
       const identityId = ident;
@@ -145,7 +127,7 @@ export default function NewAccount() {
 
   function _handleSubmit(values, actions) {
       _submitForm(values, actions);
-      navigate('/app/transactions')
+      navigate('/admin/transactions')
   }
 
   return (
@@ -167,7 +149,7 @@ export default function NewAccount() {
           >
             {({ isSubmitting }) => (
               <Form id={formId}>
-                <PayoutForm formField={formField} vuser={sub} vrequest={requestId}/>
+                <PayoutForm formField={formField} vuser={id} vrequest={requestId} vident={ident}/>
                 <div className={classes.buttons}>
                   <div className={classes.wrapper}>
                     <Button

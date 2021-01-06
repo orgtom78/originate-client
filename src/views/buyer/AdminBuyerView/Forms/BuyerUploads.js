@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "date-fns";
 import {
   Accordion,
@@ -55,6 +55,9 @@ const useStyles = makeStyles(() => ({
 function BuyerUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
   const [sub, setSub] = useState("");
   const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
@@ -92,12 +95,12 @@ function BuyerUploads(value) {
 
 
   useEffect(() => {
-    const sub = value.value.value.value.userId;
-    const key = value.value.value.value.buyerId;
+    const sub = id;
+    const key = buyId;
     var userId = sub;
     var sortkey = key;
     getBuyer({ userId, sortkey });
-  }, [value.value.value.value.userId, value.value.value.value.buyerId]);
+  }, [id, buyId]);
 
   async function getBuyer(input) {
     try {

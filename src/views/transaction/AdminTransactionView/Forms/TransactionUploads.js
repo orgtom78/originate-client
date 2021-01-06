@@ -1178,37 +1178,37 @@ function BuyerUploads(value) {
             <Card>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Registration Certificate:</Typography>
+                  <Typography>Invoice:</Typography>
                   {invoiceisimageorpdf(invoicelabel, invoicename)}
                 </>
               </Grid>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Shareholder  List:</Typography>
+                  <Typography>Purchase Order:</Typography>
                   {purchaseoisimageorpdf(purchaseolabel, purchaseoname)}
                 </>
               </Grid>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Director List:</Typography>
+                  <Typography>Offer Notice:</Typography>
                   {offernisimageorpdf(offernlabel, offernname)}
                 </>
               </Grid>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Articles of Association:</Typography>
+                  <Typography>IPU:</Typography>
                   {ipuisimageorpdf(ipulabel, ipuname)}
                 </>
               </Grid>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Articles of Association:</Typography>
+                  <Typography>Bill of lading:</Typography>
                   {blisimageorpdf(bllabel, blname)}
                 </>
               </Grid>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Articles of Association:</Typography>
+                  <Typography>Cargo Insurance:</Typography>
                   {cargoiisimageorpdf(cargoilabel, cargoiname)}
                 </>
               </Grid>

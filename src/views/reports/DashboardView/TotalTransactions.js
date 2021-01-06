@@ -67,7 +67,7 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
-      console.log("test");
+      return;
     } else {
       const d = request;
       return d;
@@ -77,7 +77,8 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   function addarrays() {
     if (handle) {
-      const count = request.length;
+      var x = request.filter(e => e.request_status === 'Approved')
+      const count = x.length;
       return(
         count
           )

@@ -146,7 +146,9 @@ const LatestLimits = ({ className, ...rest }) => {
                   key={limit.buyerId}
                 >
                   <TableCell>
+                    <Link to={`/admin/buyer/${limit.userId}/${limit.buyerId}/${limit.identityId}`}>
                     {limit.buyer_name}
+                    </Link>
                   </TableCell>
                   <TableCell>
                   <NumberFormat
@@ -162,7 +164,7 @@ const LatestLimits = ({ className, ...rest }) => {
                   <TableCell>
                   {checkstatus(limit.buyer_status)}
                   </TableCell>
-                </TableRow>
+                </TableRow>      
               ))}
             </TableBody>
           </Table>

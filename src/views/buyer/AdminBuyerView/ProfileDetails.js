@@ -10,9 +10,9 @@ import BuyerUploads from "./Forms/BuyerUploads";
 const Profile = (value) => {
   return (
     <Container maxWidth="lg">
-      <BuyerForm value={value}/>
+      <BuyerForm/>
       <br></br>
-      <BuyerUploads value={value} />
+      <BuyerUploads/>
     </Container>
   );
 };

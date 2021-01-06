@@ -282,7 +282,7 @@ const AdminTransactionListView = () => {
     </Card>
         </Box>
         <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/newtransaction/`}>
+                <Link to={`/admin/newtransactionlist/`}>
                   <Button
                   >
                     Add Transaction

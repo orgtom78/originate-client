@@ -31,8 +31,9 @@ import AdminNewBuyerDirectorView from 'src/views/director/AdminNewBuyerDirectorV
 import AdminNewBuyerView from 'src/views/buyer/AdminNewBuyerView';
 import AdminBuyerView from 'src/views/buyer/AdminBuyerView';
 import AdminTransactionListView from 'src/views/transaction/AdminTransactionListView';
+import AdminNewTransactionView from 'src/views/transaction/AdminNewTransactionView';
 import AdminNewFinancialsView from 'src/views/financials/AdminNewFinancialsView';
-
+import AdminBuyerTransactionListView from 'src/views/buyer/AdminBuyerTransactionListView';
 
   const routes = (isAuthenticated, isAdmin) =>
   [{
@@ -87,6 +88,8 @@ import AdminNewFinancialsView from 'src/views/financials/AdminNewFinancialsView'
       { path: 'adminnewbuyerdirector/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewBuyerDirectorView />},
       { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewFinancialsView />},
       { path: 'transactions', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminTransactionListView  />},
+      { path: 'newtransactionlist', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
+      { path: 'newtransaction/:id/:buyId', element: !isAuthenticated ? <LoginView /> : <AdminNewTransactionView />  },
       { path: '*', element: <Navigate to="admin/404" /> }
     ]
   }

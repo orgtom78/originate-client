@@ -156,12 +156,6 @@ const AdminBuyerListView = () => {
     }
   }
 
-  function getidandident(buyerId, userId, identityId){
-   setUserId(userId);
-   setBuyerId(buyerId);
-   setIdentityId(identityId);
-   setIsclicked(true)
-  };
 
   return (
     <React.Fragment>
@@ -226,14 +220,14 @@ const AdminBuyerListView = () => {
                       alignItems="center"
                       display="flex"
                     >
-                      
+                      <Link to={`/admin/buyer/${buyer.userId}/${buyer.buyerId}/${buyer.identityId}`}>
                       <Avatar
                         className={classes.avatar}
                         src={`${buyer.buyer_logo}`}
-                        onClick={() => getidandident(buyer.buyerId, buyer.userId, buyer.identityId)}
                       >
                         {getInitials(buyer.buyer_name)}
                       </Avatar>
+                      </Link>
                     
                       <Typography
                         color="textPrimary"

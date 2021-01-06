@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useParams } from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import {
@@ -122,6 +122,10 @@ const status = [
 const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
+
   const [userId, setUserId] = useState("");
   const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
@@ -135,10 +139,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
   const [buyer_country, setBuyer_country] = useState("");
   const [buyer_industry, setBuyer_industry] = useState("");
-  const [
-    buyer_registration_cert_attachment,
-    setBuyer_registration_cert_attachment,
-  ] = useState("");
+  const [buyer_registration_cert_attachment, setBuyer_registration_cert_attachment] = useState("");
   const [buyer_website, setBuyer_website] = useState("");
   const [buyer_address_refinment, setBuyer_address_refinment] = useState("");
   const [buyer_industry_code, setBuyer_industry_code] = useState("");
@@ -149,8 +150,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyersuccess, setBuyerSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.value.value.userId;
-    const sortkey = value.value.value.buyerId;
+    const userId = id;
+    const sortkey = buyId;
     setBuyerId(sortkey);
     getBuyer({ userId, sortkey });
     async function getBuyer(input) {
@@ -208,14 +209,14 @@ const BuyerForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.buyerId]);
+  }, [id, buyId]);
 
   async function handleBuyerSubmit() {
     setBuyerSuccess(false);
     setBuyerLoading(true);
     try {
-      const userId = value.value.value.userId;
-      const sortkey = value.value.value.buyerId;
+      const userId = id;
+      const sortkey = buyId;
       await updateBuyer({
         userId,
         sortkey,
@@ -536,7 +537,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-              <Link to={`/admin/adminnewfinancials/${value.value.value.userId}/${value.value.value.buyerId}/${identityId}`}>
+              <Link to={`/admin/adminnewfinancials/${id}/${buyId}/${ident}`}>
                 <Button
                 >
                   Add Financials
@@ -559,7 +560,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-              <Link to={`/admin/adminnewbuyerdirector/${value.value.value.userId}`}>
+              <Link to={`/admin/adminnewbuyerdirector/${id}`}>
                 <Button
                 >
                   Add Director
@@ -583,7 +584,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-              <Link to={`/admin/adminnewbuyerubo/${value.value.value.userId}`}>
+              <Link to={`/admin/adminnewbuyerubo/${id}`}>
                 <Button
                 >
                   Add Owner

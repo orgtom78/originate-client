@@ -1,4 +1,5 @@
 import React, { useState,  useCallback, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -54,7 +55,9 @@ const orangeTheme = createMuiTheme({
 
 const DirectorListView = (value) => {
   const classes = useStyles();
-  const sub = value.value.value.value.userId;
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
   const [director, setDirector] = useState([]);
   const [userId, setUserId] = useState('');
   const [directorId, setDirectorId] = useState('');
@@ -66,7 +69,6 @@ const DirectorListView = (value) => {
 
   useEffect(() => {
     async function getDirectors() {
-      const id = await sub;
       let filter = { userId: { eq: id }, sortkey: { contains: "director-buyer" } };
       const {
         data: {
@@ -79,7 +81,7 @@ const DirectorListView = (value) => {
       const items = n.data.listsDirector.items;
       setDirector(items);
     };getDirectors();
-  }, [sub]);
+  }, [id]);
 
   const handler = useCallback(() => {
     if (!director || !director.length) {

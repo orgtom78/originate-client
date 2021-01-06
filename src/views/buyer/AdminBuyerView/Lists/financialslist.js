@@ -1,4 +1,5 @@
 import React, { useState,  useCallback, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -44,8 +45,9 @@ const useStyles = makeStyles((theme) => ({
 
 const FinancialsListView = (value) => {
   const classes = useStyles();
-  const sub = value.value.value.value.userId;
-  const bid = value.value.value.value.buyerId;
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
   const [financials, setFinancials] = useState([]);
   const [userId, setUserId] = useState('');
   const [financialsId, setFinancialsId] = useState('');
@@ -57,8 +59,7 @@ const FinancialsListView = (value) => {
 
   useEffect(() => {
     async function getFinancials() {
-      const id = await sub;
-      let filter = { userId: { eq: id }, sortkey: { beginsWith: "financials-", contains: bid } };
+      let filter = { userId: { eq: id }, sortkey: { beginsWith: "financials-", contains: buyId } };
       const {
         data: {
           listsFinancials: { items: itemsPage1, nextToken },
@@ -70,7 +71,7 @@ const FinancialsListView = (value) => {
       const items = n.data.listsFinancials.items;
       setFinancials(items);
     };getFinancials();
-  }, [sub]);
+  }, [id, buyId]);
 
   const handler = useCallback(() => {
     if (!financials || !financials.length) {
