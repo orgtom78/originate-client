@@ -13,7 +13,7 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import FacebookIcon from 'src/icons/Facebook';
+import XeroIcon from 'src/icons/Xero';
 import GoogleIcon from 'src/icons/Google';
 import Page from 'src/components/Page';
 
@@ -55,7 +55,8 @@ export default function LoginView(){
             onSubmit={async (values) => { try {
               await Auth.signIn(values.email, values.password);
               userHasAuthenticated(true); 
-              navigate('/app');
+              navigate('/app/account');
+              window.location.reload () 
             } catch (e) {
               alert(e.message);
             }
@@ -98,12 +99,12 @@ export default function LoginView(){
                     <Button
                       color="primary"
                       fullWidth
-                      startIcon={<FacebookIcon />}
+                      startIcon={<XeroIcon />}
                       onClick={handleSubmit}
                       size="large"
                       variant="contained"
                     >
-                      Login with Facebook
+                      Login with Xero
                     </Button>
                   </Grid>
                   <Grid

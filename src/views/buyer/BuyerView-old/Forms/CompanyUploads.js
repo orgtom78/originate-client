@@ -20,9 +20,6 @@ import { useUser } from 'src/components/usercontext.js';
 import { Storage } from "aws-amplify"; 
 import { s3Upload } from "src/libs/awsLib.js";
 
-
-
-
 const useStyles = makeStyles(() => ({
   image: {
     width: 128,
@@ -100,9 +97,6 @@ function CompanyUploads(){
       }; geturl();
     }
   },[uploadedFile]);
-
-
-
 
 function handleFileChange(event) {
     file.current = event.target.files[0];

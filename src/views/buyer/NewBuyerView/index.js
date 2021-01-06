@@ -20,6 +20,7 @@ import NewSupplierView from 'src/views/supplier/NewSupplierView';
 
 import Page from 'src/components/Page';
 
+import BuyerListView from 'src/views/buyer/BuyerListView';
 import BuyerAddressForm from './Forms/BuyerAddressForm';
 import BuyerFinancialsForm from './Forms/BuyerFinancialsForm';
 import BuyerHistoryForm from './Forms/BuyerHistoryForm';
@@ -40,14 +41,17 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Client Details', 'Client Financials', 'Client History'];
 const { formId, formField } = NewBuyerFormModel;
 
+const financialsId  = 'financials-buyer'+uuid();
+const buyerId = 'buyer-'+uuid();
+
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <BuyerAddressForm  formField={formField}/>;
+      return <BuyerAddressForm  formField={formField} vbuyer={buyerId}/>;
     case 1:
-      return <BuyerFinancialsForm  formField={formField}/>;
+      return <BuyerFinancialsForm  formField={formField} value={financialsId}/>;
     case 2:
-      return <BuyerHistoryForm formField={formField}/>;
+      return <BuyerHistoryForm formField={formField} vbuyer={buyerId}/>;
     default:
       throw new Error('Unknown step');
   }
@@ -90,17 +94,16 @@ export default function NewAccount() {
     await _sleep(1000);
     try {
       const userId = sub;
-      const n = uuid();
-      const buyerId = 'buyer-'+n;
       const supplierId = supid;
 
       const buyer_address_city = values['buyer_address_city'];
-      const buyer_address_number = values['buyer_address_number'];
       const buyer_address_postalcode = values['buyer_address_postalcode'];
       const buyer_address_street = values['buyer_address_street'];
       const buyer_name = values['buyer_name'];
       const buyer_country = values['buyer_country'];
       const buyer_website = values['buyer_website'];
+      const buyer_contact_name = values['buyer_contact_name'];
+      const buyer_contact_email = values['buyer_contact_email'];
       const buyer_currency = values['buyer_currency'];
       const buyer_loan_request_amount = values['buyer_loan_request_amount'];
       const buyer_payment_terms = values['buyer_payment_terms'];
@@ -108,14 +111,15 @@ export default function NewAccount() {
       const buyer_sold_goods_description = values['buyer_sold_goods_description'];
 
       const ebit = values['ebit'];
-      const financials_attachment = values['financials_attachment'];
+      const balance_sheet_attachment = values['balance_sheet_attachment'];
+      const income_statement_attachment = values['income_statement_attachment'];
       const net_profit = values['net_profit'];
       const financials_rating = values['financials_rating'];
       const financials_reporting_period = values['financials_reporting_period'];
       const sales = values['sales'];
       const total_assets = values['total_assets'];
-      const m = uuid();
-      const financialsId  = 'financials-buyer'+m;
+      const retained_earnings = values['retained_earnings'];
+      const working_capital = values['working_capital'];
       const financials_status = 'Under Review';
 
       const buyer_insurance_name = values['buyer_insurance_name'];
@@ -135,10 +139,11 @@ export default function NewAccount() {
         buyer_address_city,	
         buyer_address_postalcode,
         buyer_address_street,
-        buyer_address_number,
         buyer_name,
         buyer_country,
         buyer_website,
+        buyer_contact_name,
+        buyer_contact_email,
         buyer_currency,
         buyer_loan_request_amount,
         buyer_payment_terms,
@@ -160,12 +165,15 @@ export default function NewAccount() {
         identityId,
         buyerId,
         ebit,
-        financials_attachment,
+        balance_sheet_attachment,
+        income_statement_attachment,
         net_profit,
         financials_rating,
         financials_reporting_period,
         sales,
         total_assets,
+        retained_earnings,
+        working_capital,
         financials_status
       }); 
     } catch (e) {
@@ -223,7 +231,7 @@ export default function NewAccount() {
       </Stepper>
       <React.Fragment>
         {activeStep === steps.length ? (
-          navigate('/app/buyers')
+          <BuyerListView />
         ) : (
           <Formik
             initialValues={formInitialValues}

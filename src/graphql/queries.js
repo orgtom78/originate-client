@@ -346,7 +346,6 @@ export const getRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
-      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -364,6 +363,8 @@ export const getRequest = /* GraphQL */ `
       bill_of_lading_attachment
       container_no
       packing_list_attachment
+      payout_date
+      payback_date
       createdAt
       request_status
       sortkey
@@ -498,7 +499,6 @@ export const listsRequest = /* GraphQL */ `
         investorId
         identityId
         buyer_name
-        supplier_name
         purchase_order_amount
         purchase_order_attachment
         purchase_order_date
@@ -516,6 +516,8 @@ export const listsRequest = /* GraphQL */ `
         bill_of_lading_attachment
         container_no
         packing_list_attachment
+        payout_date
+        payback_date
         createdAt
         request_status
         sortkey

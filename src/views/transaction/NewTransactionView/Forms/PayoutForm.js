@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   InputField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import {
   Card,
   CardContent,
@@ -11,19 +11,16 @@ import {
   Grid,
   makeStyles,
 } from "@material-ui/core";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/currencies.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
 import { addDays, subDays } from "date-fns";
 
 const curr = currencies;
-const auto = FormikAutocomplete;
-
 const useStyles = makeStyles(() => ({
   image: {
     width: 128,
@@ -58,7 +55,6 @@ const useStyles = makeStyles(() => ({
     marginLeft: -12,
   },
 }));
-
 export default function PayoutForm(props) {
   const classes = useStyles();
 
@@ -79,9 +75,11 @@ export default function PayoutForm(props) {
     },
   } = props;
 
+  const userId = props.vuser;
+  const requestId = props.vrequest;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  console.log(updatefields)
+
   const amount = updatefields.values.invoice_amount;
   const updateinvoice = updatefields.values.invoice_attachment;
   const updatepo = updatefields.values.purchase_order_attachment;
@@ -126,7 +124,6 @@ export default function PayoutForm(props) {
     } getvalue();
     }
     },[amount, value]);
-
 
   useEffect(() => {
     if (updateinvoice) {
@@ -481,11 +478,13 @@ export default function PayoutForm(props) {
                 <>{invoiceisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={invoice_attachment.name}
                     id={invoice_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={invoice_attachment.name}>
                     <LoaderButton
@@ -511,11 +510,13 @@ export default function PayoutForm(props) {
                 <>{poisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={purchase_order_attachment.name}
                     id={purchase_order_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={purchase_order_attachment.name}>
                     <LoaderButton
@@ -540,11 +541,13 @@ export default function PayoutForm(props) {
                 <>{offerisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={offer_notice_attachment.name}
                     id={offer_notice_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={offer_notice_attachment.name}>
                     <LoaderButton
@@ -569,11 +572,13 @@ export default function PayoutForm(props) {
                 <>{ipuisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={ipu_attachment.name}
                     id={ipu_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={ipu_attachment.name}>
                     <LoaderButton
@@ -598,11 +603,13 @@ export default function PayoutForm(props) {
                 <>{blisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={bill_of_lading_attachment.name}
                     id={bill_of_lading_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={bill_of_lading_attachment.name}>
                     <LoaderButton
@@ -628,11 +635,13 @@ export default function PayoutForm(props) {
                 <>{cargoisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={cargo_insurance_attachment.name}
                     id={cargo_insurance_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={requestId}
+                    userid={userId}
                   />
                   <label htmlFor={cargo_insurance_attachment.name}>
                     <LoaderButton
@@ -662,18 +671,12 @@ export default function PayoutForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={invoice_currency.name}
                 label={invoice_currency.label}
-                component={auto}
-                options={curr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: invoice_currency.name,
-                  label: invoice_currency.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                }}
+                data={curr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>

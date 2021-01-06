@@ -28,7 +28,6 @@ import * as queries from "src/graphql/queries.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import { useUser } from "src/components/usercontext.js";
-import { Storage } from "aws-amplify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,49 +102,51 @@ const SupplierFinancials = ({ className, ...rest }) => {
       } = data;
       setSub(sub);
       setSupplierId(supplierId);
-    } onLoad();
-    loadFinancials(sub); 
-  },[context, sub]);
+    }
+    onLoad();
 
-  async function loadFinancials(input) {
-    const id = input;
-    let filter = { userId: { eq: id }, sortkey: {contains: "financials-supplier"} };
-    try {
-    const {
-      data: {
-        listsFinancials: { items: itemsPage1, nextToken },
-      },
-    } = await API.graphql(
-      graphqlOperation(queries.listsFinancials, { filter: filter })
-    );
-    const o = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-    const finance = await o.data.listsFinancials.items[0];
-    const {
-      financialsId,
-      ebit,
-      balance_sheet_attachment,
-      income_statement_attachment,
-      net_profit,
-      financials_reporting_period,
-      sales,
-      total_assets,
-      retained_earnings,
-      working_capital,
-    } = finance;
-    setFinancialsId(financialsId);
-    setEbit(ebit);
-    setBalance_sheet_attachment(balance_sheet_attachment);
-    setIncome_statement_attachment(income_statement_attachment);
-    setNet_profit(net_profit);
-    setFinancials_reporting_period(financials_reporting_period);
-    setSales(sales);
-    setTotal_assets(total_assets);
-    setRetained_earnings(retained_earnings);
-    setWorking_capital(working_capital);
-  } catch (err) {
-    console.log("error fetching data..", err);
-  }
-}
+    async function loadFinancials() {
+      const id = sub;
+      setSub(id);
+      let filter = { userId: { eq: id }, sortkey: {contains: "financials-supplier"} };
+      const {
+        data: {
+          listsFinancials: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(
+        graphqlOperation(queries.listsFinancials, { filter: filter })
+      );
+      const o = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
+      const financials = o.data.listsFinancials.items[0];
+      return financials;
+    }
+
+    async function getfinancials() {
+      const financials = await loadFinancials;
+      const {
+        financialsId,
+        ebit,
+        balance_sheet_attachment,
+        income_statement_attachment,
+        net_profit,
+        financials_reporting_period,
+        sales,
+        total_assets,
+        retained_earnings,
+        working_capital,
+      } = financials;
+      setFinancialsId(financialsId);
+      setEbit(ebit);
+      setBalance_sheet_attachment(balance_sheet_attachment);
+      setIncome_statement_attachment(income_statement_attachment);
+      setNet_profit(net_profit);
+      setFinancials_reporting_period(financials_reporting_period);
+      setSales(sales);
+      setTotal_assets(total_assets);
+      setRetained_earnings(retained_earnings);
+      setWorking_capital(working_capital);
+    } getfinancials();
+  },[context, sub]);
 
   async function s3Up(file, name) {
     var fileExtension = file.name.split('.').pop();
@@ -565,8 +566,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   }; 
 
   return (
-    <React.Fragment>
-    <Container>
+    <Container maxWidth="lg">
+      <React.Fragment>
             <form
               autoComplete="off"
               noValidate
@@ -581,7 +582,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
                         container
                         justify="space-around"
                         item
-                        md={12}
+                        md={6}
                         xs={12}
                       >
                         <KeyboardDatePicker
@@ -590,10 +591,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
                           margin="normal"
                           variant="outlined"
                           id="financials_reporting_period"
-                          label="Reporting Period"
+                          label="Company Date of Incorporation"
                           name="financials_reporting_period"
-                          format="yyyy"
-                          views={["year"]}
+                          format="dd/MM/yyyy"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
                           onChange={(e) =>
@@ -704,7 +704,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
               </Card>
             </form>
             <Divider />
-            <Box display="flex" justifyContent="flex-end" p={2}>
+        <Box display="flex" justifyContent="flex-end" p={2}>
             <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
@@ -712,10 +712,6 @@ const SupplierFinancials = ({ className, ...rest }) => {
                   {balanceisimageorpdf(balancelabel, balancename)}
                 </>
               </Grid>
-              </Grid>
-            </Box>
-            <Box display="flex" justifyContent="flex-end" p={2}>
-            <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
                   <Typography>Income Statement:</Typography>
@@ -724,8 +720,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
               </Grid>
               </Grid>
             </Box>
+      </React.Fragment>
     </Container>
-  </React.Fragment>
   );
 };
 

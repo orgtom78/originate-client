@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   InputField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import {
   Card,
   CardContent,
@@ -15,7 +15,7 @@ import {
   Upload as UploadIcon
 } from 'react-feather';
 import { useFormikContext } from 'formik';
-import { Storage } from "aws-amplify"; 
+import { Storage, Auth } from "aws-amplify"; 
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
 
@@ -69,6 +69,7 @@ const useStyles = makeStyles(() => ({
       },
     } = props;
 
+    const buyerId = props.vbuyer;
     const { values: formValues } = useFormikContext();
     const updatefields = { values: formValues };
     const buyeripu = updatefields.values.buyer_one_off_ipu_attachment;
@@ -78,6 +79,16 @@ const useStyles = makeStyles(() => ({
   
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
+
+    const [userId, setUserId] = useState('');
+
+    useEffect(() => {
+    async function getsub() {
+      let user = await Auth.currentAuthenticatedUser();
+      const id = await user.attributes.sub
+      setUserId(id)
+    } getsub();
+  }, []);
   
     useEffect(() => {
       if (buyeripu) {
@@ -197,11 +208,13 @@ const useStyles = makeStyles(() => ({
               : 
               (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={buyer_one_off_ipu_attachment.name}
                     id={buyer_one_off_ipu_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    ident={buyerId}
+                    userid={userId}
                   />
                   <label htmlFor={buyer_one_off_ipu_attachment.name}>
                     <LoaderButton

@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import {
   InputField,
   SelectField,
-  UploadField
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -19,12 +20,8 @@ import { Storage } from "aws-amplify";
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
 import countries from 'src/components/countries.js';
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from 'formik';
 
 const cr = countries
-const auto = FormikAutocomplete
-
 const idtype = [
   {
     value: "Passport",
@@ -99,6 +96,10 @@ const useStyles = makeStyles(() => ({
         ubo_country_of_residence,
       },
     } = props;
+
+    const userId = props.vuser;
+    const uboId = props.vubo;
+    const directorId = props.vdirector;
 
     const { values: formValues } = useFormikContext();
     const updatefields = { values: formValues };
@@ -354,44 +355,22 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
-          <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+          <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={director_nationality.name}
                 label={director_nationality.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: director_nationality.name,
-                  label: director_nationality.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+            <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={director_country_of_residence.name}
                 label={director_country_of_residence.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: director_country_of_residence.name,
-                  label: director_country_of_residence.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -420,11 +399,13 @@ const useStyles = makeStyles(() => ({
 
              (
               <>
-              <UploadField
+              <NewUploadField
                 name = {director_id_attachment.name}
                 id = {director_id_attachment.name}
                 accept="image/*, application/pdf"
                 style={{ display: 'none' }}
+                ident={directorId}
+                userid={userId}
               />
               <label htmlFor={director_id_attachment.name}>
               <LoaderButton
@@ -455,11 +436,13 @@ const useStyles = makeStyles(() => ({
 
              (
               <>
-              <UploadField
+              <NewUploadField
                 name = {director_poa_attachment.name}
                 id = {director_poa_attachment.name}
                 accept="image/*, application/pdf"
                 style={{ display: 'none' }}
+                ident={directorId}
+                userid={userId}
               />
               <label htmlFor={director_poa_attachment.name}>
               <LoaderButton
@@ -505,44 +488,22 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
-          <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+          <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={ubo_nationality.name}
                 label={ubo_nationality.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_nationality.name,
-                  label: ubo_nationality.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+            <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={ubo_country_of_residence.name}
                 label={ubo_country_of_residence.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_country_of_residence.name,
-                  label: ubo_country_of_residence.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           <Grid item xs={12} sm={6}>
@@ -571,11 +532,13 @@ const useStyles = makeStyles(() => ({
 
              (
               <>
-              <UploadField
+              <NewUploadField
                 name = {ubo_id_attachment.name}
                 id = {ubo_id_attachment.name}
                 accept="image/*, application/pdf"
                 style={{ display: 'none' }}
+                ident={uboId}
+                userid={userId}
               />
               <label htmlFor={ubo_id_attachment.name}>
               <LoaderButton
@@ -606,11 +569,13 @@ const useStyles = makeStyles(() => ({
 
              (
               <>
-              <UploadField
+              <NewUploadField
                 name = {ubo_poa_attachment.name}
                 id = {ubo_poa_attachment.name}
                 accept="image/*, application/pdf"
                 style={{ display: 'none' }}
+                ident={uboId}
+                userid={userId}
               />
               <label htmlFor={ubo_poa_attachment.name}>
               <LoaderButton

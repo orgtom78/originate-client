@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Link as RouterLink } from "react-router-dom";
-import { InputField, SelectField, UploadField } from "src/components/FormFields";
+import { InputField, SelectField } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
@@ -13,18 +13,14 @@ import {
 import NumberFormat from 'react-number-format';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
-import { Storage } from "aws-amplify";
+import { Storage, Auth } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/currencies.js";
 import countries from "src/components/countries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
 
 const cr = countries;
 const curr = currencies;
-
-const auto = FormikAutocomplete;
 
 const terms = [
   {
@@ -102,12 +98,13 @@ export default function BuyerAddressForm(props) {
   const {
     formField: {
       buyer_address_city,
-      buyer_address_number,
       buyer_address_postalcode,
       buyer_address_street,
       buyer_name,
       buyer_country,
       buyer_website,
+      buyer_contact_name,
+      buyer_contact_email,
       buyer_currency,
       buyer_loan_request_amount,
       buyer_payment_terms,
@@ -116,6 +113,7 @@ export default function BuyerAddressForm(props) {
     },
   } = props;
 
+  const buyerId = props.vbuyer;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert = updatefields.values.buyer_sample_trading_docs_attachment;
@@ -125,6 +123,16 @@ export default function BuyerAddressForm(props) {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+  async function getsub() {
+    let user = await Auth.currentAuthenticatedUser();
+    const id = await user.attributes.sub
+    setUserId(id)
+  } getsub();
+}, []);
 
   useEffect(() => {
     if (updateregcert) {
@@ -277,8 +285,16 @@ export default function BuyerAddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_address_number.name}
-                label={buyer_address_number.label}
+                name={buyer_contact_name.name}
+                label={buyer_contact_name.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_contact_email.name}
+                label={buyer_contact_email.label}
                 fullWidth
                 variant="outlined"
               />
@@ -291,7 +307,7 @@ export default function BuyerAddressForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <InputField
                 name={buyer_sold_goods_description.name}
                 label={buyer_sold_goods_description.label}
@@ -304,11 +320,13 @@ export default function BuyerAddressForm(props) {
                 <>{isimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={buyer_sample_trading_docs_attachment.name}
                     id={buyer_sample_trading_docs_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={buyerId}
+                    userid={userId}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
                     <LoaderButton

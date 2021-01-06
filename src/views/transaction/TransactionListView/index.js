@@ -163,6 +163,22 @@ const TransactionListView = () => {
     }
   }
 
+  function checkpayout(date) {
+    if (date !== null) {
+      return (
+        moment(date).format('DD/MM/YYYY')
+      );
+    } else {
+      return (
+        <>
+          <MuiThemeProvider theme={orangeTheme}>
+            <Chip label='Pending' color="secondary" />
+          </MuiThemeProvider>
+        </>
+      );
+    }
+  }
+
   return (
     <Page
       className={clsx(classes.root)} 
@@ -201,7 +217,7 @@ const TransactionListView = () => {
                   Status
                 </TableCell>
                 <TableCell>
-                  Latest update
+                  Payout Date
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -255,7 +271,7 @@ const TransactionListView = () => {
                     {checkstatus(request.request_status)}
                   </TableCell>
                   <TableCell>
-                    {moment(request.createdAt).format('DD/MM/YYYY')}
+                    {checkpayout(request.payout_date)}
                   </TableCell>
                 </TableRow>
               ))}

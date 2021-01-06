@@ -518,7 +518,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
   }
 
   return (
-    <Page title="Update Ubo">
+    <Page title="Update Owner">
       <Container>
         <form
           autoComplete="off"
@@ -532,7 +532,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Ubo Name"
+                    label="Company Owner Name"
                     name="ubo_name"
                     onChange={(e) => setUbo_name(e.target.value)}
                     required
@@ -543,7 +543,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Ubo Email"
+                    label="Company Owner Email"
                     name="ubo_email"
                     onChange={(e) => setUbo_email(e.target.value)}
                     required
@@ -554,7 +554,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Ubo Phone"
+                    label="Company Owner Phone"
                     name="ubo_phone_number"
                     onChange={(e) => setUbo_phone_number(e.target.value)}
                     required
@@ -565,7 +565,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
                 <Grid item md={6} xs={12}>
                   <Select
                     fullWidth
-                    label="Company Ubo ID Type"
+                    label="Company Owner ID Type"
                     name="ubo_id_type"
                     onChange={(e) => setUbo_id_type(e.target.value)}
                     required
@@ -579,10 +579,10 @@ const UpdateUboForm = ({ className, ...rest }) => {
                     ))}
                   </Select>
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={12} xs={12}>
                   <TextField
                     fullWidth
-                    label="Company Ubo ID Number"
+                    label="Company Owner ID Number"
                     name="ubo_id_number"
                     onChange={(e) => setUbo_id_number(e.target.value)}
                     required
@@ -607,23 +607,18 @@ const UpdateUboForm = ({ className, ...rest }) => {
           </Card>
         </form>
         <Divider />
-        <Box display="flex" justifyContent="flex-end" p={2}>
-            <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Ubo ID:</Typography>
+                  <Typography>Owner ID:</Typography>
                   {uboidisimageorpdf(uboidlabel, uboidname)}
                 </>
               </Grid>
-              <br></br>
               <Grid item md={12} xs={12}>
                 <>
-                  <Typography>Ubo Proof of Address:</Typography>
+                  <Typography>Ownner Proof of Address:</Typography>
                   {ubopoaisimageorpdf(ubopoalabel, ubopoaname)}
                 </>
-              </Grid>
             </Grid>
-          </Box>
       </Container>
     </Page>
   );

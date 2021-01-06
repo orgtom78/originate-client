@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   InputField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import {
   Card,
   CardContent,
@@ -12,7 +12,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { useFormikContext } from 'formik';
-import { Storage } from "aws-amplify"; 
+import { Storage, Auth } from "aws-amplify"; 
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
 import { Upload as UploadIcon } from 'react-feather';
@@ -58,57 +58,76 @@ const useStyles = makeStyles(() => ({
     const {
       formField: {
         ebit,
-        financials_attachment,
+        balance_sheet_attachment,
+        income_statement_attachment,
         net_profit,
         financials_rating,
         financials_reporting_period,
+        retained_earnings,
+        working_capital,
         sales,
         total_assets
       },
     } = props;
 
+    const financialsId = props.value;
     const { values: formValues } = useFormikContext();
     const updatefields = { values: formValues };
-    const finattachment = updatefields.values.financials_attachment;
+    const balanceattachment = updatefields.values.balance_sheet_attachment;
+    const incomeattachment = updatefields.values.income_statement_attachment;
   
-    const [img, setImg ] = useState('');
-    const [updateregcertpdf, setUpdateregcertpdf ] = useState(''); 
+    const [balanceimg, setBalanceimg ] = useState('');
+    const [balancepdf, setBalancepdf ] = useState(''); 
+    const [incomeimg, setIncomeimg ] = useState('');
+    const [incomepdf, setIncomepdf ] = useState(''); 
   
-    const [loading, setLoading] = useState(false);
-    const [success, setSuccess] = useState(false);
+    const [balanceloading, setBalanceloading] = useState(false);
+    const [balancesuccess, setBalancesuccess] = useState(false);
+    const [incomeloading, setIncomeloading] = useState(false);
+    const [incomesuccess, setIncomesuccess] = useState(false);
+
+    const [userId, setUserId] = useState('');
 
     useEffect(() => {
-      if (finattachment) {
+    async function getsub() {
+      let user = await Auth.currentAuthenticatedUser();
+      const id = await user.attributes.sub
+      setUserId(id)
+    } getsub();
+  }, []);
+
+    useEffect(() => {
+      if (balanceattachment) {
         async function geturl () {
-          var uploadext = finattachment.split('.').pop(); 
+          var uploadext = balanceattachment.split('.').pop(); 
           var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"]
           const d  = imageExtensions.includes(uploadext)
           if (d === true){
-          const u = await Storage.vault.get(finattachment);
-          setImg(u)
+          const u = await Storage.vault.get(balanceattachment);
+          setBalanceimg(u)
         } else {
-          const h = await Storage.vault.get(finattachment);
-          setUpdateregcertpdf(h)
+          const h = await Storage.vault.get(balanceattachment);
+          setBalancepdf(h)
         }
         }; geturl()
       }
     }, 
-    [finattachment]);
+    [balanceattachment]);
   
-    async function handleClick(){
-        setSuccess(false);
-        setLoading(true);
-        const b = await img;
+    async function handleBalanceClick(){
+        setBalancesuccess(false);
+        setBalanceloading(true);
+        const b = await balanceimg;
         if (b) {
-          setSuccess(true);
-          setLoading(false);
+          setBalancesuccess(true);
+          setBalanceloading(false);
         }
       }
-      function isimageorpdf(){
-        if (img) {
+      function balanceisimageorpdf(){
+        if (balanceimg) {
           return(
             <>
-            <img className={classes.img} alt="complex" src={img} />
+            <img className={classes.img} alt="complex" src={balanceimg} />
             </>
             )
         } 
@@ -118,12 +137,62 @@ const useStyles = makeStyles(() => ({
             <iframe
             title="file"
             style={{ width: '100%', height: '100%' }}
-            src={updateregcertpdf}
+            src={balancepdf}
             />
             </>
           ) 
         }
       }
+
+      useEffect(() => {
+        if (incomeattachment) {
+          async function geturl () {
+            var uploadext = incomeattachment.split('.').pop(); 
+            var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"]
+            const d  = imageExtensions.includes(uploadext)
+            if (d === true){
+            const u = await Storage.vault.get(incomeattachment);
+            setIncomeimg(u)
+          } else {
+            const h = await Storage.vault.get(incomeattachment);
+            setIncomepdf(h)
+          }
+          }; geturl()
+        }
+      }, 
+      [incomeattachment]);
+    
+      async function handleIncomeClick(){
+          setIncomesuccess(false);
+          setIncomeloading(true);
+          const b = await incomeimg;
+          if (b) {
+            setIncomesuccess(true);
+            setIncomeloading(false);
+          }
+        }
+
+        function incomeisimageorpdf(){
+          if (incomeimg) {
+            return(
+              <>
+              <img className={classes.img} alt="complex" src={incomeimg} />
+              </>
+              )
+          } 
+          else {
+            return (
+              <>
+              <iframe
+              title="file"
+              style={{ width: '100%', height: '100%' }}
+              src={incomepdf}
+              />
+              </>
+            ) 
+          }
+        }
+
 
     return (
       <React.Fragment>
@@ -165,6 +234,22 @@ const useStyles = makeStyles(() => ({
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
+                name={retained_earnings.name}
+                label={retained_earnings.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={working_capital.name}
+                label={working_capital.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
                 name={total_assets.name}
                 label={total_assets.label}
                 fullWidth
@@ -184,34 +269,73 @@ const useStyles = makeStyles(() => ({
           />
         </Grid>
         <Grid item xs={12} sm={6}>
-            {finattachment ?            
+            {balanceattachment ?            
             (
               <>
-                {isimageorpdf()}
+                {balanceisimageorpdf()}
               </>
             )   :    
 
              (
               <>
-              <UploadField
-                name = {financials_attachment.name}
-                id = {financials_attachment.name}
+              <NewUploadField
+                name = {balance_sheet_attachment.name}
+                id = {balance_sheet_attachment.name}
                 accept="image/*,application/pdf"
                 style={{ display: 'none' }}
+                ident={financialsId}
+                userid={userId}
               />
-              <label htmlFor={financials_attachment.name}>
+              <label htmlFor={balance_sheet_attachment.name}>
               <LoaderButton
-                id={financials_attachment.name}
+                id={balance_sheet_attachment.name}
                 fullWidth
                 component="span"
                 startIcon={<UploadIcon />}
-                disabled={loading}
-                success={success}
-                loading={loading}
-                onClick={handleClick}
+                disabled={balanceloading}
+                success={balancesuccess}
+                loading={balanceloading}
+                onClick={handleBalanceClick}
               >
                 {" "}
-                Buyer financial report*
+                Buyer Balance Sheet*
+              </LoaderButton>
+              </label>
+              </>
+              ) 
+              }
+            </Grid>
+            <Grid item xs={12} sm={6}>
+            {incomeattachment ?            
+            (
+              <>
+                {incomeisimageorpdf()}
+              </>
+            )   :    
+
+             (
+              <>
+            <NewUploadField
+                name = {income_statement_attachment.name}
+                id = {income_statement_attachment.name}
+                accept="image/*,application/pdf"
+                style={{ display: 'none' }}
+                ident={financialsId}
+                userid={userId}
+              />
+              <label htmlFor={income_statement_attachment.name}>
+              <LoaderButton
+                id={income_statement_attachment.name}
+                fullWidth
+                component="span"
+                startIcon={<UploadIcon />}
+                disabled={incomeloading}
+                success={incomesuccess}
+                loading={incomeloading}
+                onClick={handleIncomeClick}
+              >
+                {" "}
+                Buyer Income Statement*
               </LoaderButton>
               </label>
               </>

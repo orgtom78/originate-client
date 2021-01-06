@@ -26,7 +26,6 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-
 export default function Profile({ className, ...rest }) {
   const classes = useStyles();
   const [avatar, setAvatar] = useState("");
@@ -74,8 +73,6 @@ export default function Profile({ className, ...rest }) {
   const country = supplier_country;
   const industry = supplier_industry;
   const name = supplier_name;
-
-  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
 
   useEffect(() => {
     if (uploadedFile) {

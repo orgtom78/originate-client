@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   InputField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -16,13 +17,9 @@ import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import { Upload as UploadIcon } from "react-feather";
-import { Field } from "formik";
 import countries from "src/components/countries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
 
 const cr = countries;
-const auto = FormikAutocomplete;
-
 const useStyles = makeStyles(() => ({
   image: {
     width: 128,
@@ -63,12 +60,14 @@ export default function FinancialsForm(props) {
   const {
     formField: {
       ebit,
-      financials_attachment,
+      balance_sheet_attachment,
+      income_statement_attachment,
       net_profit,
-      financials_rating,
       financials_reporting_period,
       sales,
       total_assets,
+      retained_earnings,
+      working_capital,
       bank_name,
       bank_account_number,
       iban,
@@ -79,49 +78,57 @@ export default function FinancialsForm(props) {
     },
   } = props;
 
+  const userId = props.vuser;
+  const financialsId = props.vfinancials;
+  const bankId = props.vbank;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const finattachment = updatefields.values.financials_attachment;
+  const balanceattachment = updatefields.values.balance_sheet_attachment;
+  const incomeattachment = updatefields.values.income_statement_attachment;
 
-  const [img, setImg] = useState("");
-  const [pdf, setPdf] = useState("");
+  const [balanceimg, setBalanceimg] = useState("");
+  const [balancepdf, setBalancepdf] = useState("");
+  const [incomeimg, setIncomeimg] = useState("");
+  const [incomepdf, setIncomepdf] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [balanceloading, setBalanceloading] = useState(false);
+  const [balancesuccess, setBalancesuccess] = useState(false);
+  const [incomeloading, setIncomeloading] = useState(false);
+  const [incomesuccess, setIncomesuccess] = useState(false);
 
   useEffect(() => {
-    if (finattachment) {
-      async function geturl() {
-        var uploadext = finattachment.split(".").pop();
+    if (balanceattachment) {
+      async function getbalanceurl() {
+        var uploadext = balanceattachment.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(finattachment);
-          setImg(u);
+          const u = await Storage.vault.get(balanceattachment);
+          setBalanceimg(u);
         } else {
-          const h = await Storage.vault.get(finattachment);
-          setPdf(h);
+          const h = await Storage.vault.get(balanceattachment);
+          setBalancepdf(h);
         }
       }
-      geturl();
+      getbalanceurl();
     }
-  }, [finattachment]);
+  }, [balanceattachment]);
 
-  async function handleClick() {
-    setSuccess(false);
-    setLoading(true);
-    const b = await img;
+  async function handlebalanceClick() {
+    setBalancesuccess(false);
+    setBalanceloading(true);
+    const b = await balanceimg;
     if (b) {
-      setSuccess(true);
-      setLoading(false);
+      setBalancesuccess(true);
+      setBalanceloading(false);
     }
   }
 
-  function finattachmentisimageorpdf() {
-    if (img) {
+  function balanceattachmentisimageorpdf() {
+    if (balanceimg) {
       return (
         <>
-          <img className={classes.img} alt="complex" src={img} />
+          <img className={classes.img} alt="complex" src={balanceimg} />
         </>
       );
     } else {
@@ -130,12 +137,61 @@ export default function FinancialsForm(props) {
           <iframe
             title="file"
             style={{ width: "100%", height: "100%" }}
-            src={pdf}
+            src={balancepdf}
           />
         </>
       );
     }
   }
+
+  useEffect(() => {
+    if (incomeattachment) {
+      async function getincomeurl() {
+        var uploadext = incomeattachment.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.vault.get(incomeattachment);
+          setIncomeimg(u);
+        } else {
+          const h = await Storage.vault.get(incomeattachment);
+          setIncomepdf(h);
+        }
+      }
+      getincomeurl();
+    }
+  }, [incomeattachment]);
+
+  async function handleincomeClick() {
+    setIncomesuccess(false);
+    setIncomeloading(true);
+    const b = await incomeimg;
+    if (b) {
+      setIncomesuccess(true);
+      setIncomeloading(false);
+    }
+  }
+
+  function incomeattachmentisimageorpdf() {
+    if (incomeimg) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={incomeimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={incomepdf}
+          />
+        </>
+      );
+    }
+  }
+
 
   return (
     <React.Fragment>
@@ -144,29 +200,62 @@ export default function FinancialsForm(props) {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={6}>
-              {finattachment ? (
-                <>{finattachmentisimageorpdf()}</>
+              {balanceattachment ? (
+                <>{balanceattachmentisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
-                    name={financials_attachment.name}
-                    id={financials_attachment.name}
+                  <NewUploadField
+                    name={balance_sheet_attachment.name}
+                    id={balance_sheet_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={financialsId}
+                    userid={userId}
                   />
-                  <label htmlFor={financials_attachment.name}>
+                  <label htmlFor={balance_sheet_attachment.name}>
                     <LoaderButton
-                      id={financials_attachment.name}
+                      id={balance_sheet_attachment.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
+                      disabled={balanceloading}
+                      success={balancesuccess}
+                      loading={balanceloading}
+                      onClick={handlebalanceClick}
                     >
                       {" "}
-                      Company Financial Report*
+                      Company Balance Sheet*
+                    </LoaderButton>
+                  </label>
+                </>
+              )}
+            </Grid>
+            <Grid item xs={6}>
+              {incomeattachment ? (
+                <>{incomeattachmentisimageorpdf()}</>
+              ) : (
+                <>
+                  <NewUploadField
+                    name={income_statement_attachment.name}
+                    id={income_statement_attachment.name}
+                    accept="image/*, application/pdf"
+                    style={{ display: "none" }}
+                    ident={financialsId}
+                    userid={userId}
+                  />
+                  <label htmlFor={income_statement_attachment.name}>
+                    <LoaderButton
+                      id={income_statement_attachment.name}
+                      fullWidth
+                      component="span"
+                      startIcon={<UploadIcon />}
+                      disabled={incomeloading}
+                      success={incomesuccess}
+                      loading={incomeloading}
+                      onClick={handleincomeClick}
+                    >
+                      {" "}
+                      Company Income Statement*
                     </LoaderButton>
                   </label>
                 </>
@@ -202,14 +291,6 @@ export default function FinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={financials_rating.name}
-                label={financials_rating.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={sales.name}
                 label={sales.label}
                 fullWidth
@@ -220,6 +301,22 @@ export default function FinancialsForm(props) {
               <InputField
                 name={total_assets.name}
                 label={total_assets.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={retained_earnings.name}
+                label={retained_earnings.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={working_capital.name}
+                label={working_capital.label}
                 fullWidth
                 variant="outlined"
               />
@@ -272,20 +369,13 @@ export default function FinancialsForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item md={6} xs={12}>
-              <Field
+            <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={bank_country.name}
                 label={bank_country.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: bank_country.name,
-                  label: bank_country.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           </Grid>

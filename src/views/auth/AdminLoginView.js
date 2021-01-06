@@ -52,6 +52,7 @@ export default function LoginView(){
               await Auth.signIn(values.email, values.password);
               userHasAuthenticated(true); 
               navigate('/admin/suppliers');
+              window.location.reload () 
             } catch (e) {
               alert(e.message);
             }

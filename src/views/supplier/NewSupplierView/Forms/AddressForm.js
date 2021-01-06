@@ -3,8 +3,9 @@ import {
   InputField,
   SelectField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -19,13 +20,9 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import countries from "src/components/countries.js";
 import industries from "src/components/industries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
 
 const cr = countries;
 const ind = industries;
-const auto = FormikAutocomplete;
-
 const type = [
   {
     value: "Corporation",
@@ -98,6 +95,8 @@ export default function AddressForm(props) {
     },
   } = props;
 
+  const userId = props.vuser;
+  const supplierId = props.vsupplier;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert = updatefields.values.supplier_registration_cert_attachment;
@@ -240,19 +239,12 @@ export default function AddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={supplier_country.name}
                 label={supplier_country.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}     
-                textFieldProps={{
-                  name: supplier_country.name,
-                  label: supplier_country.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -267,19 +259,12 @@ export default function AddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={supplier_industry.name}
                 label={supplier_industry.label}
-                component={auto}
-                options={ind}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: supplier_industry.name,
-                  label: supplier_industry.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                data={ind}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -287,11 +272,13 @@ export default function AddressForm(props) {
                 <>{isimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={supplier_registration_cert_attachment.name}
                     id={supplier_registration_cert_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={supplierId}
+                    userid={userId}
                   />
                   <label htmlFor={supplier_registration_cert_attachment.name}>
                     <LoaderButton
@@ -318,11 +305,13 @@ export default function AddressForm(props) {
                 </>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={supplier_logo.name}
                     id={supplier_logo.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    ident={supplierId}
+                    userid={userId}
                   />
                   <label htmlFor={supplier_logo.name}>
                     <LoaderButton

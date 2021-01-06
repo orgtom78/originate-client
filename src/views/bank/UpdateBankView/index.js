@@ -121,7 +121,7 @@ const UpdateBankForm = ({ className, ...rest }) => {
         graphqlOperation(queries.listsBank, { filter: filter })
       );
       const n = { data: { listsBank: { items: itemsPage1, nextToken } } };
-      const bank = n.data.listsBank.items[0]; 
+      const bank = await n.data.listsBank.items[0]; 
       const {
             bankId,
             bank_name,

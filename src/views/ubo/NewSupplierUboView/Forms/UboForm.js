@@ -4,6 +4,7 @@ import {
   SelectField,
   UploadField
 } from "src/components/FormFields";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -19,11 +20,8 @@ import { Storage } from "aws-amplify";
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
 import countries from 'src/components/countries.js';
-import FormikAutocomplete from 'src/components/FormFields/AutocompleteField.js';
-import { Field } from 'formik';
 
 const cr = countries
-const auto = FormikAutocomplete
 
 const idtype = [
   {
@@ -235,35 +233,21 @@ const useStyles = makeStyles(() => ({
             />
           </Grid>
           <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={ubo_nationality.name}
                 label={ubo_nationality.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_nationality.name,
-                  label: ubo_nationality.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={ubo_country_of_residence.name}
                 label={ubo_country_of_residence.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_country_of_residence.name,
-                  label: ubo_country_of_residence.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>

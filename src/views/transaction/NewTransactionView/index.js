@@ -44,6 +44,7 @@ export default function NewAccount() {
   const [supplier_name, setSupplier_name] = useState("");
   const context = useUser();
   const { id } = useParams();
+  const requestId = 'request-'+uuid();
 
 
   React.useEffect(() => {
@@ -67,11 +68,12 @@ export default function NewAccount() {
   var userId = sub;
   var sortkey = id;
   const buyer = await getbuyername({userId, sortkey});
-  const buyername = await buyer.data.getBuyer.buyer_name;
+  const { data: { getBuyer: { buyer_name } } } =  buyer;
+  const buyername = await buyer_name;
   setBuyername(buyername);
-  console.log(buyername);
-}load();
-}, [sub, id, buyername]);
+  } 
+  load();
+}, [sub, id]);
 
 
   function _sleep(ms) {
@@ -82,7 +84,6 @@ export default function NewAccount() {
     await _sleep(1000);
     try {
       const userId = sub;
-      const requestId = 'request-'+uuid();
       const sortkey = requestId;
       const supplierId = supid;
       const buyer_name = buyername;
@@ -161,7 +162,7 @@ export default function NewAccount() {
           >
             {({ isSubmitting }) => (
               <Form id={formId}>
-                <PayoutForm  formField={formField}/>
+                <PayoutForm formField={formField} vuser={sub} vrequest={requestId}/>
                 <div className={classes.buttons}>
                   <div className={classes.wrapper}>
                     <Button

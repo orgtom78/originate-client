@@ -47,6 +47,16 @@ export default {
       label: 'Website/URL*',
       requiredErrorMsg: 'URL is required'
     },
+    buyer_contact_name: {
+      name: 'buyer_contact_name',
+      label: 'Client Contact Person Name*',
+      requiredErrorMsg: 'Contact Person Name is required'
+    },
+    buyer_contact_email: {
+      name: 'buyer_contact_email',
+      label: 'Client Contact Person Email*',
+      requiredErrorMsg: 'Contact Person Email is required'
+    },
     buyer_currency: {
       name: 'buyer_currency',
       label: 'Invoicing Currency*',
@@ -100,10 +110,15 @@ export default {
       label: 'Earnings before Interest & Tax',
       requiredErrorMsg: 'EBIT is required',
     },
-    financials_attachment: {
-      name: 'financials_attachment',
-      label: 'Financial Accounts',
-      requiredErrorMsg: 'Financial Accounts are required',
+    balance_sheet_attachment: {
+      name: 'balance_sheet_attachment',
+      label: 'Balance Sheet',
+      requiredErrorMsg: 'Balance Sheet is required',
+    },
+    income_statement_attachment: {
+      name: 'income_statement_attachment',
+      label: 'Income Statement',
+      requiredErrorMsg: 'Income Statement is required',
     },
     net_profit: {
       name: 'net_profit',
@@ -129,6 +144,16 @@ export default {
       name: 'total_assets',
       label: 'Total Assets',
       requiredErrorMsg: 'Total Assets is required',
+    },
+    retained_earnings: {
+      name: 'retained_earnings',
+      label: 'Retained Earnings',
+      requiredErrorMsg: 'Retained Earnings is required',
+    },
+    working_capital: {
+      name: 'working_capital',
+      label: 'Working Capital',
+      requiredErrorMsg: 'Working Capital is required',
     },
   }
 };

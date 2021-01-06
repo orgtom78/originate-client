@@ -74,8 +74,6 @@ export default function Profile({ className, ...rest }) {
   const industry = company_industry;
   const name = company_name;
 
-  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
-
   useEffect(() => {
     if (uploadedFile) {
       async function geturl() {
@@ -124,8 +122,6 @@ export default function Profile({ className, ...rest }) {
       graphqlOperation(mutations.updateCompany, { input: input })
     );
   }
-
-  console.log(avatar);
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>

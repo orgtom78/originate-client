@@ -176,7 +176,6 @@ export const createRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
-      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -476,7 +475,6 @@ export const deleteRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
-      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -846,7 +844,6 @@ export const updateRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
-      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date

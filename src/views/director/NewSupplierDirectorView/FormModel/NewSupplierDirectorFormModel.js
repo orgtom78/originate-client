@@ -19,6 +19,7 @@ export default {
     director_id_attachment: {
       name: 'director_id_attachment',
       label: 'Director ID',
+      requiredErrorMsg: 'ID is required'
     },
     director_id_number: {
       name: 'director_id_number',

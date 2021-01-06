@@ -10,6 +10,8 @@ const {
     buyer_name,
     buyer_country,
     buyer_website,
+    buyer_contact_name,
+    buyer_contact_email,
     buyer_currency,
     buyer_loan_request_amount,
     buyer_payment_terms,
@@ -17,10 +19,13 @@ const {
     buyer_sold_goods_description,
 
     ebit,
-    financials_attachment,
+    balance_sheet_attachment,
+    income_statement_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
+    retained_earnings,
+    working_capital,
     sales,
     total_assets,
 
@@ -38,7 +43,6 @@ const {
 export default [
   Yup.object().shape({
     [buyer_address_city.name]: Yup.string().required(`${buyer_address_city.requiredErrorMsg}`),
-    [buyer_address_number.name]: Yup.string(),
     [buyer_address_postalcode.name]: Yup.string()
     .required(`${buyer_address_postalcode.requiredErrorMsg}`)
     .test(
@@ -50,6 +54,8 @@ export default [
     [buyer_name.name]: Yup.string().required(`${buyer_name.requiredErrorMsg}`), 
     [buyer_country.name]: Yup.string().required(`${buyer_country.requiredErrorMsg}`),
     [buyer_website.name]: Yup.string().required(`${buyer_website.requiredErrorMsg}`),
+    [buyer_contact_name.name]: Yup.string().required(`${buyer_contact_name.requiredErrorMsg}`),
+    [buyer_contact_email.name]: Yup.string().email().required(`${buyer_contact_email.requiredErrorMsg}`),
     [buyer_currency.name]: Yup.string().nullable(),
     [buyer_loan_request_amount.name]: Yup.number().required(`${buyer_loan_request_amount.requiredErrorMsg}`), 
     [buyer_payment_terms.name]: Yup.string().required(`${buyer_payment_terms.requiredErrorMsg}`), 
@@ -59,7 +65,8 @@ export default [
 
   Yup.object().shape({
     [ebit.name]: Yup.number().nullable(),
-    [financials_attachment.name]: Yup.string(),
+    [balance_sheet_attachment.name]: Yup.string(),
+    [income_statement_attachment.name]: Yup.string(),
     [net_profit.name]: Yup.number().nullable(),
     [financials_rating.name]: Yup.string().nullable(),
     [financials_reporting_period.name]: Yup.string()
@@ -78,6 +85,8 @@ export default [
     }),
     [sales.name]: Yup.number().nullable(),
     [total_assets.name]: Yup.number().nullable(),
+    [retained_earnings.name]: Yup.number().nullable(),
+    [working_capital.name]: Yup.number().nullable(),
   }),
 
   Yup.object().shape({

@@ -38,14 +38,24 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Company details', 'Shareholder details', 'Financial details'];
 const { formId, formField } = NewSupplierFormModel;
 
+const user = async () => { await Auth.currentAuthenticatedUser() } 
+const { attributes = {} } = user;
+const userId = attributes['sub'];
+const supplierId = 'supplier-'+uuid();
+const directorId = 'director-supplier'+uuid(); 
+const uboId = 'ubo-supplier'+uuid();
+const financialsId = 'financials-supplier'+uuid();
+const bankId = 'bank-supplier'+uuid();
+
+
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm  formField={formField}/>;
+      return <AddressForm  formField={formField} vuser={userId} vsupplier={supplierId}/>;
     case 1:
-      return <ShareholderForm formField={formField}/>;
+      return <ShareholderForm formField={formField} vuser={userId} vubo={uboId} vdirector={directorId}/>;
     case 2:
-      return <FinancialsForm  formField={formField}/>;
+      return <FinancialsForm  formField={formField} vuser={userId} vbank={bankId} vfinancials={financialsId}/>;
     default:
       throw new Error('Unknown step');
   }
@@ -66,13 +76,9 @@ export default function NewSupplier() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      let user = await Auth.currentAuthenticatedUser();
-      const { attributes = {} } = user;
-      const userId = attributes['sub'];
       let identity = await Auth.currentUserCredentials();
       const identityId = identity.identityId
-      const a = uuid();
-      const supplierId = 'supplier-'+a;
+      const sortkey = supplierId;
       const supplier_logo = values['supplier_logo'];
       const supplier_name = values['supplier_name'];
       const supplier_type = values['supplier_type'];
@@ -85,8 +91,6 @@ export default function NewSupplier() {
       const supplier_date_of_incorporation = values['supplier_date_of_incorporation'];
       const supplier_registration_cert_attachment = values['supplier_registration_cert_attachment'];
 
-      const b = uuid()
-      const directorId = 'director-supplier'+b;
       const director_name = values['director_name'];
       const director_email = values['director_email'];
       const director_phone_number = values['director_phone_number'];
@@ -98,8 +102,6 @@ export default function NewSupplier() {
       const director_country_of_residence = values['director_country_of_residence'];
       const director_status = 'Under Review';
 
-      const c =  uuid();
-      const uboId = 'ubo-supplier'+c;
       const ubo_name = values['ubo_name'];
       const ubo_email = values['ubo_email'];
       const ubo_phone_number = values['ubo_phone_number'];
@@ -111,8 +113,6 @@ export default function NewSupplier() {
       const ubo_country_of_residence = values['ubo_country_of_residence'];
       const ubo_status = 'Under Review';
       
-      const d = uuid();
-      const financialsId = 'financials-supplier'+d;
       const financials_attachment = values['financial_accounts_attachment'];
       const financials_reporting_period = values['financials_reporting_period'];
       const net_profit = values['net_profit'];
@@ -123,8 +123,6 @@ export default function NewSupplier() {
       const ebit = values['ebit'];
       const financials_status = 'Under Review';
 
-      const e = uuid();
-      const bankId = 'bank-supplier'+e;
       const bank_account_name = values['bank_account_name'];
       const bank_account_number = values['bank_account_number'];
       const bank_account_sortcode = values['bank_account_sortcode'];
@@ -137,6 +135,7 @@ export default function NewSupplier() {
       
       await createSupplier({
         userId,
+        sortkey,
         identityId,
         supplierId,
         supplier_logo,
@@ -215,9 +214,6 @@ export default function NewSupplier() {
         iban,
         bank_status,
       }); 
-      
-      navigate('/app/account')
-
     } catch (e) {
       onError(e);
     }

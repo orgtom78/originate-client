@@ -36,13 +36,10 @@ import { useUser } from "src/components/usercontext.js";
 import DirectorListView from "src/views/supplier/SupplierView/Lists/directorlist.js";
 import UboListView from "src/views/supplier/SupplierView/Lists/ubolist.js";
 import UpdateBankView from "src/views/bank/UpdateBankView";
+import UpdateFinancialsView from "src/views/financials/UpdateFinancialsView";
 import countries from "src/components/countries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
 
 const cr = countries;
-const auto = FormikAutocomplete;
-
-
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
@@ -68,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: -12,
   },
 }));
-
 const type = [
   {
     value: "Corporation",
@@ -103,24 +99,11 @@ const SupplierForm = ({ className, ...rest }) => {
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
 
-  //Financials:
-  const [financialsId, setFinancialsId] = useState("");
-  const [ebit, setEbit] = useState("");
-  const [financials_attachment, setFinancials_attachment] = useState("");
-  const [net_profit, setNet_profit] = useState("");
-  const [financials_rating, setFinancials_rating] = useState("");
-  const [financials_reporting_period, setFinancials_reporting_period] = useState("");
-  const [sales, setSales] = useState("");
-  const [total_assets, setTotal_assets] = useState("");
-  const [total_liabilities, setTotal_liabilities] = useState("");
-
   const [sub, setSub] = useState("");
   const context = useUser();
 
   const [supplierloading, setSupplierLoading] = useState(false);
   const [suppliersuccess, setSupplierSuccess] = useState(false);
-  const [financialsloading, setFinancialsLoading] = useState(false);
-  const [financialssuccess, setFinancialsSuccess] = useState(false);
 
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
@@ -139,15 +122,6 @@ const SupplierForm = ({ className, ...rest }) => {
         supplier_address_postalcode,
         supplier_country,
         supplier_industry,
-        financialsId,
-        ebit,
-        financials_attachment,
-        net_profit,
-        financials_rating,
-        financials_reporting_period,
-        sales,
-        total_assets,
-        total_liabilities,
       } = data;
       setSub(sub);
       setSupplierId(supplierId);
@@ -161,15 +135,6 @@ const SupplierForm = ({ className, ...rest }) => {
       setSupplier_address_postalcode(supplier_address_postalcode);
       setSupplier_country(supplier_country);
       setSupplier_industry(supplier_industry);
-      setFinancialsId(financialsId);
-      setEbit(ebit);
-      setFinancials_attachment(financials_attachment);
-      setNet_profit(net_profit);
-      setFinancials_rating(financials_rating);
-      setFinancials_reporting_period(financials_reporting_period);
-      setSales(sales);
-      setTotal_assets(total_assets);
-      setTotal_liabilities(total_liabilities);
     }
     onLoad();
   }, [context]);
@@ -202,43 +167,11 @@ const SupplierForm = ({ className, ...rest }) => {
     navigate("/app/account");
   }
 
-
-  async function handleFinancialsSubmit() {
-    setFinancialsSuccess(false);
-    setFinancialsLoading(true);
-    try {
-      const userId = sub;
-      const sortkey = financialsId;
-      await updateFinancials({
-        userId,
-        sortkey,
-        ebit,
-        financials_attachment,
-        net_profit,
-        financials_rating,
-        financials_reporting_period,
-        sales,
-        total_assets,
-        total_liabilities,
-      });
-    } catch (e) {
-      onError(e);
-    }
-    setFinancialsSuccess(true);
-    setFinancialsLoading(false);
-    navigate("/app/account");
-  }
-
   function updateSupplier(input) {
     return API.graphql(
       graphqlOperation(mutations.updateSupplier, { input: input })
     );
   }
-  function updateFinancials(input) {
-    return API.graphql(
-      graphqlOperation(mutations.updateFinancials, { input: input })
-    );
-  };
 
   function NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -415,7 +348,6 @@ const SupplierForm = ({ className, ...rest }) => {
                     ))}
                   </Select>
                 </Grid>
-
                   </Grid>
                 </CardContent>
                 <Divider />
@@ -494,135 +426,12 @@ const SupplierForm = ({ className, ...rest }) => {
 
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
-            <Typography className={classes.heading}>
-              Company Financials
-            </Typography>
+            <Typography className={classes.heading}>Company Financials</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <form
-              autoComplete="off"
-              noValidate
-              className={clsx(classes.root, className)}
-              {...rest}
-            >
-              <Card>
-                <CardContent>
-                  <Grid container spacing={3}>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Earnings Before Interest Tax"
-                        name="ebit"
-                        onChange={(e) => setEbit(e.target.value)}
-                        required
-                        value={ebit|| ''}
-                        variant="outlined"
-                        InputProps={{
-                          inputComponent: NumberFormatCustom,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Company Net Profit"
-                        name="net_profit"
-                        onChange={(e) => setNet_profit(e.target.value)}
-                        required
-                        value={net_profit|| ''}
-                        variant="outlined"
-                        InputProps={{
-                          inputComponent: NumberFormatCustom,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Company Rating"
-                        name="financials_rating"
-                        onChange={(e) => setFinancials_rating(e.target.value)}
-                        required
-                        value={financials_rating|| ''}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
-                          value={financials_reporting_period|| ''}
-                          margin="normal"
-                          variant="outlined"
-                          id="financials_reporting_period"
-                          label="Company Date of Incorporation"
-                          name="financials_reporting_period"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
-                          maxDate={new Date()}
-                          onChange={(e) =>
-                            setFinancials_reporting_period(e.target.value)
-                          }
-                          required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Sales/Revenue"
-                        name="sales"
-                        onChange={(e) => setSales(e.target.value)}
-                        required
-                        value={sales|| ''}
-                        variant="outlined"
-                        InputProps={{
-                          inputComponent: NumberFormatCustom,
-                        }}
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Total Assets"
-                        name="total_assets"
-                        onChange={(e) => setTotal_assets(e.target.value)}
-                        required
-                        value={total_assets|| ''}
-                        variant="outlined"
-                        InputProps={{
-                          inputComponent: NumberFormatCustom,
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                </CardContent>
-                <Divider />
-                <Box display="flex" justifyContent="flex-end" p={2}>
-                  <LoaderButton
-                    startIcon={<UploadIcon />}
-                    disabled={financialsloading}
-                    success={financialssuccess}
-                    loading={financialsloading}
-                    onClick={handleFinancialsSubmit}
-                  >
-                    Update Finacial details
-                  </LoaderButton>
-                </Box>
-              </Card>
-            </form>
+
+              <UpdateFinancialsView />
+
           </AccordionDetails>
         </Accordion>
       </React.Fragment>

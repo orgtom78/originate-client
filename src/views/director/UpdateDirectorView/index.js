@@ -598,7 +598,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
                     ))}
                   </Select>
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={12} xs={12}>
                   <TextField
                     fullWidth
                     label="Company Director ID Number"
@@ -626,23 +626,18 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
           </Card>
         </form>
         <Divider />
-        <Box display="flex" justifyContent="flex-end" p={2}>
-            <Grid container spacing={3}>
               <Grid item md={12} xs={12}>
                 <>
                   <Typography>Director ID:</Typography>
                   {directoridisimageorpdf(directoridlabel, directoridname)}
                 </>
               </Grid>
-              <br></br>
               <Grid item md={12} xs={12}>
                 <>
                   <Typography>Director Proof of Address:</Typography>
                   {directorpoaisimageorpdf(directorpoalabel, directorpoaname)}
                 </>
               </Grid>
-            </Grid>
-        </Box>
       </Container>
     </Page>
   );

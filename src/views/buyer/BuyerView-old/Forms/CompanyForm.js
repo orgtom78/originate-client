@@ -82,7 +82,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const CompanyForm = ({ className, ...rest }) => {
+const CompanyForm = ({ className, ...rest }, vuser) => {
   const classes = useStyles();
   const [companyId, setCompanyId] = useState('');
   const [company_name, setCompany_name] = useState('');
@@ -138,7 +138,7 @@ const CompanyForm = ({ className, ...rest }) => {
         } onLoad()
   }, [context]);
 
-    console.log(context)
+    console.log(vuser)
 
     async function handleCompanySubmit() {
       setSuccess(false);
@@ -163,7 +163,7 @@ const CompanyForm = ({ className, ...rest }) => {
       }
       setSuccess(true);
       setLoading(false);
-      window.location.reload(true);
+      window.location.reload ();
     };
 
     async function handleShareholderSubmit() {
@@ -185,7 +185,7 @@ const CompanyForm = ({ className, ...rest }) => {
       }
       setSuccess(true);
       setLoading(false);
-      window.location.reload(true);
+      window.location.reload ();
     };
   
     function updateCompany(input) {

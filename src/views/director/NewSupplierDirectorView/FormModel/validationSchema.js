@@ -1,5 +1,4 @@
 import * as Yup from 'yup';
-import moment from 'moment';
 import NewSupplierDirectorFormModel from './NewSupplierDirectorFormModel';
 const {
   formField: {
@@ -18,10 +17,10 @@ const {
 
 export default [
   Yup.object().shape({
-    [director_name.name]: Yup.string(),
-    [director_email.name]: Yup.string().email(),
+    [director_name.name]: Yup.string().required(`${director_name.requiredErrorMsg}`),
+    [director_email.name]: Yup.string().email().required(`${director_email.requiredErrorMsg}`),
     [director_phone_number.name]: Yup.string(),
-    [director_id_attachment.name]: Yup.string(),
+    [director_id_attachment.name]: Yup.string().required(`${director_id_attachment.requiredErrorMsg}`),
     [director_id_number.name]: Yup.string(),
     [director_id_type.name]: Yup.string(),
     [director_nationality.name]: Yup.string(),

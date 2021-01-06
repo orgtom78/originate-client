@@ -19,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 const Account = () => {
   const classes = useStyles();
   const [supplierId, setSupplierId] = useState("");
@@ -38,9 +37,6 @@ const Account = () => {
   }, [context]);
 
   const id= supplierId;
-
-  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
-
 
   return (
   <React.Fragment>

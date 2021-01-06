@@ -19,6 +19,7 @@ export default {
     ubo_id_attachment: {
       name: 'ubo_id_attachment',
       label: 'Owner ID',
+      requiredErrorMsg: 'ID is required'
     },
     ubo_id_number: {
       name: 'ubo_id_number',

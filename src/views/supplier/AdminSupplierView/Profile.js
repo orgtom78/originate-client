@@ -82,18 +82,19 @@ export default function Profile({ className, value, ...rest }) {
   const industry = supplier_industry;
   const name = supplier_name;
 
-  //'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon'//
-
   useEffect(() => {
     if (uploadedFile) {
       async function geturl() {
-        const u = await Storage.vault.get(uploadedFile);
+        const u = await Storage.get(uploadedFile, {
+          level: 'private',
+          identityId: identityId,
+        });
         setSupplier_logo(uploadedFile);
         setAvatar(u);
       }
       geturl();
     }
-  }, [uploadedFile]);
+  }, [uploadedFile, identityId]);
 
   function handleFileChange(event) {
     file.current = event.target.files[0];

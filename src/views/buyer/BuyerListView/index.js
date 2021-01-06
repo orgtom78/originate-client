@@ -94,49 +94,6 @@ const BuyerList = () => {
     test();
   }, [sub]);
 
-  /* for (const {
-    buyerId: id,
-    buyer_loan_amount: amount,
-    buyer_payment_terms: terms,
-    buyer_address_city: city,
-    buyer_address_number: number,
-    buyer_address_postalcode: zipcode,
-    buyer_address_street: street,
-    buyer_name: name,
-    buyer_country: country,
-    buyer_website: website,
-    buyer_currency: curr,
-    buyer_sales_contract_attachment: contract,
-    buyer_insurance_name: insurance,
-    buyer_next_year_projected_transaction_amount: nyear,
-    buyer_previous_year_transaction_amount: pyear,
-    buyer_reporting_year: ryear,
-    buyer_reporting_year_transaction_amount: ryearamount,
-    buyer_sold_goods_description: description,
-    buyer_insurance_name: insurer,
-    buyer_insurance_rating: insurer_rating,
-    buyer_one_off_ipu_attachment: ipu,
-    buyer_loan_rate: discount,
-    buyer_status: status,
-  } of buyerdata) {
-    console.log("ID: " + id + ", City: " + city, "Name: " + name);
-  }
-
-    const handler = useCallback(() => {
-    if (!buyerdata || !buyerdata.length) {
-      console.log("test");
-    } else {
-      const d = buyerdata;
-      return d;
-    }
-    console.log(handler);
-  }, [buyerdata]);
-
-  console.log(buyerdata);
-
-
-  */
-
   function checkstatus(buyerdata) {
     if (buyerdata === "submitted") {
       return (
@@ -165,6 +122,17 @@ const BuyerList = () => {
     }
   }
 
+  function getLink(status, id) {
+    if (status === "Approved") {
+      return `/app/newtransaction/${id}`
+    } else {
+      return (
+        <>
+        </>
+      );
+    }
+  }
+
   return (
     <Page className={clsx(classes.root)} title="Approved Buyers">
       <Container maxWidth={false}>
@@ -175,7 +143,7 @@ const BuyerList = () => {
               <Grid item key={buyerdata.buyerId} lg={4} md={6} xs={12}>
                 <Card>
                   <CardActionArea>
-                    <Link to={`/app/newtransaction/${buyerdata.buyerId}`}>
+                    <Link to={getLink(buyerdata.buyer_status, buyerdata.buyerId)}>
                       <CardContent>
                         <Box display="flex" justifyContent="center" mb={3}>
                           <Avatar
