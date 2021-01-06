@@ -4,7 +4,6 @@ import {
   Avatar,
   Box,
   Card,
-  Chip,
   Container,
   Checkbox,
   Table,
@@ -15,8 +14,6 @@ import {
   TableRow,
   Typography,
   makeStyles,
-  MuiThemeProvider,
-  createMuiTheme,
 } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
@@ -24,7 +21,6 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
-import { green, orange } from "@material-ui/core/colors";
 import AdminUpdateFinancialsView from 'src/views/financials/AdminUpdateFinancialsView';
 import NumberFormat from 'react-number-format';
 
@@ -46,16 +42,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
-  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createMuiTheme({
-  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
-
 const FinancialsListView = (value) => {
   const classes = useStyles();
   const sub = value.value.value.value.userId;
+  const bid = value.value.value.value.buyerId;
   const [financials, setFinancials] = useState([]);
   const [userId, setUserId] = useState('');
   const [financialsId, setFinancialsId] = useState('');
@@ -68,7 +58,7 @@ const FinancialsListView = (value) => {
   useEffect(() => {
     async function getFinancials() {
       const id = await sub;
-      let filter = { userId: { eq: id }, sortkey: { contains: "financials-buyer" } };
+      let filter = { userId: { eq: id }, sortkey: { beginsWith: "financials-", contains: bid } };
       const {
         data: {
           listsFinancials: { items: itemsPage1, nextToken },

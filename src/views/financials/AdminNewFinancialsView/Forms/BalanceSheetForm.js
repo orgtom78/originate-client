@@ -205,30 +205,6 @@ const useStyles = makeStyles(() => ({
             </Grid>
           <Grid item xs={12} sm={6}>
             <InputField
-              name={supplierId.name}
-              label={supplierId.label}
-              fullWidth
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <InputField
-              name={buyerId.name}
-              label={buyerId.label}
-              fullWidth
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <InputField
-              name={identityId.name}
-              label={identityId.label}
-              fullWidth
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <InputField
               name={marketable_securities.name}
               label={marketable_securities.label}
               fullWidth

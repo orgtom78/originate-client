@@ -41,8 +41,8 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Client Details', 'Client Financials', 'Client History'];
 const { formId, formField } = NewBuyerFormModel;
 
-const financialsId  = 'financials-buyer'+uuid();
 const buyerId = 'buyer-'+uuid();
+const financialsId = 'financials-'+uuid()+buyerId;
 
 function getStepContent(step) {
   switch (step) {

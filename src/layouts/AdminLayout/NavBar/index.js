@@ -66,10 +66,10 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, [location.pathname]);
 
-  const avatar = 'https://www.gravatar.com/avatar/dcd44927-2efd-4fc0-b955-0c676d04f738?d=identicon';
+  const avatar = 'https://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg';
   const admin_name  = 'Admin';
   const admin_country  = 'Berlin, Hong Kong, Shanghai';
 

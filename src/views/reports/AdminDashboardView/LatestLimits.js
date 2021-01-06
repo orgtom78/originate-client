@@ -50,7 +50,7 @@ const LatestLimits = ({ className, ...rest }) => {
 
   useEffect(() => {
   const getRequests = async () => {
-    let filter = { sortkey: { contains: "buyer-" } };
+    let filter = { sortkey: { contains: "buyer-", notContains: "financials-" } };
     const {
       data: {
         listsBuyer: { items: itemsPage1, nextToken },

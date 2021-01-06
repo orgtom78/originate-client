@@ -42,7 +42,7 @@ const Limits = ({ className, ...rest }) => {
 
   useEffect(() => {
   const getRequests = async () => {
-    let filter = { sortkey: { contains: "buyer-" } };
+    let filter = { sortkey: { contains: "buyer-", notContains: "financials-" } };
     const {
       data: {
         listsBuyer: { items: itemsPage1, nextToken },
@@ -68,8 +68,10 @@ const Limits = ({ className, ...rest }) => {
 
   function addamounts() {
     if (handle) {
-      const t = request.map((request) => request.buyer_loan_request_amount)
-      var b = t.map(Number);
+      var x = request.filter(e => e.buyer_status === 'Approved')
+      var fin = x.map((e) => e.buyer_loan_request_amount)
+
+      var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a,0); 
       return(
         sum

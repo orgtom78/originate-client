@@ -29,6 +29,7 @@ import AdminNewSupplierUboView from 'src/views/ubo/AdminNewSupplierUboView';
 import AdminNewBuyerUboView from 'src/views/ubo/AdminNewBuyerUboView';
 import AdminNewBuyerDirectorView from 'src/views/director/AdminNewBuyerDirectorView';
 import AdminNewBuyerView from 'src/views/buyer/AdminNewBuyerView';
+import AdminBuyerView from 'src/views/buyer/AdminBuyerView';
 import AdminTransactionListView from 'src/views/transaction/AdminTransactionListView';
 import AdminNewFinancialsView from 'src/views/financials/AdminNewFinancialsView';
 
@@ -80,6 +81,7 @@ import AdminNewFinancialsView from 'src/views/financials/AdminNewFinancialsView'
       { path: 'updateubo/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> :<UpdateUboView />  },
       { path: 'suppliers', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminSupplierListView />  },
       { path: 'buyers', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerListView />  },
+      { path: 'buyer/:id/:buyId/:ident', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerView />},
       { path: 'newbuyer', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewBuyerView />  },
       { path: 'adminnewbuyerubo/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView />: <AdminNewBuyerUboView />},
       { path: 'adminnewbuyerdirector/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewBuyerDirectorView />},

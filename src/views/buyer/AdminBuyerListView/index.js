@@ -65,7 +65,7 @@ const AdminBuyerListView = () => {
 
   useEffect(() => {
     async function getBuyers() {
-      let filter = { sortkey: { contains: "buyer-", notContains: "-buyer" } };
+      let filter = { sortkey: { contains: "buyer-", notContains: "financials-" } };
       const {
         data: {
           listsBuyer: { items: itemsPage1, nextToken },

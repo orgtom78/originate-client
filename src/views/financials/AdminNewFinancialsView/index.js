@@ -35,10 +35,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const steps = ['Balance Sheet', 'Income Statement'];
-const { formId, formField } = NewFinancialsFormModel;
-const b = uuid();
-const financialsId = 'financials-buyer'+b;
+export default function NewFinancials() {
+  const classes = useStyles();
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const { buyId } = useParams();
+  const { ident } = useParams();
+  const [activeStep, setActiveStep] = useState(0);
+  const currentValidationSchema = validationSchema[activeStep];
+  const steps = ['Balance Sheet', 'Income Statement'];
+  const { formId, formField } = NewFinancialsFormModel;
+  const financialsId = 'financials-'+uuid()+buyId;
+
+  const isLastStep = activeStep === steps.length - 1;
+
 
 function getStepContent(step) {
   switch (step) {
@@ -50,17 +60,6 @@ function getStepContent(step) {
       throw new Error('Unknown step');
   }
 }
-
-export default function NewFinancials() {
-  const classes = useStyles();
-  const navigate = useNavigate();
-  const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
-  const [activeStep, setActiveStep] = useState(0);
-  const currentValidationSchema = validationSchema[activeStep];
-
-  const isLastStep = activeStep === steps.length - 1;
 
   function _sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

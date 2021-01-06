@@ -107,8 +107,6 @@ const useStyles = makeStyles(() => ({
     const [directorpoaloading, setDirectorpoaLoading] = useState(false);
     const [directorpoasuccess, setDirectorpoaSuccess] = useState(false);
 
-    console.log(props.value)
-
     useEffect(() => {
       if (director_updateid) {
         async function geturl() {

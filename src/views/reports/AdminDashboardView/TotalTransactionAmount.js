@@ -59,8 +59,9 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
 
   function addamounts() {
     if (handle) {
-      const t = request.map((request) => request.invoice_amount)
-      var b = t.map(Number);
+      var x = request.filter(e => e.request_status === 'Approved')
+      var fin = x.map((e) => e.invoice_amount)
+      var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a,0); 
       return(
         sum
