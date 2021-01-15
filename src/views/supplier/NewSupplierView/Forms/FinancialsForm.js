@@ -80,7 +80,6 @@ export default function FinancialsForm(props) {
 
   const userId = props.vuser;
   const financialsId = props.vfinancials;
-  const bankId = props.vbank;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const balanceattachment = updatefields.values.balance_sheet_attachment;

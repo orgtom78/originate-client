@@ -82,7 +82,6 @@ const useStyles = makeStyles(() => ({
 
     const financialsId = props.value
     const { id } = useParams();
-    const { buyId } = useParams();
     const { ident } = useParams();
 
     const { values: formValues } = useFormikContext();

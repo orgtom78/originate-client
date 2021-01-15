@@ -6,6 +6,11 @@ export default {
       label: 'User ID',
       requiredErrorMsg: 'Please get the userId from your admin and dont make one up!'
     },
+    investorId: {
+      name: 'investorId',
+      label: 'Investor ID',
+      requiredErrorMsg: 'Please get the Id of the Investor from your admin and dont make one up!'
+    },
     identityId: {
       name: 'identityId',
       label: 'Identity ID',

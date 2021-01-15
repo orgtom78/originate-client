@@ -3,7 +3,6 @@ import moment from 'moment';
 import NewSupplierFormModel from './NewSupplierFormModel';
 const {
   formField: {
-    userId,
     identityId,
     supplier_logo,
     supplier_name,
@@ -52,7 +51,8 @@ const {
     short_term_debt,
     working_capital,
     ebit,
-    financials_attachment,
+    balance_sheet_attachment,
+    income_statement_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
@@ -65,7 +65,6 @@ const {
 
 export default [
   Yup.object().shape({
-    [userId.name]: Yup.string().required(`${userId.requiredErrorMsg}`),
     [identityId.name]: Yup.string().required(`${identityId.requiredErrorMsg}`),
     [supplier_logo.name]: Yup.string(),
     [supplier_name.name]: Yup.string().required(`${supplier_name.requiredErrorMsg}`),
@@ -138,7 +137,8 @@ export default [
     [short_term_debt.name]: Yup.string(),
     [working_capital.name]: Yup.string(),
     [ebit.name]: Yup.string(),
-    [financials_attachment.name]: Yup.string(),
+    [balance_sheet_attachment.name]: Yup.string(),
+    [income_statement_attachment.name]: Yup.string(),
     [net_profit.name]: Yup.string(),
     [financials_rating.name]: Yup.string(),
     [financials_reporting_period.name]: Yup.string()

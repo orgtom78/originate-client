@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Button,
   CircularProgress,
@@ -9,7 +10,6 @@ import {
   StepLabel,
   Typography 
 } from '@material-ui/core';
-import { useNavigate, useParams } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from 'uuid';
@@ -38,14 +38,19 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Company details', 'Shareholder details', 'Financial details'];
 const { formId, formField } = NewSupplierFormModel;
 
+const supplierId = 'supplier-'+uuid();
+const directorId = 'director-supplier'+uuid();
+const uboId = 'ubo-supplier'+uuid();
+const financialsId = 'financials-supplier'+uuid();
+
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm  formField={formField}/>;
+      return <AddressForm  formField={formField} value={supplierId}/>;
     case 1:
-      return <ShareholderForm formField={formField}/>;
+      return <ShareholderForm formField={formField} dir={directorId} ubo={uboId}/>;
     case 2:
-      return <FinancialsForm  formField={formField}/>;
+      return <FinancialsForm  formField={formField} fin={financialsId}/>;
     default:
       throw new Error('Unknown step');
   }
@@ -57,6 +62,8 @@ export default function NewSupplier() {
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
   const { id } = useParams();
+  const { ident } = useParams();
+  const { sub } = useParams();
 
   const isLastStep = activeStep === steps.length - 1;
 
@@ -67,9 +74,8 @@ export default function NewSupplier() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = await id;;
-      const a = uuid();
-      const supplierId = 'supplier-'+a;
+      const userId = id;;
+      const identityId = ident;
       const supplier_logo = values['supplier_logo'];
       const supplier_name = values['supplier_name'];
       const supplier_type = values['supplier_type'];
@@ -89,8 +95,6 @@ export default function NewSupplier() {
       const supplier_trading_name = values['supplier_trading_name'];
       const supplier_website = values['supplier_website'];
 
-      const b = uuid()
-      const directorId = 'director-supplier'+b;
       const director_name = values['director_name'];
       const director_email = values['director_email'];
       const director_phone_number = values['director_phone_number'];
@@ -102,8 +106,6 @@ export default function NewSupplier() {
       const director_country_of_residence = values['director_country_of_residence'];
       const director_status = 'under review';
 
-      const c =  uuid();
-      const uboId = 'ubo-supplier'+c;
       const ubo_name = values['ubo_name'];
       const ubo_email = values['ubo_email'];
       const ubo_phone_number = values['ubo_phone_number'];
@@ -115,8 +117,6 @@ export default function NewSupplier() {
       const ubo_country_of_residence = values['ubo_country_of_residence'];
       const ubo_status = 'under review';
       
-      const d = uuid();
-      const financialsId = 'financials-supplier'+d;
       const financials_attachment = values['financial_accounts_attachment'];
       const financials_reporting_period = values['financials_reporting_period'];
       const net_profit = values['net_profit'];
@@ -141,6 +141,7 @@ export default function NewSupplier() {
       await createSupplier({
         userId,
         supplierId,
+        identityId,
         supplier_logo,
         supplier_name,
         supplier_type,
@@ -164,6 +165,7 @@ export default function NewSupplier() {
       await createDirector({
         userId,
         directorId,
+        identityId,
         director_name,
         director_email,
         director_phone_number, 
@@ -179,6 +181,7 @@ export default function NewSupplier() {
       await createUbo({
         userId,
         uboId,
+        identityId,
         ubo_name,
         ubo_email,
         ubo_phone_number, 
@@ -196,6 +199,7 @@ export default function NewSupplier() {
         financialsId,
         supplierId,
         buyerId,
+        identityId,
         accounts_payable,
         accounts_receivable,
         cash,
@@ -216,14 +220,15 @@ export default function NewSupplier() {
         total_liabilities,
         financials_status
       }); 
-      
-      navigate('/admin/suppliers')
 
+      await updateUsergroup(); 
+      
     } catch (e) {
       onError(e);
     }
     actions.setSubmitting(false);
     setActiveStep(activeStep + 1);
+    navigate('/admin/suppliers')
   }
 
   function createSupplier(input) {
@@ -249,6 +254,15 @@ export default function NewSupplier() {
       {input: input}
     ))
   };
+
+  function updateUsergroup() {
+    var userId= sub;
+    var sortkey = id;
+    var input = { userId, sortkey, supplierId }
+    return API.graphql(
+      graphqlOperation(mutations.updateUsergroup, { input: input })
+    );
+  }
 
   function _handleSubmit(values, actions) {
     if (isLastStep) {

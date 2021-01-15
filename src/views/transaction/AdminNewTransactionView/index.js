@@ -37,13 +37,12 @@ export default function NewAccount() {
   const classes = useStyles();
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
-  const [sub, setSub] = useState("");
-  const [supid, setSupid] = useState("");
   const [ident, setIdent] = useState("");
   const [buyername, setBuyername] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
+  const [suppliername, setSuppliername] = useState("");
   const { id } = useParams();
   const { buyId } = useParams();
+  const { supId } = useParams();
   const requestId = 'request-'+uuid();
 
   React.useEffect(() => {
@@ -51,15 +50,25 @@ export default function NewAccount() {
   var userId = id;
   var sortkey = buyId;
   const buyer = await getbuyername({userId, sortkey});
-  const { data: { getBuyer: { buyer_name, supplierId, identityId } } } = buyer;
+  const { data: { getBuyer: { buyer_name, identityId } } } = buyer;
   const buyername = await buyer_name;
-  setSupid(supplierId);
   setIdent(identityId);
   setBuyername(buyername);
   } 
   load();
 }, [id, buyId]);
 
+React.useEffect(() => {
+  async function load(){
+  var userId = id;
+  var sortkey = supId;
+  const supplier = await getsuppliername({userId, sortkey});
+  const { data: { getSupplier: { supplier_name } } } = supplier;
+  const suppliername = await supplier_name;
+  setSuppliername(suppliername);
+  } 
+  load();
+}, [id, supId]);
 
   function _sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -70,9 +79,10 @@ export default function NewAccount() {
     try {
       const userId = id;
       const sortkey = requestId;
-      const supplierId = supid;
+      const supplierId = supId;
       const identityId = ident;
       const buyer_name = buyername;
+      const supplier_name = suppliername;
       const purchase_order_attachment = values['purchase_order_attachment'];
       const sold_goods_description = values['sold_goods_description'];
       const invoice_amount = values['invoice_amount'];
@@ -112,6 +122,8 @@ export default function NewAccount() {
     } catch (e) {
       onError(e);
     }
+    navigate('/admin/transactions');
+    window.location.reload();
   }
 
   function createRequest(input) {
@@ -124,10 +136,13 @@ export default function NewAccount() {
     return API.graphql(graphqlOperation(queries.getBuyer, input
     ))
   };
+  function getsuppliername(input) {
+    return API.graphql(graphqlOperation(queries.getSupplier, input
+    ))
+  };
 
   function _handleSubmit(values, actions) {
       _submitForm(values, actions);
-      navigate('/admin/transactions')
   }
 
   return (

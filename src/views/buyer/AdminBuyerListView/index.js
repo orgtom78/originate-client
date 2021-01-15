@@ -6,7 +6,6 @@ import {
   Box,
   Button,
   Card,
-  Chip,
   Container,
   Checkbox,
   Divider,
@@ -18,8 +17,6 @@ import {
   TableRow,
   Typography,
   makeStyles,
-  MuiThemeProvider,
-  createMuiTheme,
 } from '@material-ui/core';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
@@ -27,9 +24,7 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
-import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from 'react-number-format';
-import AdminBuyerView from 'src/views/buyer/AdminBuyerView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,21 +38,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const greenTheme = createMuiTheme({
-  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createMuiTheme({
-  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
-
 const AdminBuyerListView = () => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState([]);
-  const [isclicked, setIsclicked] = useState('');
-  const [userId, setUserId] = useState('');
-  const [buyerId, setBuyerId] = useState('');
-  const [identityId, setIdentityId] = useState('');
-
   const [selectedBuyerIds, setSelectedBuyerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
@@ -128,38 +111,8 @@ const AdminBuyerListView = () => {
     setPage(newPage);
   };
 
-  function checkstatus(buyer) {
-    if (buyer === "Submitted") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={buyer} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else if (buyer === "Under Review") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={buyer} color="secondary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={buyer} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    }
-  }
-
-
   return (
     <React.Fragment>
-    {!isclicked ? (
     <Page
       className={clsx(classes.root)} 
       title="Buyers"
@@ -273,7 +226,7 @@ const AdminBuyerListView = () => {
         </Box>
         <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/newbuyer/${userId}`}>
+                <Link to={`/admin/newbuyer`}>
                   <Button
                   >
                     Add Buyer
@@ -282,11 +235,6 @@ const AdminBuyerListView = () => {
                 </Box>
       </Container>
     </Page>
-) : (
-  <>
-  <AdminBuyerView value={{userId, buyerId, identityId}} />
-  </>
-)}
 </React.Fragment>
   )
 };

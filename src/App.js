@@ -14,7 +14,7 @@ import { AppContext } from "./libs/contextLib";
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState();
   const [isAdmin, userisAdmin] = useState();
-  const [group, setGroup] = useState();
+  const [isInvestor, userisInvestor] = useState();
   const routing = useRoutes(routes(isAuthenticated, isAdmin));
 
 
@@ -26,7 +26,6 @@ function App() {
     try {
       await Auth.currentSession();
       const user = await Auth.currentAuthenticatedUser();
-      setGroup(user)
       userHasAuthenticated(true);
       return user
     }
@@ -45,16 +44,17 @@ function App() {
   }  else if ( z.signInUserSession.accessToken.payload["cognito:groups"] === undefined || z.signInUserSession.accessToken.payload["cognito:groups"] === 0) {
     return
   }
-  else {
-    let user = z.signInUserSession.accessToken.payload["cognito:groups"][0]
-    console.log(user)
+  else if ( z.signInUserSession.accessToken.payload["cognito:groups"][0] === 'Admin'){
     userisAdmin(true)
+  }
+  else if ( z.signInUserSession.accessToken.payload["cognito:groups"][0] === 'Investor'){
+    userisInvestor(true)
   }
   }settinggroup();
   }, []);
 
   return (
-    <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated, isAdmin, userisAdmin }}>
+    <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated, isAdmin, userisAdmin, isInvestor, userisInvestor }}>
     <ThemeProvider theme={theme}>
       <GlobalStyles />
       {routing}

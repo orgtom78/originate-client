@@ -36,7 +36,6 @@ const orangeTheme = createMuiTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
-
 const useStyles = makeStyles(() => ({
   root: {},
   actions: {
@@ -60,7 +59,7 @@ const LatestLimits = ({ className, ...rest }) => {
   useEffect(() => {
   const getRequests = async () => {
     const id = sub;
-    let filter = { userId: { eq: id }, sortkey: { contains: "buyer-" } };
+    let filter = { userId: { eq: id }, sortkey: { contains: "buyer-", notContains: "financials-" } };
     const {
       data: {
         listsBuyer: { items: itemsPage1, nextToken },

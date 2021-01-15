@@ -1,4 +1,5 @@
 import React, { useState,  useCallback } from 'react';
+import { Link } from "react-router-dom";
 import clsx from 'clsx';
 import {
   Avatar,
@@ -233,11 +234,12 @@ const AdminSupplierListView = () => {
         </Box>
         <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
+                <Link to={`/admin/suppliergroups`}>
                   <Button
-                    href="/admin/newsupplier"
                   >
                     Add Supplier
                   </Button>
+                </Link>
                 </Box>
       </Container>
     </Page>

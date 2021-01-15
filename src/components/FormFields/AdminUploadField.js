@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useField } from 'formik';
 import {
-  Input,
   FormControl,
   FormHelperText
 } from '@material-ui/core';
@@ -31,8 +30,11 @@ export default function AdminUploadField(props) {
   [value]);
 
   async function s3Up(file) {
-    const filename = `${Date.now()}-${file.name}`.replace(/ /g,"_");
-  
+    const userid = await props.userid;
+    const sectorid = await props.sectorid;
+    const name = await props.name;
+    var fileExtension = file.name.split('.').pop();
+    const filename = `${userid}${sectorid}${name}.${fileExtension}`;
     const stored = await Storage.put(filename, file, {
       level: 'private',
       identityId: await props.identityId,

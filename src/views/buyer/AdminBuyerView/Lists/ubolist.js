@@ -56,8 +56,6 @@ const orangeTheme = createMuiTheme({
 const UboListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
   const [ubo, setUbo] = useState([]);
   const [userId, setUserId] = useState('');
   const [uboId, setUboId] = useState('');

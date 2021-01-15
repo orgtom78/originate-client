@@ -41,6 +41,7 @@ export default function NewAccount() {
   const [sub, setSub] = useState("");
   const [supid, setSupid] = useState("");
   const [ident, setIdent] = useState("");
+  const [investid, setInvestid] = useState("");
   const [buyername, setBuyername] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const context = useUser();
@@ -55,11 +56,11 @@ export default function NewAccount() {
       const {
         sub,
         supplierId,
-        identityId, 
+        identity, 
         supplier_name,
       } = data;
       setSub(sub);
-      setIdent(identityId);
+      setIdent(identity);
       setSupid(supplierId);
       setSupplier_name(supplier_name);
     }
@@ -71,11 +72,12 @@ export default function NewAccount() {
   var userId = sub;
   var sortkey = id;
   const buyer = await getbuyername({userId, sortkey});
-  const { data: { getBuyer: { buyer_name } } } =  buyer;
+  const { data: { getBuyer: { buyer_name, investorId } } } =  buyer;
   const buyername = await buyer_name;
+  const invid = investorId
+  setInvestid(invid)
   setBuyername(buyername);
-  } 
-  load();
+  }; load();
 }, [sub, id]);
 
 
@@ -91,6 +93,7 @@ export default function NewAccount() {
       const supplierId = supid;
       const identityId = ident;
       const buyer_name = buyername;
+      const investorId = investid;
       const purchase_order_attachment = values['purchase_order_attachment'];
       const sold_goods_description = values['sold_goods_description'];
       const invoice_amount = values['invoice_amount'];
@@ -111,6 +114,7 @@ export default function NewAccount() {
         requestId,
         supplierId,
         identityId,
+        investorId,
         buyer_name,
         supplier_name,
         purchase_order_attachment,

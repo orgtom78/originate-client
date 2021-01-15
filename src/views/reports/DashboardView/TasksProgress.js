@@ -44,7 +44,7 @@ const TasksProgress = ({ className, ...rest }) => {
   useEffect(() => {
   const getRequests = async () => {
     const id = sub;
-    let filter = { userId: { eq: id }, sortkey: { contains: "buyer-" } };
+    let filter = { userId: { eq: id }, sortkey: { contains: "buyer-", notContains: "financials-" } };
     const {
       data: {
         listsBuyer: { items: itemsPage1, nextToken },

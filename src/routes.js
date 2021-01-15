@@ -3,6 +3,7 @@ import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import AdminLayout from 'src/layouts/AdminLayout';
+import InvestorLayout from 'src/layouts/InvestorLayout';
 import SupplierView from 'src/views/supplier/SupplierView';
 import TransactionListView from 'src/views/transaction/TransactionListView';
 import NewTransactionView from 'src/views/transaction/NewTransactionView';
@@ -20,8 +21,11 @@ import NewSupplierDirectorView from 'src/views/director/NewSupplierDirectorView'
 import NewSupplierUboView from 'src/views/ubo/NewSupplierUboView';
 import UpdateDirectorView from 'src/views/director/UpdateDirectorView';
 import UpdateUboView from 'src/views/ubo/UpdateUboView';
+import AdminInvestorListView from 'src/views/investor/AdminInvestorListView';
+import AdminNewInvestorView from 'src/views/investor/AdminNewInvestorView';
 import AdminSupplierListView from 'src/views/supplier/AdminSupplierListView';
 import AdminNewSupplierView from 'src/views/supplier/AdminNewSupplierView';
+import AdminSupplierGroupListView from 'src/views/supplier/AdminSupplierGroupListView';
 import AdminBuyerListView from 'src/views/buyer/AdminBuyerListView';
 import AdminUpdateDirectorView from 'src/views/director/AdminUpdateDirectorView';
 import AdminNewSupplierDirectorView from 'src/views/director/AdminNewSupplierDirectorView';
@@ -34,8 +38,19 @@ import AdminTransactionListView from 'src/views/transaction/AdminTransactionList
 import AdminNewTransactionView from 'src/views/transaction/AdminNewTransactionView';
 import AdminNewFinancialsView from 'src/views/financials/AdminNewFinancialsView';
 import AdminBuyerTransactionListView from 'src/views/buyer/AdminBuyerTransactionListView';
+import AdminUserGroupListView from 'src/views/user/AdminUserGroupListView';
+import AdminNewUserView from 'src/views/user/AdminNewUserView';
+import AdminNewUserGroupView from 'src/views/user/AdminNewUserGroupView';
+import InvestorDashboardView from 'src/views/reports/InvestorDashboardView';
+import InvestorLoginView from 'src/views/auth/InvestorLoginView';
+import InvestorBuyerView from 'src/views/buyer/InvestorBuyerView';
+import InvestorBuyerListView from 'src/views/buyer/InvestorBuyerListView';
+import InvestorObligorListView from 'src/views/buyer/InvestorObligorListView';
+import InvestorTransactionListView from 'src/views/transaction/InvestorTransactionListView';
+import InvestorTransactionView from 'src/views/transaction/InvestorTransactionView';
 
-  const routes = (isAuthenticated, isAdmin) =>
+
+  const routes = (isAuthenticated, isAdmin, isInvestor) =>
   [{
     path: 'app',
     element: !isAuthenticated ? <MainLayout /> : <DashboardLayout />,
@@ -69,30 +84,53 @@ import AdminBuyerTransactionListView from 'src/views/buyer/AdminBuyerTransaction
   },
   {
     path: 'admin',
-    element: !isAdmin && !isAuthenticated ? <MainLayout /> : <AdminLayout />,
+    element: !isAdmin ? <MainLayout /> : <AdminLayout />,
     children: [
-      { path: 'login', element: !isAdmin && !isAuthenticated  ? <AdminLoginView /> : <AdminSupplierListView /> },
+      { path: 'login', element: !isAdmin ? <AdminLoginView /> : <AdminSupplierListView /> },
       { path: 'admin/404', element: <NotFoundView /> },
-      { path: '/', element: !isAdmin && !isAuthenticated  ? <AdminLoginView /> : <AdminSupplierListView />},
-      { path: 'dashboard', element: !isAuthenticated ? <AdminLoginView /> : <AdminDashboardView /> },
-      { path: 'newsupplier', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewSupplierView /> },
-      { path: 'adminnewsupplierdirector/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewSupplierDirectorView />},
-      { path: 'adminnewsupplierubo/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewSupplierUboView />},
-      { path: 'updatedirector/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminUpdateDirectorView />},
-      { path: 'updateubo/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> :<UpdateUboView />  },
-      { path: 'suppliers', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminSupplierListView />  },
-      { path: 'buyers', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerListView />  },
-      { path: 'buyer/:id/:buyId/:ident', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerView />},
-      { path: 'newbuyer', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewBuyerView />  },
-      { path: 'adminnewbuyerubo/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView />: <AdminNewBuyerUboView />},
-      { path: 'adminnewbuyerdirector/:id', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewBuyerDirectorView />},
-      { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminNewFinancialsView />},
-      { path: 'transactions', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminTransactionListView  />},
-      { path: 'newtransactionlist', element: !isAdmin && !isAuthenticated ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
-      { path: 'newtransaction/:id/:buyId', element: !isAuthenticated ? <LoginView /> : <AdminNewTransactionView />  },
+      { path: '/', element: !isAdmin  ? <AdminLoginView /> : <AdminSupplierListView />},
+      { path: 'dashboard', element:  !isAdmin ? <AdminLoginView /> : <AdminDashboardView /> },
+      { path: 'newsupplier/:id/:ident/:sub', element: !isAdmin ? <AdminLoginView /> : <AdminNewSupplierView /> },
+      { path: 'suppliergroups', element: !isAdmin ? <AdminLoginView /> : <AdminSupplierGroupListView /> },
+      { path: 'adminnewsupplierdirector/:id', element: !isAdmin ? <AdminLoginView /> : <AdminNewSupplierDirectorView />},
+      { path: 'adminnewsupplierubo/:id', element: !isAdmin ? <AdminLoginView /> : <AdminNewSupplierUboView />},
+      { path: 'updatedirector/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminUpdateDirectorView />},
+      { path: 'updateubo/:id', element: !isAdmin  ? <AdminLoginView /> :<UpdateUboView />  },
+      { path: 'suppliers', element: !isAdmin ? <AdminLoginView /> : <AdminSupplierListView />  },
+      { path: 'buyers', element: !isAdmin  ? <AdminLoginView /> : <AdminBuyerListView />  },
+      { path: 'buyer/:id/:buyId/:ident', element: !isAdmin  ? <AdminLoginView /> : <AdminBuyerView />},
+      { path: 'newbuyer', element: !isAdmin ? <AdminLoginView /> : <AdminNewBuyerView />  },
+      { path: 'adminnewbuyerubo/:id', element: !isAdmin ? <AdminLoginView />: <AdminNewBuyerUboView />},
+      { path: 'adminnewbuyerdirector/:id', element: !isAdmin ? <AdminLoginView /> : <AdminNewBuyerDirectorView />},
+      { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin  ? <AdminLoginView /> : <AdminNewFinancialsView />},
+      { path: 'transactions', element: !isAdmin ? <AdminLoginView /> : <AdminTransactionListView  />},
+      { path: 'newtransactionlist', element: !isAdmin ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
+      { path: 'newtransaction/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewTransactionView />  },
+      { path: 'investors', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorListView />  },
+      { path: 'newinvestor', element: !isAdmin ? <AdminLoginView /> : <AdminNewInvestorView /> },
+      { path: 'users', element: !isAdmin ? <AdminLoginView /> : <AdminUserGroupListView />  },
+      { path: 'user/:sub/:groupId', element: !isAdmin ? <AdminLoginView /> : <AdminNewUserView />  },
+      { path: 'newuser', element: !isAdmin ? <AdminLoginView /> : <AdminNewUserGroupView />  },
       { path: '*', element: <Navigate to="admin/404" /> }
     ]
-  }
+  },
+  {
+    path: 'investor',
+    element: !isAuthenticated && !isInvestor ? <MainLayout /> : <InvestorLayout />,
+    children: [
+      { path: 'login', element:!isAuthenticated && !isInvestor ? <InvestorLoginView /> : <InvestorDashboardView  /> },
+      { path: 'register', element: !isInvestor ? <RegisterView /> : <InvestorDashboardView /> },
+      { path: 'investor/404', element: <NotFoundView /> },
+      { path: '/', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorDashboardView />},
+      { path: 'dashboard', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorDashboardView /> },
+      { path: 'buyer/:id/:buyId/:ident', element: !isAuthenticated && !isInvestor ? <InvestorLoginView /> : <InvestorBuyerView />},
+      { path: 'requests', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorBuyerListView/> },
+      { path: 'obligors', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorObligorListView/> },
+      { path: 'transactions', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorTransactionListView  /> },
+      { path: 'transaction/:id/:reqId', element: !isAuthenticated && !isInvestor ? <InvestorLoginView /> : <InvestorTransactionView />},
+      { path: '*', element: <Navigate to="investor/404" /> }
+    ]
+  },
 ]
 
 export default routes;

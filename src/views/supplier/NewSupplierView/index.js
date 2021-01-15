@@ -18,6 +18,7 @@ import * as mutations from 'src/graphql/mutations.js';
 
 import Page from 'src/components/Page';
 
+import SupplierView from 'src/views/supplier/SupplierView';
 import AddressForm from './Forms/AddressForm';
 import ShareholderForm from './Forms/ShareholderForm';
 import FinancialsForm from './Forms/FinancialsForm';
@@ -38,9 +39,7 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Company details', 'Shareholder details', 'Financial details'];
 const { formId, formField } = NewSupplierFormModel;
 
-const user = async () => { await Auth.currentAuthenticatedUser() } 
-const { attributes = {} } = user;
-const userId = attributes['sub'];
+const userId = uuid()+'-group';
 const supplierId = 'supplier-'+uuid();
 const directorId = 'director-supplier'+uuid(); 
 const uboId = 'ubo-supplier'+uuid();
@@ -65,6 +64,7 @@ export default function NewSupplier() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
+  const [sub, setSub] = useState('');
   const currentValidationSchema = validationSchema[activeStep];
 
   const isLastStep = activeStep === steps.length - 1;
@@ -73,11 +73,22 @@ export default function NewSupplier() {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  React.useEffect(() => {
+  async function loadUser() {
+    let user = await Auth.currentAuthenticatedUser();
+    const { attributes = {} } = user;
+    const a = attributes["sub"];
+    setSub(a)
+  } loadUser();
+  }, []);
+
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
+      let user = await Auth.currentAuthenticatedUser();
       let identity = await Auth.currentUserCredentials();
       const identityId = identity.identityId
+      const groupId = userId;
       const sortkey = supplierId;
       const supplier_logo = values['supplier_logo'];
       const supplier_name = values['supplier_name'];
@@ -132,6 +143,12 @@ export default function NewSupplier() {
       const bic_swift_code = values['bic_swift_code'];
       const iban = values['iban'];
       const bank_status = 'Under Review';
+
+      await createUsergroup({
+        sub,
+        identityId,
+        groupId,
+      });
       
       await createSupplier({
         userId,
@@ -213,12 +230,17 @@ export default function NewSupplier() {
         bic_swift_code,
         iban,
         bank_status,
-      }); 
+      });
+
+      await Auth.updateUserAttributes(user, {
+        'custom:groupid': userId
+    }); 
     } catch (e) {
       onError(e);
     }
     actions.setSubmitting(false);
     setActiveStep(activeStep + 1);
+    window.location.reload();
   }
 
   function createSupplier(input) {
@@ -251,6 +273,12 @@ export default function NewSupplier() {
     ))
   };
 
+  function createUsergroup(groupId, sub, identityId) {
+    return API.graphql(graphqlOperation(mutations.createUsergroup,
+      {input: groupId, sub, identityId }
+    ))
+  };
+
   function _handleSubmit(values, actions) {
     if (isLastStep) {
       _submitForm(values, actions);
@@ -263,6 +291,7 @@ export default function NewSupplier() {
 
   function _handleBack() {
     setActiveStep(activeStep - 1);
+    navigate('/app/account');
   }
 
   return (
@@ -285,7 +314,7 @@ export default function NewSupplier() {
       </Stepper>
       <React.Fragment>
         {activeStep === steps.length ? (
-          navigate('/app/account')
+          <SupplierView/>
         ) : (
           <Formik
             initialValues={formInitialValues}

@@ -2,6 +2,7 @@ import NewBuyerFormModel from './NewBuyerFormModel';
 const {
   formField: {
     userId,
+    investorId,
     identityId,
     supplierId,
     buyer_address_city,	
@@ -36,6 +37,7 @@ const {
 export default {
   [userId.name]: '',
   [identityId.name]: '',
+  [investorId.name]: '',
   [supplierId.name]: '',
   [buyer_address_city.name]: '',
   [buyer_address_number.name]: '',

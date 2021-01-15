@@ -167,6 +167,29 @@ export const createUbo = /* GraphQL */ `
     }
   }
 `;
+export const createUsergroup = /* GraphQL */ `
+  mutation CreateUsergroup($input: CreateUsergroupInput!) {
+    createUsergroup(input: $input) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const createRequest = /* GraphQL */ `
   mutation CreateRequest($input: CreateRequestInput!) {
     createRequest(input: $input) {
@@ -176,6 +199,7 @@ export const createRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -194,6 +218,8 @@ export const createRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId
@@ -319,6 +345,7 @@ export const createBuyer = /* GraphQL */ `
     createBuyer(input: $input) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -328,6 +355,10 @@ export const createBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -466,6 +497,29 @@ export const deleteUbo = /* GraphQL */ `
     }
   }
 `;
+export const deleteUsergroup = /* GraphQL */ `
+  mutation DeleteUsergroup($input: DeleteUsergroupInput!) {
+    deleteUsergroup(input: $input) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const deleteRequest = /* GraphQL */ `
   mutation DeleteRequest($input: DeleteRequestInput!) {
     deleteRequest(input: $input) {
@@ -475,6 +529,7 @@ export const deleteRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -493,6 +548,8 @@ export const deleteRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId
@@ -688,6 +745,7 @@ export const deleteBuyer = /* GraphQL */ `
     deleteBuyer(input: $input) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -697,6 +755,10 @@ export const deleteBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -835,6 +897,39 @@ export const updateUbo = /* GraphQL */ `
     }
   }
 `;
+export const updateUsergroup = /* GraphQL */ `
+  mutation UpdateUsergroup($input: UpdateUsergroupInput!) {
+    updateUsergroup(input: $input) {
+      uboId
+      supplierId
+      buyerId
+      investorId
+      identityId
+      ubo_appointment_date
+      ubo_country_of_residence
+      ubo_date_of_birth
+      ubo_email
+      ubo_id_attachment
+      ubo_id_expiry_date
+      ubo_id_issue_date
+      ubo_id_issuer_country
+      ubo_id_issuer_state
+      ubo_id_number
+      ubo_id_type
+      ubo_jobtitle
+      ubo_name
+      ubo_nationality
+      ubo_ownership_percentage
+      ubo_pep_status
+      ubo_phone_number
+      ubo_poa_attachment
+      createdAt
+      ubo_status
+      sortkey
+      userId
+    }
+  }
+`;
 export const updateRequest = /* GraphQL */ `
   mutation UpdateRequest($input: UpdateRequestInput!) {
     updateRequest(input: $input) {
@@ -844,6 +939,7 @@ export const updateRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -862,6 +958,8 @@ export const updateRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId
@@ -1057,6 +1155,7 @@ export const updateBuyer = /* GraphQL */ `
     updateBuyer(input: $input) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -1066,6 +1165,10 @@ export const updateBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency

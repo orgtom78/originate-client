@@ -237,7 +237,7 @@ function renderForm(){
                   await Auth.signIn(values.email, values.password);
                   userHasAuthenticated(true);
                   navigate("/");
-                  window.location.reload(true);
+                  window.location.reload();
                 } catch (e) {
                   onError(e);
                   setIsLoading(false);

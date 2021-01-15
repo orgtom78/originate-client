@@ -81,7 +81,6 @@ export default function PayoutForm(props) {
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
-  const amount = updatefields.values.invoice_amount;
   const updateinvoice = updatefields.values.invoice_attachment;
   const updatepo = updatefields.values.purchase_order_attachment;
   const updateoffer = updatefields.values.offer_notice_attachment;
@@ -114,17 +113,6 @@ export default function PayoutForm(props) {
   const [cargosuccess, setCargoSuccess] = useState(false);
   const [blloading, setBlLoading] = useState(false);
   const [blsuccess, setBlSuccess] = useState(false);
-  const [value, setValue] = useState();
-
-  
-  useEffect(() => {
-    if (amount == null) {
-      async function getvalue(){
-      const z = await value;
-      return z;
-    } getvalue();
-    }
-    },[amount, value]);
 
   useEffect(() => {
     if (updateinvoice) {

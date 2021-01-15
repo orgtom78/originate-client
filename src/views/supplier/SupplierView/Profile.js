@@ -10,7 +10,7 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Auth } from "aws-amplify";
 import { useUser } from "src/components/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -77,6 +77,7 @@ export default function Profile({ className, ...rest }) {
   useEffect(() => {
     if (uploadedFile) {
       async function geturl() {
+        await Auth.currentAuthenticatedUser();
         const u = await Storage.vault.get(uploadedFile);
         setSupplier_logo(uploadedFile);
         setAvatar(u);

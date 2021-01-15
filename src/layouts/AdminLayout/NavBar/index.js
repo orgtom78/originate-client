@@ -15,7 +15,9 @@ import {
   BarChart as BarChartIcon,
   User as UserIcon,
   CreditCard as CreditCardIcon,
-  DollarSign as DollarSignIcon
+  DollarSign as DollarSignIcon,
+  Briefcase as BriefcaseIcon,
+  Truck as TruckIcon
 } from 'react-feather';
 import NavItem from './NavItem';
 
@@ -26,8 +28,18 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/admin/suppliers',
+    href: '/admin/users',
     icon: UserIcon,
+    title: 'Users'
+  },
+  {
+    href: '/admin/investors',
+    icon: BriefcaseIcon,
+    title: 'Investors'
+  },
+  {
+    href: '/admin/suppliers',
+    icon: TruckIcon,
     title: 'Suppliers'
   },
   {

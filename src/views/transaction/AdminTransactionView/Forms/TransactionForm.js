@@ -20,7 +20,7 @@ import {
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
-import { API, graphqlOperation, Storage } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -97,9 +97,6 @@ const status = [
 const RequestForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const [userId, setUserId] = useState("");
-  const [requestId, setRequestId] = useState("");
-  const [identityId, setIdentityId] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
@@ -116,7 +113,6 @@ const RequestForm = ({ className, value, ...rest }) => {
   useEffect(() => {
     const userId = value.value.value.userId;
     const sortkey = value.value.value.requestId;
-    setRequestId(sortkey);
     getRequest({ userId, sortkey });
     async function getRequest(input) {
       try {
@@ -125,9 +121,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         );
         const {
           data: {
-            getRequest: {
-              requestId, 
-              userId, 
+            getRequest: { 
               request_status,
               buyer_name,
               supplier_name,
@@ -140,8 +134,6 @@ const RequestForm = ({ className, value, ...rest }) => {
             },
           },
         } = request;
-        setRequestId(requestId);
-        setUserId(userId);
         setRequest_status(request_status);
         setBuyer_name(buyer_name);
         setSupplier_name(supplier_name);
@@ -166,7 +158,6 @@ const RequestForm = ({ className, value, ...rest }) => {
       await updateRequest({
         userId,
         sortkey,
-        identityId,
         request_status,
         buyer_name,
         supplier_name,
@@ -189,17 +180,6 @@ const RequestForm = ({ className, value, ...rest }) => {
     return API.graphql(
       graphqlOperation(mutations.updateRequest, { input: input })
     );
-  }
-
-  async function s3Up(file) {
-    const filename = `${Date.now()}-${file.name}`.replace(/ /g, "_");
-
-    const stored = await Storage.put(filename, file, {
-      level: "private",
-      identityId: identityId,
-      contentType: file.type,
-    });
-    return stored.key;
   }
 
   function NumberFormatCustom(props) {

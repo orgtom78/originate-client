@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Auth } from "aws-amplify";
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
@@ -24,7 +24,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginView(){
   const classes = useStyles();
-  const [isAuthenticated, userHasAuthenticated] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -50,7 +49,6 @@ export default function LoginView(){
             })}
             onSubmit={async (values) => { try {
               await Auth.signIn(values.email, values.password);
-              userHasAuthenticated(true); 
               navigate('/admin/suppliers');
               window.location.reload () 
             } catch (e) {

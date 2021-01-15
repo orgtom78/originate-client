@@ -36,11 +36,10 @@ const Account = () => {
     onLoad();
   }, [context]);
 
-  const id= supplierId;
-
+  const id = supplierId;
+if (id){
   return (
   <React.Fragment>
-  {id ? (
     <Page
       className={classes.root}
       title="Account"
@@ -69,13 +68,14 @@ const Account = () => {
         </Grid>
       </Container>
     </Page>
-    ) : (
-      <>
-      <NewSupplierView />
-      </>
-    )}
     </React.Fragment>
   );
+}
+  else { 
+    return(
+  <NewSupplierView />
+  )
+}
 };
 
 export default Account;

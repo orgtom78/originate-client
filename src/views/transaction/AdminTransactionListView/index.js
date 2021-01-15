@@ -141,7 +141,7 @@ const AdminTransactionListView = () => {
           </MuiThemeProvider>
         </>
       );
-    } else if (request === "Under Review") {
+    } else if (request === "Under Review" || request === "Documents Pending") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>

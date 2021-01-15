@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   InputField,
   SelectField,
   DatePickerField,
-  UploadField,
 } from "src/components/FormFields";
+import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -19,12 +21,10 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import countries from "src/components/countries.js";
 import industries from "src/components/industries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 const cr = countries;
 const ind = industries;
-const auto = FormikAutocomplete;
 
 const type = [
   {
@@ -84,7 +84,6 @@ export default function AddressForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      userId,
       identityId,
       supplier_logo,
       supplier_name,
@@ -104,44 +103,66 @@ export default function AddressForm(props) {
     },
   } = props;
 
+  const { id } = useParams();
+  const supId = props.value;
+  const { ident } = useParams();
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert =
-    updatefields.values.supplier_registration_cert_attachment;
+  updatefields.values.supplier_registration_cert_attachment;
   const updatelogo = updatefields.values.supplier_logo;
 
-  const [scert, setScert] = useState("");
   const [slogo, setSlogo] = useState("");
+
+  const [updateregcertimg, setUpdateregcertimg] = useState("");
+  const [updateregcertpdf, setUpdateregcertpdf] = useState("");
 
   const [certloading, setCertLoading] = useState(false);
   const [certsuccess, setCertSuccess] = useState(false);
   const [logoloading, setLogoLoading] = useState(false);
   const [logosuccess, setLogoSuccess] = useState(false);
 
+
   useEffect(() => {
     if (updateregcert) {
-      async function getcerturl() {
-        const u = await Storage.vault.get(updateregcert);
-        setScert(u);
+      async function geturl() {
+        var uploadext = updateregcert.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
+          setUpdateregcertimg(u);
+        } else {
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
+          setUpdateregcertpdf(h);
+        }
       }
-      getcerturl();
+      geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, ident]);
 
   useEffect(() => {
     if (updatelogo) {
-      async function getlogourl() {
-        const u = await Storage.vault.get(updatelogo);
-        setSlogo(u);
-      }
-      getlogourl();
+      async function geturl() {
+          const u = await Storage.get(updatelogo, {
+            level: "private",
+            identityId: ident,
+          });
+          setSlogo(u);
+        }geturl();
     }
-  }, [updatelogo]);
+  }, [updatelogo, ident]);
 
   async function handleCertClick() {
     setCertSuccess(false);
     setCertLoading(true);
-    const b = await scert;
+    const b = await updateregcert;
     if (b) {
       setCertSuccess(true);
       setCertLoading(false);
@@ -161,21 +182,33 @@ export default function AddressForm(props) {
     }
   }
 
+  function updateregcertisimageorpdf() {
+    if (updateregcertimg) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={updateregcertimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={updateregcertpdf}
+          />
+        </>
+      );
+    }
+  }    
+
   return (
     <React.Fragment>
       <Card>
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-              <InputField
-                name={userId.name}
-                label={userId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={12}>
               <InputField
                 name={identityId.name}
                 label={identityId.label}
@@ -249,21 +282,12 @@ export default function AddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={supplier_country.name}
                 label={supplier_country.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
                 data={cr}
-                onChange={(e) => this.props.setState(e.option.label)}
-                textFieldProps={{
-                  name: supplier_country.name,
-                  label: supplier_country.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -278,19 +302,12 @@ export default function AddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Field
+              <SelectListField
                 name={supplier_industry.name}
                 label={supplier_industry.label}
-                component={auto}
-                options={ind}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: supplier_industry.name,
-                  label: supplier_industry.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: "new-password", // disable autocomplete and autofill
-                }}
+                data={ind}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -311,16 +328,17 @@ export default function AddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               {updateregcert ? (
-                <>
-                  <img className={classes.img} alt="complex" src={scert} />
-                </>
+                <>{updateregcertisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={supplier_registration_cert_attachment.name}
                     id={supplier_registration_cert_attachment.name}
-                    accept="image/*"
+                    accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={id}
+                    sectorid={supId}
                   />
                   <label htmlFor={supplier_registration_cert_attachment.name}>
                     <LoaderButton
@@ -334,12 +352,13 @@ export default function AddressForm(props) {
                       onClick={handleCertClick}
                     >
                       {" "}
-                      Business Registration Certificate*
+                      Registration Certificate*
                     </LoaderButton>
                   </label>
                 </>
               )}
             </Grid>
+
             <Grid item xs={12} sm={6}>
               {updatelogo ? (
                 <>
@@ -347,11 +366,14 @@ export default function AddressForm(props) {
                 </>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={supplier_logo.name}
                     id={supplier_logo.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={id}
+                    sectorid={supId}
                   />
                   <label htmlFor={supplier_logo.name}>
                     <LoaderButton

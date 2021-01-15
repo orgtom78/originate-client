@@ -190,6 +190,7 @@ export const getBuyer = /* GraphQL */ `
     getBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -199,6 +200,10 @@ export const getBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -337,6 +342,29 @@ export const getUbo = /* GraphQL */ `
     }
   }
 `;
+export const getUsergroup = /* GraphQL */ `
+  query GetUsergroup($sortkey: String!, $userId: String!) {
+    getUsergroup(sortkey: $sortkey, userId: $userId) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const getRequest = /* GraphQL */ `
   query GetRequest($sortkey: String!, $userId: String!) {
     getRequest(sortkey: $sortkey, userId: $userId) {
@@ -346,6 +374,7 @@ export const getRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -363,9 +392,9 @@ export const getRequest = /* GraphQL */ `
       bill_of_lading_attachment
       container_no
       packing_list_attachment
+      createdAt
       payout_date
       payback_date
-      createdAt
       request_status
       sortkey
       userId
@@ -485,6 +514,36 @@ export const listsUbo = /* GraphQL */ `
     }
   }
 `;
+export const listsUsergroup = /* GraphQL */ `
+  query ListsUsergroup(
+    $filter: TableFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listsUsergroup(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        groupId
+        userId
+        user_name
+        investorId
+        supplierId
+        brokerId
+        sub
+        identityId
+        group_type
+        group_name
+        group_contact_name
+        group_contact_email
+        group_contact_phone
+        user_email
+        user_role
+        createdAt
+        sortkey
+      }
+      nextToken
+    }
+  }
+`;
 export const listsRequest = /* GraphQL */ `
   query ListsRequest(
     $filter: TableFilterInput
@@ -499,6 +558,7 @@ export const listsRequest = /* GraphQL */ `
         investorId
         identityId
         buyer_name
+        supplier_name
         purchase_order_amount
         purchase_order_attachment
         purchase_order_date
@@ -516,9 +576,9 @@ export const listsRequest = /* GraphQL */ `
         bill_of_lading_attachment
         container_no
         packing_list_attachment
+        createdAt
         payout_date
         payback_date
-        createdAt
         request_status
         sortkey
         userId
@@ -741,6 +801,7 @@ export const listsBuyer = /* GraphQL */ `
       items {
         buyerId
         supplierId
+        investorId
         identityId
         buyer_address_city
         buyer_address_number
@@ -750,6 +811,10 @@ export const listsBuyer = /* GraphQL */ `
         buyer_name
         buyer_trading_name
         buyer_country
+        buyer_contact_name
+        buyer_contact_email
+        buyer_contact_phone
+        buyer_contact_position
         buyer_website
         createdAt
         buyer_currency

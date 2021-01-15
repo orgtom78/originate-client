@@ -5,6 +5,7 @@ const {
   formField: {
     userId,
     identityId,
+    investorId,
     supplierId,
     buyer_address_city,	
     buyer_address_number,
@@ -41,6 +42,7 @@ const {
 export default [
   Yup.object().shape({
     [userId.name]: Yup.string().required(`${userId.requiredErrorMsg}`),
+    [investorId.name]: Yup.string().required(`${investorId.requiredErrorMsg}`),
     [identityId.name]: Yup.string().required(`${identityId.requiredErrorMsg}`),
     [supplierId.name]: Yup.string().required(`${supplierId.requiredErrorMsg}`),
     [buyer_address_city.name]: Yup.string().required(`${buyer_address_city.requiredErrorMsg}`),

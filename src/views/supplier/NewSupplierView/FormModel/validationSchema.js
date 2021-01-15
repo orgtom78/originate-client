@@ -33,11 +33,13 @@ const {
     ubo_poa_attachment, 
     ubo_country_of_residence,
     ebit,
-    financials_attachment,
+    income_statement_attachment,
+    balance_sheet_attachment,
     net_profit,
-    financials_rating,
     financials_reporting_period,
     sales,
+    retained_earnings,
+    working_capital,
     total_assets,
     bank_account_number,
     bank_account_sortcode,
@@ -70,7 +72,7 @@ export default [
       }),
     [supplier_address_city.name]: Yup.string().required(`${supplier_address_city.requiredErrorMsg}`),
     [supplier_address_street.name]: Yup.string().required(`${supplier_address_street.requiredErrorMsg}`),
-    [supplier_address_number.name]: Yup.number().required(`${supplier_address_number.requiredErrorMsg}`),
+    [supplier_address_number.name]: Yup.number(),
     [supplier_address_postalcode.name]: Yup.string()
       .required(`${supplier_address_postalcode.requiredErrorMsg}`)
       .test(
@@ -106,9 +108,9 @@ export default [
 
   Yup.object().shape({
     [ebit.name]: Yup.number(),
-    [financials_attachment.name]: Yup.string(),
-    [net_profit.name]: Yup.number(),
-    [financials_rating.name]: Yup.string(),
+    [balance_sheet_attachment.name]: Yup.string().required(`${balance_sheet_attachment.requiredErrorMsg}`),
+    [income_statement_attachment.name]: Yup.string().required(`${income_statement_attachment.requiredErrorMsg}`),
+    [net_profit.name]: Yup.number().required(`${net_profit.requiredErrorMsg}`),
     [financials_reporting_period.name]: Yup.string()
     .required(`${financials_reporting_period.requiredErrorMsg}`)
     .test('incdate', financials_reporting_period.invalidErrorMsg, val => {
@@ -122,8 +124,10 @@ export default [
       }
       return false;
     }),
-    [sales.name]: Yup.number(),
-    [total_assets.name]: Yup.number(),
+    [sales.name]: Yup.number().required(`${sales.requiredErrorMsg}`),
+    [total_assets.name]: Yup.number().required(`${total_assets.requiredErrorMsg}`),
+    [retained_earnings.name]: Yup.number().required(`${retained_earnings.requiredErrorMsg}`),
+    [working_capital.name]: Yup.number().required(`${working_capital.requiredErrorMsg}`),
     [bank_account_number.name]: Yup.string(),
     [bank_account_sortcode.name]: Yup.string(),
     [bank_country.name]: Yup.string(),

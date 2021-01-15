@@ -56,8 +56,6 @@ const orangeTheme = createMuiTheme({
 const DirectorListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
   const [director, setDirector] = useState([]);
   const [userId, setUserId] = useState('');
   const [directorId, setDirectorId] = useState('');

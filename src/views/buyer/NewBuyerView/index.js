@@ -85,7 +85,6 @@ export default function NewAccount() {
     onLoad();
   }, [context]);
 
-
   function _sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
@@ -198,6 +197,8 @@ export default function NewAccount() {
   function _handleSubmit(values, actions) {
     if (isLastStep) {
       _submitForm(values, actions);
+      navigate('/app/buyers')
+      window.location.reload();
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});

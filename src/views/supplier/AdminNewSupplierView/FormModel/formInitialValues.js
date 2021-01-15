@@ -1,7 +1,6 @@
 import NewSupplierFormModel from './NewSupplierFormModel';
 const {
   formField: {
-    userId,
     identityId,
     supplier_logo,
     supplier_name,
@@ -51,7 +50,8 @@ const {
     short_term_debt,
     working_capital,
     ebit,
-    financials_attachment,
+    balance_sheet_attachment,
+    income_statement_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
@@ -62,7 +62,6 @@ const {
 } = NewSupplierFormModel;
 
 export default { 
-  [userId.name]: '',
   [identityId.name]: '',
   [supplier_logo.name]: '',
   [supplier_name.name]: '',
@@ -101,7 +100,8 @@ export default {
   [ubo_poa_attachment.name]: '',
   [ubo_country_of_residence.name]: undefined,
   [ebit.name]: '',
-  [financials_attachment.name]: '',
+  [balance_sheet_attachment.name]: '',
+  [income_statement_attachment.name]: '',
   [buyerId.name]: '',
   [net_profit.name]: '',
   [financials_rating.name]: '',

@@ -136,6 +136,7 @@ export const onCreateBuyer = /* GraphQL */ `
     onCreateBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -145,6 +146,10 @@ export const onCreateBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -283,6 +288,29 @@ export const onCreateUbo = /* GraphQL */ `
     }
   }
 `;
+export const onCreateUsergroup = /* GraphQL */ `
+  subscription OnCreateUsergroup($sortkey: String, $userId: String) {
+    onCreateUsergroup(sortkey: $sortkey, userId: $userId) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const onCreateRequest = /* GraphQL */ `
   subscription OnCreateRequest($sortkey: String, $userId: String) {
     onCreateRequest(sortkey: $sortkey, userId: $userId) {
@@ -292,6 +320,7 @@ export const onCreateRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -310,6 +339,8 @@ export const onCreateRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId
@@ -451,6 +482,7 @@ export const onDeleteBuyer = /* GraphQL */ `
     onDeleteBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -460,6 +492,10 @@ export const onDeleteBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -598,6 +634,29 @@ export const onDeleteUbo = /* GraphQL */ `
     }
   }
 `;
+export const onDeleteUsergroup = /* GraphQL */ `
+  subscription OnDeleteUsergroup($sortkey: String, $userId: String) {
+    onDeleteUsergroup(sortkey: $sortkey, userId: $userId) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const onDeleteRequest = /* GraphQL */ `
   subscription OnDeleteRequest($sortkey: String, $userId: String) {
     onDeleteRequest(sortkey: $sortkey, userId: $userId) {
@@ -607,6 +666,7 @@ export const onDeleteRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -625,6 +685,8 @@ export const onDeleteRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId
@@ -766,6 +828,7 @@ export const onUpdateBuyer = /* GraphQL */ `
     onUpdateBuyer(sortkey: $sortkey, userId: $userId) {
       buyerId
       supplierId
+      investorId
       identityId
       buyer_address_city
       buyer_address_number
@@ -775,6 +838,10 @@ export const onUpdateBuyer = /* GraphQL */ `
       buyer_name
       buyer_trading_name
       buyer_country
+      buyer_contact_name
+      buyer_contact_email
+      buyer_contact_phone
+      buyer_contact_position
       buyer_website
       createdAt
       buyer_currency
@@ -913,6 +980,29 @@ export const onUpdateUbo = /* GraphQL */ `
     }
   }
 `;
+export const onUpdateUsergroup = /* GraphQL */ `
+  subscription OnUpdateUsergroup($sortkey: String, $userId: String) {
+    onUpdateUsergroup(sortkey: $sortkey, userId: $userId) {
+      groupId
+      userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const onUpdateRequest = /* GraphQL */ `
   subscription OnUpdateRequest($sortkey: String, $userId: String) {
     onUpdateRequest(sortkey: $sortkey, userId: $userId) {
@@ -922,6 +1012,7 @@ export const onUpdateRequest = /* GraphQL */ `
       investorId
       identityId
       buyer_name
+      supplier_name
       purchase_order_amount
       purchase_order_attachment
       purchase_order_date
@@ -940,6 +1031,8 @@ export const onUpdateRequest = /* GraphQL */ `
       container_no
       packing_list_attachment
       createdAt
+      payout_date
+      payback_date
       request_status
       sortkey
       userId

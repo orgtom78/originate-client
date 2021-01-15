@@ -57,7 +57,6 @@ function BuyerUploads(value) {
   const navigate = useNavigate();
   const { id } = useParams();
   const { buyId } = useParams();
-  const { ident } = useParams();
   const [sub, setSub] = useState("");
   const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");

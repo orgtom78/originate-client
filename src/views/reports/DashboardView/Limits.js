@@ -41,8 +41,6 @@ const Limits = ({ className, ...rest }) => {
   const context = useUser();
   const sub = context.sub;
   const [request, setRequest] = useState([]);
-  const [amounts, setAmounts] = useState([]);
-  const [status, setStatus] = useState([]);
 
   useEffect(() => {
     async function loadRequest() {
@@ -67,7 +65,6 @@ const Limits = ({ className, ...rest }) => {
     setRequest(items)
   }; getRequests();
   }, [sub])
-
 
   const handle = useCallback(() => {
     if (!request || !request.length) {

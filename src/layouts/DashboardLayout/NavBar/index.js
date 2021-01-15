@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
-import { Auth } from "aws-amplify";
+import { Auth } from "@aws-amplify/auth";
 import PropTypes from 'prop-types';
 import {
   Avatar,
@@ -83,7 +83,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     await Auth.signOut();
     userHasAuthenticated(false);
     navigate('/');
-    window.location.reload(true);
+    window.location.reload();
   }
 
   useEffect(() => {

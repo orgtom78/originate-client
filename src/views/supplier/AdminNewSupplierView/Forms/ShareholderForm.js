@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from "react-router-dom";
 import {
   InputField,
   SelectField,
-  UploadField
 } from "src/components/FormFields";
+import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
@@ -19,11 +21,8 @@ import { Storage } from "aws-amplify";
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
 import countries from 'src/components/countries.js';
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from 'formik';
 
 const cr = countries
-const auto = FormikAutocomplete
 
 const idtype = [
   {
@@ -100,21 +99,27 @@ const useStyles = makeStyles(() => ({
       },
     } = props;
 
-    console.log(props)
-
+    const { id } = useParams();
+    const dirId = props.dir;
+    const uboId = props.ubo;
+    const { ident } = useParams();
     const { values: formValues } = useFormikContext();
     const updatefields = { values: formValues };
-    console.log(updatefields)
     
     const director_updatepoa = updatefields.values.director_poa_attachment;
     const director_updateid = updatefields.values.director_id_attachment;
     const ubo_updatepoa = updatefields.values.ubo_poa_attachment;
     const ubo_updateid = updatefields.values.ubo_id_attachment;
   
-    const [dpoaimg, setDpoaimg ] = useState('');
-    const [didimg, setDidimg ] = useState('');
-    const [upoaimg, setUpoaimg ] = useState('');
-    const [uidimg, setUidimg ] = useState('');
+    const [directorpoaimg, setDirectorpoaimg ] = useState('');
+    const [directorpoapdf, setDirectorpoapdf ] = useState('');
+    const [directoridimg, setDirectoridimg ] = useState('');
+    const [directoridpdf, setDirectoridpdf ] = useState('');
+
+    const [ubopoaimg, setUbopoaimg ] = useState('');
+    const [ubopoapdf, setUbopoapdf ] = useState('');
+    const [uboidimg, setUboidimg ] = useState('');
+    const [uboidpdf, setUboidpdf ] = useState('');
 
     const [directoridloading, setDirectoridLoading] = useState(false);
     const [directoridsuccess, setDirectoridSuccess] = useState(false);
@@ -127,48 +132,104 @@ const useStyles = makeStyles(() => ({
   
     useEffect(() => {
       if (director_updateid) {
-        async function getdirectoridurl() { 
-          const u = await Storage.vault.get(director_updateid)
-          setDidimg(u)
-        }; getdirectoridurl()
+        async function geturl() {
+          var uploadext = director_updateid.split(".").pop();
+          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+          const d = imageExtensions.includes(uploadext);
+          if (d === true) {
+            const u = await Storage.get(director_updateid, {
+              level: "private",
+              identityId: ident,
+            });
+            setDirectoridimg(u);
+          } else {
+            const h = await Storage.get(director_updateid, {
+              level: "private",
+              identityId: ident,
+            });
+            setDirectoridpdf(h);
+          }
+        }
+        geturl();
       }
-    }, 
-    [director_updateid]);
+    }, [director_updateid, ident]);
 
     useEffect(() => {
       if (director_updatepoa) {
-        async function getdirectorpoaurl() { 
-          const u = await Storage.vault.get(director_updatepoa)
-          setDpoaimg(u)
-        }; getdirectorpoaurl()
+        async function geturl() {
+          var uploadext = director_updatepoa.split(".").pop();
+          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+          const d = imageExtensions.includes(uploadext);
+          if (d === true) {
+            const u = await Storage.get(director_updatepoa, {
+              level: "private",
+              identityId: ident,
+            });
+            setDirectorpoaimg(u);
+          } else {
+            const h = await Storage.get(director_updatepoa, {
+              level: "private",
+              identityId: ident,
+            });
+            setDirectorpoapdf(h);
+          }
+        }
+        geturl();
       }
-    }, 
-    [director_updatepoa]);
+    }, [director_updatepoa, ident]);
 
     useEffect(() => {
       if (ubo_updateid) {
-        async function getuboidurl() { 
-          const u = await Storage.vault.get(ubo_updateid)
-          setUidimg(u)
-        }; getuboidurl()
+        async function geturl() {
+          var uploadext = ubo_updateid.split(".").pop();
+          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+          const d = imageExtensions.includes(uploadext);
+          if (d === true) {
+            const u = await Storage.get(ubo_updateid, {
+              level: "private",
+              identityId: ident,
+            });
+            setUboidimg(u);
+          } else {
+            const h = await Storage.get(ubo_updateid, {
+              level: "private",
+              identityId: ident,
+            });
+            setUboidpdf(h);
+          }
+        }
+        geturl();
       }
-    }, 
-    [ubo_updateid]);
+    }, [ubo_updateid, ident]);
 
     useEffect(() => {
       if (ubo_updatepoa) {
-        async function getubopoaurl() { 
-          const u = await Storage.vault.get(ubo_updatepoa)
-          setUpoaimg(u)
-        }; getubopoaurl()
+        async function geturl() {
+          var uploadext = ubo_updatepoa.split(".").pop();
+          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+          const d = imageExtensions.includes(uploadext);
+          if (d === true) {
+            const u = await Storage.get(ubo_updatepoa, {
+              level: "private",
+              identityId: ident,
+            });
+            setUbopoaimg(u);
+          } else {
+            const h = await Storage.get(ubo_updatepoa, {
+              level: "private",
+              identityId: ident,
+            });
+            setUbopoapdf(h);
+          }
+        }
+        geturl();
       }
-    }, 
-    [ubo_updatepoa]);
+    }, [ubo_updatepoa, ident]);
   
     async function handleDirectorIdClick(){
         setDirectoridSuccess(false);
         setDirectoridLoading(true);
-        const b = await didimg;
+        const b = await director_updateid;
         if (b) {
           setDirectoridSuccess(true);
           setDirectoridLoading(false);
@@ -177,7 +238,7 @@ const useStyles = makeStyles(() => ({
     async function handleDirectorPoaClick(){
         setDirectorpoaSuccess(false);
         setDirectorpoaLoading(true);
-        const b = await dpoaimg;
+        const b = await director_updatepoa;
         if (b) {
           setDirectorpoaSuccess(true);
           setDirectorpoaLoading(false);
@@ -187,7 +248,7 @@ const useStyles = makeStyles(() => ({
       async function handleUboIdClick(){
         setUboidSuccess(false);
         setUboidLoading(true);
-        const b = await uidimg;
+        const b = await ubo_updateid;
         if (b) {
           setUboidSuccess(true);
           setUboidLoading(false);
@@ -196,12 +257,92 @@ const useStyles = makeStyles(() => ({
     async function handleUboPoaClick(){
         setUbopoaSuccess(false);
         setUbopoaLoading(true);
-        const b = await upoaimg;
+        const b = await director_updatepoa;
         if (b) {
           setUbopoaSuccess(true);
           setUbopoaLoading(false);
         }
       }
+
+      function director_updateidisimageorpdf() {
+        if (director_updateid) {
+          return (
+            <>
+              <img className={classes.img} alt="complex" src={directoridimg} />
+            </>
+          );
+        } else {
+          return (
+            <>
+              <iframe
+                title="file"
+                style={{ width: "100%", height: "100%" }}
+                src={directoridpdf}
+              />
+            </>
+          );
+        }
+      }  
+
+      function director_updatepoaisimageorpdf() {
+        if (director_updatepoa) {
+          return (
+            <>
+              <img className={classes.img} alt="complex" src={directorpoaimg} />
+            </>
+          );
+        } else {
+          return (
+            <>
+              <iframe
+                title="file"
+                style={{ width: "100%", height: "100%" }}
+                src={directorpoapdf}
+              />
+            </>
+          );
+        }
+      }   
+
+      function ubo_updateidisimageorpdf() {
+        if (ubo_updateid) {
+          return (
+            <>
+              <img className={classes.img} alt="complex" src={uboidimg} />
+            </>
+          );
+        } else {
+          return (
+            <>
+              <iframe
+                title="file"
+                style={{ width: "100%", height: "100%" }}
+                src={uboidpdf}
+              />
+            </>
+          );
+        }
+      }   
+
+      function ubo_updatepoaisimageorpdf() {
+        if (ubo_updatepoa) {
+          return (
+            <>
+              <img className={classes.img} alt="complex" src={ubopoaimg} />
+            </>
+          );
+        } else {
+          return (
+            <>
+              <iframe
+                title="file"
+                style={{ width: "100%", height: "100%" }}
+                src={ubopoapdf}
+              />
+            </>
+          );
+        }
+      }   
 
 
     return (
@@ -234,44 +375,22 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
-          <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+          <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={director_nationality.name}
                 label={director_nationality.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: director_nationality.name,
-                  label: director_nationality.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+            <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={director_country_of_residence.name}
                 label={director_country_of_residence.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: director_country_of_residence.name,
-                  label: director_country_of_residence.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -283,22 +402,28 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <InputField
+              name={director_id_number.name}
+              label={director_id_number.label}
+              fullWidth
+              variant="outlined"
+            />
+          </Grid>
             <Grid item xs={6}>
             {director_updateid ?  
-            
             (
+              <>{director_updateidisimageorpdf()}</>
+            ) : (
               <>
-              <img className={classes.img} alt="complex" src={didimg}/>
-              </>
-            )   :    
-
-             (
-              <>
-              <UploadField
+              <AdminUploadField
                 name = {director_id_attachment.name}
                 id = {director_id_attachment.name}
                 accept="image/*"
                 style={{ display: 'none' }}
+                identityId={ident}
+                userid={id}
+                sectorid={dirId}
               />
               <label htmlFor={director_id_attachment.name}>
               <LoaderButton
@@ -322,20 +447,18 @@ const useStyles = makeStyles(() => ({
 
             <Grid item xs={6}>
             {director_updatepoa ?  
-            
             (
+              <>{director_updatepoaisimageorpdf()}</>
+            ) : (
               <>
-              <img className={classes.img} alt="complex" src={dpoaimg}/>
-              </>
-            )   :    
-
-             (
-              <>
-              <UploadField
+              <AdminUploadField
                 name = {director_poa_attachment.name}
                 id = {director_poa_attachment.name}
                 accept="image/*"
                 style={{ display: 'none' }}
+                identityId={ident}
+                userid={id}
+                sectorid={dirId}
               />
               <label htmlFor={director_poa_attachment.name}>
               <LoaderButton
@@ -381,44 +504,22 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
-          <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+          <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={ubo_nationality.name}
                 label={ubo_nationality.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_nationality.name,
-                  label: ubo_nationality.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <Field
+            <Grid item xs={12} sm={6}>
+              <SelectListField
                 name={ubo_country_of_residence.name}
                 label={ubo_country_of_residence.label}
-                component={auto}
-                options={cr}
-                getOptionLabel={(option) => option.label}
-                textFieldProps={{
-                  name: ubo_country_of_residence.name,
-                  label: ubo_country_of_residence.label,
-                  fullWidth: true,
-                  variant: "outlined",
-                  autoComplete: 'new-password', // disable autocomplete and autofill
-                }}
+                data={cr}
+                fullWidth
+                variant="outlined"
               />
             </Grid>
           <Grid item xs={12} sm={6}>
@@ -430,22 +531,28 @@ const useStyles = makeStyles(() => ({
               variant="outlined"
             />
           </Grid>
+          <Grid item xs={12} sm={12}>
+            <InputField
+              name={ubo_id_number.name}
+              label={ubo_id_number.label}
+              fullWidth
+              variant="outlined"
+            />
+          </Grid>
           <Grid item xs={6}>
             {ubo_updateid ?  
-            
             (
+              <>{ubo_updateidisimageorpdf()}</>
+            ) : (
               <>
-              <img className={classes.img} alt="complex" src={uidimg}/>
-              </>
-            )   :    
-
-             (
-              <>
-              <UploadField
+              <AdminUploadField
                 name = {ubo_id_attachment.name}
                 id = {ubo_id_attachment.name}
                 accept="image/*"
                 style={{ display: 'none' }}
+                identityId={ident}
+                userid={id}
+                sectorid={uboId}
               />
               <label htmlFor={ubo_id_attachment.name}>
               <LoaderButton
@@ -469,20 +576,18 @@ const useStyles = makeStyles(() => ({
 
             <Grid item xs={6}>
             {ubo_updatepoa ?  
-            
             (
+              <>{ubo_updatepoaisimageorpdf()}</>
+            ) : (
               <>
-              <img className={classes.img} alt="complex" src={upoaimg}/>
-              </>
-            )   :    
-
-             (
-              <>
-              <UploadField
+              <AdminUploadField
                 name = {ubo_poa_attachment.name}
                 id = {ubo_id_attachment.name}
                 accept="image/*"
                 style={{ display: 'none' }}
+                identityId={ident}
+                userid={id}
+                sectorid={uboId}
               />
               <label htmlFor={ubo_id_attachment.name}>
               <LoaderButton

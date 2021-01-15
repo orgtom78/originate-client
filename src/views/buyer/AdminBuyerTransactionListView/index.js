@@ -113,9 +113,9 @@ const BuyerList = () => {
     }
   }
 
-  function getLink(status, id, buyid) {
+  function getLink(status, id, buyid, supid) {
     if (status === "Approved") {
-      return `/admin/newtransaction/${id}/${buyid}`
+      return `/admin/newtransaction/${id}/${buyid}/${supid}`
     } else {
       return (
         <>
@@ -134,7 +134,7 @@ const BuyerList = () => {
               <Grid item key={buyerdata.buyerId} lg={4} md={6} xs={12}>
                 <Card>
                   <CardActionArea>
-                    <Link to={getLink(buyerdata.buyer_status, buyerdata.userId, buyerdata.buyerId)}>
+                    <Link to={getLink(buyerdata.buyer_status, buyerdata.userId, buyerdata.buyerId, buyerdata.supplierId)}>
                       <CardContent>
                         <Box display="flex" justifyContent="center" mb={3}>
                           <Avatar

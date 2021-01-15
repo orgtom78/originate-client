@@ -47,7 +47,6 @@ const FinancialsListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
   const { buyId } = useParams();
-  const { ident } = useParams();
   const [financials, setFinancials] = useState([]);
   const [userId, setUserId] = useState('');
   const [financialsId, setFinancialsId] = useState('');

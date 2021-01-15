@@ -27,7 +27,7 @@ export default {
     },
     supplier_website: {
       name: 'supplier_website',
-      label: 'company Website',
+      label: 'Company Website',
       requiredErrorMsg: 'Company Website is required'
     },
     supplier_type: {
@@ -244,10 +244,15 @@ export default {
       label: 'Earnings before Interest & Tax',
       requiredErrorMsg: 'EBIT is required',
     },
-    financials_attachment: {
-      name: 'financials_attachment',
-      label: 'Financial Accounts',
-      requiredErrorMsg: 'Financial Accounts are required',
+    balance_sheet_attachment: {
+      name: 'balance_sheet_attachment',
+      label: 'Balance Sheet',
+      requiredErrorMsg: 'Balance Sheet is required',
+    },
+    income_statement_attachment: {
+      name: 'income_statement_attachment',
+      label: 'Income Statement',
+      requiredErrorMsg: 'Income Statement is required',
     },
     net_profit: {
       name: 'net_profit',

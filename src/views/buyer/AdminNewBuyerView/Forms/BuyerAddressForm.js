@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { Link as RouterLink } from "react-router-dom";
 import { InputField, SelectField, UploadField } from "src/components/FormFields";
 import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
@@ -18,13 +17,9 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/currencies.js";
 import countries from "src/components/countries.js";
-import FormikAutocomplete from "src/components/FormFields/AutocompleteField.js";
-import { Field } from "formik";
 
 const cr = countries;
 const curr = currencies;
-
-const auto = FormikAutocomplete;
 
 const terms = [
   {
@@ -102,6 +97,7 @@ export default function BuyerAddressForm(props) {
   const {
     formField: {
       userId,
+      investorId,
       identityId,
       supplierId,
       buyer_address_city,
@@ -231,6 +227,14 @@ export default function BuyerAddressForm(props) {
               <InputField
                 name={supplierId.name}
                 label={supplierId.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={investorId.name}
+                label={investorId.label}
                 fullWidth
                 variant="outlined"
               />

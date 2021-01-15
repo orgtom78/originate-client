@@ -10,7 +10,6 @@ export const UserContext = createContext(null);
 // components bellow via the `UserContext.Provider` component. This is where the Amplify will be
 // mapped to a different interface, the one that we are going to expose to the rest of the app.
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
   const [sub, setSub] = useState("");
   const [identity, setIdentity] = useState("");
 
@@ -37,8 +36,8 @@ export const UserProvider = ({ children }) => {
     async function loadUser() {
       let user = await Auth.currentAuthenticatedUser();
       const { attributes = {} } = user;
-      const a = attributes["sub"];
-      return a;
+      const b = attributes["custom:groupid"];
+      return b;
     }
 
     async function loadIdentity() {
@@ -113,7 +112,6 @@ export const UserProvider = ({ children }) => {
   // components or Providers above this component, then this will be a performance booster.
   const values = React.useMemo(
     () => ({
-      user,
       sub,
       identity,
       supplierId,
@@ -134,7 +132,6 @@ export const UserProvider = ({ children }) => {
       supplier_shareholder_list_attachment,
     }),
     [
-      user,
       sub,
       identity,
       supplierId,

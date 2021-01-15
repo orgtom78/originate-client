@@ -35,20 +35,11 @@ import DirectorListView from "src/views/buyer/AdminBuyerView/Lists/directorlist.
 import UboListView from "src/views/buyer/AdminBuyerView/Lists/ubolist.js";
 import FinancialsListView from "src/views/buyer/AdminBuyerView/Lists/financialslist.js";
 import * as queries from "src/graphql/queries.js";
-import  AWS from 'aws-sdk';
-import config from 'src/config.js';
 import countries from "src/components/countries.js";
 import industries from "src/components/industries.js";
 
 const cr = countries;
 const indust = industries;
-
-
-AWS.config.update({
-  accessKeyId: config.AWS.ID,
-  secretAccessKey: config.AWS.KEY,
-  region: config.AWS.REGION,
-});
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -126,9 +117,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const { buyId } = useParams();
   const { ident } = useParams();
 
-  const [userId, setUserId] = useState("");
-  const [buyerId, setBuyerId] = useState("");
-  const [identityId, setIdentityId] = useState("");
+  const [investorId, setInvestorId] = useState("");
   const [buyer_status, setBuyer_status] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
@@ -152,7 +141,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
   useEffect(() => {
     const userId = id;
     const sortkey = buyId;
-    setBuyerId(sortkey);
     getBuyer({ userId, sortkey });
     async function getBuyer(input) {
       try {
@@ -162,9 +150,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getBuyer: {
-              userId,
-              buyerId,
-              identityId,
+              investorId,
               buyer_status,
               buyer_logo,
               buyer_name,
@@ -184,9 +170,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
             },
           },
         } = buyer;
-        setUserId(userId);
-        setBuyerId(buyerId);
-        setIdentityId(identityId);
+        setInvestorId(investorId);
         setBuyer_status(buyer_status);
         setBuyer_logo(buyer_logo);
         setBuyer_name(buyer_name);
@@ -220,6 +204,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
       await updateBuyer({
         userId,
         sortkey,
+        investorId,
         buyer_status,
         buyer_logo,
         buyer_name,
@@ -311,6 +296,17 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           </MenuItem>
                         ))}
                       </Select>
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Investor ID"
+                        name="investorId"
+                        onChange={(e) => setInvestorId(e.target.value)}
+                        required
+                        value={investorId || ""}
+                        variant="outlined"
+                      />
                     </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
