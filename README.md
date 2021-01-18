@@ -73,7 +73,7 @@ Within the download you'll find the following directories and files:
 
 ## License
 
-- Licensed under MIT (https://github.com/devias-io/react-material-dashboard/blob/master/LICENSE.md)
+- Licensed under MIT (https://github.com/orgtom78/originate-client/blob/master/LICENSE.md)
 
 ## Contact Us
 
