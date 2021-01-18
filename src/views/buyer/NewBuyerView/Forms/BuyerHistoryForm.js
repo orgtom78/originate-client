@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   InputField,
   DatePickerField,
@@ -10,6 +11,7 @@ import {
   Divider,
   Grid,
   makeStyles,
+  Typography
 } from "@material-ui/core";
 import {
   Upload as UploadIcon
@@ -234,6 +236,9 @@ const useStyles = makeStyles(() => ({
                 </>
               )
               }
+            <Link target={"_blank"} rel='noopener noreferrer' to={'https://originatesampledocs.s3.us-east-2.amazonaws.com/Originate-Capital-IPU-clean.docx'}>
+            <Typography variant='subtitle2'>Download Sample</Typography>
+            </Link>
             </Grid>
         </Grid>
         </CardContent>

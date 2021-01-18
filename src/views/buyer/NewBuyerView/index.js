@@ -42,7 +42,7 @@ const steps = ['Client Details', 'Client Financials', 'Client History'];
 const { formId, formField } = NewBuyerFormModel;
 
 const buyerId = 'buyer-'+uuid();
-const financialsId = 'financials-'+uuid()+buyerId;
+const financialsId = 'financials-buyer'+uuid()+buyerId;
 
 function getStepContent(step) {
   switch (step) {
@@ -197,8 +197,7 @@ export default function NewAccount() {
   function _handleSubmit(values, actions) {
     if (isLastStep) {
       _submitForm(values, actions);
-      navigate('/app/buyers')
-      window.location.reload();
+
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});

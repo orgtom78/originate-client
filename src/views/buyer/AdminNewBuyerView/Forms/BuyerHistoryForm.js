@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import {
   InputField,
   DatePickerField,
@@ -18,7 +19,6 @@ import { useFormikContext } from 'formik';
 import { Storage } from "aws-amplify"; 
 import LoaderButton from 'src/components/LoaderButton.js';
 import { green } from '@material-ui/core/colors';
-
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -69,38 +69,46 @@ const useStyles = makeStyles(() => ({
       },
     } = props;
 
+    const { id } = useParams();
+    const dirId = props.dir;
+    const uboId = props.ubo;
+    const { ident } = useParams();
     const { values: formValues } = useFormikContext();
     const updatefields = { values: formValues };
     const buyeripu = updatefields.values.buyer_one_off_ipu_attachment;
-  
-    const [img, setImg ] = useState('');
-    const [updateregcertpdf, setUpdateregcertpdf ] = useState(''); 
-  
+    const [ipuimg, setIpuimg ] = useState('');
+    const [ipupdf, setIpupdf ] = useState(''); 
     const [loading, setLoading] = useState(false);
     const [success, setSuccess] = useState(false);
   
     useEffect(() => {
       if (buyeripu) {
-        async function geturl () {
-          var uploadext = buyeripu.split('.').pop(); 
-          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"]
-          const d  = imageExtensions.includes(uploadext)
-          if (d === true){
-          const u = await Storage.vault.get(buyeripu);
-          setImg(u)
-        } else {
-          const h = await Storage.vault.get(buyeripu);
-          setUpdateregcertpdf(h)
+        async function geturl() {
+          var uploadext = buyeripu.split(".").pop();
+          var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+          const d = imageExtensions.includes(uploadext);
+          if (d === true) {
+            const u = await Storage.get(buyeripu, {
+              level: "private",
+              identityId: ident,
+            });
+            setIpuimg(u);
+          } else {
+            const h = await Storage.get(buyeripu, {
+              level: "private",
+              identityId: ident,
+            });
+            setIpupdf(h);
+          }
         }
-        }; geturl()
+        geturl();
       }
-    }, 
-    [buyeripu]);
+    }, [buyeripu, ident]);
   
     async function handleClick(){
         setSuccess(false);
         setLoading(true);
-        const b = await img;
+        const b = await buyeripu;
         if (b) {
           setSuccess(true);
           setLoading(false);
@@ -108,10 +116,10 @@ const useStyles = makeStyles(() => ({
       }
       
       function isimageorpdf(){
-        if (img) {
+        if (ipuimg) {
           return(
             <>
-            <img className={classes.img} alt="complex" src={img} />
+            <img className={classes.img} alt="complex" src={ipuimg} />
             </>
             )
         } 
@@ -121,7 +129,7 @@ const useStyles = makeStyles(() => ({
             <iframe
             title="file"
             style={{ width: '100%', height: '100%' }}
-            src={updateregcertpdf}
+            src={ipupdf}
             />
             </>
           ) 

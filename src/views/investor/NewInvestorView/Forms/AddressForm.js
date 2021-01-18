@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   InputField,
   SelectField,
   DatePickerField,
 } from "src/components/FormFields";
-import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
   CardContent,
   Divider,
   Grid,
-  makeStyles,
+  makeStyles
 } from "@material-ui/core";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
@@ -24,7 +23,6 @@ import industries from "src/components/industries.js";
 
 const cr = countries;
 const ind = industries;
-
 const type = [
   {
     value: "Corporation",
@@ -37,10 +35,6 @@ const type = [
   {
     value: "Partnership",
     label: "Partnership",
-  },
-  {
-    value: "Sole Proprietorship",
-    label: "Sole Proprietorship",
   },
 ];
 
@@ -83,43 +77,35 @@ export default function AddressForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      identityId,
-      supplier_logo,
-      supplier_name,
-      supplier_type,
-      supplier_date_of_incorporation,
-      supplier_address_city,
-      supplier_address_street,
-      supplier_address_postalcode,
-      supplier_country,
-      supplier_industry,
-      supplier_registration_cert_attachment,
-      supplier_website,
-      supplier_address_refinment,
-      supplier_industry_code,
-      supplier_register_number,
-      supplier_trading_name,
+      investor_logo,
+      investor_name,
+      investor_type,
+      investor_date_of_incorporation,
+      investor_address_city,
+      investor_address_street,
+      investor_address_number,
+      investor_address_postalcode,
+      investor_country,
+      investor_industry,
+      investor_registration_cert_attachment,
     },
   } = props;
 
-  const { id } = useParams();
-  const supId = props.value;
-  const { ident } = useParams();
+  const userId = props.vuser;
+  const investorId = props.vinvestor;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const updateregcert =
-  updatefields.values.supplier_registration_cert_attachment;
-  const updatelogo = updatefields.values.supplier_logo;
+  const updateregcert = updatefields.values.investor_registration_cert_attachment;
+  const updatelogo = updatefields.values.investor_logo;
 
   const [slogo, setSlogo] = useState("");
-
-  const [updateregcertimg, setUpdateregcertimg] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");
+  const [updateregcertimg, setUpdateregcertimg] = useState("");
 
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [certloading, setCertLoading] = useState(false);
   const [certsuccess, setCertSuccess] = useState(false);
-  const [logoloading, setLogoLoading] = useState(false);
-  const [logosuccess, setLogoSuccess] = useState(false);
 
 
   useEffect(() => {
@@ -129,39 +115,21 @@ export default function AddressForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.get(updateregcert, {
-            level: "private",
-            identityId: ident,
-          });
+          const u = await Storage.vault.get(updateregcert);
           setUpdateregcertimg(u);
         } else {
-          const h = await Storage.get(updateregcert, {
-            level: "private",
-            identityId: ident,
-          });
+          const h = await Storage.vault.get(updateregcert);
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [updateregcert, ident]);
-
-  useEffect(() => {
-    if (updatelogo) {
-      async function geturl() {
-          const u = await Storage.get(updatelogo, {
-            level: "private",
-            identityId: ident,
-          });
-          setSlogo(u);
-        }geturl();
-    }
-  }, [updatelogo, ident]);
+  }, [updateregcert]);
 
   async function handleCertClick() {
     setCertSuccess(false);
     setCertLoading(true);
-    const b = await updateregcert;
+    const b = await updateregcertimg;
     if (b) {
       setCertSuccess(true);
       setCertLoading(false);
@@ -171,17 +139,7 @@ export default function AddressForm(props) {
     }
   }
 
-  async function handleLogoClick() {
-    setLogoSuccess(false);
-    setLogoLoading(true);
-    const b = await slogo;
-    if (b) {
-      setLogoSuccess(true);
-      setLogoLoading(false);
-    }
-  }
-
-  function updateregcertisimageorpdf() {
+  function isimageorpdf() {
     if (updateregcertimg) {
       return (
         <>
@@ -199,7 +157,27 @@ export default function AddressForm(props) {
         </>
       );
     }
-  }    
+  }
+
+  useEffect(() => {
+    if (updatelogo) {
+      async function getlogourl() {
+        const u = await Storage.vault.get(updatelogo);
+        setSlogo(u);
+      }
+      getlogourl();
+    }
+  }, [updatelogo]);
+
+  async function handleLogoClick() {
+    setSuccess(false);
+    setLoading(true);
+    const b = await slogo;
+    if (b) {
+      setSuccess(true);
+      setLoading(false);
+    }
+  }
 
   return (
     <React.Fragment>
@@ -207,42 +185,18 @@ export default function AddressForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={12}>
-              <InputField
-                name={identityId.name}
-                label={identityId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={supplier_name.name}
-                label={supplier_name.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplier_trading_name.name}
-                label={supplier_trading_name.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplier_website.name}
-                label={supplier_website.label}
+                name={investor_name.name}
+                label={investor_name.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <SelectField
-                name={supplier_type.name}
-                label={supplier_type.label}
+                name={investor_type.name}
+                label={investor_type.label}
                 data={type}
                 fullWidth
                 variant="outlined"
@@ -250,40 +204,40 @@ export default function AddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={supplier_address_city.name}
-                label={supplier_address_city.label}
+                name={investor_address_city.name}
+                label={investor_address_city.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={supplier_address_postalcode.name}
-                label={supplier_address_postalcode.label}
+                name={investor_address_postalcode.name}
+                label={investor_address_postalcode.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={supplier_address_street.name}
-                label={supplier_address_street.label}
+                name={investor_address_street.name}
+                label={investor_address_street.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={supplier_address_refinment.name}
-                label={supplier_address_refinment.label}
+                name={investor_address_number.name}
+                label={investor_address_number.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <SelectListField
-                name={supplier_country.name}
-                label={supplier_country.label}
+                name={investor_country.name}
+                label={investor_country.label}
                 data={cr}
                 fullWidth
                 variant="outlined"
@@ -291,8 +245,8 @@ export default function AddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerField
-                name={supplier_date_of_incorporation.name}
-                label={supplier_date_of_incorporation.label}
+                name={investor_date_of_incorporation.name}
+                label={investor_date_of_incorporation.label}
                 format="dd/MM/yyyy"
                 minDate={new Date("1500/12/31")}
                 maxDate={new Date()}
@@ -302,46 +256,29 @@ export default function AddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <SelectListField
-                name={supplier_industry.name}
-                label={supplier_industry.label}
+                name={investor_industry.name}
+                label={investor_industry.label}
                 data={ind}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplier_industry_code.name}
-                label={supplier_industry_code.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplier_register_number.name}
-                label={supplier_register_number.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               {updateregcert ? (
-                <>{updateregcertisimageorpdf()}</>
+                <>{isimageorpdf()}</>
               ) : (
                 <>
-                  <AdminUploadField
-                    name={supplier_registration_cert_attachment.name}
-                    id={supplier_registration_cert_attachment.name}
+                  <NewUploadField
+                    name={investor_registration_cert_attachment.name}
+                    id={investor_registration_cert_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
-                    identityId={ident}
-                    userid={id}
-                    sectorid={supId}
+                    ident={investorId}
+                    userid={userId}
                   />
-                  <label htmlFor={supplier_registration_cert_attachment.name}>
+                  <label htmlFor={investor_registration_cert_attachment.name}>
                     <LoaderButton
-                      id={supplier_registration_cert_attachment.name}
+                      id={investor_registration_cert_attachment.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}
@@ -351,13 +288,12 @@ export default function AddressForm(props) {
                       onClick={handleCertClick}
                     >
                       {" "}
-                      Registration Certificate*
+                      Business Registration Certificate*
                     </LoaderButton>
                   </label>
                 </>
               )}
             </Grid>
-
             <Grid item xs={12} sm={6}>
               {updatelogo ? (
                 <>
@@ -365,24 +301,23 @@ export default function AddressForm(props) {
                 </>
               ) : (
                 <>
-                  <AdminUploadField
-                    name={supplier_logo.name}
-                    id={supplier_logo.name}
+                  <NewUploadField
+                    name={investor_logo.name}
+                    id={investor_logo.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
-                    userid={id}
-                    sectorid={supId}
+                    ident={investorId}
+                    userid={userId}
                   />
-                  <label htmlFor={supplier_logo.name}>
+                  <label htmlFor={investor_logo.name}>
                     <LoaderButton
-                      id={supplier_logo.name}
+                      id={investor_logo.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}
-                      disabled={logoloading}
-                      success={logosuccess}
-                      loading={logoloading}
+                      disabled={loading}
+                      success={success}
+                      loading={loading}
                       onClick={handleLogoClick}
                     >
                       {" "}

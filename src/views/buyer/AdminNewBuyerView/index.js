@@ -38,6 +38,9 @@ const useStyles = makeStyles((theme) => ({
 const steps = ['Client Details', 'Client Financials', 'Client History'];
 const { formId, formField } = NewBuyerFormModel;
 
+const buyerId = 'buyer-'+uuid();
+const financialsId = 'financials-buyer'+uuid()+buyerId;
+
 function getStepContent(step) {
   switch (step) {
     case 0:
@@ -71,9 +74,6 @@ export default function NewAccount() {
       const supplierId = values['supplierId']
       const identityId = values['identityId']
 
-      const n = uuid();
-      const buyerId = 'buyer-'+n;
-
       const buyer_address_city = values['buyer_address_city'];
       const buyer_address_number = values['buyer_address_number'];
       const buyer_address_postalcode = values['buyer_address_postalcode'];
@@ -88,14 +88,15 @@ export default function NewAccount() {
       const buyer_sold_goods_description = values['buyer_sold_goods_description'];
 
       const ebit = values['ebit'];
-      const financials_attachment = values['financials_attachment'];
+      const balance_sheet_attachment = values['balance_sheet_attachment'];
+      const income_statement_attachment = values['income_statement_attachment'];
       const net_profit = values['net_profit'];
       const financials_rating = values['financials_rating'];
       const financials_reporting_period = values['financials_reporting_period'];
       const sales = values['sales'];
       const total_assets = values['total_assets'];
-      const m = uuid();
-      const financialsId  = 'financials-buyer'+m;
+      const retained_earnings = values['retained_earnings'];
+      const working_capital = values['working_capital'];
       const financials_status = 'Under Review';
 
       const buyer_insurance_name = values['buyer_insurance_name'];
@@ -140,12 +141,15 @@ export default function NewAccount() {
         identityId,
         buyerId,
         ebit,
-        financials_attachment,
+        balance_sheet_attachment,
+        income_statement_attachment,
         net_profit,
         financials_rating,
         financials_reporting_period,
         sales,
         total_assets,
+        retained_earnings,
+        working_capital,
         financials_status
       }); 
       navigate('/admin/buyers');

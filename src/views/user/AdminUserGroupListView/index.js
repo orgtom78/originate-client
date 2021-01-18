@@ -146,7 +146,7 @@ const AdminUserGroupListView = () => {
                   Group Type
                 </TableCell>
                 <TableCell>
-                  User Role
+                  ID
                 </TableCell>
                 <TableCell>
                   Created at  
@@ -175,9 +175,8 @@ const AdminUserGroupListView = () => {
                     <Link to={`/admin/user/${usergroup.userId}/${usergroup.groupId}`}>
                       <Avatar
                         className={classes.avatar}
-                        src={`${usergroup.usergroup_logo}`}
                       >
-                        {getInitials(usergroup.group_name)}
+                        {getInitials(usergroup.user_name)}
                       </Avatar>
                       </Link>
                       <Typography
@@ -195,7 +194,7 @@ const AdminUserGroupListView = () => {
                     {`${usergroup.group_type}`}
                   </TableCell>
                   <TableCell>
-                  {`${usergroup.user_role}`}
+                  {`${usergroup.groupId}`}
                   </TableCell>
                   <TableCell>
                     {moment(usergroup.createdAt).format('DD/MM/YYYY')}

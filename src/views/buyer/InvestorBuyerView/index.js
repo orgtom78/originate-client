@@ -21,6 +21,8 @@ import FinancialsListView from "src/views/buyer/InvestorBuyerView/Lists/financia
 import BuyerUploadView from "src/views/buyer/InvestorBuyerView/Forms/BuyerUploads.js";
 import DirectorView from "src/views/buyer/InvestorBuyerView/Lists/directorlist.js";
 import OwnerView from "src/views/buyer/InvestorBuyerView/Lists/ubolist.js";
+import History from "src/views/buyer/InvestorBuyerView/History.js";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +43,8 @@ const Buyer = (value) => {
 
   const [userId, setUserId] = useState("");
   const [buyerId, setBuyerId] = useState("");
-  const [identityId, setIdentityId] = useState("");
   const [investorId, setInvestorId] = useState("");
+  const [identityId, setIdentityId] = useState("");
   const [buyer_status, setBuyer_status] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
@@ -163,11 +165,14 @@ const Buyer = (value) => {
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <ApprovalStatus value={item} />
             </Grid>
-            <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <Grid item lg={4} sm={4} xl={4} xs={12}>
               <KeyFinancials value={fin} />
             </Grid>
-            <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <Grid item lg={4} sm={4} xl={4} xs={12}>
               <FinancialRatios value={fin} />
+            </Grid>
+            <Grid item lg={4} sm={4} xl={4} xs={12}>
+               <History value={item} />
             </Grid>
             <Grid container>
             <Grid item lg={12} sm={12} xl={12} xs={12}>

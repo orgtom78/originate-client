@@ -1,5 +1,9 @@
 import React from "react";
 import { Auth } from 'aws-amplify';
+import {
+    Button,
+  } from '@material-ui/core';
+import GoogleIcon from 'src/icons/Google';
 // To federated sign in from Google
 export default class SignInWithGoogle extends React.Component {
     constructor(props) {
@@ -56,17 +60,27 @@ export default class SignInWithGoogle extends React.Component {
         const g = window.gapi;
         g.load('auth2', function() {
             g.auth2.init({
-                client_id: 'your_google_client_id',
+                client_id: '399587954030-mljkgf3nq2i61kids3vusmnfhjicugvg.apps.googleusercontent.com',
                 // authorized scopes
                 scope: 'profile email openid'
             });
         });
     }
 
+    //onClick={this.signIn}
+
     render() {
         return (
             <div>
-                <button onClick={this.signIn}>Sign in with Google</button>
+                <Button
+                      fullWidth
+                      startIcon={<GoogleIcon />}
+                      onClick={''}
+                      size="large"
+                      variant="contained"
+                    >
+                      Login with Google
+                    </Button>
             </div>
         );
     }

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import { InputField, SelectField, UploadField } from "src/components/FormFields";
+import { InputField, SelectField } from "src/components/FormFields";
+import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx"; 
 import {
   Card,
@@ -114,16 +116,19 @@ export default function BuyerAddressForm(props) {
       buyer_sold_goods_description,
     },
   } = props;
-
+  const { id } = useParams();
+  const supId = props.value;
+  const { ident } = useParams();
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const updateregcert = updatefields.values.buyer_sample_trading_docs_attachment;
+  const updateregcert =
+  updatefields.values.supplier_registration_cert_attachment;
 
-  const [img, setImg] = useState("");
+  const [updateregcertimg, setUpdateregcertimg] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [certloading, setCertLoading] = useState(false);
+  const [certsuccess, setCertSuccess] = useState(false);
 
   useEffect(() => {
     if (updateregcert) {
@@ -132,32 +137,41 @@ export default function BuyerAddressForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(updateregcert);
-          setImg(u);
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
+          setUpdateregcertimg(u);
         } else {
-          const h = await Storage.vault.get(updateregcert);
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, ident]);
 
-  async function handleClick() {
-    setSuccess(false);
-    setLoading(true);
-    const b = await img;
+  async function handleCertClick() {
+    setCertSuccess(false);
+    setCertLoading(true);
+    const b = await updateregcert;
     if (b) {
-      setSuccess(true);
-      setLoading(false);
+      setCertSuccess(true);
+      setCertLoading(false);
+    } else {
+      setCertSuccess(false);
+      setCertLoading(true);
     }
   }
 
-  function isimageorpdf() {
-    if (img) {
+  function updateregcertisimageorpdf() {
+    if (updateregcertimg) {
       return (
         <>
-          <img className={classes.img} alt="complex" src={img} />
+          <img className={classes.img} alt="complex" src={updateregcertimg} />
         </>
       );
     } else {
@@ -171,7 +185,7 @@ export default function BuyerAddressForm(props) {
         </>
       );
     }
-  }
+  }    
 
   function NumberFormatCustom(props) {
     const { inputRef, onChange, ...other } = props;
@@ -332,14 +346,17 @@ export default function BuyerAddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               {updateregcert ? (
-                <>{isimageorpdf()}</>
+                <>{updateregcertisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={buyer_sample_trading_docs_attachment.name}
                     id={buyer_sample_trading_docs_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={id}
+                    sectorid={supId}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
                     <LoaderButton
@@ -347,13 +364,13 @@ export default function BuyerAddressForm(props) {
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
+                      disabled={certloading}
+                      success={certsuccess}
+                      loading={certloading}
+                      onClick={handleCertClick}
                     >
                       {" "}
-                      Sample Tading Documents*
+                      Sample Trading Documents*
                     </LoaderButton>
                   </label>
                 </>

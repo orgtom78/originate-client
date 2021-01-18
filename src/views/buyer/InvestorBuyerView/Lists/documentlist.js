@@ -40,72 +40,72 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UboListView = (value) => {
+const DocumentListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
   const { buyId } = useParams();
   const { ident } = useParams();
-  const [ubo, setUbo] = useState([]);
+  const [document, setDocument] = useState([]);
 
-  const [selectedUboIds, setSelectedUboIds] = useState([]);
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    async function getUbos() {
-      let filter = { userId: { eq: id }, sortkey: { contains: "ubo-buyer" } };
+    async function getDocuments() {
+      let filter = { userId: { eq: id }, sortkey: { contains: "document-buyer" } };
       const {
         data: {
-          listsUBO: { items: itemsPage1, nextToken },
+          listsDocuments: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUbo, { filter: filter })
+        graphqlOperation(queries.listsDocuments, { filter: filter })
       );
-      const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsUBO.items;
-      setUbo(items);
-    };getUbos();
+      const n = { data: { listsDocuments: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listsDocuments.items;
+      setDocument(items);
+    };getDocuments();
   }, [id]);
 
   const handler = useCallback(() => {
-    if (!ubo || !ubo.length) {
+    if (!document || !document.length) {
       return;
     } else {
-      const d = ubo;
+      const d = document;
       return d;
     }
-  }, [ubo]);
+  }, [document]);
 
   const handleSelectAll = (event) => {
-    let newSelectedUboIds;
+    let newSelectedDocumentIds;
 
     if (event.target.checked) {
-      newSelectedUboIds = ubo.map((ubo) => ubo.uboId);
+      newSelectedDocumentIds = document.map((document) => document.documentId);
     } else {
-      newSelectedUboIds = [];
+      newSelectedDocumentIds = [];
     }
 
-    setSelectedUboIds(newSelectedUboIds);
+    setSelectedDocumentIds(newSelectedDocumentIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUboIds.indexOf(id);
-    let newSelectedUboIds = [];
+    const selectedIndex = selectedDocumentIds.indexOf(id);
+    let newSelectedDocumentIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds, id);
+      newSelectedDocumentIds = newSelectedDocumentIds.concat(selectedDocumentIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(1));
-    } else if (selectedIndex === selectedUboIds.length - 1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(0, -1));
+      newSelectedDocumentIds = newSelectedDocumentIds.concat(selectedDocumentIds.slice(1));
+    } else if (selectedIndex === selectedDocumentIds.length - 1) {
+      newSelectedDocumentIds = newSelectedDocumentIds.concat(selectedDocumentIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(
-        selectedUboIds.slice(0, selectedIndex),
-        selectedUboIds.slice(selectedIndex + 1)
+      newSelectedDocumentIds = newSelectedDocumentIds.concat(
+        selectedDocumentIds.slice(0, selectedIndex),
+        selectedDocumentIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedUboIds(newSelectedUboIds);
+    setSelectedDocumentIds(newSelectedDocumentIds);
   };
 
   const handleLimitChange = (event) => {
@@ -139,26 +139,20 @@ const UboListView = (value) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedUboIds.length === ubo.length}
+                    checked={selectedDocumentIds.length === document.length}
                     color="primary"
                     indeterminate={
-                      selectedUboIds.length > 0
-                      && selectedUboIds.length < ubo.length
+                      selectedDocumentIds.length > 0
+                      && selectedDocumentIds.length < document.length
                     }
                     onChange={handleSelectAll}
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Document Type
                 </TableCell>
                 <TableCell>
-                  Nationality
-                </TableCell>
-                <TableCell>
-                  ID
-                </TableCell>
-                <TableCell>
-                  Proof of Address
+                  Download
                 </TableCell>
                 <TableCell>
                   Date created
@@ -166,16 +160,16 @@ const UboListView = (value) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {ubo.slice(0, limit).map((ubo) => (
+              {document.slice(0, limit).map((document) => (
                 <TableRow
                   hover
-                  key={ubo.uboId}
-                  selected={selectedUboIds.indexOf(ubo.uboId) !== -1}
+                  key={document.documentId}
+                  selected={selectedDocumentIds.indexOf(document.documentId) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedUboIds.indexOf(ubo.uboId) !== -1}
-                      onChange={(event) => handleSelectOne(event, ubo.uboId)}
+                      checked={selectedDocumentIds.indexOf(document.documentId) !== -1}
+                      onChange={(event) => handleSelectOne(event, document.documentId)}
                       value="true"
                     />
                     
@@ -187,41 +181,29 @@ const UboListView = (value) => {
                     >
                       <Avatar
                         className={classes.avatar}
-                        src={ubo.avatarUrl}
+                        src={document.avatarUrl}
                       >
-                        {getInitials(ubo.ubo_name)}
+                        {getInitials(document.document_type)}
                       </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {ubo.ubo_name}
+                        {document.document_type}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {ubo.ubo_nationality}
-                  </TableCell>
-                  <TableCell>
                   <Button
                   label='Download' 
                   color="primary"
                   target="_blank"
-                  onClick={() => geturl(ubo.ubo_id_attachment)}
+                  onClick={() => geturl(document.document_attachment)}
                   >Download
                   </Button>
                   </TableCell>
                   <TableCell>
-                  <Button
-                  label='Download' 
-                  color="primary"
-                  target="_blank"
-                  onClick={() => geturl(ubo.ubo_poa_attachment)}
-                  >Download
-                  </Button>
-                  </TableCell>
-                  <TableCell>
-                    {moment(ubo.createdAt).format('DD/MM/YYYY')}
+                    {moment(document.createdAt).format('DD/MM/YYYY')}
                   </TableCell>
                 </TableRow>
               ))}
@@ -231,7 +213,7 @@ const UboListView = (value) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={ubo.length}
+        count={document.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -244,4 +226,4 @@ const UboListView = (value) => {
 )
 };
 
-export default UboListView;
+export default DocumentListView;

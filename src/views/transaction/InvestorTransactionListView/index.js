@@ -4,7 +4,6 @@ import clsx from 'clsx';
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Chip,
   Container,
@@ -23,12 +22,12 @@ import {
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import Page from 'src/components/Page';
 import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import moment from 'moment';
 import getInitials from 'src/utils/getInitials';
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from 'react-number-format';
-import AdminTransactionView from 'src/views/transaction/AdminTransactionView';
+import NewInvestorView from 'src/views/investor/NewInvestorView';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,10 +51,10 @@ const orangeTheme = createMuiTheme({
 const InvestorTransactionListView = () => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
-
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [investid, setInvestid] = useState('');
 
   useEffect(() => {
     async function getRequests() {
@@ -69,7 +68,10 @@ const InvestorTransactionListView = () => {
       );
       const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
       const items = n.data.listsRequest.items;
-      var investrequest = items.filter(e => e.investorId === "2c58ed1e-edee-4a39-baf8-da9978674059")
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
+      setInvestid(id);
+      var investrequest = items.filter(e => e.investorId === id)
       return investrequest;
     }
 
@@ -82,7 +84,7 @@ const InvestorTransactionListView = () => {
 
   const handler = useCallback(() => {
     if (!request || !request.length) {
-      console.log("test");
+      return;
     } else {
       const d = request;
       return d;
@@ -158,6 +160,8 @@ const InvestorTransactionListView = () => {
   }
 
   return (
+  <React.Fragment>
+    {investid ? (
     <React.Fragment>
     <Page
       className={clsx(classes.root)} 
@@ -273,6 +277,12 @@ const InvestorTransactionListView = () => {
         </Box>
       </Container>
     </Page>
+</React.Fragment>
+    ) : (
+      <>
+      <NewInvestorView />
+      </>
+    )}
     </React.Fragment>
   );
 };

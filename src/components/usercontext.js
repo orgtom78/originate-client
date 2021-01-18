@@ -12,6 +12,7 @@ export const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
   const [sub, setSub] = useState("");
   const [identity, setIdentity] = useState("");
+  const [username, setUsername] = useState("");
 
   //supplier data:
   const [supplierId, setSupplierId] = useState("");
@@ -35,6 +36,8 @@ export const UserProvider = ({ children }) => {
     // attempt to fetch the info of the user that was already logged in
     async function loadUser() {
       let user = await Auth.currentAuthenticatedUser();
+      const u = await user.username;
+      setUsername(u);
       const { attributes = {} } = user;
       const b = attributes["custom:groupid"];
       return b;
@@ -114,6 +117,7 @@ export const UserProvider = ({ children }) => {
     () => ({
       sub,
       identity,
+      username,
       supplierId,
       supplier_logo,
       supplier_name,
@@ -134,6 +138,7 @@ export const UserProvider = ({ children }) => {
     [
       sub,
       identity,
+      username,
       supplierId,
       supplier_logo,
       supplier_name,

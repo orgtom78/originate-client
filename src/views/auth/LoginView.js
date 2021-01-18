@@ -14,8 +14,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 import XeroIcon from 'src/icons/Xero';
-import GoogleIcon from 'src/icons/Google';
 import Page from 'src/components/Page';
+import Googlesignin from 'src/views/auth/Googlesignin.js';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -112,15 +112,7 @@ export default function LoginView(){
                     xs={12}
                     md={6}
                   >
-                    <Button
-                      fullWidth
-                      startIcon={<GoogleIcon />}
-                      onClick={handleSubmit}
-                      size="large"
-                      variant="contained"
-                    >
-                      Login with Google
-                    </Button>
+                    <Googlesignin />
                   </Grid>
                 </Grid>
                 <Box

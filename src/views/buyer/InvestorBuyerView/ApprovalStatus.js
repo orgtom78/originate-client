@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import {
-  Box,
   Card,
   CardContent,
-  Divider,
   Grid,
   Table,
   TableRow,
@@ -22,6 +20,7 @@ import BlockIcon from '@material-ui/icons/Block';
 import * as mutations from "src/graphql/mutations.js";
 import { API, graphqlOperation } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
+import LoaderButtonRed from "src/components/LoaderButtonRed.js";
 import { onError } from "src/libs/errorLib.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +49,7 @@ const Limits = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState("");
   const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState("");
+  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
 
   const [approveloading, setApproveloading] = useState(false);
   const [approvesuccess, setApprovesuccess] = useState(false);
@@ -62,6 +62,7 @@ const Limits = ({ className, value, ...rest }) => {
        const data = await value.data.getBuyer
        setBuyer(data)
        setBuyer_loan_approved_amount(data.buyer_loan_approved_amount)
+       setBuyer_loan_rate(data.buyer_loan_rate)
        return 
      } catch (err) {
      console.log("error fetching data..", err);
@@ -79,7 +80,8 @@ const Limits = ({ className, value, ...rest }) => {
         sortkey,
         userId,
         buyer_status,
-        buyer_loan_approved_amount
+        buyer_loan_approved_amount,
+        buyer_loan_rate
       });
     } catch (e) {
       onError(e);
@@ -158,10 +160,26 @@ const Limits = ({ className, value, ...rest }) => {
                       />
                   </TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Discount % (pa)
+                  </TableCell>
+                  <TableCell align="right">
+                  <TextField
+                        fullWidth
+                        name="buyer_loan_rate"
+                        onChange={(e) => setBuyer_loan_rate(e.target.value)}
+                        required
+                        value={buyer_loan_rate|| ''}
+                        type="number"
+                        inputProps={{min: 0, style: { textAlign: 'right' }}}
+                      />
+                  </TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           <Grid >
-            <LoaderButton 
+            <LoaderButtonRed 
             startIcon={<BlockIcon />}
             onClick={() => ondeclinedclick()}
             id='Declined'
@@ -171,7 +189,7 @@ const Limits = ({ className, value, ...rest }) => {
             success={declinesuccess}
             loading={declineloading}
             >
-              Decline</LoaderButton>
+              Decline</LoaderButtonRed>
           </Grid>
           <Grid>
             <LoaderButton startIcon={<CheckCircleOutlineIcon />}

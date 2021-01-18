@@ -2,7 +2,6 @@ import NewBuyerFormModel from './NewBuyerFormModel';
 const {
   formField: {
     buyer_address_city,	
-    buyer_address_number,
     buyer_address_postalcode,
     buyer_address_street,
     buyer_name,

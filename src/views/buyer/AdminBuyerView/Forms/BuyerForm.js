@@ -105,6 +105,10 @@ const status = [
     label: "Under Review",
   },
   {
+    value: "Investor Offer Pending",
+    label: "Investor Offer Pending",
+  },
+  {
     value: "Approved",
     label: "Approved",
   },
@@ -119,6 +123,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
 
   const [investorId, setInvestorId] = useState("");
   const [buyer_status, setBuyer_status] = useState("");
+  const [buyer_loan_request_amount, setBuyer_loan_request_amount] = useState("");
+  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
@@ -152,6 +159,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
             getBuyer: {
               investorId,
               buyer_status,
+              buyer_loan_request_amount,
+              buyer_loan_approved_amount,
+              buyer_loan_discount_fee,
               buyer_logo,
               buyer_name,
               buyer_type,
@@ -172,6 +182,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
         } = buyer;
         setInvestorId(investorId);
         setBuyer_status(buyer_status);
+        setBuyer_loan_request_amount(buyer_loan_request_amount);
+        setBuyer_loan_approved_amount(buyer_loan_approved_amount);
+        setBuyer_loan_discount_fee(buyer_loan_discount_fee);
         setBuyer_logo(buyer_logo);
         setBuyer_name(buyer_name);
         setBuyer_date_of_incorporation(buyer_date_of_incorporation);
@@ -206,6 +219,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
         sortkey,
         investorId,
         buyer_status,
+        buyer_loan_request_amount,
+        buyer_loan_approved_amount,
+        buyer_loan_discount_fee,
         buyer_logo,
         buyer_name,
         buyer_type,
@@ -338,6 +354,39 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         onChange={(e) => setBuyer_website(e.target.value)}
                         required
                         value={buyer_website || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Desired Loan Amount"
+                        name="buyer_loan_request_amount"
+                        onChange={(e) => setBuyer_loan_request_amount(e.target.value)}
+                        required
+                        value={buyer_loan_request_amount || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Approved Loan Amount"
+                        name="buyer_loan_approved_amount"
+                        onChange={(e) => setBuyer_loan_approved_amount(e.target.value)}
+                        required
+                        value={buyer_loan_approved_amount || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Loan discount (pa)"
+                        name="buyer_loan_discount_fee"
+                        onChange={(e) => setBuyer_loan_discount_fee(e.target.value)}
+                        required
+                        value={buyer_loan_discount_fee|| ""}
                         variant="outlined"
                       />
                     </Grid>

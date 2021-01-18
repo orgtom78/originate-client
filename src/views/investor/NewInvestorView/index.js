@@ -17,14 +17,13 @@ import { onError } from "src/libs/errorLib.js";
 import * as mutations from 'src/graphql/mutations.js';
 
 import Page from 'src/components/Page';
-
-import SupplierView from 'src/views/supplier/SupplierView';
+import InvestorDashboardView from 'src/views/reports/InvestorDashboardView';
 import AddressForm from './Forms/AddressForm';
 import ShareholderForm from './Forms/ShareholderForm';
 import FinancialsForm from './Forms/FinancialsForm';
 
 import validationSchema from './FormModel/validationSchema';
-import NewSupplierFormModel from './FormModel/NewSupplierFormModel';
+import NewInvestorFormModel from './FormModel/NewInvestorFormModel';
 import formInitialValues from './FormModel/formInitialValues';
 
 const useStyles = makeStyles((theme) => ({
@@ -36,21 +35,21 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const steps = ['Company details', 'Shareholder details', 'Financial details'];
-const { formId, formField } = NewSupplierFormModel;
+const steps = ['Investor details', 'Shareholder details', 'Financial details'];
+const { formId, formField } = NewInvestorFormModel;
 
 const userId = uuid()+'-group';
-const supplierId = 'supplier-'+uuid();
-const directorId = 'director-supplier'+uuid(); 
-const uboId = 'ubo-supplier'+uuid();
-const financialsId = 'financials-supplier'+uuid();
-const bankId = 'bank-supplier'+uuid();
+const investorId = 'investor-'+uuid();
+const directorId = 'director-investor'+uuid(); 
+const uboId = 'ubo-investor'+uuid();
+const financialsId = 'financials-investor'+uuid();
+const bankId = 'bank-investor'+uuid();
 
 
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm  formField={formField} vuser={userId} vsupplier={supplierId}/>;
+      return <AddressForm  formField={formField} vuser={userId} vinvestor={investorId}/>;
     case 1:
       return <ShareholderForm formField={formField} vuser={userId} vubo={uboId} vdirector={directorId}/>;
     case 2:
@@ -60,7 +59,7 @@ function getStepContent(step) {
   }
 }
 
-export default function NewSupplier() {
+export default function NewInvestor() {
   const classes = useStyles();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -90,19 +89,19 @@ export default function NewSupplier() {
       const user_name = await user.username;
       const identityId = identity.identityId
       const groupId = userId;
-      const group_type = 'Supplier';
-      const sortkey = supplierId;
-      const supplier_logo = values['supplier_logo'];
-      const supplier_name = values['supplier_name'];
-      const supplier_type = values['supplier_type'];
-      const supplier_address_city = values['supplier_address_city'];
-      const supplier_address_street = values['supplier_address_street'];
-      const supplier_address_number = values['supplier_address_number'];
-      const supplier_address_postalcode = values['supplier_address_postalcode'];
-      const supplier_country = values['supplier_country'];
-      const supplier_industry = values['supplier_industry'];
-      const supplier_date_of_incorporation = values['supplier_date_of_incorporation'];
-      const supplier_registration_cert_attachment = values['supplier_registration_cert_attachment'];
+      const group_type = 'Investor';
+      const sortkey = investorId;
+      const investor_logo = values['investor_logo'];
+      const investor_name = values['investor_name'];
+      const investor_type = values['investor_type'];
+      const investor_address_city = values['investor_address_city'];
+      const investor_address_street = values['investor_address_street'];
+      const investor_address_number = values['investor_address_number'];
+      const investor_address_postalcode = values['investor_address_postalcode'];
+      const investor_country = values['investor_country'];
+      const investor_industry = values['investor_industry'];
+      const investor_date_of_incorporation = values['investor_date_of_incorporation'];
+      const investor_registration_cert_attachment = values['investor_registration_cert_attachment'];
 
       const director_name = values['director_name'];
       const director_email = values['director_email'];
@@ -157,22 +156,22 @@ export default function NewSupplier() {
         user_name
       });
       
-      await createSupplier({
+      await createInvestor({
         userId,
         sortkey,
         identityId,
-        supplierId,
-        supplier_logo,
-        supplier_name,
-        supplier_type,
-        supplier_date_of_incorporation,
-        supplier_address_city,
-        supplier_address_street,
-        supplier_address_number,
-        supplier_address_postalcode,
-        supplier_country,
-        supplier_industry,
-        supplier_registration_cert_attachment,
+        investorId,
+        investor_logo,
+        investor_name,
+        investor_type,
+        investor_date_of_incorporation,
+        investor_address_city,
+        investor_address_street,
+        investor_address_number,
+        investor_address_postalcode,
+        investor_country,
+        investor_industry,
+        investor_registration_cert_attachment,
       });
       
       await createDirector({
@@ -210,7 +209,7 @@ export default function NewSupplier() {
       await createFinancials({
         userId,
         financialsId,
-        supplierId,
+        investorId,
         identityId,
         ebit,
         balance_sheet_attachment,
@@ -229,7 +228,7 @@ export default function NewSupplier() {
       await createBank({
         userId,
         bankId,
-        supplierId,
+        investorId,
         identityId,
         bank_account_name,
         bank_account_number,
@@ -253,8 +252,8 @@ export default function NewSupplier() {
     window.location.reload();
   }
 
-  function createSupplier(input) {
-    return API.graphql(graphqlOperation(mutations.createSupplier,
+  function createInvestor(input) {
+    return API.graphql(graphqlOperation(mutations.createInvestor,
       {input: input}
     ))
   };
@@ -312,7 +311,7 @@ export default function NewSupplier() {
     <Container maxWidth="lg">
     <React.Fragment>
       <Typography component="h1" variant="h4" align="center">
-        Register your company
+        Register as an investor
       </Typography>
       <br></br>
       <Stepper activeStep={activeStep} className={classes.stepper}>
@@ -324,7 +323,7 @@ export default function NewSupplier() {
       </Stepper>
       <React.Fragment>
         {activeStep === steps.length ? (
-          <SupplierView/>
+          <InvestorDashboardView/>
         ) : (
           <Formik
             initialValues={formInitialValues}
