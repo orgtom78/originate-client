@@ -279,6 +279,29 @@ export const getDirector = /* GraphQL */ `
     }
   }
 `;
+export const getDocument = /* GraphQL */ `
+  query GetDocument($sortkey: String!, $userId: String!) {
+    getDocument(sortkey: $sortkey, userId: $userId) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const getInvestor = /* GraphQL */ `
   query GetInvestor($sortkey: String!, $userId: String!) {
     getInvestor(sortkey: $sortkey, userId: $userId) {
@@ -436,6 +459,36 @@ export const listsDirector = /* GraphQL */ `
         director_status
         sortkey
         userId
+      }
+      nextToken
+    }
+  }
+`;
+export const listsDocument = /* GraphQL */ `
+  query ListsDocument(
+    $filter: TableFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listsDocument(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        documentId
+        userId
+        identityId
+        bankId
+        brokerId
+        buyerId
+        directorId
+        financialsId
+        investorId
+        requestId
+        supplierId
+        transactionId
+        uboId
+        document_type
+        document_attachment
+        createdAt
+        sortkey
       }
       nextToken
     }

@@ -104,6 +104,29 @@ export const createDirector = /* GraphQL */ `
     }
   }
 `;
+export const createDocument = /* GraphQL */ `
+  mutation CreateDocument($input: CreateDocumentInput!) {
+    createDocument(input: $input) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const createInvestor = /* GraphQL */ `
   mutation CreateInvestor($input: CreateInvestorInput!) {
     createInvestor(input: $input) {
@@ -431,6 +454,29 @@ export const deleteDirector = /* GraphQL */ `
       director_status
       sortkey
       userId
+    }
+  }
+`;
+export const deleteDocument = /* GraphQL */ `
+  mutation DeleteDocument($input: DeleteDocumentInput!) {
+    deleteDocument(input: $input) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
     }
   }
 `;
@@ -834,6 +880,29 @@ export const updateDirector = /* GraphQL */ `
     }
   }
 `;
+export const updateDocument = /* GraphQL */ `
+  mutation UpdateDocument($input: UpdateDocumentInput!) {
+    updateDocument(input: $input) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const updateInvestor = /* GraphQL */ `
   mutation UpdateInvestor($input: UpdateInvestorInput!) {
     updateInvestor(input: $input) {
@@ -900,33 +969,23 @@ export const updateUbo = /* GraphQL */ `
 export const updateUsergroup = /* GraphQL */ `
   mutation UpdateUsergroup($input: UpdateUsergroupInput!) {
     updateUsergroup(input: $input) {
-      uboId
-      supplierId
-      buyerId
-      investorId
-      identityId
-      ubo_appointment_date
-      ubo_country_of_residence
-      ubo_date_of_birth
-      ubo_email
-      ubo_id_attachment
-      ubo_id_expiry_date
-      ubo_id_issue_date
-      ubo_id_issuer_country
-      ubo_id_issuer_state
-      ubo_id_number
-      ubo_id_type
-      ubo_jobtitle
-      ubo_name
-      ubo_nationality
-      ubo_ownership_percentage
-      ubo_pep_status
-      ubo_phone_number
-      ubo_poa_attachment
-      createdAt
-      ubo_status
-      sortkey
+      groupId
       userId
+      user_name
+      investorId
+      supplierId
+      brokerId
+      sub
+      identityId
+      group_type
+      group_name
+      group_contact_name
+      group_contact_email
+      group_contact_phone
+      user_email
+      user_role
+      createdAt
+      sortkey
     }
   }
 `;

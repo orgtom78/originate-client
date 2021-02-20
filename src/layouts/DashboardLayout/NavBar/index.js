@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Auth } from "@aws-amplify/auth";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
@@ -10,67 +10,67 @@ import {
   Hidden,
   List,
   Typography,
-  makeStyles
-} from '@material-ui/core';
+  makeStyles,
+} from "@material-ui/core";
 import {
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
   User as UserIcon,
   UserPlus as UserPlusIcon,
   CreditCard as CreditCardIcon,
-  DollarSign as DollarSignIcon
-} from 'react-feather';
-import NavItem from './NavItem';
+  DollarSign as DollarSignIcon,
+} from "react-feather";
+import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
-import { useUser } from "src/components/usercontext.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const items = [
   {
-    href: '/app/dashboard',
+    href: "/app/dashboard",
     icon: BarChartIcon,
-    title: 'Dashboard'
+    title: "Dashboard",
   },
   {
-    href: '/app/account',
+    href: "/app/account",
     icon: UserIcon,
-    title: 'Account'
+    title: "Account",
   },
   {
-    href: '/app/newbuyer',
+    href: "/app/newbuyer",
     icon: UserPlusIcon,
-    title: 'New Buyer'
+    title: "New Buyer",
   },
   {
-    href: '/app/buyers',
+    href: "/app/buyers",
     icon: DollarSignIcon,
-    title: 'Payout Request'
+    title: "Payout Request",
   },
   {
-    href: '/app/transactions',
+    href: "/app/transactions",
     icon: CreditCardIcon,
-    title: 'Transactions'
+    title: "Transactions",
   },
   {
-    href: '/app/settings',
+    href: "/app/settings",
     icon: SettingsIcon,
-    title: 'Settings'
+    title: "Settings",
   },
 ];
 
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
-    width: 256
+    width: 256,
   },
   desktopDrawer: {
     width: 256,
     top: 64,
-    height: 'calc(100% - 64px)'
+    height: "calc(100% - 64px)",
   },
   avatar: {
-    cursor: 'pointer',
+    cursor: "pointer",
     width: 64,
-    height: 64
-  }
+    height: 64,
+  },
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
@@ -82,7 +82,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   async function handleLogout() {
     await Auth.signOut();
     userHasAuthenticated(false);
-    navigate('/');
+    navigate("/");
     window.location.reload();
   }
 
@@ -120,36 +120,19 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     onLoad();
   }, [context]);
 
-
   const content = (
-    <Box
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="column"
-        p={2}
-      >
+    <Box height="100%" display="flex" flexDirection="column">
+      <Box alignItems="center" display="flex" flexDirection="column" p={2}>
         <Avatar
           className={classes.avatar}
           component={RouterLink}
           src={avatar}
           to="/app/account"
         />
-        <Typography
-          className={classes.name}
-          color="textPrimary"
-          variant="h5"
-        >
+        <Typography className={classes.name} color="textPrimary" variant="h5">
           {supplier_name}
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
+        <Typography color="textSecondary" variant="body2">
           {supplier_country}
         </Typography>
       </Box>
@@ -198,12 +181,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
 NavBar.propTypes = {
   onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
+  openMobile: PropTypes.bool,
 };
 
 NavBar.defaultProps = {
   onMobileClose: () => {},
-  openMobile: false
+  openMobile: false,
 };
 
 export default NavBar;

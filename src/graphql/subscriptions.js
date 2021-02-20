@@ -225,6 +225,29 @@ export const onCreateDirector = /* GraphQL */ `
     }
   }
 `;
+export const onCreateDocument = /* GraphQL */ `
+  subscription OnCreateDocument($sortkey: String, $userId: String) {
+    onCreateDocument(sortkey: $sortkey, userId: $userId) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const onCreateInvestor = /* GraphQL */ `
   subscription OnCreateInvestor($sortkey: String, $userId: String) {
     onCreateInvestor(sortkey: $sortkey, userId: $userId) {
@@ -571,6 +594,29 @@ export const onDeleteDirector = /* GraphQL */ `
     }
   }
 `;
+export const onDeleteDocument = /* GraphQL */ `
+  subscription OnDeleteDocument($sortkey: String, $userId: String) {
+    onDeleteDocument(sortkey: $sortkey, userId: $userId) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
+    }
+  }
+`;
 export const onDeleteInvestor = /* GraphQL */ `
   subscription OnDeleteInvestor($sortkey: String, $userId: String) {
     onDeleteInvestor(sortkey: $sortkey, userId: $userId) {
@@ -914,6 +960,29 @@ export const onUpdateDirector = /* GraphQL */ `
       director_status
       sortkey
       userId
+    }
+  }
+`;
+export const onUpdateDocument = /* GraphQL */ `
+  subscription OnUpdateDocument($sortkey: String, $userId: String) {
+    onUpdateDocument(sortkey: $sortkey, userId: $userId) {
+      documentId
+      userId
+      identityId
+      bankId
+      brokerId
+      buyerId
+      directorId
+      financialsId
+      investorId
+      requestId
+      supplierId
+      transactionId
+      uboId
+      document_type
+      document_attachment
+      createdAt
+      sortkey
     }
   }
 `;

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import clsx from "clsx";
+import PropTypes from "prop-types";
 import {
   AppBar,
   Badge,
@@ -10,45 +10,37 @@ import {
   Hidden,
   IconButton,
   Toolbar,
-  makeStyles
-} from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
-import InputIcon from '@material-ui/icons/Input';
-import Logo from 'src/components/Logo';
+  makeStyles,
+} from "@material-ui/core";
+import MenuIcon from "@material-ui/icons/Menu";
+import NotificationsIcon from "@material-ui/icons/NotificationsOutlined";
+import InputIcon from "@material-ui/icons/Input";
+import Logo from "src/components/Logo";
 
 const useStyles = makeStyles(() => ({
   root: {},
   avatar: {
     width: 60,
-    height: 60
-  }
+    height: 60,
+  },
 }));
 
-const TopBar = ({
-  className,
-  onMobileNavOpen,
-  ...rest
-}) => {
+const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const classes = useStyles();
   const [notifications] = useState([]);
   const navigate = useNavigate();
 
   const [isAuthenticated, userHasAuthenticated] = useState();
-  
+
   async function handleLogout() {
     await Auth.signOut();
     userHasAuthenticated(false);
-    navigate('/');
+    navigate("/");
     window.location.reload(true);
   }
 
   return (
-    <AppBar
-      className={clsx(classes.root, className)}
-      elevation={0}
-      {...rest}
-    >
+    <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
       <Toolbar>
         <RouterLink to="/">
           <Logo />
@@ -64,15 +56,12 @@ const TopBar = ({
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <IconButton color="inherit" onClick={handleLogout} >
+          <IconButton color="inherit" onClick={handleLogout}>
             <InputIcon />
           </IconButton>
         </Hidden>
         <Hidden lgUp>
-          <IconButton
-            color="inherit"
-            onClick={onMobileNavOpen}
-          >
+          <IconButton color="inherit" onClick={onMobileNavOpen}>
             <MenuIcon />
           </IconButton>
         </Hidden>
@@ -83,7 +72,7 @@ const TopBar = ({
 
 TopBar.propTypes = {
   className: PropTypes.string,
-  onMobileNavOpen: PropTypes.func
+  onMobileNavOpen: PropTypes.func,
 };
 
 export default TopBar;

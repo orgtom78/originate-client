@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import React, { useEffect } from "react";
+import { Link as RouterLink, useLocation } from "react-router-dom";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
@@ -9,65 +9,65 @@ import {
   Hidden,
   List,
   Typography,
-  makeStyles
-} from '@material-ui/core';
+  makeStyles,
+} from "@material-ui/core";
 import {
   BarChart as BarChartIcon,
   User as UserIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon,
   Briefcase as BriefcaseIcon,
-  Truck as TruckIcon
-} from 'react-feather';
-import NavItem from './NavItem';
+  Truck as TruckIcon,
+} from "react-feather";
+import NavItem from "./NavItem";
 
 const items = [
   {
-    href: '/admin/dashboard',
+    href: "/admin/dashboard",
     icon: BarChartIcon,
-    title: 'Dashboard'
+    title: "Dashboard",
   },
   {
-    href: '/admin/users',
+    href: "/admin/users",
     icon: UserIcon,
-    title: 'Users'
+    title: "Users",
   },
   {
-    href: '/admin/investors',
+    href: "/admin/investors",
     icon: BriefcaseIcon,
-    title: 'Investors'
+    title: "Investors",
   },
   {
-    href: '/admin/suppliers',
+    href: "/admin/suppliers",
     icon: TruckIcon,
-    title: 'Suppliers'
+    title: "Suppliers",
   },
   {
-    href: '/admin/buyers',
+    href: "/admin/buyers",
     icon: DollarSignIcon,
-    title: 'Limit requests'
+    title: "Limit requests",
   },
   {
-    href: '/admin/transactions',
+    href: "/admin/transactions",
     icon: CreditCardIcon,
-    title: 'Transactions'
+    title: "Transactions",
   },
 ];
 
 const useStyles = makeStyles(() => ({
   mobileDrawer: {
-    width: 256
+    width: 256,
   },
   desktopDrawer: {
     width: 256,
     top: 64,
-    height: 'calc(100% - 64px)'
+    height: "calc(100% - 64px)",
   },
   avatar: {
-    cursor: 'pointer',
+    cursor: "pointer",
     width: 64,
-    height: 64
-  }
+    height: 64,
+  },
 }));
 
 const NavBar = ({ onMobileClose, openMobile }) => {
@@ -78,43 +78,27 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const avatar = 'https://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg';
-  const admin_name  = 'Admin';
-  const admin_country  = 'Berlin, Hong Kong, Shanghai';
-
+  const avatar =
+    "https://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg";
+  const admin_name = "Admin";
+  const admin_country = "Berlin, Hong Kong, Shanghai";
 
   const content = (
-    <Box
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
-      <Box
-        alignItems="center"
-        display="flex"
-        flexDirection="column"
-        p={2}
-      >
+    <Box height="100%" display="flex" flexDirection="column">
+      <Box alignItems="center" display="flex" flexDirection="column" p={2}>
         <Avatar
           className={classes.avatar}
           component={RouterLink}
           src={avatar}
           to="/app/account"
         />
-        <Typography
-          className={classes.name}
-          color="textPrimary"
-          variant="h5"
-        >
+        <Typography className={classes.name} color="textPrimary" variant="h5">
           {admin_name}
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
+        <Typography color="textSecondary" variant="body2">
           {admin_country}
         </Typography>
       </Box>
@@ -163,12 +147,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
 NavBar.propTypes = {
   onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
+  openMobile: PropTypes.bool,
 };
 
 NavBar.defaultProps = {
   onMobileClose: () => {},
-  openMobile: false
+  openMobile: false,
 };
 
 export default NavBar;
