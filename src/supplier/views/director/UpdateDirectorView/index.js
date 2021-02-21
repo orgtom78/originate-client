@@ -23,7 +23,6 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { s3Upload } from "src/libs/awsLib.js";
 import { green } from "@material-ui/core/colors";
 
 const idtype = [
@@ -348,6 +347,16 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
   }
 
+  async function s3Up(file, name) {
+    var fileExtension = file.name.split(".").pop();
+    const filename = `${sub}${directorId}${name}.${fileExtension}`;
+
+    const stored = await Storage.vault.put(filename, file, {
+      contentType: file.type,
+    });
+    return stored.key;
+  }
+
   function handledirectoridChange(event) {
     file.current = event.target.files[0];
     const newdirectoridfile = file.current;
@@ -358,7 +367,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     setDirectoridSuccess(false);
     setDirectoridLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile, "director_id_attachment") : null;
       var director_id_attachment = u;
       const sortkey = directorId;
       const userId = sub;
@@ -525,7 +534,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     setDirectorpoaSuccess(false);
     setDirectorpoaLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile, "director_poa_attachment") : null;
       var director_poa_attachment = u;
       const sortkey = directorId;
       const userId = sub;

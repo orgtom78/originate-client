@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import {
   InputField,
   SelectField,
-  UploadField,
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import {
   Card,
@@ -87,6 +87,8 @@ export default function UboForm(props) {
     },
   } = props;
 
+  const userId = props.vuser;
+  const uboId = props.vubo;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -269,11 +271,13 @@ export default function UboForm(props) {
                 <>{uboidisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={ubo_id_attachment.name}
                     id={ubo_id_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={uboId}
+                    userid={userId}
                   />
                   <label htmlFor={ubo_id_attachment.name}>
                     <LoaderButton
@@ -299,11 +303,13 @@ export default function UboForm(props) {
                 <>{ubopoaisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={ubo_poa_attachment.name}
                     id={ubo_poa_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={uboId}
+                    userid={userId}
                   />
                   <label htmlFor={ubo_poa_attachment.name}>
                     <LoaderButton

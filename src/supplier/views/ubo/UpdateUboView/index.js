@@ -23,7 +23,6 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { s3Upload } from "src/libs/awsLib.js";
 import { green } from "@material-ui/core/colors";
 
 const idtype = [
@@ -325,6 +324,17 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
   }
 
+  async function s3Up(file, name) {
+    var fileExtension = file.name.split(".").pop();
+    const filename = `${sub}${uboId}${name}.${fileExtension}`;
+
+    const stored = await Storage.vault.put(filename, file, {
+      contentType: file.type,
+    });
+    return stored.key;
+  }
+
+
   function handleuboidChange(event) {
     file.current = event.target.files[0];
     const newuboidfile = file.current;
@@ -335,7 +345,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     setUboidSuccess(false);
     setUboidLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile, "ubo_id_attachment") : null;
       var ubo_id_attachment = u;
       const sortkey = uboId;
       const userId = sub;
@@ -496,7 +506,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     setUbopoaSuccess(false);
     setUbopoaLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile ? await s3Up(newfile, "ubo_poa_attachment") : null;
       var ubo_poa_attachment = u;
       const sortkey = uboId;
       const userId = sub;

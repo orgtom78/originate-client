@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {
   InputField,
-  SelectField,
-  UploadField,
+  SelectField
 } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import {
   Card,
@@ -87,6 +87,8 @@ export default function ShareholderForm(props) {
     },
   } = props;
 
+  const userId = props.vuser;
+  const directorId = props.vdirector;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -269,11 +271,13 @@ export default function ShareholderForm(props) {
                 <>{didisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={director_id_attachment.name}
                     id={director_id_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={directorId}
+                    userid={userId}
                   />
                   <label htmlFor={director_id_attachment.name}>
                     <LoaderButton
@@ -299,11 +303,13 @@ export default function ShareholderForm(props) {
                 <>{dpoaisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={director_poa_attachment.name}
                     id={director_poa_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={directorId}
+                    userid={userId}
                   />
                   <label htmlFor={director_poa_attachment.name}>
                     <LoaderButton
