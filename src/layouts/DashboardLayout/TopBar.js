@@ -36,7 +36,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
     await Auth.signOut();
     userHasAuthenticated(false);
     navigate("/");
-    window.location.reload(true);
+    window.location.reload();
   }
 
   return (

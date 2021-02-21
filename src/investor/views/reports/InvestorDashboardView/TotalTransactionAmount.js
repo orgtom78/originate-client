@@ -78,6 +78,7 @@ const TotalTransactionAmount = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
+                decimalScale='2'
               />
             </Typography>
           </Grid>

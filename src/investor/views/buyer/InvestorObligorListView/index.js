@@ -135,19 +135,6 @@ const InvestorBuyerListView = () => {
                       <Table>
                         <TableHead>
                           <TableRow>
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  selectedBuyerIds.length === buyer.length
-                                }
-                                color="primary"
-                                indeterminate={
-                                  selectedBuyerIds.length > 0 &&
-                                  selectedBuyerIds.length < buyer.length
-                                }
-                                onChange={handleSelectAll}
-                              />
-                            </TableCell>
                             <TableCell>Buyer's Name</TableCell>
                             <TableCell>Country</TableCell>
                             <TableCell>Website</TableCell>
@@ -164,18 +151,6 @@ const InvestorBuyerListView = () => {
                                 selectedBuyerIds.indexOf(buyer.buyerId) !== -1
                               }
                             >
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={
-                                    selectedBuyerIds.indexOf(buyer.buyerId) !==
-                                    -1
-                                  }
-                                  onChange={(event) =>
-                                    handleSelectOne(event, buyer.buyerId)
-                                  }
-                                  value="true"
-                                />
-                              </TableCell>
                               <TableCell>
                                 <Box alignItems="center" display="flex">
                                   <Link
