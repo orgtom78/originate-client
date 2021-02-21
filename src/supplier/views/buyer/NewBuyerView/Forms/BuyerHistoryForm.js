@@ -219,7 +219,7 @@ export default function HistoryForm(props) {
                       onClick={handleClick}
                     >
                       {" "}
-                      Executed Irrevocable Payment Undertaking*
+                      Irrevocable Payment Undertaking
                     </LoaderButton>
                   </label>
                 </>

@@ -60,7 +60,8 @@ const LatestLimits = ({ className, ...rest }) => {
       );
       const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
       const items = await n.data.listsBuyer.items;
-      setLimitdata(items);
+      var x = items.filter((e) => e.buyer_status === "Investor Offer Pending" || "Approved");
+      setLimitdata(x);
     };
     getRequests();
   }, []);
@@ -75,15 +76,7 @@ const LatestLimits = ({ className, ...rest }) => {
   }, [limitdata]);
 
   function checkstatus(status) {
-    if (status === "submitted") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else if (status === "Under Review") {
+    if (status === "Investor Offer Pending") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>

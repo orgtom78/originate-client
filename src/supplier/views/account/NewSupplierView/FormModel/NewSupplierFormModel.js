@@ -72,6 +72,7 @@ export default {
     director_id_attachment: {
       name: "director_id_attachment",
       label: "Director ID",
+      requiredErrorMsg: "ID is required",
     },
     director_id_number: {
       name: "director_id_number",
@@ -91,7 +92,7 @@ export default {
     director_poa_attachment: {
       name: "director_poa_attachment",
       label: "Director Proof of Address",
-      requiredErrorMsg: "Proof of Address Type is required",
+      requiredErrorMsg: "Proof of Address is required",
     },
     director_country_of_residence: {
       name: "director_country_of_residence",
@@ -116,6 +117,7 @@ export default {
     ubo_id_attachment: {
       name: "ubo_id_attachment",
       label: "Owner ID",
+      requiredErrorMsg: "ID is required",
     },
     ubo_id_number: {
       name: "ubo_id_number",
@@ -135,7 +137,7 @@ export default {
     ubo_poa_attachment: {
       name: "ubo_poa_attachment",
       label: "Owner Proof of Address",
-      requiredErrorMsg: "Proof of Address Type is required",
+      requiredErrorMsg: "Proof of Address is required",
     },
     ubo_country_of_residence: {
       name: "ubo_country_of_residence",

@@ -13,6 +13,7 @@ import {
   colors,
 } from "@material-ui/core";
 import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -64,13 +65,16 @@ const TasksProgress = ({ className, value, ...rest }) => {
     if (handle) {
       const p = calculateprogress();
       const app = p["Approved"];
-      const rev = p["Under Review"];
+      const rev = p["Investor Offer Pending"];
       const sum = app + rev || 1;
       const perc = (app / sum) * 100;
-      if (isNaN(perc)) {
+      const n = Number(perc);
+      if (isNaN(n)) {
         return "0";
-      } else if (perc !== "NaN") {
-        return perc;
+      } else if (n !== "NaN" && n > 100) {
+        return "100";
+      } else if (n !== "NaN" && n <= 100) {
+        return n;
       }
     } else {
       return;
@@ -86,7 +90,14 @@ const TasksProgress = ({ className, value, ...rest }) => {
               APPROVAL PROGRESS
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {calcperecentage()}%
+              <NumberFormat
+                color="textPrimary"
+                variant="h3"
+                value={calcperecentage()}
+                displayType={"text"}
+                decimalScale="2"
+              />
+              %
             </Typography>
           </Grid>
           <Grid item>

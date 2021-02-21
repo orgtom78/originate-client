@@ -178,19 +178,6 @@ const DirectorListView = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={
-                            selectedDirectorIds.length === director.length
-                          }
-                          color="primary"
-                          indeterminate={
-                            selectedDirectorIds.length > 0 &&
-                            selectedDirectorIds.length < director.length
-                          }
-                          onChange={handleSelectAll}
-                        />
-                      </TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Email</TableCell>
                       <TableCell>Country</TableCell>
@@ -208,19 +195,6 @@ const DirectorListView = () => {
                           -1
                         }
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={
-                              selectedDirectorIds.indexOf(
-                                director.directorId
-                              ) !== -1
-                            }
-                            onChange={(event) =>
-                              handleSelectOne(event, director.directorId)
-                            }
-                            value="true"
-                          />
-                        </TableCell>
                         <TableCell>
                           <Box alignItems="center" display="flex">
                             <Link

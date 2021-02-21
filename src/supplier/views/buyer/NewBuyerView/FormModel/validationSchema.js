@@ -47,7 +47,7 @@ export default [
       .test(
         "len",
         `${buyer_address_postalcode.invalidErrorMsg}`,
-        (val) => val && val.length === 5
+        (val) => val && val.length <= 12
       ),
     [buyer_address_street.name]: Yup.string().required(
       `${buyer_address_street.requiredErrorMsg}`

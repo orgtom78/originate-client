@@ -47,7 +47,9 @@ const Password = ({ className, ...rest }) => {
       alert(e.message);
     }
     setIsChanging(false);
-    navigate("/app/account");
+    await Auth.signOut();
+    navigate("/");
+    window.location.reload();
   }
 
   return (

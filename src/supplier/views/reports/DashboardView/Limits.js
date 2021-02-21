@@ -11,7 +11,7 @@ import {
   colors,
   makeStyles,
 } from "@material-ui/core";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import MoneyIcon from "@material-ui/icons/Money";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -28,10 +28,10 @@ const useStyles = makeStyles((theme) => ({
     width: 56,
   },
   differenceIcon: {
-    color: colors.red[900],
+    color: colors.green[900],
   },
   differenceValue: {
-    color: colors.red[900],
+    color: colors.green[900],
     marginRight: theme.spacing(1),
   },
 }));
@@ -119,7 +119,7 @@ const Limits = ({ className, ...rest }) => {
           </Grid>
         </Grid>
         <Box mt={2} display="flex" alignItems="center">
-          <ArrowDownwardIcon className={classes.differenceIcon} />
+          <ArrowUpwardIcon className={classes.differenceIcon} />
           <Typography className={classes.differenceValue} variant="body2">
             0%
           </Typography>

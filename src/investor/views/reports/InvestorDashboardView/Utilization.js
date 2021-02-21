@@ -13,6 +13,7 @@ import {
   colors,
 } from "@material-ui/core";
 import BlurLinearIcon from "@material-ui/icons/BlurLinear";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -121,7 +122,14 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
               AVERAGE UTILIZATION (%)
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {calcutil()}%
+              <NumberFormat
+                color="textPrimary"
+                variant="h3"
+                value={calcutil()}
+                displayType={"text"}
+                decimalScale='2'
+              />
+              %
             </Typography>
           </Grid>
           <Grid item>

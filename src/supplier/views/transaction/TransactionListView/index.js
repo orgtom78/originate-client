@@ -193,19 +193,6 @@ const TransactionListView = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={
-                            selectedCustomerIds.length === request.length
-                          }
-                          color="primary"
-                          indeterminate={
-                            selectedCustomerIds.length > 0 &&
-                            selectedCustomerIds.length < request.length
-                          }
-                          onChange={handleSelectAll}
-                        />
-                      </TableCell>
                       <TableCell>Buyer's Name</TableCell>
                       <TableCell>Amount</TableCell>
                       <TableCell>Goods</TableCell>
@@ -222,18 +209,6 @@ const TransactionListView = () => {
                           selectedCustomerIds.indexOf(request.requestId) !== -1
                         }
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={
-                              selectedCustomerIds.indexOf(request.requestId) !==
-                              -1
-                            }
-                            onChange={(event) =>
-                              handleSelectOne(event, request.requestId)
-                            }
-                            value="true"
-                          />
-                        </TableCell>
                         <TableCell>
                           <Box alignItems="center" display="flex">
                             <Avatar

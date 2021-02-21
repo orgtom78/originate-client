@@ -171,17 +171,6 @@ const UboListView = () => {
                 <Table>
                   <TableHead>
                     <TableRow>
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={selectedUboIds.length === ubo.length}
-                          color="primary"
-                          indeterminate={
-                            selectedUboIds.length > 0 &&
-                            selectedUboIds.length < ubo.length
-                          }
-                          onChange={handleSelectAll}
-                        />
-                      </TableCell>
                       <TableCell>Name</TableCell>
                       <TableCell>Email</TableCell>
                       <TableCell>Country</TableCell>
@@ -196,15 +185,6 @@ const UboListView = () => {
                         key={ubo.uboId}
                         selected={selectedUboIds.indexOf(ubo.uboId) !== -1}
                       >
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={selectedUboIds.indexOf(ubo.uboId) !== -1}
-                            onChange={(event) =>
-                              handleSelectOne(event, ubo.uboId)
-                            }
-                            value="true"
-                          />
-                        </TableCell>
                         <TableCell>
                           <Box alignItems="center" display="flex">
                             <Link to={`/app/updateubo/${ubo.uboId}`}>

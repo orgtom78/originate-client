@@ -179,19 +179,6 @@ const InvestorTransactionListView = () => {
                       <Table>
                         <TableHead>
                           <TableRow>
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  selectedCustomerIds.length === request.length
-                                }
-                                color="primary"
-                                indeterminate={
-                                  selectedCustomerIds.length > 0 &&
-                                  selectedCustomerIds.length < request.length
-                                }
-                                onChange={handleSelectAll}
-                              />
-                            </TableCell>
                             <TableCell>Buyer's Name</TableCell>
                             <TableCell>Suppliers' Name</TableCell>
                             <TableCell>Amount</TableCell>
@@ -210,19 +197,6 @@ const InvestorTransactionListView = () => {
                                 ) !== -1
                               }
                             >
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={
-                                    selectedCustomerIds.indexOf(
-                                      request.requestId
-                                    ) !== -1
-                                  }
-                                  onChange={(event) =>
-                                    handleSelectOne(event, request.requestId)
-                                  }
-                                  value="true"
-                                />
-                              </TableCell>
                               <TableCell>
                                 <Box alignItems="center" display="flex">
                                   <Link
@@ -239,7 +213,11 @@ const InvestorTransactionListView = () => {
                                     color="textPrimary"
                                     variant="body1"
                                   >
-                                    {request.buyer_name}
+                                    <Link
+                                      to={`/investor/transaction/${request.userId}/${request.requestId}`}
+                                    >
+                                      {request.buyer_name}
+                                    </Link>
                                   </Typography>
                                 </Box>
                               </TableCell>
