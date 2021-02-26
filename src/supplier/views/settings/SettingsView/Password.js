@@ -48,6 +48,7 @@ const Password = ({ className, ...rest }) => {
     }
     setIsChanging(false);
     await Auth.signOut();
+    navigate("/");
     window.location.reload();
   }
 

@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import {
   BarChart as BarChartIcon,
+  Settings as SettingsIcon,
   User as UserIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon,
@@ -42,6 +43,11 @@ const items = [
     href: "/investor/transactions",
     icon: CreditCardIcon,
     title: "Transactions",
+  },
+  {
+    href: "/investor/settings",
+    icon: SettingsIcon,
+    title: "Settings",
   },
 ];
 

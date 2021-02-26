@@ -13,7 +13,7 @@ import AdminLoginView from 'src/admin/views/auth/AdminLoginView';
 import NotFoundView from 'src/investor/views/errors/NotFoundView';
 import BuyerListView from 'src/supplier/views/buyer/BuyerListView';
 import RegisterView from 'src/supplier/views/auth/RegisterView';
-import SettingsView from 'src/investor/views/settings/SettingsView';
+import SettingsView from 'src/supplier/views/settings/SettingsView';
 import NewSupplierView from 'src/supplier/views/account/NewSupplierView';
 import NewBuyerView from 'src/supplier/views/buyer/NewBuyerView';
 import NewSupplierDirectorView from 'src/supplier/views/director/NewSupplierDirectorView';
@@ -52,6 +52,7 @@ import InvestorBuyerListView from 'src/investor/views/buyer/InvestorBuyerListVie
 import InvestorObligorListView from 'src/investor/views/buyer/InvestorObligorListView';
 import InvestorTransactionListView from 'src/investor/views/transaction/InvestorTransactionListView';
 import InvestorTransactionView from 'src/investor/views/transaction/InvestorTransactionView';
+import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
 
   const routes = (isAuthenticated, isAdmin, isInvestor) =>
   [{
@@ -132,6 +133,7 @@ import InvestorTransactionView from 'src/investor/views/transaction/InvestorTran
       { path: 'obligors', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorObligorListView/> },
       { path: 'transactions', element: !isAuthenticated && !isInvestor ? <InvestorLoginView />  : <InvestorTransactionListView  /> },
       { path: 'transaction/:id/:reqId', element: !isAuthenticated && !isInvestor ? <InvestorLoginView /> : <InvestorTransactionView />},
+      { path: 'settings', element: !isAuthenticated ? <InvestorLoginView /> : <InvestorSettingsView /> },
       { path: '*', element: <Navigate to="investor/404" /> }
     ]
   },
