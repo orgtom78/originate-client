@@ -101,18 +101,22 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       );
       const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
       const investor = n.data.listsInvestor.items[0];
+      if (investor){
       const {
         investor_name,
         investor_country,
         investor_industry,
         investor_logo,
-      } = investor;
+      } = investor; 
       setInvestor_name(investor_name);
       setInvestor_country(investor_country);
       setInvestor_industry(investor_industry);
       setInvestor_logo(investor_logo);
       const z = await Storage.vault.get(investor_logo);
       setAvatar(z);
+    } else {
+      return
+    }
     }
     onLoad();
   }, []);
