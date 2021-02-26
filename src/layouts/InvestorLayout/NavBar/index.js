@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
@@ -18,6 +18,9 @@ import {
   DollarSign as DollarSignIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
+import { Storage } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
+import * as queries from "src/graphql/queries.js";
 
 const items = [
   {
@@ -69,10 +72,44 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const avatar =
-    "https://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg";
-  const admin_name = "TestInvestor";
-  const admin_country = "Berlin, Hong Kong, Shanghai";
+  const [avatar, setAvatar] = useState("");
+  const [investor_name, setInvestor_name] = useState("");
+  const [investor_country, setInvestor_country] = useState("");
+  const [investor_industry, setInvestor_industry] = useState("");
+  const [investor_logo, setInvestor_logo] = useState("");
+
+
+  useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      let user = await Auth.currentAuthenticatedUser();
+      const { attributes = {} } = user;
+      const b = attributes["custom:groupid"];
+      let filter = { userId: { eq: b }, sortkey: { contains: "investor-" } };
+      const {
+        data: {
+          listsInvestor: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(
+        graphqlOperation(queries.listsInvestor, { filter: filter })
+      );
+      const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
+      const investor = n.data.listsInvestor.items[0];
+      const {
+        investor_name,
+        investor_country,
+        investor_industry,
+        investor_logo,
+      } = investor;
+      setInvestor_name(investor_name);
+      setInvestor_country(investor_country);
+      setInvestor_industry(investor_industry);
+      setInvestor_logo(investor_logo);
+      const z = await Storage.vault.get(investor_logo);
+      setAvatar(z);
+    }
+    onLoad();
+  }, []);
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">
@@ -84,10 +121,10 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           to="/app/account"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
-          {admin_name}
+          {investor_name}
         </Typography>
         <Typography color="textSecondary" variant="body2">
-          {admin_country}
+          {investor_country}
         </Typography>
       </Box>
       <Divider />

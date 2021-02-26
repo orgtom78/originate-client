@@ -32,8 +32,8 @@ import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
-import DirectorListView from "src/admin/views/supplier/AdminSupplierView/Lists/directorlist.js";
-import UboListView from "src/admin/views/supplier/AdminSupplierView/Lists/ubolist.js";
+import DirectorListView from "src/admin/views/investor/AdminInvestorView/Lists/directorlist.js";
+import UboListView from "src/admin/views/investor/AdminInvestorView/Lists/ubolist.js";
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
@@ -86,36 +86,36 @@ const type = [
   },
 ];
 
-const SupplierForm = ({ className, value, ...rest }) => {
+const InvestorForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
-  const [supplierId, setSupplierId] = useState("");
-  const [supplier_logo, setSupplier_logo] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
-  const [supplier_type, setSupplier_type] = useState("");
+  const [investorId, setInvestorId] = useState("");
+  const [investor_logo, setInvestor_logo] = useState("");
+  const [investor_name, setInvestor_name] = useState("");
+  const [investor_type, setInvestor_type] = useState("");
   const [
-    supplier_date_of_incorporation,
-    setSupplier_date_of_incorporation,
+    investor_date_of_incorporation,
+    setInvestor_date_of_incorporation,
   ] = useState("");
-  const [supplier_address_city, setSupplier_address_city] = useState("");
-  const [supplier_address_street, setSupplier_address_street] = useState("");
+  const [investor_address_city, setInvestor_address_city] = useState("");
+  const [investor_address_street, setInvestor_address_street] = useState("");
   const [
-    supplier_address_postalcode,
-    setSupplier_address_postalcode,
+    investor_address_postalcode,
+    setInvestor_address_postalcode,
   ] = useState("");
-  const [supplier_country, setSupplier_country] = useState("");
-  const [supplier_industry, setSupplier_industry] = useState("");
+  const [investor_country, setInvestor_country] = useState("");
+  const [investor_industry, setInvestor_industry] = useState("");
   const [
-    supplier_registration_cert_attachment,
-    setSupplier_registration_cert_attachment,
+    investor_registration_cert_attachment,
+    setInvestor_registration_cert_attachment,
   ] = useState("");
-  const [supplier_website, setSupplier_website] = useState("");
-  const [supplier_address_refinment, setSupplier_address_refinment] = useState(
+  const [investor_website, setInvestor_website] = useState("");
+  const [investor_address_refinment, setInvestor_address_refinment] = useState(
     ""
   );
-  const [supplier_industry_code, setSupplier_industry_code] = useState("");
-  const [supplier_register_number, setSupplier_register_number] = useState("");
-  const [supplier_trading_name, setSupplier_trading_name] = useState("");
+  const [investor_industry_code, setInvestor_industry_code] = useState("");
+  const [investor_register_number, setInvestor_register_number] = useState("");
+  const [investor_trading_name, setInvestor_trading_name] = useState("");
 
   //Financials:
   const [financialsId, setFinancialsId] = useState("");
@@ -141,64 +141,64 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [short_term_debt, setShort_term_debt] = useState("");
   const [working_capital, setWorking_capital] = useState("");
 
-  const [supplierloading, setSupplierLoading] = useState(false);
-  const [suppliersuccess, setSupplierSuccess] = useState(false);
+  const [investorloading, setInvestorLoading] = useState(false);
+  const [investorsuccess, setInvestorSuccess] = useState(false);
   const [financialsloading, setFinancialsLoading] = useState(false);
   const [financialssuccess, setFinancialsSuccess] = useState(false);
 
   useEffect(() => {
     const userId = value.value.value.userId;
-    const sortkey = value.value.value.supplierId;
-    setSupplierId(sortkey);
-    getSupplier({ userId, sortkey });
-    async function getSupplier(input) {
+    const sortkey = value.value.value.investorId;
+    setInvestorId(sortkey);
+    getInvestor({ userId, sortkey });
+    async function getInvestor(input) {
       try {
-        const supplier = await API.graphql(
-          graphqlOperation(queries.getSupplier, input)
+        const investor = await API.graphql(
+          graphqlOperation(queries.getInvestor, input)
         );
         const {
           data: {
-            getSupplier: {
-              supplier_logo,
-              supplier_name,
-              supplier_type,
-              supplier_date_of_incorporation,
-              supplier_address_city,
-              supplier_address_street,
-              supplier_address_postalcode,
-              supplier_country,
-              supplier_industry,
-              supplier_registration_cert_attachment,
-              supplier_website,
-              supplier_address_refinment,
-              supplier_industry_code,
-              supplier_register_number,
-              supplier_trading_name,
+            getInvestor: {
+              investor_logo,
+              investor_name,
+              investor_type,
+              investor_date_of_incorporation,
+              investor_address_city,
+              investor_address_street,
+              investor_address_postalcode,
+              investor_country,
+              investor_industry,
+              investor_registration_cert_attachment,
+              investor_website,
+              investor_address_refinment,
+              investor_industry_code,
+              investor_register_number,
+              investor_trading_name,
             },
           },
-        } = supplier;
-        setSupplier_logo(supplier_logo);
-        setSupplier_name(supplier_name);
-        setSupplier_date_of_incorporation(supplier_date_of_incorporation);
-        setSupplier_type(supplier_type);
-        setSupplier_address_city(supplier_address_city);
-        setSupplier_address_street(supplier_address_street);
-        setSupplier_address_postalcode(supplier_address_postalcode);
-        setSupplier_country(supplier_country);
-        setSupplier_industry(supplier_industry);
-        setSupplier_registration_cert_attachment(
-          supplier_registration_cert_attachment
+        } = investor;
+        setInvestor_logo(investor_logo);
+        setInvestor_name(investor_name);
+        setInvestor_date_of_incorporation(investor_date_of_incorporation);
+        setInvestor_type(investor_type);
+        setInvestor_address_city(investor_address_city);
+        setInvestor_address_street(investor_address_street);
+        setInvestor_address_postalcode(investor_address_postalcode);
+        setInvestor_country(investor_country);
+        setInvestor_industry(investor_industry);
+        setInvestor_registration_cert_attachment(
+          investor_registration_cert_attachment
         );
-        setSupplier_website(supplier_website);
-        setSupplier_address_refinment(supplier_address_refinment);
-        setSupplier_industry_code(supplier_industry_code);
-        setSupplier_register_number(supplier_register_number);
-        setSupplier_trading_name(supplier_trading_name);
+        setInvestor_website(investor_website);
+        setInvestor_address_refinment(investor_address_refinment);
+        setInvestor_industry_code(investor_industry_code);
+        setInvestor_register_number(investor_register_number);
+        setInvestor_trading_name(investor_trading_name);
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.supplierId]);
+  }, [value.value.value.userId, value.value.value.investorId]);
 
   useEffect(() => {
     const id = value.value.value.userId;
@@ -207,7 +207,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
       try {
         let filter = {
           userId: { eq: input },
-          sortkey: { contains: "financials-supplier" },
+          sortkey: { contains: "financials-investor" },
         };
         const {
           data: {
@@ -269,37 +269,37 @@ const SupplierForm = ({ className, value, ...rest }) => {
     }
   }, [value.value.value.userId]);
 
-  async function handleSupplierSubmit() {
-    setSupplierSuccess(false);
-    setSupplierLoading(true);
+  async function handleInvestorSubmit() {
+    setInvestorSuccess(false);
+    setInvestorLoading(true);
     try {
       const userId = value.value.value.userId;
-      const sortkey = value.value.value.supplierId;
-      await updateSupplier({
+      const sortkey = value.value.value.investorId;
+      await updateInvestor({
         userId,
         sortkey,
-        supplier_logo,
-        supplier_name,
-        supplier_type,
-        supplier_date_of_incorporation,
-        supplier_address_city,
-        supplier_address_street,
-        supplier_address_postalcode,
-        supplier_country,
-        supplier_industry,
-        supplier_registration_cert_attachment,
-        supplier_website,
-        supplier_address_refinment,
-        supplier_industry_code,
-        supplier_register_number,
-        supplier_trading_name,
+        investor_logo,
+        investor_name,
+        investor_type,
+        investor_date_of_incorporation,
+        investor_address_city,
+        investor_address_street,
+        investor_address_postalcode,
+        investor_country,
+        investor_industry,
+        investor_registration_cert_attachment,
+        investor_website,
+        investor_address_refinment,
+        investor_industry_code,
+        investor_register_number,
+        investor_trading_name,
       });
     } catch (e) {
       onError(e);
     }
-    setSupplierSuccess(true);
-    setSupplierLoading(false);
-    navigate("/admin/suppliers");
+    setInvestorSuccess(true);
+    setInvestorLoading(false);
+    navigate("/admin/investors");
   }
 
   async function handleFinancialsSubmit() {
@@ -336,12 +336,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    navigate("/admin/suppliers");
+    navigate("/admin/investors");
   }
 
-  function updateSupplier(input) {
+  function updateInvestor(input) {
     return API.graphql(
-      graphqlOperation(mutations.updateSupplier, { input: input })
+      graphqlOperation(mutations.updateInvestor, { input: input })
     );
   }
   function updateFinancials(input) {
@@ -398,10 +398,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Company Legal Name"
-                        name="supplier_name"
-                        onChange={(e) => setSupplier_name(e.target.value)}
+                        name="investor_name"
+                        onChange={(e) => setInvestor_name(e.target.value)}
                         required
-                        value={supplier_name || ""}
+                        value={investor_name || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -409,12 +409,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Company Trading Name"
-                        name="supplier_trading_name"
+                        name="investor_trading_name"
                         onChange={(e) =>
-                          setSupplier_trading_name(e.target.value)
+                          setInvestor_trading_name(e.target.value)
                         }
-                        required
-                        value={supplier_trading_name || ""}
+                        value={investor_trading_name || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -422,10 +421,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Company Website"
-                        name="supplier_website"
-                        onChange={(e) => setSupplier_website(e.target.value)}
+                        name="investor_website"
+                        onChange={(e) => setInvestor_website(e.target.value)}
                         required
-                        value={supplier_website || ""}
+                        value={investor_website || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -433,10 +432,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <Select
                         fullWidth
                         label="Company Type"
-                        name="supplier_type"
-                        onChange={(e) => setSupplier_type(e.target.value)}
+                        name="investor_type"
+                        onChange={(e) => setInvestor_type(e.target.value)}
                         required
-                        value={supplier_type || ""}
+                        value={investor_type || ""}
                         variant="outlined"
                       >
                         {type.map((item, index) => (
@@ -450,12 +449,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Company Registration Number"
-                        name="supplier_register_number"
+                        name="investor_register_number"
                         onChange={(e) =>
-                          setSupplier_register_number(e.target.value)
+                          setInvestor_register_number(e.target.value)
                         }
                         required
-                        value={supplier_register_number || ""}
+                        value={investor_register_number || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -463,12 +462,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Company City"
-                        name="supplier_address_city"
+                        name="investor_address_city"
                         onChange={(e) =>
-                          setSupplier_address_city(e.target.value)
+                          setInvestor_address_city(e.target.value)
                         }
                         required
-                        value={supplier_address_city || ""}
+                        value={investor_address_city || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -476,12 +475,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Zipcode"
-                        name="supplier_address_postalcode"
+                        name="investor_address_postalcode"
                         onChange={(e) =>
-                          setSupplier_address_postalcode(e.target.value)
+                          setInvestor_address_postalcode(e.target.value)
                         }
                         type="number"
-                        value={supplier_address_postalcode || ""}
+                        value={investor_address_postalcode || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -489,12 +488,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Street"
-                        name="supplier_address_street"
+                        name="investor_address_street"
                         onChange={(e) =>
-                          setSupplier_address_street(e.target.value)
+                          setInvestor_address_street(e.target.value)
                         }
                         required
-                        value={supplier_address_street || ""}
+                        value={investor_address_street || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -502,12 +501,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <TextField
                         fullWidth
                         label="Address refinment"
-                        name="supplier_address_refinment"
+                        name="investor_address_refinment"
                         onChange={(e) =>
-                          setSupplier_address_refinment(e.target.value)
+                          setInvestor_address_refinment(e.target.value)
                         }
-                        required
-                        value={supplier_address_refinment || ""}
+                        value={investor_address_refinment || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -522,7 +520,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       >
                         <KeyboardDatePicker
                           fullWidth
-                          value={supplier_date_of_incorporation || ""}
+                          value={investor_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
                           id="date_of_incorporation"
@@ -532,7 +530,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
                           onChange={(e) =>
-                            setSupplier_date_of_incorporation(e.target.value)
+                            setInvestor_date_of_incorporation(e.target.value)
                           }
                           required
                           KeyboardButtonProps={{
@@ -548,10 +546,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                       <Select
                         fullWidth
                         label="Country"
-                        name="supplier_country"
-                        onChange={(e) => setSupplier_country(e.target.value)}
+                        name="investor_country"
+                        onChange={(e) => setInvestor_country(e.target.value)}
                         required
-                        value={supplier_country || ""}
+                        value={investor_country || ""}
                         variant="outlined"
                       >
                         {cr.map((item, index) => (
@@ -564,11 +562,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
-                        label="Supplier Industry"
-                        name="supplier_industry"
-                        onChange={(e) => setSupplier_industry(e.target.value)}
+                        label="Investor Industry"
+                        name="investor_industry"
+                        onChange={(e) => setInvestor_industry(e.target.value)}
                         required
-                        value={supplier_industry || ""}
+                        value={investor_industry || ""}
                         variant="outlined"
                       >
                         {indust.map((item, index) => (
@@ -581,13 +579,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Supplier Industry Code"
-                        name="supplier_industry_code"
+                        label="Investor Industry Code"
+                        name="investor_industry_code"
                         onChange={(e) =>
-                          setSupplier_industry_code(e.target.value)
+                          setInvestor_industry_code(e.target.value)
                         }
-                        required
-                        value={supplier_industry_code || ""}
+                        value={investor_industry_code || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -597,10 +594,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                 <Box display="flex" justifyContent="flex-end" p={2}>
                   <LoaderButton
                     startIcon={<UploadIcon />}
-                    disabled={supplierloading}
-                    success={suppliersuccess}
-                    loading={supplierloading}
-                    onClick={handleSupplierSubmit}
+                    disabled={investorloading}
+                    success={investorsuccess}
+                    loading={investorloading}
+                    onClick={handleInvestorSubmit}
                   >
                     Update details
                   </LoaderButton>
@@ -624,7 +621,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewsupplierdirector/${value.value.value.userId}`}
+                  to={`/admin/adminnewinvestordirector/${value.value.value.userId}`}
                 >
                   <Button>Add Director</Button>
                 </Link>
@@ -647,7 +644,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewsupplierubo/${value.value.value.userId}`}
+                  to={`/admin/adminnewinvestorubo/${value.value.value.userId}`}
                 >
                   <Button>Add Owner</Button>
                 </Link>
@@ -903,8 +900,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
   );
 };
 
-SupplierForm.propTypes = {
+InvestorForm.propTypes = {
   className: PropTypes.string,
 };
 
-export default SupplierForm;
+export default InvestorForm;

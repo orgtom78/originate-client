@@ -664,6 +664,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
                     required
                     value={retained_earnings || ""}
                     variant="outlined"
+                    InputProps={{
+                      inputComponent: NumberFormatCustom,
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -675,6 +678,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
                     required
                     value={working_capital || ""}
                     variant="outlined"
+                    InputProps={{
+                      inputComponent: NumberFormatCustom,
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>

@@ -28,15 +28,15 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Profile({ className, value, ...rest }) {
-  const supplierId = value.value.supplierId;
+  const investorId = value.value.investorId;
   const Id = value.value.userId;
   const classes = useStyles();
   const [avatar, setAvatar] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
-  const [supplier_address_city, setSupplier_address_city] = useState("");
-  const [supplier_country, setSupplier_country] = useState("");
-  const [supplier_industry, setSupplier_industry] = useState("");
-  const [supplier_logo, setSupplier_logo] = useState("");
+  const [investor_name, setInvestor_name] = useState("");
+  const [investor_address_city, setInvestor_address_city] = useState("");
+  const [investor_country, setInvestor_country] = useState("");
+  const [investor_industry, setInvestor_industry] = useState("");
+  const [investor_logo, setInvestor_logo] = useState("");
   const [identityId, setIdentityId] = useState("");
   const navigate = useNavigate();
 
@@ -46,32 +46,32 @@ export default function Profile({ className, value, ...rest }) {
   const file = useRef(null);
 
   useEffect(() => {
-    async function getSupplier() {
+    async function getInvestor() {
       var userId = Id;
-      var sortkey = supplierId;
+      var sortkey = investorId;
       try {
         const data = await API.graphql(
-          graphqlOperation(queries.getSupplier, { userId, sortkey })
+          graphqlOperation(queries.getInvestor, { userId, sortkey })
         );
         const {
           data: {
-            getSupplier: {
+            getInvestor: {
               identityId,
-              supplier_logo,
-              supplier_name,
-              supplier_address_city,
-              supplier_country,
-              supplier_industry,
+              investor_logo,
+              investor_name,
+              investor_address_city,
+              investor_country,
+              investor_industry,
             },
           },
         } = data;
         setIdentityId(identityId);
-        setSupplier_name(supplier_name);
-        setSupplier_address_city(supplier_address_city);
-        setSupplier_country(supplier_country);
-        setSupplier_industry(supplier_industry);
-        setSupplier_logo(supplier_logo);
-        const z = await Storage.get(supplier_logo, {
+        setInvestor_name(investor_name);
+        setInvestor_address_city(investor_address_city);
+        setInvestor_country(investor_country);
+        setInvestor_industry(investor_industry);
+        setInvestor_logo(investor_logo);
+        const z = await Storage.get(investor_logo, {
           level: "private",
           identityId: identityId,
         });
@@ -80,13 +80,13 @@ export default function Profile({ className, value, ...rest }) {
         console.log("error fetching data..", err);
       }
     }
-    getSupplier();
-  }, [Id, supplierId]);
+    getInvestor();
+  }, [Id, investorId]);
 
-  const city = supplier_address_city;
-  const country = supplier_country;
-  const industry = supplier_industry;
-  const name = supplier_name;
+  const city = investor_address_city;
+  const country = investor_country;
+  const industry = investor_industry;
+  const name = investor_name;
 
   useEffect(() => {
     if (uploadedFile) {
@@ -95,7 +95,7 @@ export default function Profile({ className, value, ...rest }) {
           level: "private",
           identityId: identityId,
         });
-        setSupplier_logo(uploadedFile);
+        setInvestor_logo(uploadedFile);
         setAvatar(u);
       }
       geturl();
@@ -112,7 +112,7 @@ export default function Profile({ className, value, ...rest }) {
   }
 
   async function deleteold() {
-    await Storage.vault.remove(supplier_logo);
+    await Storage.vault.remove(investor_logo);
   }
 
   async function handleLogoSubmit(a) {
@@ -121,25 +121,25 @@ export default function Profile({ className, value, ...rest }) {
     try {
       const u = a ? await s3Upload(a) : null;
       setUploadedFile(u);
-      var supplier_logo = u;
+      var investor_logo = u;
       const userId = Id;
-      const sortkey = supplierId;
-      await updateSupplier({
+      const sortkey = investorId;
+      await updateInvestor({
         userId,
         sortkey,
-        supplier_logo,
+        investor_logo,
       });
     } catch (e) {
       onError(e);
     }
     setSuccess(true);
     setLoading(false);
-    navigate("/admin/suppliers");
+    navigate("/admin/investors");
   }
 
-  function updateSupplier(input) {
+  function updateInvestor(input) {
     return API.graphql(
-      graphqlOperation(mutations.updateSupplier, { input: input })
+      graphqlOperation(mutations.updateInvestor, { input: input })
     );
   }
 
@@ -163,15 +163,15 @@ export default function Profile({ className, value, ...rest }) {
       <CardActions style={{ width: "100%", justifyContent: "center" }}>
         <Box>
           <input
-            id="supplier_logo"
+            id="investor_logo"
             accept="image/*"
             style={{ display: "none" }}
             type="file"
             onChange={handleFileChange}
           />
-          <label htmlFor="supplier_logo">
+          <label htmlFor="investor_logo">
             <LoaderButton
-              id="supplier_logo"
+              id="investor_logo"
               color="primary"
               variant="text"
               fullWidth

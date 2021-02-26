@@ -39,6 +39,21 @@ const idtype = [
   },
 ];
 
+const status = [
+  {
+    value: "Declined",
+    label: "Declined",
+  },
+  {
+    value: "Under Review",
+    label: "Under Review",
+  },
+  {
+    value: "Approved",
+    label: "Approved",
+  },
+];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -86,6 +101,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
 
   const [identityId, setIdentityId] = useState("");
   const [uboId, setUboId] = useState("");
+  const [ubo_status, setUbo_status] = useState("");
   const [ubo_name, setUbo_name] = useState("");
   const [ubo_email, setUbo_email] = useState("");
   const [ubo_phone_number, setUbo_phone_number] = useState("");
@@ -132,6 +148,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
           getUBO: {
             identityId,
             uboId,
+            ubo_status,
             ubo_name,
             ubo_email,
             ubo_phone_number,
@@ -146,6 +163,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       } = ubo;
       setIdentityId(identityId);
       setUboId(uboId);
+      setUbo_status(ubo_status);
       setUbo_name(ubo_name);
       setUbo_email(ubo_email);
       setUbo_phone_number(ubo_phone_number);
@@ -169,6 +187,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       await updateUbo({
         userId,
         sortkey,
+        ubo_status,
         ubo_name,
         ubo_email,
         ubo_phone_number,
@@ -548,6 +567,23 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
+              <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="ubo_status"
+                        label="UBO Status"
+                        onChange={(e) => setUbo_status(e.target.value)}
+                        required
+                        value={ubo_status || ""}
+                        variant="outlined"
+                      >
+                        {status.map((item, index) => (
+                          <MenuItem key={index} value={item.label}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth

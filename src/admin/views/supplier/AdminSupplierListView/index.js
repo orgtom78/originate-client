@@ -64,7 +64,6 @@ const AdminSupplierListView = () => {
       );
       const n = { data: { listsSupplier: { items: itemsPage1, nextToken } } };
       const items = n.data.listsSupplier.items;
-      console.log(items)
       setSupplier(items);
     }
     getSuppliers();

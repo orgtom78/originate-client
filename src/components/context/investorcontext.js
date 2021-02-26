@@ -74,7 +74,9 @@ export const UserProvider = ({ children }) => {
 
     async function loadInvestor() {
       const id = await loadUser();
+      console.log(id)
       const ident = await loadIdentity();
+      console.log(ident)
       setSub(id);
       setIdentity(ident);
       let filter = { userId: { eq: id }, sortkey: { contains: "investor-" } };
@@ -87,6 +89,7 @@ export const UserProvider = ({ children }) => {
       );
       const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
       const investor = n.data.listsInvestor.items[0];
+      console.log(investor)
       return investor;
     }
 

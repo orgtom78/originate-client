@@ -52,27 +52,27 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function SupplierUploads(value) {
+function InvestorUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [sub, setSub] = useState("");
-  const [supplierId, setSupplierId] = useState("");
+  const [investorId, setInvestorId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [
-    supplier_registration_cert_attachment,
-    setSupplier_registration_cert_attachment,
+    investor_registration_cert_attachment,
+    setInvestor_registration_cert_attachment,
   ] = useState("");
   const [
-    supplier_shareholder_list_attachment,
-    setSupplier_shareholder_list_attachment,
+    investor_shareholder_list_attachment,
+    setInvestor_shareholder_list_attachment,
   ] = useState("");
   const [
-    supplier_director_list_attachment,
-    setSupplier_director_list_attachment,
+    investor_director_list_attachment,
+    setInvestor_director_list_attachment,
   ] = useState("");
   const [
-    supplier_articles_of_association_attachment,
-    setSupplier_articles_of_association_attachment,
+    investor_articles_of_association_attachment,
+    setInvestor_articles_of_association_attachment,
   ] = useState("");
   const [regcertloading, setRegcertLoading] = useState(false);
   const [regcertsuccess, setRegcertSuccess] = useState(false);
@@ -93,53 +93,53 @@ function SupplierUploads(value) {
 
   const file = useRef(null);
 
-  const regcertlabel = "supplier_registration_cert_attachment";
+  const regcertlabel = "investor_registration_cert_attachment";
   const regcertname = "Registration Certificate";
-  const shareholderllabel = "supplier_shareholder_list_attachment";
-  const shareholderlname = "Supplier Shareholder List";
-  const directorllabel = "supplier_director_list_attachment";
-  const directorlname = "Supplier Director List";
-  const aoalabel = "supplier_articles_of_association_attachment";
-  const aoaname = "Supplier Articles of Association";
+  const shareholderllabel = "investor_shareholder_list_attachment";
+  const shareholderlname = "Investor Shareholder List";
+  const directorllabel = "investor_director_list_attachment";
+  const directorlname = "Investor Director List";
+  const aoalabel = "investor_articles_of_association_attachment";
+  const aoaname = "Investor Articles of Association";
 
   useEffect(() => {
     const sub = value.value.value.value.userId;
-    const key = value.value.value.value.supplierId;
+    const key = value.value.value.value.investorId;
     var userId = sub;
     var sortkey = key;
-    getSupplier({ userId, sortkey });
-  }, [value.value.value.value.userId, value.value.value.value.supplierId]);
+    getInvestor({ userId, sortkey });
+  }, [value.value.value.value.userId, value.value.value.value.investorId]);
 
-  async function getSupplier(input) {
+  async function getInvestor(input) {
     try {
-      const supplier = await API.graphql(
-        graphqlOperation(queries.getSupplier, input)
+      const investor = await API.graphql(
+        graphqlOperation(queries.getInvestor, input)
       );
       const {
         data: {
-          getSupplier: {
+          getInvestor: {
             identityId,
             userId,
-            supplierId,
-            supplier_registration_cert_attachment,
-            supplier_shareholder_list_attachment,
-            supplier_director_list_attachment,
-            supplier_articles_of_association_attachment,
+            investorId,
+            investor_registration_cert_attachment,
+            investor_shareholder_list_attachment,
+            investor_director_list_attachment,
+            investor_articles_of_association_attachment,
           },
         },
-      } = supplier;
+      } = investor;
       setSub(userId);
-      setSupplierId(supplierId);
+      setInvestorId(investorId);
       setIdentityId(identityId);
-      setSupplier_registration_cert_attachment(
-        supplier_registration_cert_attachment
+      setInvestor_registration_cert_attachment(
+        investor_registration_cert_attachment
       );
-      setSupplier_shareholder_list_attachment(
-        supplier_shareholder_list_attachment
+      setInvestor_shareholder_list_attachment(
+        investor_shareholder_list_attachment
       );
-      setSupplier_director_list_attachment(supplier_director_list_attachment);
-      setSupplier_articles_of_association_attachment(
-        supplier_articles_of_association_attachment
+      setInvestor_director_list_attachment(investor_director_list_attachment);
+      setInvestor_articles_of_association_attachment(
+        investor_articles_of_association_attachment
       );
     } catch (err) {
       console.log("error fetching data..", err);
@@ -157,16 +157,16 @@ function SupplierUploads(value) {
     return stored.key;
   }
 
-  function updateSupplier(input) {
+  function updateInvestor(input) {
     return API.graphql(
-      graphqlOperation(mutations.updateSupplier, { input: input })
+      graphqlOperation(mutations.updateInvestor, { input: input })
     );
   }
 
   useEffect(() => {
-    if (supplier_registration_cert_attachment) {
+    if (investor_registration_cert_attachment) {
       async function getregcertimgurl() {
-        var uploadext = supplier_registration_cert_attachment.split(".").pop();
+        var uploadext = investor_registration_cert_attachment.split(".").pop();
         var imageExtensions = [
           "jpg",
           "jpeg",
@@ -179,7 +179,7 @@ function SupplierUploads(value) {
         ];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_registration_cert_attachment, {
+          const y = await Storage.get(investor_registration_cert_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -188,16 +188,16 @@ function SupplierUploads(value) {
       }
       getregcertimgurl();
     }
-  }, [supplier_registration_cert_attachment, identityId]);
+  }, [investor_registration_cert_attachment, identityId]);
 
   useEffect(() => {
-    if (supplier_registration_cert_attachment) {
+    if (investor_registration_cert_attachment) {
       async function getregcertpdfurl() {
-        var uploadext = supplier_registration_cert_attachment.split(".").pop();
+        var uploadext = investor_registration_cert_attachment.split(".").pop();
         var imageExtensions = ["pdf", "PDF"];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_registration_cert_attachment, {
+          const y = await Storage.get(investor_registration_cert_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -206,7 +206,7 @@ function SupplierUploads(value) {
       }
       getregcertpdfurl();
     }
-  }, [supplier_registration_cert_attachment, identityId]);
+  }, [investor_registration_cert_attachment, identityId]);
 
   function regcertisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -314,13 +314,13 @@ function SupplierUploads(value) {
     setRegcertLoading(true);
     try {
       const u = newfile ? await s3Up(newfile) : null;
-      var supplier_registration_cert_attachment = u;
-      const sortkey = supplierId;
+      var investor_registration_cert_attachment = u;
+      const sortkey = investorId;
       const userId = sub;
-      await updateSupplier({
+      await updateInvestor({
         sortkey,
         userId,
-        supplier_registration_cert_attachment,
+        investor_registration_cert_attachment,
       });
     } catch (e) {
       onError(e);
@@ -331,9 +331,9 @@ function SupplierUploads(value) {
   }
 
   useEffect(() => {
-    if (supplier_shareholder_list_attachment) {
+    if (investor_shareholder_list_attachment) {
       async function getshareholderlistimgurl() {
-        var uploadext = supplier_shareholder_list_attachment.split(".").pop();
+        var uploadext = investor_shareholder_list_attachment.split(".").pop();
         var imageExtensions = [
           "jpg",
           "jpeg",
@@ -346,7 +346,7 @@ function SupplierUploads(value) {
         ];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_shareholder_list_attachment, {
+          const y = await Storage.get(investor_shareholder_list_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -355,16 +355,16 @@ function SupplierUploads(value) {
       }
       getshareholderlistimgurl();
     }
-  }, [supplier_shareholder_list_attachment, identityId]);
+  }, [investor_shareholder_list_attachment, identityId]);
 
   useEffect(() => {
-    if (supplier_shareholder_list_attachment) {
+    if (investor_shareholder_list_attachment) {
       async function getshareholderlistpdfurl() {
-        var uploadext = supplier_shareholder_list_attachment.split(".").pop();
+        var uploadext = investor_shareholder_list_attachment.split(".").pop();
         var imageExtensions = ["pdf", "PDF"];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_shareholder_list_attachment, {
+          const y = await Storage.get(investor_shareholder_list_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -373,7 +373,7 @@ function SupplierUploads(value) {
       }
       getshareholderlistpdfurl();
     }
-  }, [supplier_shareholder_list_attachment, identityId]);
+  }, [investor_shareholder_list_attachment, identityId]);
 
   function shareholderlisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -481,14 +481,14 @@ function SupplierUploads(value) {
     setShareholderlLoading(true);
     try {
       const u = newfile ? await s3Up(newfile) : null;
-      var supplier_shareholder_list_attachment = u;
-      const sortkey = supplierId;
+      var investor_shareholder_list_attachment = u;
+      const sortkey = investorId;
       const userId = sub;
       console.log(sub);
-      await updateSupplier({
+      await updateInvestor({
         sortkey,
         userId,
-        supplier_shareholder_list_attachment,
+        investor_shareholder_list_attachment,
       });
     } catch (e) {
       onError(e);
@@ -499,9 +499,9 @@ function SupplierUploads(value) {
   }
 
   useEffect(() => {
-    if (supplier_director_list_attachment) {
+    if (investor_director_list_attachment) {
       async function getdirectorlistimgurl() {
-        var uploadext = supplier_director_list_attachment.split(".").pop();
+        var uploadext = investor_director_list_attachment.split(".").pop();
         var imageExtensions = [
           "jpg",
           "jpeg",
@@ -514,7 +514,7 @@ function SupplierUploads(value) {
         ];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_director_list_attachment, {
+          const y = await Storage.get(investor_director_list_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -523,16 +523,16 @@ function SupplierUploads(value) {
       }
       getdirectorlistimgurl();
     }
-  }, [supplier_director_list_attachment, identityId]);
+  }, [investor_director_list_attachment, identityId]);
 
   useEffect(() => {
-    if (supplier_director_list_attachment) {
+    if (investor_director_list_attachment) {
       async function getdirectorlistpdfurl() {
-        var uploadext = supplier_director_list_attachment.split(".").pop();
+        var uploadext = investor_director_list_attachment.split(".").pop();
         var imageExtensions = ["pdf", "PDF"];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
-          const y = await Storage.get(supplier_director_list_attachment, {
+          const y = await Storage.get(investor_director_list_attachment, {
             level: "private",
             identityId: identityId,
           });
@@ -541,7 +541,7 @@ function SupplierUploads(value) {
       }
       getdirectorlistpdfurl();
     }
-  }, [supplier_director_list_attachment, identityId]);
+  }, [investor_director_list_attachment, identityId]);
 
   function directorlisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -649,13 +649,13 @@ function SupplierUploads(value) {
     setDirectorlLoading(true);
     try {
       const u = newfile ? await s3Up(newfile) : null;
-      var supplier_director_list_attachment = u;
-      const sortkey = supplierId;
+      var investor_director_list_attachment = u;
+      const sortkey = investorId;
       const userId = sub;
-      await updateSupplier({
+      await updateInvestor({
         sortkey,
         userId,
-        supplier_director_list_attachment,
+        investor_director_list_attachment,
       });
     } catch (e) {
       onError(e);
@@ -666,9 +666,9 @@ function SupplierUploads(value) {
   }
 
   useEffect(() => {
-    if (supplier_articles_of_association_attachment) {
+    if (investor_articles_of_association_attachment) {
       async function getaoaimgurl() {
-        var uploadext = supplier_articles_of_association_attachment
+        var uploadext = investor_articles_of_association_attachment
           .split(".")
           .pop();
         var imageExtensions = [
@@ -684,7 +684,7 @@ function SupplierUploads(value) {
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
           const y = await Storage.get(
-            supplier_articles_of_association_attachment,
+            investor_articles_of_association_attachment,
             {
               level: "private",
               identityId: identityId,
@@ -695,19 +695,19 @@ function SupplierUploads(value) {
       }
       getaoaimgurl();
     }
-  }, [supplier_articles_of_association_attachment, identityId]);
+  }, [investor_articles_of_association_attachment, identityId]);
 
   useEffect(() => {
-    if (supplier_articles_of_association_attachment) {
+    if (investor_articles_of_association_attachment) {
       async function getaoapdfurl() {
-        var uploadext = supplier_articles_of_association_attachment
+        var uploadext = investor_articles_of_association_attachment
           .split(".")
           .pop();
         var imageExtensions = ["pdf", "PDF"];
         const x = imageExtensions.includes(uploadext);
         if (x === true) {
           const y = await Storage.get(
-            supplier_articles_of_association_attachment,
+            investor_articles_of_association_attachment,
             {
               level: "private",
               identityId: identityId,
@@ -718,7 +718,7 @@ function SupplierUploads(value) {
       }
       getaoapdfurl();
     }
-  }, [supplier_articles_of_association_attachment, identityId]);
+  }, [investor_articles_of_association_attachment, identityId]);
 
   function aoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -826,13 +826,13 @@ function SupplierUploads(value) {
     setAoaLoading(true);
     try {
       const u = newfile ? await s3Up(newfile) : null;
-      var supplier_articles_of_association_attachment = u;
-      const sortkey = supplierId;
+      var investor_articles_of_association_attachment = u;
+      const sortkey = investorId;
       const userId = sub;
-      await updateSupplier({
+      await updateInvestor({
         sortkey,
         userId,
-        supplier_articles_of_association_attachment,
+        investor_articles_of_association_attachment,
       });
     } catch (e) {
       onError(e);
@@ -888,4 +888,4 @@ function SupplierUploads(value) {
   );
 }
 
-export default SupplierUploads;
+export default InvestorUploads;

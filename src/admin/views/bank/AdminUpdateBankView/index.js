@@ -430,7 +430,6 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
                     label="Company Bank Sortcode"
                     name="bank_account_sortcode"
                     onChange={(e) => setBank_account_sortcode(e.target.value)}
-                    required
                     value={bank_account_sortcode || ""}
                     variant="outlined"
                   />
@@ -441,7 +440,6 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
                     label="Company Bank Routing Number"
                     name="bank_routing_number"
                     onChange={(e) => setBank_routing_number(e.target.value)}
-                    required
                     value={bank_routing_number || ""}
                     variant="outlined"
                   />
@@ -463,7 +461,6 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
                     label="IBAN"
                     name="iban"
                     onChange={(e) => setIban(e.target.value)}
-                    required
                     value={iban || ""}
                     variant="outlined"
                   />
@@ -507,7 +504,6 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
                     label="Company Bank Zipcode"
                     name="bank_address_postalcode"
                     onChange={(e) => setBank_address_postalcode(e.target.value)}
-                    required
                     value={bank_address_postalcode || ""}
                     variant="outlined"
                   />

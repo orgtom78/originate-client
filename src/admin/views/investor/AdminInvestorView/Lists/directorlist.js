@@ -69,7 +69,7 @@ const DirectorListView = (value) => {
       const id = await sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "director-supplier" },
+        sortkey: { contains: "director-investor" },
       };
       const {
         data: {

@@ -39,6 +39,21 @@ const idtype = [
   },
 ];
 
+const status = [
+  {
+    value: "Declined",
+    label: "Declined",
+  },
+  {
+    value: "Under Review",
+    label: "Under Review",
+  },
+  {
+    value: "Approved",
+    label: "Approved",
+  },
+];
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -86,6 +101,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
 
   const [identityId, setIdentityId] = useState("");
   const [directorId, setDirectorId] = useState("");
+  const [director_status, setDirector_status] = useState("");
   const [director_name, setDirector_name] = useState("");
   const [director_email, setDirector_email] = useState("");
   const [director_phone_number, setDirector_phone_number] = useState("");
@@ -137,6 +153,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           getDirector: {
             identityId,
             directorId,
+            director_status,
             director_name,
             director_email,
             director_phone_number,
@@ -151,6 +168,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       } = director;
       setIdentityId(identityId);
       setDirectorId(directorId);
+      setDirector_status(director_status);
       setDirector_name(director_name);
       setDirector_email(director_email);
       setDirector_phone_number(director_phone_number);
@@ -174,6 +192,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       await updateDirector({
         userId,
         sortkey,
+        director_status,
         director_name,
         director_email,
         director_phone_number,
@@ -557,6 +576,23 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
+              <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="director_status"
+                        label="Director Status"
+                        onChange={(e) => setDirector_status(e.target.value)}
+                        required
+                        value={director_status || ""}
+                        variant="outlined"
+                      >
+                        {status.map((item, index) => (
+                          <MenuItem key={index} value={item.label}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth

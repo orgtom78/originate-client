@@ -69,7 +69,7 @@ const UboListView = (value) => {
       const id = await sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "ubo-supplier" },
+        sortkey: { contains: "ubo-investor" },
       };
       const {
         data: {

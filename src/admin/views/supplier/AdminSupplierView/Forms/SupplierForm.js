@@ -414,7 +414,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setSupplier_trading_name(e.target.value)
                         }
-                        required
                         value={supplier_trading_name || ""}
                         variant="outlined"
                       />
@@ -507,12 +506,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setSupplier_address_refinment(e.target.value)
                         }
-                        required
                         value={supplier_address_refinment || ""}
                         variant="outlined"
                       />
                     </Grid>
-
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <Grid
                         container
@@ -568,7 +565,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         label="Supplier Industry"
                         name="supplier_industry"
                         onChange={(e) => setSupplier_industry(e.target.value)}
-                        required
                         value={supplier_industry || ""}
                         variant="outlined"
                       >
@@ -587,7 +583,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setSupplier_industry_code(e.target.value)
                         }
-                        required
                         value={supplier_industry_code || ""}
                         variant="outlined"
                       />

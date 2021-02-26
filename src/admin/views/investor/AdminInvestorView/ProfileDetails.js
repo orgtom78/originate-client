@@ -2,15 +2,15 @@ import React from "react";
 import "date-fns";
 import { Container } from "@material-ui/core";
 
-import SupplierForm from "./Forms/SupplierForm";
-import SupplierUploads from "./Forms/SupplierUploads";
+import InvestorForm from "./Forms/InvestorForm";
+import InvestorUploads from "./Forms/InvestorUploads";
 
 const Profile = (value) => {
   return (
     <Container maxWidth="lg">
-      <SupplierForm value={value} />
+      <InvestorForm value={value} />
       <br></br>
-      <SupplierUploads value={value} />
+      <InvestorUploads value={value} />
     </Container>
   );
 };
