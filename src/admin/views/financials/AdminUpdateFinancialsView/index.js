@@ -1742,7 +1742,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                             and last year)
                           </TableCell>
                           <TableCell component="th" scope="row">
-                            <TextField
+                          <TextField
+                              type="text"
                               fullWidth
                               onChange={(e) =>
                                 setInventory_turnover(e.target.value)
@@ -1758,6 +1759,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
+                              type="text"
                               fullWidth
                               onChange={(e) =>
                                 setInterest_coverage(e.target.value)

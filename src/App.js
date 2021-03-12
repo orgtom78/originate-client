@@ -14,7 +14,7 @@ function App() {
   const [isAuthenticated, userHasAuthenticated] = useState();
   const [isAdmin, userisAdmin] = useState();
   const [isInvestor, userisInvestor] = useState();
-  const routing = useRoutes(routes(isAuthenticated, isAdmin));
+  const routing = useRoutes(routes(isAuthenticated, isAdmin, isInvestor));
 
   useEffect(() => {
     onLoad();
