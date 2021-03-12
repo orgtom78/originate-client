@@ -17,6 +17,7 @@ import AccountDebtor from "./AccountDebtor";
 import ApprovalStatus from "./ApprovalStatus";
 import KeyFinancials from "./KeyFinancials";
 import FinancialRatios from "./FinancialRatios";
+import FinancialOverview from "./FinancialOverview";
 import FinancialsListView from "src/investor/views/buyer/InvestorBuyerView/Lists/financialslist.js";
 import BuyerUploadView from "src/investor/views/buyer/InvestorBuyerView/Forms/BuyerUploads.js";
 import DirectorView from "src/investor/views/buyer/InvestorBuyerView/Lists/directorlist.js";
@@ -158,7 +159,7 @@ const Buyer = (value) => {
       <Page className={classes.root} title="Buyer">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
-            <Grid item lg={6} sm={6} xl={6} xs={12}>
+          <Grid item lg={6} sm={6} xl={6} xs={12}>
               <AccountDebtor value={item} />
             </Grid>
             <Grid item lg={6} sm={6} xl={6} xs={12}>
@@ -172,6 +173,9 @@ const Buyer = (value) => {
             </Grid>
             <Grid item lg={4} sm={4} xl={4} xs={12}>
               <History value={item} />
+            </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <FinancialOverview value={fin} />
             </Grid>
             <Grid container>
               <Grid item lg={12} sm={12} xl={12} xs={12}>

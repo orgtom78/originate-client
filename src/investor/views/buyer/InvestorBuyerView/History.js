@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
   },
   tableRow: {
-    backgroundColor: colors.green[200],
+    backgroundColor: colors.teal[400],
   },
 }));
 

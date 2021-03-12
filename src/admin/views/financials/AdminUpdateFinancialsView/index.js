@@ -6,6 +6,8 @@ import {
   Card,
   CardContent,
   Container,
+  colors,
+  Divider,
   Grid,
   Paper,
   Table,
@@ -70,6 +72,12 @@ const useStyles = makeStyles((theme) => ({
   table: {
     minWidth: 650,
   },
+  tableRow: {
+    backgroundColor: colors.teal[400],
+  },
+  tableRow2: {
+    backgroundColor: colors.teal[200],
+  },
 }));
 
 const UpdateFinancialsForm = ({ className, value, ...rest }) => {
@@ -86,6 +94,25 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const [
     income_statement_attachment,
     setIncome_statement_attachment,
+  ] = useState("");
+  const [current_assets, setCurrent_assets] = useState("");
+  const [cash_flow, setCash_flow] = useState("");
+  const [current_long_term_debt, setCurrent_long_term_debt] = useState("");
+  const [current_liabilities, setCurrent_liabilities] = useState("");
+  const [gross_margin, setGross_margin] = useState("");
+  const [operating_income, setOperating_income] = useState("");
+  const [other_expenses, setOther_expenses] = useState("");
+  const [ebt, setEbt] = useState("");
+  const [ebitda, setEbitda] = useState("");
+  const [current_ratio, setCurrent_ratio] = useState("");
+  const [debt_equity_ratio, setDebt_equity_ratio] = useState("");
+  const [debt_ebitda_ratio, setDebt_ebitda_ratio] = useState("");
+  const [inventory_turnover, setInventory_turnover] = useState("");
+  const [interest_coverage, setInterest_coverage] = useState("");
+  const [income_tax_expense, setIncome_tax_expense] = useState("");
+  const [
+    total_liabilities_and_equity,
+    setTotal_liabilities_and_equity,
   ] = useState("");
   const [marketable_securities, setMarketable_securities] = useState("");
   const [accounts_receivable, setAccounts_receivable] = useState("");
@@ -185,6 +212,22 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
             financials_attachment,
             balance_sheet_attachment,
             income_statement_attachment,
+            current_assets,
+            cash_flow,
+            current_long_term_debt,
+            current_liabilities,
+            gross_margin,
+            operating_income,
+            other_expenses,
+            ebt,
+            ebitda,
+            current_ratio,
+            debt_equity_ratio,
+            debt_ebitda_ratio,
+            inventory_turnover,
+            interest_coverage,
+            income_tax_expense,
+            total_liabilities_and_equity,
             marketable_securities,
             accounts_receivable,
             inventory,
@@ -235,6 +278,22 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
       setFinancials_attachment(financials_attachment);
       setBalance_sheet_attachment(balance_sheet_attachment);
       setIncome_statement_attachment(income_statement_attachment);
+      setCurrent_assets(current_assets);
+      setCash_flow(cash_flow);
+      setCurrent_long_term_debt(current_long_term_debt);
+      setCurrent_liabilities(current_liabilities);
+      setGross_margin(gross_margin);
+      setOperating_income(operating_income);
+      setOther_expenses(other_expenses);
+      setEbt(ebt);
+      setEbitda(ebitda);
+      setCurrent_ratio(current_ratio);
+      setDebt_equity_ratio(debt_equity_ratio);
+      setDebt_ebitda_ratio(debt_ebitda_ratio);
+      setInventory_turnover(inventory_turnover);
+      setInterest_coverage(interest_coverage);
+      setIncome_tax_expense(income_tax_expense);
+      setTotal_liabilities_and_equity(total_liabilities_and_equity);
       setMarketable_securities(marketable_securities);
       setAccounts_receivable(accounts_receivable);
       setInventory(inventory);
@@ -284,6 +343,55 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   async function handleFinancialsSubmit() {
     setFinancialsSuccess(false);
     setFinancialsLoading(true);
+    const ca =
+      Number(cash) +
+      Number(accounts_receivable) +
+      Number(inventory) +
+      Number(other_current_assets);
+    const current_assets = Number(ca);
+    const ta =
+      current_assets +
+      Number(sale_purchase_of_fixed_asset) +
+      Number(goodwill) +
+      Number(other_non_current_assets);
+    const total_assets = Number(ta);
+    const cl =
+      Number(accounts_payable) +
+      Number(current_long_term_debt) +
+      Number(other_current_liabilities);
+    const current_liabilities = Number(cl);
+    const ll = Number(long_term_debt) + Number(other_long_term_liabilities);
+    const total_liabilities = Number(ll) + Number(current_liabilities);
+    const total_liabilities_and_equity =
+      Number(total_equity) + Number(total_liabilities);
+
+    const gm = Number(sales) - Number(cost_of_goods_sold);
+    const gross_margin = Number(gm);
+    const oi =
+      Number(gross_margin) -
+      Number(depreciation_expenses) -
+      Number(operating_expenses);
+    const operating_income = Number(oi);
+    const ebt =
+      Number(operating_income) -
+      Number(interest_expenses) -
+      Number(other_expenses);
+    const ebit = Number(ebt) - Number(income_tax_expense);
+    const net_profit = Number(ebit) - Number(extraordinary_income);
+
+    const ebitda =
+      Number(depreciation_expenses) +
+      Number(interest_expenses) +
+      Number(income_tax_expense) +
+      Number(net_profit);
+    const current_ratio = Number(current_assets) / Number(current_liabilities);
+    const debt_equity_ratio =
+      (Number(long_term_debt) + Number(current_long_term_debt)) /
+      Number(total_equity);
+    const debt_ebitda_ratio =
+      (Number(long_term_debt) + Number(current_long_term_debt)) /
+      Number(ebitda);
+
     try {
       const userId = sub;
       const sortkey = financialsId;
@@ -293,6 +401,22 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         financials_attachment,
         balance_sheet_attachment,
         income_statement_attachment,
+        current_assets,
+        cash_flow,
+        current_long_term_debt,
+        current_liabilities,
+        gross_margin,
+        operating_income,
+        other_expenses,
+        ebt,
+        ebitda,
+        current_ratio,
+        debt_equity_ratio,
+        debt_ebitda_ratio,
+        inventory_turnover,
+        interest_coverage,
+        income_tax_expense,
+        total_liabilities_and_equity,
         marketable_securities,
         accounts_receivable,
         inventory,
@@ -410,64 +534,68 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     if (regex.test(balanceimg)) {
       return (
         <>
-          <img className={classes.img} alt="complex" src={balanceimg} />
-          <div>
-            <input
-              id={balanceimg}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handlebalanceChange(event)}
-            />
-            <label htmlFor={balanceimg}>
-              <LoaderButton
+          <Grid item md={12} xs={12}>
+            <img className={classes.img} alt="complex" src={balanceimg} />
+            <div>
+              <input
                 id={balanceimg}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-                disabled={balanceloading}
-                success={balancesuccess}
-                loading={balanceloading}
-              >
-                {" "}
-                Update File
-              </LoaderButton>
-            </label>
-          </div>
+                accept="image/*,application/pdf"
+                style={{ display: "none" }}
+                type="file"
+                onChange={(event) => handlebalanceChange(event)}
+              />
+              <label htmlFor={balanceimg}>
+                <LoaderButton
+                  id={balanceimg}
+                  fullWidth
+                  component="span"
+                  startIcon={<UploadIcon />}
+                  disabled={balanceloading}
+                  success={balancesuccess}
+                  loading={balanceloading}
+                >
+                  {" "}
+                  Update File
+                </LoaderButton>
+              </label>
+            </div>
+          </Grid>
         </>
       );
     } else if (regex.test(balancepdf)) {
       return (
         <>
-          <iframe
-            title="file"
-            style={{ width: "100%", height: "100%" }}
-            allowFullScreen
-            src={balancepdf}
-          />
-          <div>
-            <input
-              id={balancepdf}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handlebalanceChange(event)}
+          <Grid item md={12} xs={12}>
+            <iframe
+              title="file"
+              style={{ width: "100%", height: "100%" }}
+              allowFullScreen
+              src={balancepdf}
             />
-            <label htmlFor={balancepdf}>
-              <LoaderButton
+            <div>
+              <input
                 id={balancepdf}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-                disabled={balanceloading}
-                success={balancesuccess}
-                loading={balanceloading}
-              >
-                {" "}
-                Update File
-              </LoaderButton>
-            </label>
-          </div>
+                accept="image/*,application/pdf"
+                style={{ display: "none" }}
+                type="file"
+                onChange={(event) => handlebalanceChange(event)}
+              />
+              <label htmlFor={balancepdf}>
+                <LoaderButton
+                  id={balancepdf}
+                  fullWidth
+                  component="span"
+                  startIcon={<UploadIcon />}
+                  disabled={balanceloading}
+                  success={balancesuccess}
+                  loading={balanceloading}
+                >
+                  {" "}
+                  Update File
+                </LoaderButton>
+              </label>
+            </div>
+          </Grid>
         </>
       );
     } else {
@@ -581,52 +709,85 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     if (regex.test(incomeimg)) {
       return (
         <>
-          <img className={classes.img} alt="complex" src={incomeimg} />
-          <div>
-            <input
-              id={incomeimg}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handleincomeChange(event)}
-            />
-            <label htmlFor={incomeimg}>
-              <LoaderButton
+          <Grid item md={12} xs={12}>
+            <img className={classes.img} alt="complex" src={incomeimg} />
+            <div>
+              <input
                 id={incomeimg}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-                disabled={incomeloading}
-                success={incomesuccess}
-                loading={incomeloading}
-              >
-                {" "}
-                Update File
-              </LoaderButton>
-            </label>
-          </div>
+                accept="image/*,application/pdf"
+                style={{ display: "none" }}
+                type="file"
+                onChange={(event) => handleincomeChange(event)}
+              />
+              <label htmlFor={incomeimg}>
+                <LoaderButton
+                  id={incomeimg}
+                  fullWidth
+                  component="span"
+                  startIcon={<UploadIcon />}
+                  disabled={incomeloading}
+                  success={incomesuccess}
+                  loading={incomeloading}
+                >
+                  {" "}
+                  Update File
+                </LoaderButton>
+              </label>
+            </div>
+          </Grid>
         </>
       );
     } else if (regex.test(incomepdf)) {
       return (
         <>
-          <iframe
-            title="file"
-            style={{ width: "100%", height: "100%" }}
-            allowFullScreen
-            src={incomepdf}
-          />
-          <div>
+          <Grid item md={12} xs={12}>
+            <iframe
+              title="file"
+              style={{ width: "100%", height: "100%" }}
+              allowFullScreen
+              src={incomepdf}
+            />
+            <div>
+              <input
+                id={incomepdf}
+                accept="image/*,application/pdf"
+                style={{ display: "none" }}
+                type="file"
+                onChange={(event) => handleincomeChange(event)}
+              />
+              <label htmlFor={incomepdf}>
+                <LoaderButton
+                  id={incomepdf}
+                  fullWidth
+                  component="span"
+                  startIcon={<UploadIcon />}
+                  disabled={incomeloading}
+                  success={incomesuccess}
+                  loading={incomeloading}
+                >
+                  {" "}
+                  Update File
+                </LoaderButton>
+              </label>
+            </div>
+          </Grid>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Grid item md={12} xs={12}>
             <input
-              id={incomepdf}
+              name={incomename}
+              id={incomelabel}
               accept="image/*,application/pdf"
               style={{ display: "none" }}
               type="file"
               onChange={(event) => handleincomeChange(event)}
             />
-            <label htmlFor={incomepdf}>
+            <label htmlFor={incomelabel}>
               <LoaderButton
-                id={incomepdf}
+                id={incomelabel}
                 fullWidth
                 component="span"
                 startIcon={<UploadIcon />}
@@ -635,37 +796,10 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                 loading={incomeloading}
               >
                 {" "}
-                Update File
+                {incomename}
               </LoaderButton>
             </label>
-          </div>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <input
-            name={incomename}
-            id={incomelabel}
-            accept="image/*,application/pdf"
-            style={{ display: "none" }}
-            type="file"
-            onChange={(event) => handleincomeChange(event)}
-          />
-          <label htmlFor={incomelabel}>
-            <LoaderButton
-              id={incomelabel}
-              fullWidth
-              component="span"
-              startIcon={<UploadIcon />}
-              disabled={incomeloading}
-              success={incomesuccess}
-              loading={incomeloading}
-            >
-              {" "}
-              {incomename}
-            </LoaderButton>
-          </label>
+          </Grid>
         </>
       );
     }
@@ -767,25 +901,35 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                   style={{ width: "100%", maxWidth: 500, overflow: "auto" }}
                 >
                   <Typography>Balance Sheet Text:</Typography>
-                  <Typography>{sheet}
-                  </Typography>
+                  <Typography>{sheet}</Typography>
                 </Grid>
+                <Divider></Divider>
                 <Grid item md={12} xs={12}>
                   <TableContainer component={Paper}>
                     <Table
                       className={classes.table}
                       size="small"
-                      aria-label="Balaance Sheet Table"
+                      aria-label="Balance Sheet Table"
                     >
                       <TableHead>
                         <TableRow>
                           <TableCell></TableCell>
                           <TableCell align="left">
-                            {moment(financials_reporting_period).format("YYYY")}
+                            <Box fontWeight="fontWeightBold">
+                              {moment(financials_reporting_period).format(
+                                "YYYY"
+                              )}
+                            </Box>
                           </TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        <TableRow className={classes.tableRow}>
+                          <TableCell component="th" scope="row">
+                            Mandatory Fields
+                          </TableCell>
+                          <TableCell component="th" scope="row"></TableCell>
+                        </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
                             Cash
@@ -803,73 +947,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Equity Market Value
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setEquity_market_value(e.target.value)
-                              }
-                              required
-                              value={equity_market_value || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Total Assets
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) => setTotal_assets(e.target.value)}
-                              required
-                              value={total_assets || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Total Liabilities
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setTotal_liabilities(e.target.value)
-                              }
-                              required
-                              value={total_liabilities || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Accounts Payable
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setAccounts_payable(e.target.value)
-                              }
-                              required
-                              value={accounts_payable || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Account Receivables
+                            Accounts Receivable
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
@@ -886,21 +964,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Goodwill
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) => setGoodwill(e.target.value)}
-                              required
-                              value={goodwill || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
                             Inventory
                           </TableCell>
                           <TableCell component="th" scope="row">
@@ -910,23 +973,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               onChange={(e) => setInventory(e.target.value)}
                               required
                               value={inventory || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Marketable Securities
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setMarketable_securities(e.target.value)
-                              }
-                              required
-                              value={marketable_securities || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -950,6 +996,59 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              Current Assets
+                            </Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={current_assets || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Fixed Assets (PPE)
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setSale_purchase_of_fixed_asset(e.target.value)
+                              }
+                              required
+                              value={sale_purchase_of_fixed_asset || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Intangibles/Goodwill
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) => setGoodwill(e.target.value)}
+                              required
+                              value={goodwill || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
                             Other Non-Current Assets
                           </TableCell>
                           <TableCell component="th" scope="row">
@@ -961,6 +1060,211 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               }
                               required
                               value={other_non_current_assets || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">Total Assets</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={total_assets || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Accounts Payable
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setAccounts_payable(e.target.value)
+                              }
+                              required
+                              value={accounts_payable || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Current Portion of Long-Term Debt
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setCurrent_long_term_debt(e.target.value)
+                              }
+                              required
+                              value={current_long_term_debt || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Other Current Liabilities
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setOther_current_liabilities(e.target.value)
+                              }
+                              required
+                              value={other_current_liabilities || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              Current Liabilities
+                            </Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={current_liabilities || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Long Term Debt
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setLong_term_debt(e.target.value)
+                              }
+                              required
+                              value={long_term_debt || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Other Long Term Liabilities
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setOther_long_term_liabilities(e.target.value)
+                              }
+                              required
+                              value={other_long_term_liabilities || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              Total Liabilities
+                            </Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={total_liabilities || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Total Equity
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              required
+                              onChange={(e) => setTotal_equity(e.target.value)}
+                              value={total_equity || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              Total Equity and Liabilities
+                            </Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={total_liabilities_and_equity || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow className={classes.tableRow}>
+                          <TableCell component="th" scope="row">
+                            Optional Fields
+                          </TableCell>
+                          <TableCell component="th" scope="row"></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Marketable Securities
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setMarketable_securities(e.target.value)
+                              }
+                              required
+                              value={marketable_securities || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1012,57 +1316,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               }
                               required
                               value={accured_expenses || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Other Current Liabilities
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setOther_long_term_liabilities(e.target.value)
-                              }
-                              required
-                              value={other_long_term_liabilities || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Long Term Debt
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setLong_term_debt(e.target.value)
-                              }
-                              required
-                              value={long_term_debt || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Other Long Term Liabilities
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setOther_long_term_liabilities(e.target.value)
-                              }
-                              required
-                              value={other_long_term_liabilities || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1169,15 +1422,17 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Total Equity
+                            Equity Market Value
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
                               type="number"
                               fullWidth
-                              onChange={(e) => setTotal_equity(e.target.value)}
+                              onChange={(e) =>
+                                setEquity_market_value(e.target.value)
+                              }
                               required
-                              value={total_equity || ""}
+                              value={equity_market_value || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1197,7 +1452,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                     </LoaderButton>
                   </Box>
                 </Grid>
-
                 <Grid item md={6} xs={12}>
                   <>
                     <Typography>Income Statement:</Typography>
@@ -1230,9 +1484,15 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
+                        <TableRow className={classes.tableRow}>
+                          <TableCell component="th" scope="row">
+                            Mandatory Fields
+                          </TableCell>
+                          <TableCell component="th" scope="row"></TableCell>
+                        </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Revenue
+                            Sales
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
@@ -1247,36 +1507,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            EBIT
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) => setEbit(e.target.value)}
-                              required
-                              value={ebit || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Net Profit
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) => setNet_profit(e.target.value)}
-                              required
-                              value={net_profit || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-
-                        <TableRow>
-                          <TableCell component="th" scope="row">
                             Cost of Goods Sold
                           </TableCell>
                           <TableCell component="th" scope="row">
@@ -1288,6 +1518,42 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               }
                               required
                               value={cost_of_goods_sold || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">Gross Margin</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={gross_margin || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Depreciation Expenses
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setDepreciation_expenses(e.target.value)
+                              }
+                              required
+                              value={depreciation_expenses || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1311,10 +1577,209 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              Operating Income
+                            </Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={operating_income || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Interest Expenses
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setInterest_expenses(e.target.value)
+                              }
+                              required
+                              value={interest_expenses || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Other Expenses
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setOther_expenses(e.target.value)
+                              }
+                              required
+                              value={other_expenses || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">EBT</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={ebt || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Income Tax Expense
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setIncome_tax_expense(e.target.value)
+                              }
+                              required
+                              value={income_tax_expense || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">EBIT</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={ebit || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Extraordinary Income / Expense
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setExtraordinary_income(e.target.value)
+                              }
+                              required
+                              value={extraordinary_income || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">Net Profit</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={net_profit || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Operating Cash Flow
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) => setCash_flow(e.target.value)}
+                              required
+                              value={cash_flow || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Inventory Turnover (COGS/ Average Inventory current
+                            and last year)
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              fullWidth
+                              onChange={(e) =>
+                                setInventory_turnover(e.target.value)
+                              }
+                              value={inventory_turnover | ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Interest Coverage (IE + EBT / IE)
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              fullWidth
+                              onChange={(e) =>
+                                setInterest_coverage(e.target.value)
+                              }
+                              value={interest_coverage | ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow className={classes.tableRow}>
+                          <TableCell component="th" scope="row">
+                            Optional Fields
+                          </TableCell>
+                          <TableCell component="th" scope="row"></TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
                             Marketing Expenses
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
+                              type="number"
                               fullWidth
                               onChange={(e) =>
                                 setMarketing_expenses(e.target.value)
@@ -1331,6 +1796,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
+                              type="number"
                               fullWidth
                               onChange={(e) =>
                                 setBad_debt_expenses(e.target.value)
@@ -1343,74 +1809,11 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Interest Expenses
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) =>
-                                setInterest_expenses(e.target.value)
-                              }
-                              required
-                              value={interest_expenses || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Depreciation Expenses
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) =>
-                                setDepreciation_expenses(e.target.value)
-                              }
-                              required
-                              value={depreciation_expenses || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Sale/Purchase of Fixed Assets
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) =>
-                                setSale_purchase_of_fixed_asset(e.target.value)
-                              }
-                              required
-                              value={sale_purchase_of_fixed_asset || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Extraordinary Income
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              fullWidth
-                              onChange={(e) =>
-                                setExtraordinary_income(e.target.value)
-                              }
-                              required
-                              value={extraordinary_income || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
                             Tax Expenses
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
+                              type="number"
                               fullWidth
                               onChange={(e) => setTax_expenses(e.target.value)}
                               required
