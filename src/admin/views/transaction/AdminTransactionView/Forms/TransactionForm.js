@@ -89,6 +89,7 @@ const status = [
 const RequestForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const [investorId, setInvestorId] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
@@ -114,6 +115,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getRequest: {
+              investorId,
               request_status,
               buyer_name,
               supplier_name,
@@ -126,6 +128,7 @@ const RequestForm = ({ className, value, ...rest }) => {
             },
           },
         } = request;
+        setInvestorId(investorId)
         setRequest_status(request_status);
         setBuyer_name(buyer_name);
         setSupplier_name(supplier_name);
@@ -150,6 +153,7 @@ const RequestForm = ({ className, value, ...rest }) => {
       await updateRequest({
         userId,
         sortkey,
+        investorId,
         request_status,
         buyer_name,
         supplier_name,
@@ -236,6 +240,17 @@ const RequestForm = ({ className, value, ...rest }) => {
                           </MenuItem>
                         ))}
                       </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        name="investorId"
+                        label="Investor ID"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setInvestorId(e.target.value)}
+                        required
+                        value={investorId|| ""}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField

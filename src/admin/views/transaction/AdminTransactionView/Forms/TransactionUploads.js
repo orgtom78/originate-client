@@ -134,6 +134,8 @@ function BuyerUploads(value) {
             purchase_order_attachment,
             offer_notice_attachment,
             ipu_attachment,
+            bill_of_lading_attachment,
+            cargo_insurance_attachment
           },
         },
       } = request;
@@ -144,6 +146,8 @@ function BuyerUploads(value) {
       setPurchase_order_attachment(purchase_order_attachment);
       setOffer_notice_attachment(offer_notice_attachment);
       setIpu_attachment(ipu_attachment);
+      setBill_of_lading_attachment(bill_of_lading_attachment);
+      setCargo_insurance_attachment(cargo_insurance_attachment);
     } catch (err) {
       console.log("error fetching data..", err);
     }
