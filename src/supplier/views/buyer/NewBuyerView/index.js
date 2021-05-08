@@ -35,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
   },
+  button: {
+    float: "right",
+  },
 }));
 
 const steps = ["Client Details", "Client Financials", "Client History"];
@@ -240,17 +243,9 @@ export default function NewAccount() {
                     {({ isSubmitting }) => (
                       <Form id={formId}>
                         {getStepContent(activeStep)}
-
+                        <br></br>
                         <div className={classes.buttons}>
-                          {activeStep !== 0 && (
-                            <Button
-                              onClick={_handleBack}
-                              className={classes.button}
-                            >
-                              Back
-                            </Button>
-                          )}
-                          <div className={classes.wrapper}>
+                          {activeStep !== 3 && (
                             <Button
                               disabled={isSubmitting}
                               type="submit"
@@ -259,12 +254,22 @@ export default function NewAccount() {
                               className={classes.button}
                             >
                               {isLastStep ? "Submit" : "Next"}
+                              {isSubmitting && (
+                                <CircularProgress
+                                  size={24}
+                                  className={classes.buttonProgress}
+                                />
+                              )}
                             </Button>
-                            {isSubmitting && (
-                              <CircularProgress
-                                size={24}
-                                className={classes.buttonProgress}
-                              />
+                          )}
+                          <div className={classes.wrapper}>
+                            {activeStep !== 0 && (
+                              <Button
+                                onClick={_handleBack}
+                                className={classes.button}
+                              >
+                                Back
+                              </Button>
                             )}
                           </div>
                         </div>

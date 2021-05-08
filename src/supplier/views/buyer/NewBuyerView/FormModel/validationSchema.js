@@ -37,7 +37,7 @@ const {
   },
 } = NewBuyerFormModel;
 
-export default [
+const scheme = [
   Yup.object().shape({
     [buyer_address_city.name]: Yup.string().required(
       `${buyer_address_city.requiredErrorMsg}`
@@ -75,7 +75,9 @@ export default [
     [buyer_sample_trading_docs_attachment.name]: Yup.string().required(
       `${buyer_sample_trading_docs_attachment.requiredErrorMsg}`
     ),
-    [buyer_sold_goods_description.name]: Yup.string().nullable(),
+    [buyer_sold_goods_description.name]: Yup.string().required(
+      `${buyer_sold_goods_description.requiredErrorMsg}`
+    ),
   }),
 
   Yup.object().shape({
@@ -124,3 +126,5 @@ export default [
     ),
   }),
 ];
+
+export default scheme;

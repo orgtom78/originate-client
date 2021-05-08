@@ -5,10 +5,12 @@ import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
+  Card,
   Divider,
   Drawer,
   Hidden,
   List,
+  Paper,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -23,6 +25,7 @@ import {
 import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
+import grey from "@material-ui/core/colors/grey";
 
 const items = [
   {
@@ -57,7 +60,7 @@ const items = [
   },
 ];
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   mobileDrawer: {
     width: 256,
   },
@@ -122,7 +125,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">
-      <Box alignItems="center" display="flex" flexDirection="column" p={2}>
+      <Box
+        alignItems="center"
+        display="flex"
+        flexDirection="column"
+        justifyContent="flex-start"
+        p={2}
+      >
         <Avatar
           className={classes.avatar}
           component={RouterLink}
@@ -148,6 +157,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
             />
           ))}
         </List>
+      </Box>
+      <Box alignItems="center" display="flex" justifyContent="flex-start" p={4}>
+        <Paper style={{ backgroundColor: grey.A200 }} variant="outlined">
+          <Typography variant="h6"> An Issue? Contact us. </Typography>
+          <Typography variant="body"> admin@originatecapital.co</Typography>
+        </Paper>
       </Box>
     </Box>
   );

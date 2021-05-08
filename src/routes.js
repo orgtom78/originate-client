@@ -20,6 +20,7 @@ import NewSupplierDirectorView from 'src/supplier/views/director/NewSupplierDire
 import NewSupplierUboView from 'src/supplier/views/ubo/NewSupplierUboView';
 import UpdateDirectorView from 'src/supplier/views/director/UpdateDirectorView';
 import UpdateUboView from 'src/supplier/views/ubo/UpdateUboView';
+import SupplierSuccessView from 'src/supplier/views/account/SupplierSuccessView';
 
 import AdminDashboardView from 'src/admin/views/reports/AdminDashboardView';
 import AdminLayout from 'src/layouts/AdminLayout';
@@ -72,6 +73,7 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },
       { path: 'newaccount', element: !isAuthenticated ? <LoginView /> : <NewSupplierView /> },
       { path: 'newbuyer', element: !isAuthenticated ? <LoginView /> : <NewBuyerView /> },
+      { path: 'suppliers', element: !isAuthenticated ? <LoginView /> : <SupplierSuccessView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   },

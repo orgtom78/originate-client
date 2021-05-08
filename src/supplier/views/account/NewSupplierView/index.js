@@ -19,6 +19,7 @@ import * as mutations from "src/graphql/mutations.js";
 import Page from "src/components/Page";
 
 import SupplierView from "src/supplier/views/account/SupplierView";
+import SupplierSuccessView from "src/supplier/views/account/SupplierSuccessView";
 import AddressForm from "./Forms/AddressForm";
 import ShareholderForm from "./Forms/ShareholderForm";
 import FinancialsForm from "./Forms/FinancialsForm";
@@ -33,6 +34,9 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100%",
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
+  },
+  button: {
+    float: "right",
   },
 }));
 
@@ -273,7 +277,10 @@ export default function NewSupplier() {
     }
     actions.setSubmitting(false);
     setActiveStep(activeStep + 1);
-    window.location.reload();
+    setTimeout(function() {
+      navigate("/app/suppliers");
+      window.location.reload();
+    }, 3000);
   }
 
   function createSupplier(input) {
@@ -342,7 +349,7 @@ export default function NewSupplier() {
           </Stepper>
           <React.Fragment>
             {activeStep === steps.length ? (
-              <SupplierView />
+              <SupplierSuccessView />
             ) : (
               <Formik
                 initialValues={formInitialValues}
@@ -352,17 +359,9 @@ export default function NewSupplier() {
                 {({ isSubmitting }) => (
                   <Form id={formId}>
                     {getStepContent(activeStep)}
-
+                    <br></br>
                     <div className={classes.buttons}>
-                      {activeStep !== 0 && (
-                        <Button
-                          onClick={_handleBack}
-                          className={classes.button}
-                        >
-                          Back
-                        </Button>
-                      )}
-                      <div className={classes.wrapper}>
+                      {activeStep !== 3 && (
                         <Button
                           disabled={isSubmitting}
                           type="submit"
@@ -371,12 +370,22 @@ export default function NewSupplier() {
                           className={classes.button}
                         >
                           {isLastStep ? "Submit" : "Next"}
+                          {isSubmitting && (
+                            <CircularProgress
+                              size={24}
+                              className={classes.buttonProgress}
+                            />
+                          )}
                         </Button>
-                        {isSubmitting && (
-                          <CircularProgress
-                            size={24}
-                            className={classes.buttonProgress}
-                          />
+                      )}
+                      <div className={classes.wrapper}>
+                        {activeStep !== 0 && (
+                          <Button
+                            onClick={_handleBack}
+                            className={classes.button}
+                          >
+                            Back
+                          </Button>
                         )}
                       </div>
                     </div>
