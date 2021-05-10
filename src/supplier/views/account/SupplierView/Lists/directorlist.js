@@ -214,7 +214,7 @@ const DirectorListView = () => {
                         </TableCell>
                         <TableCell>{director.director_email}</TableCell>
                         <TableCell>
-                          {`${director.director_country_of_residence}`}
+                          {`${director.director_nationality}`}
                         </TableCell>
                         <TableCell>
                           {checkstatus(director.director_status)}

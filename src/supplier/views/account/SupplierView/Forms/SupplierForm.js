@@ -111,6 +111,8 @@ const SupplierForm = ({ className, ...rest }) => {
   const [supplierloading, setSupplierLoading] = useState(false);
   const [suppliersuccess, setSupplierSuccess] = useState(false);
 
+  console.log(supplier_date_of_incorporation);
+
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
@@ -323,9 +325,7 @@ const SupplierForm = ({ className, ...rest }) => {
                           format="dd/MM/yyyy"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setSupplier_date_of_incorporation(e.target.value)
-                          }
+                          onChange={(e) => setSupplier_date_of_incorporation(e)}
                           required
                           KeyboardButtonProps={{
                             "aria-label": "change date",

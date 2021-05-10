@@ -202,7 +202,7 @@ const UboListView = () => {
                         </TableCell>
                         <TableCell>{ubo.ubo_email}</TableCell>
                         <TableCell>
-                          {`${ubo.ubo_country_of_residence}`}
+                          {`${ubo.ubo_nationality}`}
                         </TableCell>
                         <TableCell>{checkstatus(ubo.ubo_status)}</TableCell>
                         <TableCell>

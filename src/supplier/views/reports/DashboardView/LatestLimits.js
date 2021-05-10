@@ -96,7 +96,10 @@ const LatestLimits = ({ className, ...rest }) => {
           </MuiThemeProvider>
         </>
       );
-    } else if (status === "Under Review") {
+    } else if (
+      status === "Under Review" ||
+      status === "Investor Offer Pending"
+    ) {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>

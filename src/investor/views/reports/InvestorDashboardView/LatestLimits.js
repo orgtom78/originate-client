@@ -60,7 +60,9 @@ const LatestLimits = ({ className, ...rest }) => {
       );
       const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
       const items = await n.data.listsBuyer.items;
-      var x = items.filter((e) => e.buyer_status === "Investor Offer Pending" || "Approved");
+      var x = items.filter(
+        (e) => e.buyer_status === "Investor Offer Pending" || "Approved"
+      );
       setLimitdata(x);
     };
     getRequests();

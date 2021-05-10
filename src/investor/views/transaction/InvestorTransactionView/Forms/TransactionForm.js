@@ -292,8 +292,8 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        name="invoice_date"
-                        label="Invoice Date"
+                        name="invoice_due_date"
+                        label="Invoice Due Date"
                         fullWidth
                         variant="outlined"
                         required

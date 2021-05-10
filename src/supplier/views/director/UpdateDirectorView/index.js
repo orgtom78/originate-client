@@ -24,6 +24,9 @@ import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@material-ui/core/colors";
+import countries from "src/components/FormLists/countries.js";
+
+const cr = countries;
 
 const idtype = [
   {
@@ -613,7 +616,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
                     ))}
                   </Select>
                 </Grid>
-                <Grid item md={12} xs={12}>
+                <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth
                     label="Company Director ID Number"
@@ -623,6 +626,23 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
                     value={director_id_number || ""}
                     variant="outlined"
                   />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <Select
+                    fullWidth
+                    label="Nationality"
+                    name="director_nationality"
+                    onChange={(e) => setDirector_nationality(e.target.value)}
+                    required
+                    value={director_nationality || ""}
+                    variant="outlined"
+                  >
+                    {cr.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
               </Grid>
             </CardContent>

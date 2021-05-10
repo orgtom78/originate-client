@@ -106,7 +106,10 @@ const BuyerList = () => {
           </MuiThemeProvider>
         </>
       );
-    } else if (buyerdata === "Under Review") {
+    } else if (
+      buyerdata === "Under Review" ||
+      buyerdata === "Investor Offer Pending"
+    ) {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>

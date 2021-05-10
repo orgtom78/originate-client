@@ -15,6 +15,7 @@ import {
 import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -94,7 +95,15 @@ const TasksProgress = ({ className, ...rest }) => {
               APPROVAL PROGRESS
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {calcperecentage()}%
+              <NumberFormat
+                color="textPrimary"
+                variant="h3"
+                value={calcperecentage()}
+                displayType={"text"}
+                thousandSeparator={true}
+                suffix={"%"}
+                decimalScale="2"
+              />
             </Typography>
           </Grid>
           <Grid item>
