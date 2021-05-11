@@ -426,19 +426,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Company Registration Number"
-                        name="buyer_register_number"
-                        onChange={(e) =>
-                          setBuyer_register_number(e.target.value)
-                        }
-                        required
-                        value={buyer_register_number || ""}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
                         label="Company City"
                         name="buyer_address_city"
                         onChange={(e) => setBuyer_address_city(e.target.value)}

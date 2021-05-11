@@ -279,7 +279,7 @@ const AdminTransactionListView = () => {
                   onChangeRowsPerPage={handleLimitChange}
                   page={page}
                   rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25]}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
                 />
               </Card>
             </Box>
