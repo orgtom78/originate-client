@@ -148,7 +148,7 @@ const AdminBuyerListView = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {buyer.slice(0, limit).map((buyer) => (
+                      {buyer.slice(page * limit, page * limit + limit).map((buyer) => (
                         <TableRow
                           hover
                           key={buyer.buyerId}

@@ -165,7 +165,7 @@ const AdminSupplierListView = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {supplier.slice(0, limit).map((supplier) => (
+                        {supplier.slice(page * limit, page * limit + limit).map((supplier) => (
                           <TableRow
                             hover
                             key={supplier.supplierId}

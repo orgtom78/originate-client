@@ -201,7 +201,7 @@ const TransactionListView = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {request.slice(0, limit).map((request) => (
+                    {request.slice(page * limit, page * limit + limit).map((request) => (
                       <TableRow
                         hover
                         key={request.requestId}

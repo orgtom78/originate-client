@@ -165,7 +165,7 @@ const AdminInvestorListView = () => {
                         </TableRow>
                       </TableHead>
                       <TableBody>
-                        {investor.slice(0, limit).map((investor) => (
+                        {investor.slice(page * limit, page * limit + limit).map((investor) => (
                           <TableRow
                             hover
                             key={investor.investorId}

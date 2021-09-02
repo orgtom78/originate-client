@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -9,16 +10,19 @@ import {
   Chip,
   Container,
   Checkbox,
+  lighten,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   Typography,
   makeStyles,
   MuiThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -42,10 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -60,6 +64,9 @@ const AdminTransactionListView = () => {
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("status");
 
   useEffect(() => {
     async function getRequests() {
@@ -91,6 +98,124 @@ const AdminTransactionListView = () => {
       return d;
     }
   }, [request]);
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "buyers_name",
+      numeric: false,
+      disablePadding: false,
+      label: "Buyers  Name",
+    },
+    {
+      id: "suppliers_name",
+      numeric: false,
+      disablePadding: false,
+      label: "Suppliers Name",
+    },
+    { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
+    { id: "status", numeric: false, disablePadding: false, label: "Status" },
+    {
+      id: "latest_update",
+      numeric: false,
+      disablePadding: false,
+      label: "Latest update",
+    },
+  ];
+
+  function EnhancedTableHead(props) {
+    const {
+      classes,
+      onSelectAllClick,
+      order,
+      orderBy,
+      numSelected,
+      rowCount,
+      onRequestSort,
+    } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ "aria-label": "select all desserts" }}
+            />
+          </TableCell>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    classes: PropTypes.object.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
 
   const handleSelectAll = (event) => {
     let newSelectedCustomerIds;
@@ -132,10 +257,11 @@ const AdminTransactionListView = () => {
   };
 
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setLimit(+event.target.value);
+    setPage(0);
   };
 
-  const handlePageChange = (event, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -183,99 +309,100 @@ const AdminTransactionListView = () => {
               <Card>
                 <PerfectScrollbar>
                   <Box minWidth={1050}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                selectedCustomerIds.length === request.length
-                              }
-                              color="primary"
-                              indeterminate={
-                                selectedCustomerIds.length > 0 &&
-                                selectedCustomerIds.length < request.length
-                              }
-                              onChange={handleSelectAll}
-                            />
-                          </TableCell>
-                          <TableCell>Buyer's Name</TableCell>
-                          <TableCell>Suppliers' Name</TableCell>
-                          <TableCell>Amount</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Latest update</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {request.slice(0, limit).map((request) => (
-                          <TableRow
-                            hover
-                            key={request.requestId}
-                            selected={
-                              selectedCustomerIds.indexOf(request.requestId) !==
-                              -1
-                            }
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  selectedCustomerIds.indexOf(
-                                    request.requestId
-                                  ) !== -1
-                                }
-                                onChange={(event) =>
-                                  handleSelectOne(event, request.requestId)
-                                }
-                                value="true"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Box alignItems="center" display="flex">
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={request.avatarUrl}
-                                  onClick={() =>
-                                    getidandident(
-                                      request.requestId,
-                                      request.userId,
-                                      request.identityId
-                                    )
+                    <TableContainer>
+                      <Table>
+                        <EnhancedTableHead
+                          classes={classes}
+                          numSelected={selectedCustomerIds.length}
+                          onSelectAllClick={handleSelectAll}
+                          onRequestSort={handleRequestSort}
+                          rowCount={request.length}
+                        />
+                        <TableBody>
+                          {request
+                            .slice(page * limit, page * limit + limit)
+                            .map((request, index) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  key={request.requestId}
+                                  selected={
+                                    selectedCustomerIds.indexOf(
+                                      request.requestId
+                                    ) !== -1
                                   }
+                                  tabIndex={-1}
                                 >
-                                  {getInitials(request.buyer_name)}
-                                </Avatar>
-                                <Typography color="textPrimary" variant="body1">
-                                  {request.buyer_name}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>{`${request.supplier_name}`}</TableCell>
-                            <TableCell>
-                              <NumberFormat
-                                color="textPrimary"
-                                variant="h3"
-                                value={request.invoice_amount}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                prefix={"$"}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {checkstatus(request.request_status)}
-                            </TableCell>
-                            <TableCell>
-                              {moment(request.createdAt).format("DD/MM/YYYY")}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      checked={
+                                        selectedCustomerIds.indexOf(
+                                          request.requestId
+                                        ) !== -1
+                                      }
+                                      onChange={(event) =>
+                                        handleSelectOne(
+                                          event,
+                                          request.requestId
+                                        )
+                                      }
+                                      value="true"
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Box alignItems="center" display="flex">
+                                      <Avatar
+                                        className={classes.avatar}
+                                        src={request.avatarUrl}
+                                        onClick={() =>
+                                          getidandident(
+                                            request.requestId,
+                                            request.userId,
+                                            request.identityId
+                                          )
+                                        }
+                                      >
+                                        {getInitials(request.buyer_name)}
+                                      </Avatar>
+                                      <Typography
+                                        color="textPrimary"
+                                        variant="body1"
+                                      >
+                                        {request.buyer_name}
+                                      </Typography>
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell>{`${request.supplier_name}`}</TableCell>
+                                  <TableCell>
+                                    <NumberFormat
+                                      color="textPrimary"
+                                      variant="h3"
+                                      value={request.invoice_amount}
+                                      displayType={"text"}
+                                      thousandSeparator={true}
+                                      prefix={"$"}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    {checkstatus(request.request_status)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {moment(request.createdAt).format(
+                                      "DD/MM/YYYY"
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
                   </Box>
                 </PerfectScrollbar>
                 <TablePagination
                   component="div"
                   count={request.length}
-                  onChangePage={handlePageChange}
+                  onPageChange={handleChangePage}
                   onChangeRowsPerPage={handleLimitChange}
                   page={page}
                   rowsPerPage={limit}

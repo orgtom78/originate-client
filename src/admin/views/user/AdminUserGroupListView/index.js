@@ -152,7 +152,7 @@ const AdminUserGroupListView = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {usergroup.slice(0, limit).map((usergroup) => (
+                      {usergroup.slice(page * limit, page * limit + limit).map((usergroup) => (
                         <TableRow
                           hover
                           key={usergroup.userId}
