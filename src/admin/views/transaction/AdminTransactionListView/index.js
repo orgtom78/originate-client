@@ -84,7 +84,9 @@ const AdminTransactionListView = () => {
 
     async function test() {
       const c = await getRequests();
-      setRequest(c);
+      const d = c.sort(function(a,b){
+        return new Date(b.createdAt) - new Date(a.createdAt)});
+      setRequest(d);
     }
     test();
   }, []);
