@@ -9,12 +9,13 @@ export const InvestorContext = createContext(null);
 // Create a "controller" component that will calculate all the data that we need to give to our
 // components bellow via the `UserContext.Provider` component. This is where the Amplify will be
 // mapped to a different interface, the one that we are going to expose to the rest of the app.
-export const UserProvider = ({ children }) => {
+export const InvestorProvider = ({ children }) => {
   const [sub, setSub] = useState("");
   const [identity, setIdentity] = useState("");
   const [username, setUsername] = useState("");
 
   //investor data:
+  const [id, setId] = useState("");
   const [investorId, setInvestorId] = useState("");
   const [investor_logo, setInvestor_logo] = useState("");
   const [investor_name, setInvestor_name] = useState("");
@@ -54,16 +55,11 @@ export const UserProvider = ({ children }) => {
     // attempt to fetch the info of the user that was already logged in
     async function loadUser() {
       let user = await Auth.currentAuthenticatedUser();
-      console.log(user);
       const u = await user.username;
       setUsername(u);
       const { attributes = {} } = user;
       const b = attributes["custom:groupid"];
-      if (b === null) {
-        return;
-      } else {
-        return b;
-      }
+      return b;
     }
 
     async function loadIdentity() {
@@ -73,23 +69,24 @@ export const UserProvider = ({ children }) => {
     }
 
     async function loadInvestor() {
-      const id = await loadUser();
-      console.log(id)
-      const ident = await loadIdentity();
-      console.log(ident)
-      setSub(id);
-      setIdentity(ident);
-      let filter = { userId: { eq: id }, sortkey: { contains: "investor-" } };
+      const groupid = await loadUser();
+      setSub(groupid);
+      let filter = { userId: { eq: groupid } };
       const {
         data: {
-          listsInvestor: { items: itemsPage1, nextToken },
+          listInvestors: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsInvestor, { filter: filter })
+        graphqlOperation(queries.listInvestors, { filter: filter })
       );
-      const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
-      const investor = n.data.listsInvestor.items[0];
-      console.log(investor)
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const investor = n.data.listInvestors.items[0];
+      if (investor) {
+        setIdentity(investor.identityId);
+      } else {
+        const ident = await loadIdentity();
+        setIdentity(ident);
+      }
       return investor;
     }
 
@@ -99,6 +96,7 @@ export const UserProvider = ({ children }) => {
         return;
       } else {
         const {
+          id,
           investorId,
           investor_logo,
           investor_name,
@@ -116,6 +114,7 @@ export const UserProvider = ({ children }) => {
           investor_director_list_attachment,
           investor_shareholder_list_attachment,
         } = investordata;
+        setId(id);
         setInvestorId(investorId);
         setInvestor_logo(investor_logo);
         setInvestor_name(investor_name);
@@ -151,6 +150,7 @@ export const UserProvider = ({ children }) => {
   // components or Providers above this component, then this will be a performance booster.
   const values = React.useMemo(
     () => ({
+      id,
       sub,
       identity,
       username,
@@ -172,6 +172,7 @@ export const UserProvider = ({ children }) => {
       investor_shareholder_list_attachment,
     }),
     [
+      id,
       sub,
       identity,
       username,

@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme) => ({
 const Limits = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState("");
+  const [id, setId] = useState("");
   const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
     ""
   );
@@ -65,6 +66,7 @@ const Limits = ({ className, value, ...rest }) => {
         setBuyer(data);
         setBuyer_loan_approved_amount(data.buyer_loan_approved_amount);
         setBuyer_loan_rate(data.buyer_loan_rate);
+        setId(data.id);
         return;
       } catch (err) {
         console.log("error fetching data..", err);
@@ -77,15 +79,11 @@ const Limits = ({ className, value, ...rest }) => {
     setApprovesuccess(false);
     setApproveloading(true);
     try {
-      const sortkey = buyer.buyerId;
-      const userId = buyer.userId;
       const buyer_status = "Approved";
       let user = await Auth.currentAuthenticatedUser();
-      const id = user.attributes["custom:groupid"];
-      const investorId = id;
+      const investorId = user.attributes["custom:groupid"];
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         investorId,
         buyer_status,
         buyer_loan_approved_amount,
@@ -103,13 +101,10 @@ const Limits = ({ className, value, ...rest }) => {
     setDeclinesuccess(false);
     setDeclineloading(true);
     try {
-      const sortkey = buyer.buyerId;
-      const userId = buyer.userId;
       const buyer_status = "Declined";
       var buyer_loan_approved_amount = "0";
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_status,
         buyer_loan_approved_amount,
       });

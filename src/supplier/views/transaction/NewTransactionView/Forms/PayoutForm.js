@@ -74,6 +74,7 @@ export default function PayoutForm(props) {
 
   const userId = props.vuser;
   const requestId = props.vrequest;
+  const ident = props.vident; 
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -126,16 +127,22 @@ export default function PayoutForm(props) {
         ];
         const a = imageExtensions.includes(uploadext);
         if (a === true) {
-          const b = await Storage.vault.get(updateinvoice);
+          const b = await Storage.get(updateinvoice, {
+            level: "private",
+            identityId: ident,
+          });
           setInvoiceImg(b);
         } else {
-          const c = await Storage.vault.get(updateinvoice);
+          const c = await Storage.get(updateinvoice, {
+            level: "private",
+            identityId: ident,
+          });
           setInvoicepdf(c);
         }
       }
       geturl();
     }
-  }, [updateinvoice]);
+  }, [updateinvoice, ident]);
 
   function invoiceisimageorpdf() {
     if (invoiceimg) {
@@ -173,16 +180,22 @@ export default function PayoutForm(props) {
         ];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const e = await Storage.vault.get(updatepo);
+          const e = await Storage.get(updatepo, {
+            level: "private",
+            identityId: ident,
+          });
           setPoImg(e);
         } else {
-          const f = await Storage.vault.get(updatepo);
+          const f = await Storage.get(updatepo, {
+            level: "private",
+            identityId: ident,
+          });
           setPopdf(f);
         }
       }
       geturl();
     }
-  }, [updatepo]);
+  }, [updatepo, ident]);
 
   function poisimageorpdf() {
     if (poimg) {
@@ -220,16 +233,22 @@ export default function PayoutForm(props) {
         ];
         const g = imageExtensions.includes(uploadext);
         if (g === true) {
-          const h = await Storage.vault.get(updateoffer);
+          const h = await Storage.get(updateoffer, {
+            level: "private",
+            identityId: ident,
+          });
           setOfferImg(h);
         } else {
-          const i = await Storage.vault.get(updateoffer);
+          const i = await Storage.get(updateoffer, {
+            level: "private",
+            identityId: ident,
+          });
           setOfferpdf(i);
         }
       }
       geturl();
     }
-  }, [updateoffer]);
+  }, [updateoffer, ident]);
 
   function offerisimageorpdf() {
     if (offerimg) {
@@ -267,16 +286,22 @@ export default function PayoutForm(props) {
         ];
         const j = imageExtensions.includes(uploadext);
         if (j === true) {
-          const k = await Storage.vault.get(updateipu);
+          const k = await Storage.get(updateipu, {
+            level: "private",
+            identityId: ident,
+          });
           setIpuImg(k);
         } else {
-          const l = await Storage.vault.get(updateipu);
+          const l = await Storage.get(updateipu, {
+            level: "private",
+            identityId: ident,
+          });
           setIpupdf(l);
         }
       }
       geturl();
     }
-  }, [updateipu]);
+  }, [updateipu, ident]);
 
   function ipuisimageorpdf() {
     if (ipuimg) {
@@ -314,16 +339,22 @@ export default function PayoutForm(props) {
         ];
         const m = imageExtensions.includes(uploadext);
         if (m === true) {
-          const n = await Storage.vault.get(updatecargo);
+          const n = await Storage.get(updatecargo, {
+            level: "private",
+            identityId: ident,
+          });
           setCargoImg(n);
         } else {
-          const o = await Storage.vault.get(updatecargo);
+          const o = await Storage.get(updatecargo, {
+            level: "private",
+            identityId: ident,
+          });
           setCargopdf(o);
         }
       }
       geturl();
     }
-  }, [updatecargo]);
+  }, [updatecargo, ident]);
 
   function cargoisimageorpdf() {
     if (cargoimg) {
@@ -361,16 +392,22 @@ export default function PayoutForm(props) {
         ];
         const p = imageExtensions.includes(uploadext);
         if (p === true) {
-          const q = await Storage.vault.get(updatebl);
+          const q = await Storage.get(updatebl, {
+            level: "private",
+            identityId: ident,
+          });
           setBlImg(q);
         } else {
-          const r = await Storage.vault.get(updatebl);
+          const r = await Storage.get(updatebl, {
+            level: "private",
+            identityId: ident,
+          });
           setBlpdf(r);
         }
       }
       geturl();
     }
-  }, [updatebl]);
+  }, [updatebl, ident]);
 
   function blisimageorpdf() {
     if (blimg) {
@@ -470,6 +507,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={invoice_attachment.name}>
                     <LoaderButton
@@ -502,6 +540,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={purchase_order_attachment.name}>
                     <LoaderButton
@@ -533,6 +572,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={offer_notice_attachment.name}>
                     <LoaderButton
@@ -564,6 +604,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={ipu_attachment.name}>
                     <LoaderButton
@@ -595,6 +636,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={bill_of_lading_attachment.name}>
                     <LoaderButton
@@ -627,6 +669,7 @@ export default function PayoutForm(props) {
                     style={{ display: "none" }}
                     ident={requestId}
                     userid={userId}
+                    identityid={ident}
                   />
                   <label htmlFor={cargo_insurance_attachment.name}>
                     <LoaderButton

@@ -16,7 +16,7 @@ import {
 } from "@material-ui/core";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
-import { API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation, Storage } from "aws-amplify";
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -59,6 +59,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [supplierId, setSupplierId] = useState("");
+  const [identityId, setIdentityId] = useState("");
+  const [dynamofinid, setdynamofinId] = useState("");
   const [financialsId, setFinancialsId] = useState("");
   const [balance_sheet_attachment, setBalance_sheet_attachment] = useState("");
   const [
@@ -113,23 +115,27 @@ const SupplierFinancials = ({ className, ...rest }) => {
       setSub(id);
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "financials-supplier" },
+        supplierId: { attributeExists: true },
       };
       const {
         data: {
-          listsFinancials: { items: itemsPage1, nextToken },
+          listsFinancialss: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
+        graphqlOperation(queries.listFinancialss, { filter: filter })
       );
-      const o = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const financials = o.data.listsFinancials.items[0];
+      const o = {
+        data: { listsFinancialss: { items: itemsPage1, nextToken } },
+      };
+      const financials = o.data.listsFinancialss.items[0];
       return financials;
     }
 
     async function getfinancials() {
       const financials = await loadFinancials;
       const {
+        id,
+        identityId,
         financialsId,
         ebit,
         balance_sheet_attachment,
@@ -141,6 +147,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
         retained_earnings,
         working_capital,
       } = financials;
+      setdynamofinId(id);
+      setIdentityId(identityId);
       setFinancialsId(financialsId);
       setEbit(ebit);
       setBalance_sheet_attachment(balance_sheet_attachment);
@@ -159,7 +167,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
     var fileExtension = file.name.split(".").pop();
     const filename = `${sub}${supplierId}${name}.${fileExtension}`;
 
-    const stored = await Storage.vault.put(filename, file, {
+    const stored = await Storage.put(filename, file, {
+      level: "private",
+      identityId: identityId,
       contentType: file.type,
     });
     return stored.key;
@@ -169,11 +179,12 @@ const SupplierFinancials = ({ className, ...rest }) => {
     setFinancialsSuccess(false);
     setFinancialsLoading(true);
     try {
+      const id = dynamofinid;
       const userId = sub;
-      const sortkey = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
+        financialsId,
         ebit,
         balance_sheet_attachment,
         income_statement_attachment,
@@ -214,13 +225,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(balance_sheet_attachment);
+          var y = await Storage.get(balance_sheet_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalanceimg(y);
         }
       }
       getbalanceimgurl();
     }
-  }, [balance_sheet_attachment]);
+  }, [balance_sheet_attachment, identityId]);
 
   useEffect(() => {
     if (balance_sheet_attachment) {
@@ -229,13 +243,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(balance_sheet_attachment);
+          var y = await Storage.get(balance_sheet_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalancepdf(y);
         }
       }
       getbankidpdfurl();
     }
-  }, [balance_sheet_attachment]);
+  }, [balance_sheet_attachment, identityId]);
 
   function balanceisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -358,10 +375,11 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ? await s3Up(newfile, "balance_sheet_attachment")
         : null;
       var balance_sheet_attachment = u;
-      const sortkey = financialsId;
+      const id = dynamofinid;
       const userId = sub;
       await updateFinancials({
-        sortkey,
+        id,
+        financialsId,
         userId,
         balance_sheet_attachment,
       });
@@ -389,13 +407,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(income_statement_attachment);
+          var y = await Storage.get(income_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomeimg(y);
         }
       }
       getincomeimgurl();
     }
-  }, [income_statement_attachment]);
+  }, [income_statement_attachment, identityId]);
 
   useEffect(() => {
     if (income_statement_attachment) {
@@ -404,13 +425,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(income_statement_attachment);
+          var y = await Storage.get(income_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomepdf(y);
         }
       }
       getbankidpdfurl();
     }
-  }, [income_statement_attachment]);
+  }, [income_statement_attachment, identityId]);
 
   function incomeisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -533,10 +557,11 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ? await s3Up(newfile, "income_statement_attachment")
         : null;
       var income_statement_attachment = u;
-      const sortkey = financialsId;
+      const id = dynamofinid;
       const userId = sub;
       await updateFinancials({
-        sortkey,
+        id,
+        financialsId,
         userId,
         income_statement_attachment,
       });

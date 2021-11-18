@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -24,7 +24,6 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import AdminInvestorView from "src/admin/views/investor/AdminInvestorView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,10 +40,6 @@ const useStyles = makeStyles((theme) => ({
 const AdminInvestorListView = () => {
   const classes = useStyles();
   const [investor, setInvestor] = useState([]);
-  const [isclicked, setIsclicked] = useState("");
-  const [userId, setUserId] = useState("");
-  const [investorId, setInvestorId] = useState("");
-  const [identityId, setIdentityId] = useState("");
 
   const [selectedInvestorIds, setSelectedInvestorIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -52,31 +47,17 @@ const AdminInvestorListView = () => {
 
   React.useEffect(() => {
     async function getInvestors() {
-      let filter = {
-        sortkey: { contains: "investor-", notContains: "-investor" },
-      };
       const {
         data: {
-          listsInvestor: { items: itemsPage1, nextToken },
+          listInvestors: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsInvestor, { filter: filter })
-      );
-      const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsInvestor.items;
+      } = await API.graphql(graphqlOperation(queries.listInvestors));
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listInvestors.items;
       setInvestor(items);
     }
     getInvestors();
   }, []);
-
-  const handler = useCallback(() => {
-    if (!investor || !investor.length) {
-      console.log("test");
-    } else {
-      const d = investor;
-      return d;
-    }
-  }, [investor]);
 
   const handleSelectAll = (event) => {
     let newSelectedInvestorIds;
@@ -125,47 +106,41 @@ const AdminInvestorListView = () => {
     setPage(newPage);
   };
 
-  function getidandident(investorId, userId, identityId) {
-    setUserId(userId);
-    setInvestorId(investorId);
-    setIdentityId(identityId);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <Page className={clsx(classes.root)} title="Investors">
-          <Container maxWidth={false}>
-            <Box mt={3}>
-              <Card>
-                <PerfectScrollbar>
-                  <Box minWidth={1050}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                selectedInvestorIds.length === investor.length
-                              }
-                              color="primary"
-                              indeterminate={
-                                selectedInvestorIds.length > 0 &&
-                                selectedInvestorIds.length < investor.length
-                              }
-                              onChange={handleSelectAll}
-                            />
-                          </TableCell>
-                          <TableCell>Investor's Name</TableCell>
-                          <TableCell>Country</TableCell>
-                          <TableCell>Industry</TableCell>
-                          <TableCell>Website</TableCell>
-                          <TableCell>Latest update</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {investor.slice(page * limit, page * limit + limit).map((investor) => (
+      <Page className={clsx(classes.root)} title="Investors">
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            <Card>
+              <PerfectScrollbar>
+                <Box minWidth={1050}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={
+                              selectedInvestorIds.length === investor.length
+                            }
+                            color="primary"
+                            indeterminate={
+                              selectedInvestorIds.length > 0 &&
+                              selectedInvestorIds.length < investor.length
+                            }
+                            onChange={handleSelectAll}
+                          />
+                        </TableCell>
+                        <TableCell>Investor's Name</TableCell>
+                        <TableCell>Country</TableCell>
+                        <TableCell>Industry</TableCell>
+                        <TableCell>Website</TableCell>
+                        <TableCell>Latest update</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {investor
+                        .slice(page * limit, page * limit + limit)
+                        .map((investor) => (
                           <TableRow
                             hover
                             key={investor.investorId}
@@ -190,20 +165,14 @@ const AdminInvestorListView = () => {
                             </TableCell>
                             <TableCell>
                               <Box alignItems="center" display="flex">
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={`${investor.investor_logo}`}
-                                  onClick={() =>
-                                    getidandident(
-                                      investor.investorId,
-                                      investor.userId,
-                                      investor.identityId
-                                    )
-                                  }
-                                >
-                                  {getInitials(investor.investor_name)}
-                                </Avatar>
-
+                                <Link to={`/admin/investor/${investor.id}/`}>
+                                  <Avatar
+                                    className={classes.avatar}
+                                    src={`${investor.investor_logo}`}
+                                  >
+                                    {getInitials(investor.investor_name)}
+                                  </Avatar>
+                                </Link>
                                 <Typography color="textPrimary" variant="body1">
                                   {investor.investor_name}
                                 </Typography>
@@ -223,34 +192,29 @@ const AdminInvestorListView = () => {
                             </TableCell>
                           </TableRow>
                         ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </PerfectScrollbar>
-                <TablePagination
-                  component="div"
-                  count={investor.length}
-                  onChangePage={handlePageChange}
-                  onChangeRowsPerPage={handleLimitChange}
-                  page={page}
-                  rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25]}
-                />
-              </Card>
-            </Box>
-            <Divider />
-            <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={''}>
+                    </TableBody>
+                  </Table>
+                </Box>
+              </PerfectScrollbar>
+              <TablePagination
+                component="div"
+                count={investor.length}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25]}
+              />
+            </Card>
+          </Box>
+          <Divider />
+          <Box display="flex" justifyContent="flex-end" p={2}>
+            <Link to={`/admin/investorgroups/`}>
               <Button>Add Investor</Button>
             </Link>
-            </Box>
-          </Container>
-        </Page>
-      ) : (
-        <>
-          <AdminInvestorView value={{ userId, investorId, identityId }} />
-        </>
-      )}
+          </Box>
+        </Container>
+      </Page>
     </React.Fragment>
   );
 };

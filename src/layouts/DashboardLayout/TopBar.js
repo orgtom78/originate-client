@@ -30,7 +30,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const [notifications] = useState([]);
   const navigate = useNavigate();
 
-  const [isAuthenticated, userHasAuthenticated] = useState();
+  const userHasAuthenticated = useState();
 
   async function handleLogout() {
     await Auth.signOut();

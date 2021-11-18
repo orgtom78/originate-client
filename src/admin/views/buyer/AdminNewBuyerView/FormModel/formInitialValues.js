@@ -1,10 +1,7 @@
 import NewBuyerFormModel from "./NewBuyerFormModel";
 const {
   formField: {
-    userId,
     investorId,
-    identityId,
-    supplierId,
     buyer_address_city,
     buyer_address_number,
     buyer_address_postalcode,
@@ -25,20 +22,20 @@ const {
     buyer_sample_trading_docs_attachment,
     buyer_sold_goods_description,
     ebit,
-    financials_attachment,
+    balance_sheet_attachment,
+    income_statement_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
     sales,
     total_assets,
+    retained_earnings,
+    working_capital,
   },
 } = NewBuyerFormModel;
 
-export default {
-  [userId.name]: "",
-  [identityId.name]: "",
+const values = {
   [investorId.name]: "",
-  [supplierId.name]: "",
   [buyer_address_city.name]: "",
   [buyer_address_number.name]: "",
   [buyer_address_street.name]: "",
@@ -59,10 +56,14 @@ export default {
   [buyer_sample_trading_docs_attachment.name]: "",
   [buyer_sold_goods_description.name]: "",
   [ebit.name]: "",
-  [financials_attachment.name]: "",
+  [balance_sheet_attachment.name]: "",
+  [income_statement_attachment.name]: "",
   [net_profit.name]: "",
   [financials_rating.name]: "",
   [financials_reporting_period.name]: "",
   [sales.name]: "",
   [total_assets.name]: "",
-};
+  [retained_earnings.name]: "",
+  [working_capital.name]: "",
+}
+export default values;

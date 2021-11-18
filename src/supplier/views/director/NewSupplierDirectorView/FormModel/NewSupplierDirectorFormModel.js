@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewDirector",
   formField: {
     director_name: {
@@ -48,3 +48,5 @@ export default {
     },
   },
 };
+
+export default model;

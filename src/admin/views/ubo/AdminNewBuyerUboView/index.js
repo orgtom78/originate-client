@@ -32,6 +32,7 @@ export default function NewAccount() {
   const classes = useStyles();
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
+  const [userId, setUserId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [buyerId, setBuyerId] = useState("");
   const [buyername, setBuyername] = useState("");
@@ -40,30 +41,30 @@ export default function NewAccount() {
   React.useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
-      getBuyer(id);
+      getBuyer({ id });
     }
     onLoad();
   }, [id]);
 
   async function getBuyer(input) {
     try {
-      let filter = {
-        userId: { eq: input },
-        sortkey: { contains: "buyer-", notContains: "-buyer" },
-      };
+      const buyer = await API.graphql(
+        graphqlOperation(queries.getBuyer, input)
+      );
       const {
         data: {
-          listsBuyer: {
-            items: [itemsPage1],
-            nextToken,
+          getBuyer: {
+            buyerId,
+            userId,
+            identityId,
+            buyer_name,
           },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
-      );
-      const n = { data: { listsBuyer: { items: [itemsPage1], nextToken } } };
-      const buyers = await n.data.listsBuyer.items[0];
-      const { identityId, buyerId, buyer_name } = buyers;
+      } = buyer;
+      setUserId(userId);
+      setIdentityId(identityId);
+      setBuyerId(buyerId);
+      setBuyername(buyer_name);
       setIdentityId(identityId);
       setBuyerId(buyerId);
       setBuyername(buyer_name);
@@ -79,7 +80,6 @@ export default function NewAccount() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = id;
       const b = uuid();
       const uboId = "ubo-buyer" + b;
       const sortkey = uboId;
@@ -122,7 +122,7 @@ export default function NewAccount() {
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
-    navigate("/admin/buyers");
+    navigate(`/admin/buyer/${id}`);
   }
 
   return (
@@ -141,7 +141,7 @@ export default function NewAccount() {
             >
               {({ isSubmitting }) => (
                 <Form id={formId}>
-                  <UboForm formField={formField} value={identityId} />
+                  <UboForm formField={formField} ident={identityId} buyer={buyerId}/>
                   <div className={classes.buttons}>
                     <div className={classes.wrapper}>
                       <Button

@@ -34,7 +34,7 @@ const {
   },
 } = NewBuyerFormModel;
 
-export default {
+const values = {
   [buyer_address_city.name]: "",
   [buyer_address_street.name]: "",
   [buyer_address_postalcode.name]: "",
@@ -66,3 +66,5 @@ export default {
   [retained_earnings.name]: "",
   [working_capital.name]: "",
 };
+
+export default values;

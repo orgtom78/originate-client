@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewSupplier",
   formField: {
     userId: {
@@ -6,12 +6,6 @@ export default {
       label: "User ID",
       requiredErrorMsg:
         "Please get the userId from your admin and dont make one up!",
-    },
-    identityId: {
-      name: "identityId",
-      label: "Identity ID",
-      requiredErrorMsg:
-        "Please get the identityId from your admin and dont make one up!",
     },
     supplier_logo: {
       name: "supplier_logo",
@@ -288,3 +282,5 @@ export default {
     },
   },
 };
+
+export default model;

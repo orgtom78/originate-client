@@ -3,60 +3,43 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import {
   Avatar,
-  Box,
   Card,
   CardContent,
   Grid,
   Typography,
-  colors,
   makeStyles,
+  colors,
 } from "@material-ui/core";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import MoneyIcon from "@material-ui/icons/Money";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import NumberFormat from "react-number-format";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: "100%",
   },
   avatar: {
-    backgroundColor: colors.red[600],
+    backgroundColor: colors.indigo[600],
     height: 56,
     width: 56,
   },
-  differenceIcon: {
-    color: colors.red[900],
-  },
-  differenceValue: {
-    color: colors.red[900],
-    marginRight: theme.spacing(1),
-  },
 }));
 
-const Limits = ({ className, ...rest }) => {
+const UtilizationAmount = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
 
   useEffect(() => {
-    const getRequests = async () => {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
-      const {
-        data: {
-          listsBuyer: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
-      );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
-      setRequest(items);
-    };
-    getRequests();
-  }, []);
+    async function get() {
+      try {
+        const data = await value;
+        setRequest(data);
+        return;
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    get();
+  }, [value]);
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
@@ -69,9 +52,9 @@ const Limits = ({ className, ...rest }) => {
 
   function addamounts() {
     if (handle) {
-      var x = request.filter((e) => e.buyer_status === "Approved");
-      var fin = x.map((e) => e.buyer_loan_request_amount);
-
+      var x = request.filter((e) => e.request_status === "Approved");
+      var y = x.filter((e) => e.payback_date === null);
+      var fin = y.map((e) => e.invoice_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       return sum;
@@ -86,7 +69,7 @@ const Limits = ({ className, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              AVAILABLE LIMITS
+              TOTAL UTILIZATION AMOUNT
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -96,31 +79,23 @@ const Limits = ({ className, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
+                decimalScale='2'
               />
             </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <MoneyIcon />
+              <AccountBalanceIcon />
             </Avatar>
           </Grid>
         </Grid>
-        <Box mt={2} display="flex" alignItems="center">
-          <ArrowDownwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            0%
-          </Typography>
-          <Typography color="textSecondary" variant="caption">
-            Since last month
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
 };
 
-Limits.propTypes = {
+UtilizationAmount.propTypes = {
   className: PropTypes.string,
 };
 
-export default Limits;
+export default UtilizationAmount;

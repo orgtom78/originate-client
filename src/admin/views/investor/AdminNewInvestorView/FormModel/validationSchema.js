@@ -3,8 +3,6 @@ import moment from "moment";
 import NewInvestorFormModel from "./NewInvestorFormModel";
 const {
   formField: {
-    userId,
-    identityId,
     investor_logo,
     investor_name,
     investor_type,
@@ -62,10 +60,8 @@ const {
   },
 } = NewInvestorFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
-    [userId.name]: Yup.string().required(`${userId.requiredErrorMsg}`),
-    [identityId.name]: Yup.string().required(`${identityId.requiredErrorMsg}`),
     [investor_logo.name]: Yup.string(),
     [investor_name.name]: Yup.string().required(
       `${investor_name.requiredErrorMsg}`
@@ -174,3 +170,5 @@ export default [
     [total_liabilities.name]: Yup.string(),
   }),
 ];
+
+export default yup;

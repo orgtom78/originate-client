@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import clsx from "clsx";
 import {
   Avatar,
@@ -6,7 +6,6 @@ import {
   Card,
   Chip,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +15,7 @@ import {
   Typography,
   makeStyles,
   MuiThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -40,10 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -53,7 +52,6 @@ const TransactionListView = () => {
   const sub = context.sub;
   const [request, setRequest] = useState([]);
 
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
@@ -65,75 +63,28 @@ const TransactionListView = () => {
 
     async function getRequests() {
       const id = await loadRequest();
-      let filter = { userId: { eq: id }, sortkey: { contains: "request-" } };
+      let filter = { userId: { eq: id } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsRequest.items;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = n.data.listRequests.items;
       return items;
     }
 
     async function test() {
       const c = await getRequests();
-      const d = c.sort(function(a,b){
-        return new Date(b.createdAt) - new Date(a.createdAt)});
+      const d = c.sort(function(a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
       setRequest(d);
     }
     test();
   }, [sub]);
-
-  const handler = useCallback(() => {
-    if (!request || !request.length) {
-      console.log("test");
-    } else {
-      const d = request;
-      return d;
-    }
-  }, [request]);
-
-  const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
-
-    if (event.target.checked) {
-      newSelectedCustomerIds = request.map((request) => request.requestId);
-    } else {
-      newSelectedCustomerIds = [];
-    }
-
-    setSelectedCustomerIds(newSelectedCustomerIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds,
-        id
-      );
-    } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(1)
-      );
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedCustomerIds(newSelectedCustomerIds);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -203,48 +154,44 @@ const TransactionListView = () => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {request.slice(page * limit, page * limit + limit).map((request) => (
-                      <TableRow
-                        hover
-                        key={request.requestId}
-                        selected={
-                          selectedCustomerIds.indexOf(request.requestId) !== -1
-                        }
-                      >
-                        <TableCell>
-                          <Box alignItems="center" display="flex">
-                            <Avatar
-                              className={classes.avatar}
-                              src={request.avatarUrl}
-                            >
-                              {getInitials(request.buyer_name)}
-                            </Avatar>
-                            <Typography color="textPrimary" variant="body1">
-                              {request.buyer_name}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>
-                          <NumberFormat
-                            color="textPrimary"
-                            variant="h3"
-                            value={request.invoice_amount}
-                            displayType={"text"}
-                            thousandSeparator={true}
-                            prefix={"$"}
-                          />
-                        </TableCell>
-                        <TableCell>
-                          {`${request.sold_goods_description}`}
-                        </TableCell>
-                        <TableCell>
-                          {checkstatus(request.request_status)}
-                        </TableCell>
-                        <TableCell>
-                          {checkpayout(request.payout_date)}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {request
+                      .slice(page * limit, page * limit + limit)
+                      .map((request) => (
+                        <TableRow hover key={request.requestId}>
+                          <TableCell>
+                            <Box alignItems="center" display="flex">
+                              <Avatar
+                                className={classes.avatar}
+                                src={request.avatarUrl}
+                              >
+                                {getInitials(request.buyer_name)}
+                              </Avatar>
+                              <Typography color="textPrimary" variant="body1">
+                                {request.buyer_name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>
+                            <NumberFormat
+                              color="textPrimary"
+                              variant="h3"
+                              value={request.invoice_amount}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              prefix={"$"}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            {`${request.sold_goods_description}`}
+                          </TableCell>
+                          <TableCell>
+                            {checkstatus(request.request_status)}
+                          </TableCell>
+                          <TableCell>
+                            {checkpayout(request.payout_date)}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </Box>

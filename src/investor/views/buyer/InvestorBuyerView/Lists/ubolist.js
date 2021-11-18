@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Avatar,
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 const UboListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
   const { ident } = useParams();
   const [ubo, setUbo] = useState([]);
 
@@ -53,29 +52,20 @@ const UboListView = (value) => {
 
   useEffect(() => {
     async function getUbos() {
-      let filter = { userId: { eq: id }, sortkey: { contains: "ubo-buyer" } };
+      let filter = { userId: { eq: id } };
       const {
         data: {
-          listsUBO: { items: itemsPage1, nextToken },
+          listUBOs: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUbo, { filter: filter })
+        graphqlOperation(queries.listUbOs, { filter: filter })
       );
-      const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsUBO.items;
+      const n = { data: { listUBOs: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listUBOs.items;
       setUbo(items);
     }
     getUbos();
   }, [id]);
-
-  const handler = useCallback(() => {
-    if (!ubo || !ubo.length) {
-      return;
-    } else {
-      const d = ubo;
-      return d;
-    }
-  }, [ubo]);
 
   const handleSelectAll = (event) => {
     let newSelectedUboIds;

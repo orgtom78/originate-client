@@ -66,17 +66,17 @@ const BuyerList = () => {
   useEffect(() => {
     async function getBuyers() {
       let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
+        buyer_status: { eq: "Approved"}
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBuyers.items;
       return items;
     }
 
@@ -136,7 +136,7 @@ const BuyerList = () => {
                     <Link
                       to={getLink(
                         buyerdata.buyer_status,
-                        buyerdata.userId,
+                        buyerdata.id,
                         buyerdata.buyerId,
                         buyerdata.supplierId
                       )}

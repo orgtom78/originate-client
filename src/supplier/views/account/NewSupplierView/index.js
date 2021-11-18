@@ -18,7 +18,6 @@ import * as mutations from "src/graphql/mutations.js";
 
 import Page from "src/components/Page";
 
-import SupplierView from "src/supplier/views/account/SupplierView";
 import SupplierSuccessView from "src/supplier/views/account/SupplierSuccessView";
 import AddressForm from "./Forms/AddressForm";
 import ShareholderForm from "./Forms/ShareholderForm";

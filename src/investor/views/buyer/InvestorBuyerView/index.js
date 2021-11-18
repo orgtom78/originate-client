@@ -36,8 +36,7 @@ const useStyles = makeStyles((theme) => ({
 const Buyer = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+
   const [item, setItem] = useState("");
   const [fin, setFin] = useState([]);
 
@@ -69,10 +68,7 @@ const Buyer = (value) => {
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = buyId;
-    setBuyerId(sortkey);
-    getBuyer({ userId, sortkey });
+    getBuyer({ id });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -131,28 +127,27 @@ const Buyer = (value) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [id, buyId]);
+  }, [id]);
 
   useEffect(() => {
     async function getFinancials() {
       let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "financials-", contains: buyId },
+        buyerId: { eq: buyerId }
       };
       const {
         data: {
-          listsFinancials: { items: itemsPage1, nextToken },
+          listFinancialss: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
+        graphqlOperation(queries.listFinancialss, { filter: filter })
       );
-      const n = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsFinancials.items;
+      const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listFinancialss.items;
       setFin(items);
       return items;
     }
     getFinancials();
-  }, [buyId, id]);
+  }, [buyerId]);
 
   return (
     <React.Fragment>

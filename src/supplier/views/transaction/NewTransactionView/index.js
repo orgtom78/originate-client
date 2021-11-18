@@ -58,9 +58,7 @@ export default function NewAccount() {
 
   React.useEffect(() => {
     async function load() {
-      var userId = sub;
-      var sortkey = id;
-      const buyer = await getbuyername({ userId, sortkey });
+      const buyer = await getbuyername({ id });
       const {
         data: {
           getBuyer: { buyer_name, investorId },
@@ -164,6 +162,7 @@ export default function NewAccount() {
                     formField={formField}
                     vuser={sub}
                     vrequest={requestId}
+                    vident={ident}
                   />
                   <div className={classes.buttons}>
                     <div className={classes.wrapper}>

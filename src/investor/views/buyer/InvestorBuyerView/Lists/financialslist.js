@@ -1,5 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -17,11 +16,10 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation, Storage } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import NumberFormat from "react-number-format";
+import { Storage } from "aws-amplify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,9 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 const FinancialsListView = (value) => {
   const classes = useStyles();
-  const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
   const [financials, setFinancials] = useState([]);
 
   const [selectedFinancialsIds, setSelectedFinancialsIds] = useState([]);
@@ -54,41 +49,17 @@ const FinancialsListView = (value) => {
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    async function getFinancials() {
-      let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "financials-", contains: buyId },
-      };
-      const {
-        data: {
-          listsFinancials: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
-      );
-      const n = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsFinancials.items;
-      setFinancials(items);
-    }
-    getFinancials();
-  }, [id, buyId]);
+    const items = value.value;
+    setFinancials(items);
+  }, [value]);
 
-  const handler = useCallback(() => {
-    if (!financials || !financials.length) {
-      return;
-    } else {
-      const d = financials;
-      return d;
-    }
-  }, [financials]);
-
-  const geturl = async (input) => {
+  const geturl = async (input, id) => {
     if (input === "") {
       return;
     } else {
       const t = await Storage.get(input, {
         level: "private",
-        identityId: ident,
+        identityId: id,
       });
       window.open(t, "_blank");
     }
@@ -233,7 +204,10 @@ const FinancialsListView = (value) => {
                           color="primary"
                           target="_blank"
                           onClick={() =>
-                            geturl(financials.balance_sheet_attachment)
+                            geturl(
+                              financials.balance_sheet_attachment,
+                              financials.identityId
+                            )
                           }
                         >
                           Download
@@ -245,7 +219,10 @@ const FinancialsListView = (value) => {
                           color="primary"
                           target="_blank"
                           onClick={() =>
-                            geturl(financials.income_statement_attachment)
+                            geturl(
+                              financials.income_statement_attachment,
+                              financials.identityId
+                            )
                           }
                         >
                           Download

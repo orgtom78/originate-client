@@ -69,7 +69,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ShareholderForm(props, value) {
+export default function ShareholderForm(props) {
   const classes = useStyles();
   const {
     formField: {
@@ -86,8 +86,8 @@ export default function ShareholderForm(props, value) {
   } = props;
 
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+  const buyId = props.buyer;
+  const ident = props.ident;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 

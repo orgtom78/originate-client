@@ -1,7 +1,6 @@
 import NewSupplierFormModel from "./NewSupplierFormModel";
 const {
   formField: {
-    identityId,
     supplier_logo,
     supplier_name,
     supplier_type,
@@ -61,8 +60,7 @@ const {
   },
 } = NewSupplierFormModel;
 
-export default {
-  [identityId.name]: "",
+const values ={
   [supplier_logo.name]: "",
   [supplier_name.name]: "",
   [supplier_trading_name.name]: "",
@@ -120,3 +118,5 @@ export default {
   [short_term_debt.name]: "",
   [working_capital.name]: "",
 };
+
+export default values;

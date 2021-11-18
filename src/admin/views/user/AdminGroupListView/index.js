@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -47,29 +47,18 @@ const AdminUserGroupListView = () => {
 
   React.useEffect(() => {
     async function getUsergroups() {
-      let filter = { userId: { notContains: "-group" } };
       const {
         data: {
-          listsUsergroup: { items: itemsPage1, nextToken },
+          listUsergroups: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsUsergroup, { filter: filter })
-      );
-      const n = { data: { listsUsergroup: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsUsergroup.items;
+      } = await API.graphql(graphqlOperation(queries.listUsergroups));
+
+      const n = { data: { listUsergroups: { items: itemsPage1, nextToken } } };
+      const items = n.data.listUsergroups.items;
       setUsergroup(items);
     }
     getUsergroups();
   }, []);
-
-  const handler = useCallback(() => {
-    if (!usergroup || !usergroup.length) {
-      console.log("test");
-    } else {
-      const d = usergroup;
-      return d;
-    }
-  }, [usergroup]);
 
   const handleSelectAll = (event) => {
     let newSelectedUsergroupIds;
@@ -152,50 +141,52 @@ const AdminUserGroupListView = () => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {usergroup.slice(page * limit, page * limit + limit).map((usergroup) => (
-                        <TableRow
-                          hover
-                          key={usergroup.userId}
-                          selected={
-                            selectedUsergroupIds.indexOf(usergroup.userId) !==
-                            -1
-                          }
-                        >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                selectedUsergroupIds.indexOf(
-                                  usergroup.userId
-                                ) !== -1
-                              }
-                              onChange={(event) =>
-                                handleSelectOne(event, usergroup.userId)
-                              }
-                              value="true"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Box alignItems="center" display="flex">
-                              <Link
-                                to={`/admin/user/${usergroup.userId}/${usergroup.groupId}`}
-                              >
-                                <Avatar className={classes.avatar}>
-                                  {getInitials(usergroup.user_name)}
-                                </Avatar>
-                              </Link>
-                              <Typography color="textPrimary" variant="body1">
-                                {usergroup.group_name}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>{`${usergroup.user_name}`}</TableCell>
-                          <TableCell>{`${usergroup.group_type}`}</TableCell>
-                          <TableCell>{`${usergroup.groupId}`}</TableCell>
-                          <TableCell>
-                            {moment(usergroup.createdAt).format("DD/MM/YYYY")}
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                      {usergroup
+                        .slice(page * limit, page * limit + limit)
+                        .map((usergroup) => (
+                          <TableRow
+                            hover
+                            key={usergroup.userId}
+                            selected={
+                              selectedUsergroupIds.indexOf(usergroup.userId) !==
+                              -1
+                            }
+                          >
+                            <TableCell padding="checkbox">
+                              <Checkbox
+                                checked={
+                                  selectedUsergroupIds.indexOf(
+                                    usergroup.userId
+                                  ) !== -1
+                                }
+                                onChange={(event) =>
+                                  handleSelectOne(event, usergroup.userId)
+                                }
+                                value="true"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <Box alignItems="center" display="flex">
+                                <Link
+                                  to={`/admin/user/${usergroup.userId}/${usergroup.groupId}`}
+                                >
+                                  <Avatar className={classes.avatar}>
+                                    {getInitials(usergroup.user_name)}
+                                  </Avatar>
+                                </Link>
+                                <Typography color="textPrimary" variant="body1">
+                                  {usergroup.group_name}
+                                </Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell>{`${usergroup.user_name}`}</TableCell>
+                            <TableCell>{`${usergroup.group_type}`}</TableCell>
+                            <TableCell>{`${usergroup.groupId}`}</TableCell>
+                            <TableCell>
+                              {moment(usergroup.createdAt).format("DD/MM/YYYY")}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                     </TableBody>
                   </Table>
                 </Box>
@@ -213,7 +204,7 @@ const AdminUserGroupListView = () => {
           </Box>
           <Divider />
           <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={''}>
+            <Link to={`/admin/newuser`}>
               <Button>Add User+Group</Button>
             </Link>
           </Box>

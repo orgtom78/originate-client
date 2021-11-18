@@ -23,6 +23,7 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@material-ui/core/colors";
+import { useParams } from "react-router-dom";
 
 const idtype = [
   {
@@ -97,8 +98,9 @@ const useStyles = makeStyles((theme) => ({
 const UpdateUboForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
+  const [userId, setUserId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [uboId, setUboId] = useState("");
   const [ubo_status, setUbo_status] = useState("");
@@ -133,12 +135,8 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
   const ubopoaname = "Ubo Proof of Address";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.uboId;
-    var userId = sub;
-    var sortkey = key;
-    getUbo({ userId, sortkey });
-  }, [value.uboId, value.userId]);
+    getUbo({ id });
+  }, [id]);
 
   async function getUbo(input) {
     try {
@@ -146,6 +144,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       const {
         data: {
           getUBO: {
+            userId,
             identityId,
             uboId,
             ubo_status,
@@ -161,6 +160,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
           },
         },
       } = ubo;
+      setUserId(userId);
       setIdentityId(identityId);
       setUboId(uboId);
       setUbo_status(ubo_status);
@@ -182,9 +182,9 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     setUboSuccess(false);
     setUboLoading(true);
     try {
-      const userId = sub;
       const sortkey = uboId;
       await updateUbo({
+        id,
         userId,
         sortkey,
         ubo_status,
@@ -235,7 +235,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getuboidimgurl();
     }
-  }, [ubo_id_attachment, sub, identityId]);
+  }, [ubo_id_attachment, identityId]);
 
   useEffect(() => {
     if (ubo_id_attachment) {
@@ -253,7 +253,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getuboidpdfurl();
     }
-  }, [ubo_id_attachment, sub, identityId]);
+  }, [ubo_id_attachment, identityId]);
 
   function uboidisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -373,11 +373,8 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile) : null;
       var ubo_id_attachment = u;
-      const sortkey = uboId;
-      const userId = sub;
       await updateUbo({
-        sortkey,
-        userId,
+        id,
         ubo_id_attachment,
       });
     } catch (e) {
@@ -413,7 +410,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getubopoaimgurl();
     }
-  }, [ubo_poa_attachment, sub, identityId]);
+  }, [ubo_poa_attachment, identityId]);
 
   useEffect(() => {
     if (ubo_poa_attachment) {
@@ -431,7 +428,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getubopoapdfurl();
     }
-  }, [ubo_poa_attachment, sub, identityId]);
+  }, [ubo_poa_attachment, identityId]);
 
   function ubopoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -540,11 +537,8 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile) : null;
       var ubo_poa_attachment = u;
-      const sortkey = uboId;
-      const userId = sub;
       await updateUbo({
-        sortkey,
-        userId,
+        id,
         ubo_poa_attachment,
       });
     } catch (e) {

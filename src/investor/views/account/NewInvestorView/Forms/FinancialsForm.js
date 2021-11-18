@@ -15,6 +15,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import { Upload as UploadIcon } from "react-feather";
 import countries from "src/components/FormLists/countries.js";
+import { useUser } from "src/components/context/investorcontext.js";
 
 const cr = countries;
 const useStyles = makeStyles(() => ({
@@ -54,6 +55,7 @@ const useStyles = makeStyles(() => ({
 
 export default function FinancialsForm(props) {
   const classes = useStyles();
+  const context = useUser();
   const {
     formField: {
       ebit,
@@ -82,6 +84,7 @@ export default function FinancialsForm(props) {
   const balanceattachment = updatefields.values.balance_sheet_attachment;
   const incomeattachment = updatefields.values.income_statement_attachment;
 
+  const [identity, setIdentity] = useState("");
   const [balanceimg, setBalanceimg] = useState("");
   const [balancepdf, setBalancepdf] = useState("");
   const [incomeimg, setIncomeimg] = useState("");
@@ -93,22 +96,38 @@ export default function FinancialsForm(props) {
   const [incomesuccess, setIncomesuccess] = useState(false);
 
   useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { identity } = data;
+      setIdentity(identity);
+    }
+    onLoad();
+  }, [context]);
+
+  useEffect(() => {
     if (balanceattachment) {
       async function getbalanceurl() {
         var uploadext = balanceattachment.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(balanceattachment);
+          const u = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalanceimg(u);
         } else {
-          const h = await Storage.vault.get(balanceattachment);
+          const h = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalancepdf(h);
         }
       }
       getbalanceurl();
     }
-  }, [balanceattachment]);
+  }, [balanceattachment, identity]);
 
   async function handlebalanceClick() {
     setBalancesuccess(false);
@@ -147,16 +166,22 @@ export default function FinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(incomeattachment);
+          const u = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomeimg(u);
         } else {
-          const h = await Storage.vault.get(incomeattachment);
+          const h = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomepdf(h);
         }
       }
       getincomeurl();
     }
-  }, [incomeattachment]);
+  }, [incomeattachment, identity]);
 
   async function handleincomeClick() {
     setIncomesuccess(false);
@@ -206,6 +231,7 @@ export default function FinancialsForm(props) {
                     style={{ display: "none" }}
                     ident={financialsId}
                     userid={userId}
+                    identityid={identity}
                   />
                   <label htmlFor={balance_sheet_attachment.name}>
                     <LoaderButton
@@ -237,6 +263,7 @@ export default function FinancialsForm(props) {
                     style={{ display: "none" }}
                     ident={financialsId}
                     userid={userId}
+                    identityid={identity}
                   />
                   <label htmlFor={income_statement_attachment.name}>
                     <LoaderButton

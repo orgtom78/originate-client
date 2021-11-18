@@ -46,18 +46,18 @@ const GroupList = () => {
   useEffect(() => {
     async function getGroups() {
       let filter = {
-        userId: { notContains: "-group" },
-        sortkey: { contains: "-group" },
+        group_type: { eq: "Supplier" }
       };
+      let limit = 100;
       const {
         data: {
-          listsUsergroup: { items: itemsPage1, nextToken },
+          listUsergroups: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUsergroup, { filter: filter })
+        graphqlOperation(queries.listUsergroups, { filter: filter, limit:limit })
       );
-      const n = { data: { listsUsergroup: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsUsergroup.items;
+      const n = { data: { listUsergroups: { items: itemsPage1, nextToken } } };
+      const items = n.data.listUsergroups.items;
       var fin = items.filter((e) => e.supplierId !== "" && e.investorId !== "");
       return fin;
     }

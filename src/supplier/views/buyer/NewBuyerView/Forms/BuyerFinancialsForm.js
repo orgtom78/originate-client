@@ -9,10 +9,11 @@ import {
   makeStyles,
 } from "@material-ui/core";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import { Upload as UploadIcon } from "react-feather";
+import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -50,6 +51,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function BuyerFinancialsForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
@@ -82,17 +84,18 @@ export default function BuyerFinancialsForm(props) {
   const [incomeloading, setIncomeloading] = useState(false);
   const [incomesuccess, setIncomesuccess] = useState(false);
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
   useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const { attributes = {} } = user;
-      const b = await attributes["custom:groupid"];
-      setUserId(b);
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (balanceattachment) {
@@ -101,16 +104,22 @@ export default function BuyerFinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(balanceattachment);
+          const u = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalanceimg(u);
         } else {
-          const h = await Storage.vault.get(balanceattachment);
+          const h = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalancepdf(h);
         }
       }
       geturl();
     }
-  }, [balanceattachment]);
+  }, [balanceattachment, identity]);
 
   async function handleBalanceClick() {
     setBalancesuccess(false);
@@ -148,16 +157,22 @@ export default function BuyerFinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(incomeattachment);
+          const u = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomeimg(u);
         } else {
-          const h = await Storage.vault.get(incomeattachment);
+          const h = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomepdf(h);
         }
       }
       geturl();
     }
-  }, [incomeattachment]);
+  }, [incomeattachment, identity]);
 
   async function handleIncomeClick() {
     setIncomesuccess(false);
@@ -274,7 +289,8 @@ export default function BuyerFinancialsForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     ident={financialsId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={balance_sheet_attachment.name}>
                     <LoaderButton
@@ -305,7 +321,8 @@ export default function BuyerFinancialsForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     ident={financialsId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={income_statement_attachment.name}>
                     <LoaderButton

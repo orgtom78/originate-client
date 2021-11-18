@@ -101,20 +101,20 @@ export default function DocumentForm(props, value) {
         if (d === true) {
           const u = await Storage.get(document_update, {
             level: "private",
-            identityId: await props.value,
+            identityId: ident,
           });
           setDocimg(u);
         } else {
           const h = await Storage.get(document_update, {
             level: "private",
-            identityId: await props.value,
+            identityId: ident,
           });
           setDocpdf(h);
         }
       }
       geturl();
     }
-  }, [document_update, props.value]);
+  }, [document_update, ident]);
 
   async function handledocClick() {
     setDocsuccess(false);

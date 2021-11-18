@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewSupplier",
   formField: {
     supplier_logo: {
@@ -172,7 +172,8 @@ export default {
     financials_reporting_period: {
       name: "financials_reporting_period",
       label: "Reporting Period*",
-      requiredErrorMsg: "Only a year during the last 3 years is accepted as Reporting Period",
+      requiredErrorMsg:
+        "Only a year during the last 3 years is accepted as Reporting Period",
     },
     sales: {
       name: "sales",
@@ -231,3 +232,5 @@ export default {
     },
   },
 };
+
+export default model;

@@ -28,9 +28,9 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "/admin/users",
+    href: "/admin/groups",
     icon: UserIcon,
-    title: "Users",
+    title: "Groups",
   },
   {
     href: "/admin/investors",

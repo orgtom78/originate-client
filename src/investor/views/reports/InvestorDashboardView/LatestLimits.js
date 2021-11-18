@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import moment from "moment";
@@ -10,7 +10,7 @@ import {
   Card,
   CardHeader,
   Chip,
-  createMuiTheme,
+  createTheme,
   Divider,
   Table,
   TableBody,
@@ -28,10 +28,10 @@ import { API, graphqlOperation } from "aws-amplify";
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -49,17 +49,17 @@ const LatestLimits = ({ className, ...rest }) => {
   useEffect(() => {
     const getRequests = async () => {
       let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
+        buyer_status: { eq: "Investor Offer Pending" || "Approved" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       var x = items.filter(
         (e) => e.buyer_status === "Investor Offer Pending" || "Approved"
       );
@@ -67,15 +67,6 @@ const LatestLimits = ({ className, ...rest }) => {
     };
     getRequests();
   }, []);
-
-  const limits = useCallback(() => {
-    if (!limitdata || !limitdata.length) {
-      return;
-    } else {
-      const d = limitdata;
-      return d;
-    }
-  }, [limitdata]);
 
   function checkstatus(status) {
     if (status === "Investor Offer Pending") {
@@ -122,9 +113,7 @@ const LatestLimits = ({ className, ...rest }) => {
               {limitdata.map((limit) => (
                 <TableRow hover key={limit.buyerId}>
                   <TableCell>
-                    <Link
-                      to={`/investor/buyer/${limit.userId}/${limit.buyerId}/${limit.identityId}`}
-                    >
+                    <Link to={`/investor/buyer/${limit.id}`}>
                       {limit.buyer_name}
                     </Link>
                   </TableCell>

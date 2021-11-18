@@ -1,29 +1,11 @@
-export default {
+const model = {
   formId: "NewBuyer",
   formField: {
-    userId: {
-      name: "userId",
-      label: "User ID",
-      requiredErrorMsg:
-        "Please get the userId from your admin and dont make one up!",
-    },
     investorId: {
       name: "investorId",
       label: "Investor ID",
       requiredErrorMsg:
         "Please get the Id of the Investor from your admin and dont make one up!",
-    },
-    identityId: {
-      name: "identityId",
-      label: "Identity ID",
-      requiredErrorMsg:
-        "Please get the identityId from your admin and dont make one up!",
-    },
-    supplierId: {
-      name: "supplierId",
-      label: "Supplier ID",
-      requiredErrorMsg:
-        "Please get the supplierId from your admin and dont make one up!",
     },
     buyer_loan_request_amount: {
       name: "buyer_loan_request_amount",
@@ -125,10 +107,15 @@ export default {
       label: "Earnings before Interest & Tax",
       requiredErrorMsg: "EBIT is required",
     },
-    financials_attachment: {
-      name: "financials_attachment",
-      label: "Financial Accounts",
-      requiredErrorMsg: "Financial Accounts are required",
+    balance_sheet_attachment: {
+      name: "balance_sheet_attachment",
+      label: "Balance Sheet",
+      requiredErrorMsg: "Balance Sheets are required",
+    },
+    income_statement_attachment: {
+      name: "income_statement_attachment",
+      label: "Income Statement",
+      requiredErrorMsg: "Income Statements are required",
     },
     net_profit: {
       name: "net_profit",
@@ -155,5 +142,17 @@ export default {
       label: "Total Assets",
       requiredErrorMsg: "Total Assets is required",
     },
+    retained_earnings: {
+      name: "retained_earnings",
+      label: "Retained Earnings",
+      requiredErrorMsg: "Retained Earnings is required",
+    },
+    working_capital: {
+      name: "working_capital",
+      label: "Working Capital",
+      requiredErrorMsg: "Working Capital is required",
+    },
   },
 };
+
+export default model;

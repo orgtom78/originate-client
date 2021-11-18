@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import {
@@ -12,9 +11,10 @@ import {
 } from "@material-ui/core";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
+import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -52,6 +52,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function HistoryForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
@@ -76,16 +77,18 @@ export default function HistoryForm(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
   useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const id = await user.attributes.sub;
-      setUserId(id);
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (buyeripu) {
@@ -94,16 +97,22 @@ export default function HistoryForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(buyeripu);
+          const u = await Storage.get(buyeripu, {
+            level: "private",
+            identityId: identity,
+          });
           setImg(u);
         } else {
-          const h = await Storage.vault.get(buyeripu);
+          const h = await Storage.get(buyeripu, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [buyeripu]);
+  }, [buyeripu, identity]);
 
   async function handleClick() {
     setSuccess(false);
@@ -205,7 +214,8 @@ export default function HistoryForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     ident={buyerId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={buyer_one_off_ipu_attachment.name}>
                     <LoaderButton

@@ -87,6 +87,7 @@ const type = [
 const SupplierForm = ({ className, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [dynamosupplierid, setdynamosupplierId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -111,13 +112,12 @@ const SupplierForm = ({ className, ...rest }) => {
   const [supplierloading, setSupplierLoading] = useState(false);
   const [suppliersuccess, setSupplierSuccess] = useState(false);
 
-  console.log(supplier_date_of_incorporation);
-
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
       const data = await context;
       const {
+        id,
         sub,
         supplierId,
         supplier_logo,
@@ -131,6 +131,7 @@ const SupplierForm = ({ className, ...rest }) => {
         supplier_country,
         supplier_industry,
       } = data;
+      setdynamosupplierId(id);
       setSub(sub);
       setSupplierId(supplierId);
       setSupplier_logo(supplier_logo);
@@ -152,10 +153,11 @@ const SupplierForm = ({ className, ...rest }) => {
     setSupplierLoading(true);
     try {
       const userId = sub;
-      const sortkey = supplierId;
+      const id = dynamosupplierid;
       await updateSupplier({
+        id,
         userId,
-        sortkey,
+        supplierId,
         supplier_logo,
         supplier_name,
         supplier_type,

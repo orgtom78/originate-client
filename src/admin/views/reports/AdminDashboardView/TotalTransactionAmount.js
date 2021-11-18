@@ -11,8 +11,6 @@ import {
   colors,
 } from "@material-ui/core";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
@@ -26,26 +24,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TotalTransactionAmount = ({ className, ...rest }) => {
+const TotalTransactionAmount = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
 
   useEffect(() => {
-    const getRequests = async () => {
-      let filter = { sortkey: { contains: "request-" } };
-      const {
-        data: {
-          listsRequest: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
-      );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
-      setRequest(items);
-    };
-    getRequests();
-  }, []);
+    async function get() {
+      try {
+        const data = await value;
+        setRequest(data);
+        return;
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    get();
+  }, [value]);
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
@@ -84,6 +78,7 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
+                decimalScale='2'
               />
             </Typography>
           </Grid>

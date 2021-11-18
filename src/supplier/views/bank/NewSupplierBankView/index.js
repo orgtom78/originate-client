@@ -33,20 +33,21 @@ export default function NewAccount() {
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
   const [sub, setSub] = useState("");
+  const [supplierId, setSupplierId] = useState("");
   const [identity, setIdentity] = useState("");
 
   const [suppliername, setSuppliername] = useState("");
   const context = useUser();
-  const { id } = useParams();
 
   React.useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
       const data = await context;
-      const { sub, identity, supplier_name } = data;
+      const { sub, identity, supplier_name, supplierId } = data;
       setSub(sub);
       setIdentity(identity);
       setSuppliername(supplier_name);
+      setSupplierId(supplierId);
     }
     onLoad();
   }, [context]);
@@ -60,7 +61,6 @@ export default function NewAccount() {
     try {
       const userId = sub;
       const b = uuid();
-      const supplierId = id;
       const bankId = "bank-supplier" + b;
       const sortkey = bankId;
       const identityId = identity;

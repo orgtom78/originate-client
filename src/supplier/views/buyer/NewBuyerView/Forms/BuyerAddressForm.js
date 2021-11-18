@@ -13,11 +13,12 @@ import {
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import currencies from "src/components/FormLists/currencies.js";
 import countries from "src/components/FormLists/countries.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
 const curr = currencies;
@@ -124,17 +125,20 @@ export default function BuyerAddressForm(props) {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const context = useUser();
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
-  useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const id = await user.attributes.sub;
-      setUserId(id);
+ useEffect(() => {
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (updateregcert !== '') {
@@ -143,16 +147,22 @@ export default function BuyerAddressForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(updateregcert);
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setImg(u);
         } else {
-          const h = await Storage.vault.get(updateregcert);
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, identity]);
 
   async function handleClick() {
     setSuccess(false);
@@ -328,7 +338,8 @@ export default function BuyerAddressForm(props) {
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
                     ident={buyerId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
                     <LoaderButton

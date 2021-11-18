@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
@@ -86,10 +86,11 @@ const useStyles = makeStyles((theme) => ({
 const UpdateDirectorForm = ({ className, ...rest }) => {
   const classes = useStyles();
   const { id } = useParams();
-  const navigate = useNavigate();
   const context = useUser();
   const sub = context.sub;
+  const identity = context.identity;
 
+  const [dynamodirectorid, setdynamodirectorId] = useState("");
   const [directorId, setDirectorId] = useState("");
   const [director_name, setDirector_name] = useState("");
   const [director_email, setDirector_email] = useState("");
@@ -125,11 +126,8 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
   const directorpoaname = "Director Proof of Address";
 
   useEffect(() => {
-    const sub = context.sub;
-    var userId = sub;
-    var sortkey = id;
-    getDirector({ userId, sortkey });
-  }, [context, id]);
+    getDirector({ id });
+  }, [id]);
 
   async function getDirector(input) {
     try {
@@ -139,6 +137,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
       const {
         data: {
           getDirector: {
+            id,
             directorId,
             director_name,
             director_email,
@@ -152,6 +151,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
           },
         },
       } = director;
+      setdynamodirectorId(id);
       setDirectorId(directorId);
       setDirector_name(director_name);
       setDirector_email(director_email);
@@ -172,10 +172,11 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     setDirectorLoading(true);
     try {
       const userId = sub;
-      const sortkey = directorId;
+      const id = dynamodirectorid;
       await updateDirector({
+        id,
         userId,
-        sortkey,
+        directorId,
         director_name,
         director_email,
         director_phone_number,
@@ -191,7 +192,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectorSuccess(true);
     setDirectorLoading(false);
-    navigate("/app/account");
+    window.location.reload(); 
   }
 
   function updateDirector(input) {
@@ -216,13 +217,16 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(director_id_attachment);
+          var y = await Storage.get(director_id_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setDirectoridImg(y);
         }
       }
       getdirectoridimgurl();
     }
-  }, [director_id_attachment]);
+  }, [director_id_attachment, identity]);
 
   useEffect(() => {
     if (director_id_attachment) {
@@ -231,13 +235,16 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(director_id_attachment);
+          var y = await Storage.get(director_id_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setDirectoridpdf(y);
         }
       }
       getdirectoridpdfurl();
     }
-  }, [director_id_attachment]);
+  }, [director_id_attachment, identity]);
 
   function directoridisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -354,8 +361,10 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     var fileExtension = file.name.split(".").pop();
     const filename = `${sub}${directorId}${name}.${fileExtension}`;
 
-    const stored = await Storage.vault.put(filename, file, {
+    const stored = await Storage.put(filename, file, {
       contentType: file.type,
+      level: "private",
+      identityId: identity
     });
     return stored.key;
   }
@@ -372,10 +381,10 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, "director_id_attachment") : null;
       var director_id_attachment = u;
-      const sortkey = directorId;
       const userId = sub;
+      const id = dynamodirectorid;
       await updateDirector({
-        sortkey,
+        id,
         userId,
         director_id_attachment,
       });
@@ -384,7 +393,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectoridSuccess(true);
     setDirectoridLoading(false);
-    navigate("/app/account");
+    window.location.reload(); 
   }
 
   useEffect(() => {
@@ -403,13 +412,16 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(director_poa_attachment);
+          var y = await Storage.get(director_poa_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setDirectorpoaImg(y);
         }
       }
       getdirectorpoaimgurl();
     }
-  }, [director_poa_attachment]);
+  }, [director_poa_attachment, identity]);
 
   useEffect(() => {
     if (director_poa_attachment) {
@@ -418,13 +430,16 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(director_poa_attachment);
+          var y = await Storage.get(director_poa_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setDirectorpoapdf(y);
         }
       }
       getdirectorpoapdfurl();
     }
-  }, [director_poa_attachment]);
+  }, [director_poa_attachment, identity]);
 
   function directorpoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -539,10 +554,10 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, "director_poa_attachment") : null;
       var director_poa_attachment = u;
-      const sortkey = directorId;
+      const id = dynamodirectorid;
       const userId = sub;
       await updateDirector({
-        sortkey,
+        id,
         userId,
         director_poa_attachment,
       });
@@ -551,7 +566,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectorpoaSuccess(true);
     setDirectorpoaLoading(false);
-    navigate("/app/account");
+    window.location.reload(); 
   }
 
   return (

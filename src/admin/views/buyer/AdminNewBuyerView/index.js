@@ -25,6 +25,7 @@ import BuyerHistoryForm from "./Forms/BuyerHistoryForm";
 import validationSchema from "./FormModel/validationSchema";
 import NewBuyerFormModel from "./FormModel/NewBuyerFormModel";
 import formInitialValues from "./FormModel/formInitialValues";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +56,9 @@ function getStepContent(step) {
 }
 
 export default function NewAccount() {
+  const { id } = useParams();
+  const { user } = useParams();
+  const { ident } = useParams();
   const classes = useStyles();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
@@ -69,10 +73,11 @@ export default function NewAccount() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = values["userId"];
-      const supplierId = values["supplierId"];
-      const identityId = values["identityId"];
+      const userId = user;
+      const supplierId = id;
+      const identityId = ident;
 
+      const investorId = values["investorId"];
       const buyer_address_city = values["buyer_address_city"];
       const buyer_address_number = values["buyer_address_number"];
       const buyer_address_postalcode = values["buyer_address_postalcode"];
@@ -119,6 +124,7 @@ export default function NewAccount() {
         buyerId,
         supplierId,
         identityId,
+        investorId,
         buyer_address_city,
         buyer_address_postalcode,
         buyer_address_street,

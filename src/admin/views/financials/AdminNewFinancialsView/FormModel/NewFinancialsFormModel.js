@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewFinancials",
   formField: {
     supplierId: {
@@ -238,3 +238,5 @@ export default {
     },
   },
 };
+
+export default model;

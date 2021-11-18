@@ -55,17 +55,16 @@ const Limits = ({ className, ...rest }) => {
       const id = sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "buyer-", notContains: "financials-" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setRequest(items);
     };
     getRequests();

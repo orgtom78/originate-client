@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
 import clsx from "clsx";
@@ -20,7 +19,6 @@ const useStyles = makeStyles({
 
 const Password = ({ className, ...rest }) => {
   const classes = useStyles();
-  const navigate = useNavigate();
   const [values, setValues] = useState({
     password: "",
     confirm: "",

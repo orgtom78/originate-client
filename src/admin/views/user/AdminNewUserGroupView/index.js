@@ -33,9 +33,10 @@ export default function NewUserGroup() {
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
   const AWS = require("aws-sdk");
-  AWS.config.update({
-    region: 'us-east-2',
-  });
+  AWS.config = new AWS.Config();
+  AWS.config.accessKeyId = awsconfig.accessKeyId;
+  AWS.config.secretAccessKey = awsconfig.secretAccessKey;
+  AWS.config.region = "us-east-2";  
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,10 +68,8 @@ export default function NewUserGroup() {
     } catch (e) {
       onError(e);
     }
+    navigate("/admin/groups");
   }
-
-  console.log(awsconfig)
-  console.log(awsconfig.aws_user_pools_id)
 
   async function getident(input) {
     let cognito = new AWS.CognitoIdentityServiceProvider();
@@ -106,10 +105,13 @@ export default function NewUserGroup() {
       const group_name = input.group_name;
       const group_type = input.group_type;
       const userId = sub;
+      let identity = await Auth.currentUserCredentials();
+      const identityId = identity.identityId;
 
       await createUserGroup({
         userId,
         sortkey,
+        identityId,
         user_name,
         sub,
         groupId,
@@ -129,7 +131,6 @@ export default function NewUserGroup() {
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
-    navigate("/admin/users");
   }
 
   return (

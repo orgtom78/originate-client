@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewRequest",
   formField: {
     invoice_attachment: {
@@ -63,3 +63,5 @@ export default {
     },
   },
 };
+
+export default model;

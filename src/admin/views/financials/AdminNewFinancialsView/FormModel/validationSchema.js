@@ -52,7 +52,7 @@ const {
   },
 } = NewFinancialsFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [supplierId.name]: Yup.string(),
     [buyerId.name]: Yup.string(),
@@ -106,3 +106,5 @@ export default [
     [working_capital.name]: Yup.string(),
   }),
 ];
+
+export default yup;

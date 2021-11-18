@@ -20,6 +20,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
 const ind = industries;
@@ -78,6 +79,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function AddressForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
@@ -99,10 +101,10 @@ export default function AddressForm(props) {
   const supplierId = props.vsupplier;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const updateregcert =
-    updatefields.values.supplier_registration_cert_attachment;
+  const updateregcert = updatefields.values.supplier_registration_cert_attachment;
   const updatelogo = updatefields.values.supplier_logo;
 
+  const [identity, setIdentity] = useState("");
   const [slogo, setSlogo] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");
   const [updateregcertimg, setUpdateregcertimg] = useState("");
@@ -113,22 +115,38 @@ export default function AddressForm(props) {
   const [certsuccess, setCertSuccess] = useState(false);
 
   useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { identity } = data;
+      setIdentity(identity);
+    }
+    onLoad();
+  }, [context]);
+
+  useEffect(() => {
     if (updateregcert) {
       async function geturl() {
         var uploadext = updateregcert.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(updateregcert);
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertimg(u);
         } else {
-          const h = await Storage.vault.get(updateregcert);
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, identity]);
 
   async function handleCertClick() {
     setCertSuccess(false);
@@ -166,12 +184,15 @@ export default function AddressForm(props) {
   useEffect(() => {
     if (updatelogo) {
       async function getlogourl() {
-        const u = await Storage.vault.get(updatelogo);
+        const u = await Storage.get(updatelogo, {
+          level: "private",
+          identityId: identity,
+        });
         setSlogo(u);
       }
       getlogourl();
     }
-  }, [updatelogo]);
+  }, [updatelogo, identity]);
 
   async function handleLogoClick() {
     setSuccess(false);
@@ -279,6 +300,7 @@ export default function AddressForm(props) {
                     style={{ display: "none" }}
                     ident={supplierId}
                     userid={userId}
+                    identityid={identity}
                   />
                   <label htmlFor={supplier_registration_cert_attachment.name}>
                     <LoaderButton
@@ -312,6 +334,7 @@ export default function AddressForm(props) {
                     style={{ display: "none" }}
                     ident={supplierId}
                     userid={userId}
+                    identityid={identity}
                   />
                   <label htmlFor={supplier_logo.name}>
                     <LoaderButton

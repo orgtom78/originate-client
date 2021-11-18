@@ -98,10 +98,7 @@ export default function BuyerAddressForm(props) {
 
   const {
     formField: {
-      userId,
       investorId,
-      identityId,
-      supplierId,
       buyer_address_city,
       buyer_address_number,
       buyer_address_postalcode,
@@ -221,30 +218,6 @@ export default function BuyerAddressForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={userId.name}
-                label={userId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={identityId.name}
-                label={identityId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplierId.name}
-                label={supplierId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={investorId.name}

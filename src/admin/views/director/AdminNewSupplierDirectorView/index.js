@@ -53,18 +53,18 @@ export default function NewAccount() {
       };
       const {
         data: {
-          listsSupplier: {
+          listSuppliers: {
             items: [itemsPage1],
             nextToken,
           },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsSupplier, { filter: filter })
+        graphqlOperation(queries.listSuppliers, { filter: filter })
       );
       const n = await {
-        data: { listsSupplier: { items: [itemsPage1], nextToken } },
+        data: { listSuppliers: { items: [itemsPage1], nextToken } },
       };
-      const suppliers = await n.data.listsSupplier.items[0];
+      const suppliers = await n.data.listSuppliers.items[0];
       const { identityId, supplierId, supplier_name } = suppliers;
       setIdentityId(identityId);
       setSupplierId(supplierId);

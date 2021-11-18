@@ -54,7 +54,6 @@ export default function ShareholderForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      buyerId,
       balance_sheet_attachment,
       income_statement_attachment,
       accounts_payable,
@@ -272,14 +271,6 @@ export default function ShareholderForm(props) {
                   </label>
                 </>
               )}
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={buyerId.name}
-                label={buyerId.label}
-                fullWidth
-                variant="outlined"
-              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField

@@ -83,7 +83,6 @@ export default function AddressForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      identityId,
       supplier_logo,
       supplier_name,
       supplier_type,
@@ -105,6 +104,7 @@ export default function AddressForm(props) {
   const { id } = useParams();
   const supId = props.value;
   const { ident } = useParams();
+
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert =
@@ -207,14 +207,6 @@ export default function AddressForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={12}>
-              <InputField
-                name={identityId.name}
-                label={identityId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={supplier_name.name}

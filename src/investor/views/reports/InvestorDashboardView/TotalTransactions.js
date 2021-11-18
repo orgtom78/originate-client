@@ -43,13 +43,13 @@ const TotalTransactions = ({ className, ...rest }) => {
       let filter = { sortkey: { contains: "request-" } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
       setRequest(items);
     };
     getRequests();

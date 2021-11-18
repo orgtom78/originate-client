@@ -28,10 +28,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function Profile({ className, value, ...rest }) {
-  const investorId = value.value.investorId;
-  const Id = value.value.userId;
+  const id = value;
   const classes = useStyles();
   const [avatar, setAvatar] = useState("");
+  const [investorId, setInvestorId] = useState("");
+  const [userId, setUserId] = useState("");
   const [investor_name, setInvestor_name] = useState("");
   const [investor_address_city, setInvestor_address_city] = useState("");
   const [investor_country, setInvestor_country] = useState("");
@@ -47,15 +48,15 @@ export default function Profile({ className, value, ...rest }) {
 
   useEffect(() => {
     async function getInvestor() {
-      var userId = Id;
-      var sortkey = investorId;
       try {
         const data = await API.graphql(
-          graphqlOperation(queries.getInvestor, { userId, sortkey })
+          graphqlOperation(queries.getInvestor, { id })
         );
         const {
           data: {
             getInvestor: {
+              userId,
+              investorId,
               identityId,
               investor_logo,
               investor_name,
@@ -65,6 +66,8 @@ export default function Profile({ className, value, ...rest }) {
             },
           },
         } = data;
+        setInvestorId(investorId);
+        setUserId(userId);
         setIdentityId(identityId);
         setInvestor_name(investor_name);
         setInvestor_address_city(investor_address_city);
@@ -81,7 +84,7 @@ export default function Profile({ className, value, ...rest }) {
       }
     }
     getInvestor();
-  }, [Id, investorId]);
+  }, [id]);
 
   const city = investor_address_city;
   const country = investor_country;
@@ -122,7 +125,6 @@ export default function Profile({ className, value, ...rest }) {
       const u = a ? await s3Upload(a) : null;
       setUploadedFile(u);
       var investor_logo = u;
-      const userId = Id;
       const sortkey = investorId;
       await updateInvestor({
         userId,

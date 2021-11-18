@@ -14,7 +14,7 @@ const {
   },
 } = NewSupplierUboFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [ubo_name.name]: Yup.string(),
     [ubo_email.name]: Yup.string().email(),
@@ -27,3 +27,4 @@ export default [
     [ubo_country_of_residence.name]: Yup.string(),
   }),
 ];
+export default yup;

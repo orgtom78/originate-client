@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import moment from "moment";
@@ -10,7 +10,7 @@ import {
   Card,
   CardHeader,
   Chip,
-  createMuiTheme,
+  createTheme,
   Divider,
   Table,
   TableBody,
@@ -29,10 +29,10 @@ import { useUser } from "src/components/context/usercontext.js";
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -62,30 +62,20 @@ const LatestLimits = ({ className, ...rest }) => {
       const id = sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "buyer-", notContains: "financials-" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setLimitdata(items);
     };
     getRequests();
   }, [sub]);
-
-  const limits = useCallback(() => {
-    if (!limitdata || !limitdata.length) {
-      console.log("test");
-    } else {
-      const d = limitdata;
-      return d;
-    }
-  }, [limitdata]);
 
   function checkstatus(status) {
     if (status === "submitted") {

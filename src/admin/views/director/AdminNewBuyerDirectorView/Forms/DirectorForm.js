@@ -69,7 +69,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ShareholderForm(props, value) {
+export default function ShareholderForm(props) {
   const classes = useStyles();
   const {
     formField: {
@@ -86,8 +86,8 @@ export default function ShareholderForm(props, value) {
   } = props;
 
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+  const ident = props.ident;
+  const buyId = props.buyer;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -167,13 +167,13 @@ export default function ShareholderForm(props, value) {
         if (d === true) {
           const u = await Storage.get(director_updatepoa, {
             level: "private",
-            identityId: await ident,
+            identityId: ident,
           });
           setDpoaimg(u);
         } else {
           const h = await Storage.get(director_updatepoa, {
             level: "private",
-            identityId: await ident,
+            identityId: ident,
           });
           setDpoapdf(h);
         }

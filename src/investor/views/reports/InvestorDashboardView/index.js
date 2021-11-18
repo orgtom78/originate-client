@@ -9,8 +9,6 @@ import LatestLimits from "./LatestLimits";
 import TasksProgress from "./TasksProgress";
 import TotalTransactions from "./TotalTransactions";
 import TotalTransactionAmount from "./TotalTransactionAmount";
-import CountryExposure from "./CountryExposure";
-import Map from "./Map.js";
 import PastDue from "./PastDue";
 import Utilization from "./Utilization";
 import ExposureObligor from "./ExposureObligor";
@@ -32,18 +30,13 @@ const InvestorDashboard = () => {
 
   useEffect(() => {
     async function getBuyers() {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
-      );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      } = await API.graphql(graphqlOperation(queries.listBuyers));
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setBuyer(items);
       return items;
     }
@@ -52,16 +45,13 @@ const InvestorDashboard = () => {
 
   useEffect(() => {
     async function getRequests() {
-      let filter = { sortkey: { contains: "request-" } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
-      );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
+      } = await API.graphql(graphqlOperation(queries.listRequests));
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
       setTransaction(items);
       return items;
     }

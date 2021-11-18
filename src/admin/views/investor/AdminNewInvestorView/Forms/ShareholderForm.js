@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-  InputField,
-  SelectField,
-  UploadField,
-} from "src/components/FormFields";
-import SelectListField from "src/supplier/views/financials/UpdateFinancialsView/index.js";
+import { useParams } from "react-router-dom";
+import { InputField, SelectField } from "src/components/FormFields";
+import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import {
   Card,
   CardContent,
@@ -96,21 +94,27 @@ export default function ShareholderForm(props) {
     },
   } = props;
 
-  console.log(props);
-
+  const { groupid } = useParams();
+  const dirId = props.dir;
+  const uboId = props.ubo;
+  const { ident } = useParams();
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  console.log(updatefields);
 
   const director_updatepoa = updatefields.values.director_poa_attachment;
   const director_updateid = updatefields.values.director_id_attachment;
   const ubo_updatepoa = updatefields.values.ubo_poa_attachment;
   const ubo_updateid = updatefields.values.ubo_id_attachment;
 
-  const [dpoaimg, setDpoaimg] = useState("");
-  const [didimg, setDidimg] = useState("");
-  const [upoaimg, setUpoaimg] = useState("");
-  const [uidimg, setUidimg] = useState("");
+  const [directorpoaimg, setDirectorpoaimg] = useState("");
+  const [directorpoapdf, setDirectorpoapdf] = useState("");
+  const [directoridimg, setDirectoridimg] = useState("");
+  const [directoridpdf, setDirectoridpdf] = useState("");
+
+  const [ubopoaimg, setUbopoaimg] = useState("");
+  const [ubopoapdf, setUbopoapdf] = useState("");
+  const [uboidimg, setUboidimg] = useState("");
+  const [uboidpdf, setUboidpdf] = useState("");
 
   const [directoridloading, setDirectoridLoading] = useState(false);
   const [directoridsuccess, setDirectoridSuccess] = useState(false);
@@ -123,48 +127,104 @@ export default function ShareholderForm(props) {
 
   useEffect(() => {
     if (director_updateid) {
-      async function getdirectoridurl() {
-        const u = await Storage.vault.get(director_updateid);
-        setDidimg(u);
+      async function geturl() {
+        var uploadext = director_updateid.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(director_updateid, {
+            level: "private",
+            identityId: ident,
+          });
+          setDirectoridimg(u);
+        } else {
+          const h = await Storage.get(director_updateid, {
+            level: "private",
+            identityId: ident,
+          });
+          setDirectoridpdf(h);
+        }
       }
-      getdirectoridurl();
+      geturl();
     }
-  }, [director_updateid]);
+  }, [director_updateid, ident]);
 
   useEffect(() => {
     if (director_updatepoa) {
-      async function getdirectorpoaurl() {
-        const u = await Storage.vault.get(director_updatepoa);
-        setDpoaimg(u);
+      async function geturl() {
+        var uploadext = director_updatepoa.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(director_updatepoa, {
+            level: "private",
+            identityId: ident,
+          });
+          setDirectorpoaimg(u);
+        } else {
+          const h = await Storage.get(director_updatepoa, {
+            level: "private",
+            identityId: ident,
+          });
+          setDirectorpoapdf(h);
+        }
       }
-      getdirectorpoaurl();
+      geturl();
     }
-  }, [director_updatepoa]);
+  }, [director_updatepoa, ident]);
 
   useEffect(() => {
     if (ubo_updateid) {
-      async function getuboidurl() {
-        const u = await Storage.vault.get(ubo_updateid);
-        setUidimg(u);
+      async function geturl() {
+        var uploadext = ubo_updateid.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(ubo_updateid, {
+            level: "private",
+            identityId: ident,
+          });
+          setUboidimg(u);
+        } else {
+          const h = await Storage.get(ubo_updateid, {
+            level: "private",
+            identityId: ident,
+          });
+          setUboidpdf(h);
+        }
       }
-      getuboidurl();
+      geturl();
     }
-  }, [ubo_updateid]);
+  }, [ubo_updateid, ident]);
 
   useEffect(() => {
     if (ubo_updatepoa) {
-      async function getubopoaurl() {
-        const u = await Storage.vault.get(ubo_updatepoa);
-        setUpoaimg(u);
+      async function geturl() {
+        var uploadext = ubo_updatepoa.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(ubo_updatepoa, {
+            level: "private",
+            identityId: ident,
+          });
+          setUbopoaimg(u);
+        } else {
+          const h = await Storage.get(ubo_updatepoa, {
+            level: "private",
+            identityId: ident,
+          });
+          setUbopoapdf(h);
+        }
       }
-      getubopoaurl();
+      geturl();
     }
-  }, [ubo_updatepoa]);
+  }, [ubo_updatepoa, ident]);
 
   async function handleDirectorIdClick() {
     setDirectoridSuccess(false);
     setDirectoridLoading(true);
-    const b = await didimg;
+    const b = await director_updateid;
     if (b) {
       setDirectoridSuccess(true);
       setDirectoridLoading(false);
@@ -173,7 +233,7 @@ export default function ShareholderForm(props) {
   async function handleDirectorPoaClick() {
     setDirectorpoaSuccess(false);
     setDirectorpoaLoading(true);
-    const b = await dpoaimg;
+    const b = await director_updatepoa;
     if (b) {
       setDirectorpoaSuccess(true);
       setDirectorpoaLoading(false);
@@ -183,7 +243,7 @@ export default function ShareholderForm(props) {
   async function handleUboIdClick() {
     setUboidSuccess(false);
     setUboidLoading(true);
-    const b = await uidimg;
+    const b = await ubo_updateid;
     if (b) {
       setUboidSuccess(true);
       setUboidLoading(false);
@@ -192,10 +252,90 @@ export default function ShareholderForm(props) {
   async function handleUboPoaClick() {
     setUbopoaSuccess(false);
     setUbopoaLoading(true);
-    const b = await upoaimg;
+    const b = await director_updatepoa;
     if (b) {
       setUbopoaSuccess(true);
       setUbopoaLoading(false);
+    }
+  }
+
+  function director_updateidisimageorpdf() {
+    if (director_updateid) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={directoridimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={directoridpdf}
+          />
+        </>
+      );
+    }
+  }
+
+  function director_updatepoaisimageorpdf() {
+    if (director_updatepoa) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={directorpoaimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={directorpoapdf}
+          />
+        </>
+      );
+    }
+  }
+
+  function ubo_updateidisimageorpdf() {
+    if (ubo_updateid) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={uboidimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={uboidpdf}
+          />
+        </>
+      );
+    }
+  }
+
+  function ubo_updatepoaisimageorpdf() {
+    if (ubo_updatepoa) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={ubopoaimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={ubopoapdf}
+          />
+        </>
+      );
     }
   }
 
@@ -238,6 +378,7 @@ export default function ShareholderForm(props) {
                 variant="outlined"
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <SelectListField
                 name={director_country_of_residence.name}
@@ -256,7 +397,7 @@ export default function ShareholderForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <InputField
                 name={director_id_number.name}
                 label={director_id_number.label}
@@ -266,16 +407,17 @@ export default function ShareholderForm(props) {
             </Grid>
             <Grid item xs={6}>
               {director_updateid ? (
-                <>
-                  <img className={classes.img} alt="complex" src={didimg} />
-                </>
+                <>{director_updateidisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={director_id_attachment.name}
                     id={director_id_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={dirId}
                   />
                   <label htmlFor={director_id_attachment.name}>
                     <LoaderButton
@@ -298,16 +440,17 @@ export default function ShareholderForm(props) {
 
             <Grid item xs={6}>
               {director_updatepoa ? (
-                <>
-                  <img className={classes.img} alt="complex" src={dpoaimg} />
-                </>
+                <>{director_updatepoaisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={director_poa_attachment.name}
                     id={director_poa_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={dirId}
                   />
                   <label htmlFor={director_poa_attachment.name}>
                     <LoaderButton
@@ -379,7 +522,7 @@ export default function ShareholderForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <InputField
                 name={ubo_id_number.name}
                 label={ubo_id_number.label}
@@ -389,16 +532,17 @@ export default function ShareholderForm(props) {
             </Grid>
             <Grid item xs={6}>
               {ubo_updateid ? (
-                <>
-                  <img className={classes.img} alt="complex" src={uidimg} />
-                </>
+                <>{ubo_updateidisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={ubo_id_attachment.name}
                     id={ubo_id_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={uboId}
                   />
                   <label htmlFor={ubo_id_attachment.name}>
                     <LoaderButton
@@ -421,20 +565,21 @@ export default function ShareholderForm(props) {
 
             <Grid item xs={6}>
               {ubo_updatepoa ? (
-                <>
-                  <img className={classes.img} alt="complex" src={upoaimg} />
-                </>
+                <>{ubo_updatepoaisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <AdminUploadField
                     name={ubo_poa_attachment.name}
-                    id={ubo_id_attachment.name}
+                    id={ubo_poa_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={uboId}
                   />
-                  <label htmlFor={ubo_id_attachment.name}>
+                  <label htmlFor={ubo_poa_attachment.name}>
                     <LoaderButton
-                      id={ubo_id_attachment.name}
+                      id={ubo_poa_attachment.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}

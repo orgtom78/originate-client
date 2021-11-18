@@ -31,23 +31,15 @@ import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
-import DirectorListView from "src/admin/views/buyer/AdminBuyerView/Lists/directorlist.js";
-import UboListView from "src/admin/views/buyer/AdminBuyerView/Lists/ubolist.js";
+import DirectorListView from "src/investor/views/buyer/AdminBuyerView/Lists/directorlist.js";
+import UboListView from "src/investor/views/buyer/AdminBuyerView/Lists/ubolist.js";
 import FinancialsListView from "src/investor/views/buyer/InvestorBuyerView/Lists/financialslist.js";
 import * as queries from "src/graphql/queries.js";
-import AWS from "aws-sdk";
-import config from "src/admin/views/user/AdminNewUserGroupView/node_modules/src/config.js.js";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
 
 const cr = countries;
 const indust = industries;
-
-AWS.config.update({
-  accessKeyId: config.AWS.ID,
-  secretAccessKey: config.AWS.KEY,
-  region: config.AWS.REGION,
-});
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -122,8 +114,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
 
   const [userId, setUserId] = useState("");
   const [buyerId, setBuyerId] = useState("");
@@ -156,10 +146,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyersuccess, setBuyerSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = buyId;
-    setBuyerId(sortkey);
-    getBuyer({ userId, sortkey });
+    getBuyer({ id });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -217,17 +204,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [id, buyId]);
+  }, [id]);
 
   async function handleBuyerSubmit() {
     setBuyerSuccess(false);
     setBuyerLoading(true);
     try {
-      const userId = id;
-      const sortkey = buyId;
       await updateBuyer({
+        id,
         userId,
-        sortkey,
         investorId,
         buyer_status,
         buyer_logo,
@@ -251,7 +236,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
     }
     setBuyerSuccess(true);
     setBuyerLoading(false);
-    navigate("/admin/buyers");
+    navigate("/investor/buyers");
   }
 
   function updateBuyer(input) {
@@ -551,11 +536,11 @@ const BuyerForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <FinancialsListView value={value} />
+                <FinancialsListView buyer={buyerId} ident={identityId}/>
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewfinancials/${id}/${buyId}/${ident}`}>
+                <Link to={`/investor/investornewfinancials/${id}`}>
                   <Button>Add Financials</Button>
                 </Link>
               </Box>
@@ -575,7 +560,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewbuyerdirector/${id}`}>
+                <Link to={`/investor/investornewbuyerdirector/${id}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -596,7 +581,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewbuyerubo/${id}`}>
+                <Link to={`/investor/investornewbuyerubo/${id}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>

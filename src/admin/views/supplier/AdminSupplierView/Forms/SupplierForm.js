@@ -90,6 +90,8 @@ const type = [
 const SupplierForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const [userId, setUserId] = useState("");
+  const [dynamosupplierid, setdynamosupplierId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -148,10 +150,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [financialssuccess, setFinancialsSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.value.value.userId;
-    const sortkey = value.value.value.supplierId;
-    setSupplierId(sortkey);
-    getSupplier({ userId, sortkey });
+    const id = value.value;
+    getSupplier({ id });
     async function getSupplier(input) {
       try {
         const supplier = await API.graphql(
@@ -160,6 +160,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getSupplier: {
+              id,
+              userId,
+              supplierId,
               supplier_logo,
               supplier_name,
               supplier_type,
@@ -178,6 +181,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
             },
           },
         } = supplier;
+        setdynamosupplierId(id);
+        setUserId(userId);
+        setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
         setSupplier_name(supplier_name);
         setSupplier_date_of_incorporation(supplier_date_of_incorporation);
@@ -199,33 +205,31 @@ const SupplierForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.supplierId]);
+  }, [value]);
 
   useEffect(() => {
-    const id = value.value.value.userId;
-    getFinancials(id);
+    getFinancials(userId);
     async function getFinancials(input) {
       try {
         let filter = {
-          userId: { eq: input },
-          sortkey: { contains: "financials-supplier" },
+          userId: { eq: input }
         };
         const {
           data: {
-            listsFinancials: {
+            listFinancialss: {
               items: [itemsPage1],
               nextToken,
             },
           },
         } = await API.graphql(
-          graphqlOperation(queries.listsFinancials, { filter: filter })
+          graphqlOperation(queries.listFinancialss, { filter: filter })
         );
         const n = await {
-          data: { listsFinancials: { items: [itemsPage1], nextToken } },
+          data: { listFinancialss: { items: [itemsPage1], nextToken } },
         };
-        const financials = await n.data.listsFinancials.items[0];
+        const financials = await n.data.listFinancialss.items[0];
         const {
-          financialsId,
+          id,
           accounts_payable,
           accounts_receivable,
           cash,
@@ -245,7 +249,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
           total_assets,
           total_liabilities,
         } = financials;
-        setFinancialsId(financialsId);
+        setFinancialsId(id);
         setEbit(ebit);
         setFinancials_attachment(financials_attachment);
         setNet_profit(net_profit);
@@ -268,17 +272,16 @@ const SupplierForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId]);
+  }, [userId]);
 
   async function handleSupplierSubmit() {
     setSupplierSuccess(false);
     setSupplierLoading(true);
     try {
-      const userId = value.value.value.userId;
-      const sortkey = value.value.value.supplierId;
+      const id = dynamosupplierid;
       await updateSupplier({
+        id,
         userId,
-        sortkey,
         supplier_logo,
         supplier_name,
         supplier_type,
@@ -307,13 +310,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
     setFinancialsSuccess(false);
     setFinancialsLoading(true);
     try {
-      var s = await financialsId;
-      const sortkey = s;
-      console.log(sortkey);
-      const userId = value.value.value.userId;
+      var id = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
         accounts_payable,
         accounts_receivable,
         cash,
@@ -615,12 +615,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <DirectorListView value={value} />
+                <DirectorListView value={supplierId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewsupplierdirector/${value.value.value.userId}`}
+                  to={`/admin/adminnewsupplierdirector/${supplierId}`}
                 >
                   <Button>Add Director</Button>
                 </Link>
@@ -638,12 +638,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <UboListView value={value} />
+                <UboListView value={supplierId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewsupplierubo/${value.value.value.userId}`}
+                  to={`/admin/adminnewsupplierubo/${supplierId}`}
                 >
                   <Button>Add Owner</Button>
                 </Link>
@@ -903,7 +903,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <AdminUpdateBankView value={value} />
+                <AdminUpdateBankView value={supplierId} user={userId} />
               </CardContent>
             </Card>
           </AccordionDetails>

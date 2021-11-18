@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewUserGroup",
   formField: {
     group_type: {
@@ -29,3 +29,4 @@ export default {
     },
   },
 };
+export default model;

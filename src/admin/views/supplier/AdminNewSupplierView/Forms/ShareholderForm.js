@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { InputField, SelectField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
-import SelectListField from "src/supplier/views/financials/UpdateFinancialsView/index.js";
+import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import {
   Card,
   CardContent,
@@ -378,6 +378,7 @@ export default function ShareholderForm(props) {
                 variant="outlined"
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <SelectListField
                 name={director_country_of_residence.name}
@@ -569,16 +570,16 @@ export default function ShareholderForm(props) {
                 <>
                   <AdminUploadField
                     name={ubo_poa_attachment.name}
-                    id={ubo_id_attachment.name}
+                    id={ubo_poa_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
                     identityId={ident}
                     userid={id}
                     sectorid={uboId}
                   />
-                  <label htmlFor={ubo_id_attachment.name}>
+                  <label htmlFor={ubo_poa_attachment.name}>
                     <LoaderButton
-                      id={ubo_id_attachment.name}
+                      id={ubo_poa_attachment.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}

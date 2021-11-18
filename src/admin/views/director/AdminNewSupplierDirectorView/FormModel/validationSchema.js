@@ -14,7 +14,7 @@ const {
   },
 } = NewSupplierDirectorFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [director_name.name]: Yup.string(),
     [director_email.name]: Yup.string().email(),
@@ -27,3 +27,5 @@ export default [
     [director_country_of_residence.name]: Yup.string(),
   }),
 ];
+
+export default yup;

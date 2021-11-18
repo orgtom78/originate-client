@@ -2,6 +2,7 @@ import React from "react";
 import { Container, Grid, makeStyles } from "@material-ui/core";
 import Page from "src/components/Page";
 import TransactionDetails from "./TransactionDetails";
+import { useParams } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Transaction = (value) => {
   const classes = useStyles();
+  const { id } = useParams();
 
   return (
     <React.Fragment>
@@ -21,7 +23,7 @@ const Transaction = (value) => {
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item lg={12} md={6} xs={12}>
-              <TransactionDetails value={value} />
+              <TransactionDetails value={id} />
             </Grid>
           </Grid>
         </Container>

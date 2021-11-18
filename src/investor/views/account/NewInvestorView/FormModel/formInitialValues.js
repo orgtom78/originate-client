@@ -50,7 +50,7 @@ const {
   },
 } = NewInvestorFormModel;
 
-export default {
+const values = {
   [investor_logo.name]: "",
   [investor_name.name]: "",
   [investor_type.name]: "",
@@ -98,3 +98,5 @@ export default {
   [bic_swift_code.name]: "",
   [iban.name]: "",
 };
+
+export default values;

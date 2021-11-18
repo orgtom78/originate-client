@@ -118,10 +118,11 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
 
+  const [buyerId, setBuyerId] = useState("");
   const [investorId, setInvestorId] = useState("");
+  const [userId, setUserId] = useState("");
+  const [identityId, setIdentityId] = useState("");
   const [buyer_status, setBuyer_status] = useState("");
   const [buyer_loan_request_amount, setBuyer_loan_request_amount] = useState(
     ""
@@ -156,9 +157,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyersuccess, setBuyerSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = buyId;
-    getBuyer({ userId, sortkey });
+    getBuyer({ id });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -167,6 +166,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getBuyer: {
+              buyerId,
+              userId,
+              identityId,
               investorId,
               buyer_status,
               buyer_loan_request_amount,
@@ -190,7 +192,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
             },
           },
         } = buyer;
+        setBuyerId(buyerId);
         setInvestorId(investorId);
+        setUserId(userId);
+        setIdentityId(identityId);
         setBuyer_status(buyer_status);
         setBuyer_loan_request_amount(buyer_loan_request_amount);
         setBuyer_loan_approved_amount(buyer_loan_approved_amount);
@@ -216,17 +221,14 @@ const BuyerForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [id, buyId]);
+  }, [id]);
 
   async function handleBuyerSubmit() {
     setBuyerSuccess(false);
     setBuyerLoading(true);
     try {
-      const userId = id;
-      const sortkey = buyId;
       await updateBuyer({
-        userId,
-        sortkey,
+        id,
         investorId,
         buyer_status,
         buyer_loan_request_amount,
@@ -253,7 +255,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
     }
     setBuyerSuccess(true);
     setBuyerLoading(false);
-    navigate("/admin/buyers");
+    navigate(`/admin/buyer/${id}`);
   }
 
   function updateBuyer(input) {
@@ -577,13 +579,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <FinancialsListView value={value} />
+                <FinancialsListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewfinancials/${id}/${buyId}/${ident}`}>
+                <Link
+                  to={`/admin/adminnewfinancials/${userId}/${buyerId}/${identityId}`}
+                >
                   <Button>Add Financials</Button>
                 </Link>
               </Box>
@@ -597,14 +601,14 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <DirectorListView value={value} />
+                <DirectorListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewbuyerdirector/${id}/${buyId}/${ident}`}
+                  to={`/admin/adminnewbuyerdirector/${id}`}
                 >
                   <Button>Add Director</Button>
                 </Link>
@@ -620,13 +624,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <UboListView value={value} />
+                <UboListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewbuyerubo/${id}/${buyId}/${ident}`}>
+                <Link
+                  to={`/admin/adminnewbuyerubo/${id}`}
+                >
                   <Button>Add Owner</Button>
                 </Link>
               </Box>

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import {
   Avatar,
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 const DirectorListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
   const { ident } = useParams();
   const [director, setDirector] = useState([]);
 
@@ -55,30 +54,20 @@ const DirectorListView = (value) => {
     async function getDirectors() {
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "director-buyer" },
       };
       const {
         data: {
-          listsDirector: { items: itemsPage1, nextToken },
+          listDirectors: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsDirector, { filter: filter })
+        graphqlOperation(queries.listDirectors, { filter: filter })
       );
-      const n = { data: { listsDirector: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsDirector.items;
+      const n = { data: { listDirectors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listDirectors.items;
       setDirector(items);
     }
     getDirectors();
   }, [id]);
-
-  const handler = useCallback(() => {
-    if (!director || !director.length) {
-      return;
-    } else {
-      const d = director;
-      return d;
-    }
-  }, [director]);
 
   const handleSelectAll = (event) => {
     let newSelectedDirectorIds;

@@ -104,9 +104,8 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [requestsuccess, setRequestSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.value.value.userId;
-    const sortkey = value.value.value.requestId;
-    getRequest({ userId, sortkey });
+    const id = value.value
+    getRequest({ id });
     async function getRequest(input) {
       try {
         const request = await API.graphql(
@@ -142,17 +141,15 @@ const RequestForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.requestId]);
+  }, [value]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      const userId = value.value.value.userId;
-      const sortkey = value.value.value.requestId;
+      const id = value.value;
       await updateRequest({
-        userId,
-        sortkey,
+        id,
         investorId,
         request_status,
         buyer_name,

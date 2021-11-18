@@ -19,13 +19,10 @@ const useStyles = makeStyles((theme) => ({
 const Transaction = () => {
   const classes = useStyles();
   const { id } = useParams();
-  const { reqId } = useParams();
   const [req, setReq] = useState([]);
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = reqId;
-    getRequest({ userId, sortkey });
+    getRequest({ id });
     async function getRequest(input) {
       try {
         const request = await API.graphql(
@@ -43,7 +40,7 @@ const Transaction = () => {
         console.log("error fetching data..", err);
       }
     }
-  }, [reqId, id]);
+  }, [id]);
 
   return (
     <React.Fragment>

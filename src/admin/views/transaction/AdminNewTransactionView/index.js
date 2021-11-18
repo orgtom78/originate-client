@@ -33,6 +33,7 @@ export default function NewAccount() {
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
   const [ident, setIdent] = useState("");
+  const [userId, setUserId] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
   const { id } = useParams();
@@ -42,16 +43,15 @@ export default function NewAccount() {
 
   React.useEffect(() => {
     async function load() {
-      var userId = id;
-      var sortkey = buyId;
-      const buyer = await getbuyername({ userId, sortkey });
+      const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, identityId },
+          getBuyer: { buyer_name, identityId, userId },
         },
       } = buyer;
       const buyername = await buyer_name;
       setIdent(identityId);
+      setUserId(userId);
       setBuyername(buyername);
     }
     load();
@@ -59,9 +59,8 @@ export default function NewAccount() {
 
   React.useEffect(() => {
     async function load() {
-      var userId = id;
-      var sortkey = supId;
-      const supplier = await getsuppliername({ userId, sortkey });
+      var supplierId = supId;
+      const supplier = await getsuppliername({ userId, supplierId });
       const {
         data: {
           getSupplier: { supplier_name },
@@ -71,7 +70,7 @@ export default function NewAccount() {
       setSuppliername(suppliername);
     }
     load();
-  }, [id, supId]);
+  }, [userId, supId]);
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -80,7 +79,6 @@ export default function NewAccount() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = id;
       const sortkey = requestId;
       const supplierId = supId;
       const identityId = ident;

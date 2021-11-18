@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
@@ -83,9 +83,10 @@ const useStyles = makeStyles((theme) => ({
 const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
   const [userId, setUserId] = useState("");
+  const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
 
   const [financialsId, setFinancialsId] = useState("");
@@ -103,10 +104,10 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const [operating_income, setOperating_income] = useState("");
   const [other_expenses, setOther_expenses] = useState("");
   const [ebt, setEbt] = useState("");
-  const [ebitda, setEbitda] = useState("");
-  const [current_ratio, setCurrent_ratio] = useState("");
-  const [debt_equity_ratio, setDebt_equity_ratio] = useState("");
-  const [debt_ebitda_ratio, setDebt_ebitda_ratio] = useState("");
+  //const [ebitda, setEbitda] = useState("");
+  //const [current_ratio, setCurrent_ratio] = useState("");
+  //const [debt_equity_ratio, setDebt_equity_ratio] = useState("");
+  //const [debt_ebitda_ratio, setDebt_ebitda_ratio] = useState("");
   const [inventory_turnover, setInventory_turnover] = useState("");
   const [interest_coverage, setInterest_coverage] = useState("");
   const [income_tax_expense, setIncome_tax_expense] = useState("");
@@ -191,12 +192,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const incomename = "Income Statement";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.financialsId;
-    var userId = sub;
-    var sortkey = key;
-    getFinancials({ userId, sortkey });
-  }, [value.financialsId, value.userId]);
+    getFinancials({ id });
+  }, [id]);
 
   async function getFinancials(input) {
     try {
@@ -207,6 +204,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         data: {
           getFinancials: {
             userId,
+            buyerId,
             identityId,
             financialsId,
             financials_attachment,
@@ -220,10 +218,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
             operating_income,
             other_expenses,
             ebt,
-            ebitda,
-            current_ratio,
-            debt_equity_ratio,
-            debt_ebitda_ratio,
             inventory_turnover,
             interest_coverage,
             income_tax_expense,
@@ -273,6 +267,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         },
       } = financials;
       setUserId(userId);
+      setBuyerId(buyerId);
       setIdentityId(identityId);
       setFinancialsId(financialsId);
       setFinancials_attachment(financials_attachment);
@@ -286,10 +281,10 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
       setOperating_income(operating_income);
       setOther_expenses(other_expenses);
       setEbt(ebt);
-      setEbitda(ebitda);
-      setCurrent_ratio(current_ratio);
-      setDebt_equity_ratio(debt_equity_ratio);
-      setDebt_ebitda_ratio(debt_ebitda_ratio);
+      //setEbitda(ebitda);
+      //setCurrent_ratio(current_ratio);
+      //setDebt_equity_ratio(debt_equity_ratio);
+      //setDebt_ebitda_ratio(debt_ebitda_ratio);
       setInventory_turnover(inventory_turnover);
       setInterest_coverage(interest_coverage);
       setIncome_tax_expense(income_tax_expense);
@@ -393,11 +388,10 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
       Number(ebitda);
 
     try {
-      const userId = sub;
-      const sortkey = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
+        buyerId,
         financials_attachment,
         balance_sheet_attachment,
         income_statement_attachment,
@@ -464,7 +458,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    navigate("/admin/buyers");
+    navigate("/admin/dashboard");
   }
 
   function updateFinancials(input) {
@@ -644,11 +638,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         ? await s3Up(newfile, "balance_sheet_attachment")
         : null;
       var balance_sheet_attachment = u;
-      const sortkey = financialsId;
-      const userId = await value.userId;
       await updateFinancials({
-        sortkey,
-        userId,
+        id,
         balance_sheet_attachment,
       });
     } catch (e) {
@@ -656,7 +647,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setBalanceSuccess(true);
     setBalanceLoading(false);
-    navigate("/admin/buyers");
+    navigate("/admin/dashboard");
   }
 
   useEffect(() => {
@@ -819,11 +810,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         ? await s3Up(newfile, "income_statement_attachment")
         : null;
       var income_statement_attachment = u;
-      const sortkey = financialsId;
-      const userId = value.userId;
       await updateFinancials({
-        sortkey,
-        userId,
+        id,
         income_statement_attachment,
       });
     } catch (e) {
@@ -831,35 +819,37 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setIncomeSuccess(true);
     setIncomeLoading(false);
-    navigate("/admin/buyers");
+    navigate("/admin/dashboard");
   }
 
   useEffect(() => {
     if (balance_sheet_attachment) {
       async function getjson() {
         const y = await Storage.get(
-          `${userId}${financialsId}balance_sheet_attachment.json`,
+          `${userId}${financialsId}${buyerId}balance_sheet_attachment.json`,
           {
             level: "private",
             identityId: identityId,
             download: true,
           }
         );
+        console.log(y)
         const s = await new Response(y.Body).json();
+        console.log(s)
         if (s) {
-          const t = s[0].Blocks.map((item) => item.Text);
+          const t = s[0].Blocks.map((item) => item.Text !== "");
           setSheet(t);
         }
       }
       getjson();
     }
-  }, [userId, financialsId, balance_sheet_attachment, identityId]);
+  }, [userId, financialsId, balance_sheet_attachment, buyerId, identityId]);
 
   useEffect(() => {
     if (income_statement_attachment) {
       async function getjson() {
         const y = await Storage.get(
-          `${userId}${financialsId}income_statement_attachment.json`,
+          `${userId}${financialsId}${buyerId}income_statement_attachment.json`,
           {
             level: "private",
             identityId: identityId,
@@ -868,13 +858,15 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         );
         const s = await new Response(y.Body).json();
         if (s) {
-          const t = s[0].Blocks.map((item) => item.Text);
+          const t = s.Blocks[0].map((item) => item.Text !== "");
           setIncome(t);
+        } else {
+          return;
         }
       }
       getjson();
     }
-  }, [userId, financialsId, income_statement_attachment, identityId]);
+  }, [userId, financialsId, income_statement_attachment, buyerId, identityId]);
 
   return (
     <Page title="Update Financials">
@@ -1742,7 +1734,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                             and last year)
                           </TableCell>
                           <TableCell component="th" scope="row">
-                          <TextField
+                            <TextField
                               type="text"
                               fullWidth
                               onChange={(e) =>

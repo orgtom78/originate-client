@@ -23,7 +23,6 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { s3Upload } from "src/libs/awsLib.js";
 import { green } from "@material-ui/core/colors";
 import countries from "src/components/FormLists/countries.js";
 
@@ -75,7 +74,10 @@ const UpdateBankForm = ({ className, ...rest }) => {
   const context = useUser();
   const sub = context.sub;
 
-  const [bankId, setBankId] = useState("");
+  const [dynamobankid, setdynamobankId] = useState("");
+  const [identityId, setIdentityId] = useState("");
+  const [supplierId, setSupplierId] = useState("");
+  //const [bankId, setBankId] = useState("");
   const [
     account_statement_attachment,
     setAccount_statement_attachment,
@@ -115,20 +117,22 @@ const UpdateBankForm = ({ className, ...rest }) => {
   async function getBank(input) {
     let filter = {
       userId: { eq: input },
-      sortkey: { contains: "bank-supplier" },
     };
     try {
       const {
         data: {
-          listsBank: { items: itemsPage1, nextToken },
+          listBanks: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBank, { filter: filter })
+        graphqlOperation(queries.listBanks, { filter: filter })
       );
-      const n = { data: { listsBank: { items: itemsPage1, nextToken } } };
-      const bank = await n.data.listsBank.items[0];
+      const n = { data: { listBanks: { items: itemsPage1, nextToken } } };
+      const bank = await n.data.listBanks.items[0];
       const {
-        bankId,
+        id,
+        supplierId,
+        identityId,
+        //bankId,
         bank_name,
         bank_account_name,
         bank_account_number,
@@ -143,7 +147,10 @@ const UpdateBankForm = ({ className, ...rest }) => {
         iban,
         account_statement_attachment,
       } = bank;
-      setBankId(bankId);
+      setdynamobankId(id);
+      setSupplierId(supplierId);
+      setIdentityId(identityId);
+      //setBankId(bankId);
       setBank_name(bank_name);
       setBank_account_name(bank_account_name);
       setBank_account_number(bank_account_number);
@@ -162,15 +169,27 @@ const UpdateBankForm = ({ className, ...rest }) => {
     }
   }
 
+  async function s3Up(file, name) {
+    var fileExtension = file.name.split(".").pop();
+    const filename = `${sub}${supplierId}${name}.${fileExtension}`;
+
+    const stored = await Storage.put(filename, file, {
+      level: "private",
+      identityId: identityId,
+      contentType: file.type,
+    });
+    return stored.key;
+  }
+
   async function handleBankSubmit() {
     setBankSuccess(false);
     setBankLoading(true);
     try {
       const userId = sub;
-      const sortkey = bankId;
+      const id = dynamobankid;
       await updateBank({
+        id,
         userId,
-        sortkey,
         bank_name,
         bank_account_name,
         bank_account_number,
@@ -190,6 +209,7 @@ const UpdateBankForm = ({ className, ...rest }) => {
     setBankSuccess(true);
     setBankLoading(false);
     navigate("/app/account");
+    window.location.reload();
   }
 
   function updateBank(input) {
@@ -214,13 +234,16 @@ const UpdateBankForm = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(account_statement_attachment);
+          var y = await Storage.get(account_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setAccountimg(y);
         }
       }
       getbankaccountimgurl();
     }
-  }, [account_statement_attachment]);
+  }, [account_statement_attachment, identityId]);
 
   useEffect(() => {
     if (account_statement_attachment) {
@@ -229,13 +252,16 @@ const UpdateBankForm = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(account_statement_attachment);
+          var y = await Storage.get(account_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setAccountpdf(y);
         }
       }
       getbankidpdfurl();
     }
-  }, [account_statement_attachment]);
+  }, [account_statement_attachment, identityId]);
 
   function accountisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -354,12 +380,14 @@ const UpdateBankForm = ({ className, ...rest }) => {
     setAccountSuccess(false);
     setAccountLoading(true);
     try {
-      const u = newfile ? await s3Upload(newfile) : null;
+      const u = newfile
+        ? await s3Up(newfile, "account_statement_attachment")
+        : null;
       var account_statement_attachment = u;
-      const sortkey = bankId;
+      const id = dynamobankid;
       const userId = sub;
       await updateBank({
-        sortkey,
+        id,
         userId,
         account_statement_attachment,
       });
@@ -369,6 +397,7 @@ const UpdateBankForm = ({ className, ...rest }) => {
     setAccountSuccess(true);
     setAccountLoading(false);
     navigate("/app/account");
+    window.location.reload();
   }
 
   return (

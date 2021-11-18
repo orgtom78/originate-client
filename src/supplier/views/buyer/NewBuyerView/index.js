@@ -104,7 +104,7 @@ export default function NewAccount() {
       const buyer_loan_request_amount = values["buyer_loan_request_amount"];
       const buyer_payment_terms = values["buyer_payment_terms"];
       const buyer_sample_trading_docs_attachment =
-        values["buyer_sales_contract_attachment"];
+        values["buyer_sample_trading_docs_attachment"];
       const buyer_sold_goods_description =
         values["buyer_sold_goods_description"];
 

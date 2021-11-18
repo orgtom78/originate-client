@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
-  Card,
   Divider,
   Drawer,
   Hidden,
@@ -99,7 +98,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const [avatar, setAvatar] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_country, setSupplier_country] = useState("");
-  const [supplier_industry, setSupplier_industry] = useState("");
+  //const [supplier_industry, setSupplier_industry] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const context = useUser();
 
@@ -110,12 +109,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       const {
         supplier_name,
         supplier_country,
-        supplier_industry,
+        //supplier_industry,
         supplier_logo,
       } = data;
       setSupplier_name(supplier_name);
       setSupplier_country(supplier_country);
-      setSupplier_industry(supplier_industry);
+      //setSupplier_industry(supplier_industry);
       setSupplier_logo(supplier_logo);
       const z = await Storage.vault.get(supplier_logo);
       setAvatar(z);

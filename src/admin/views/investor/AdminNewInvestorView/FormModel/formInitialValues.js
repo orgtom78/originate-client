@@ -1,8 +1,6 @@
 import NewInvestorFormModel from "./NewInvestorFormModel";
 const {
   formField: {
-    userId,
-    identityId,
     investor_logo,
     investor_name,
     investor_type,
@@ -61,9 +59,7 @@ const {
   },
 } = NewInvestorFormModel;
 
-export default {
-  [userId.name]: "",
-  [identityId.name]: "",
+const values = {
   [investor_logo.name]: "",
   [investor_name.name]: "",
   [investor_trading_name.name]: "",
@@ -120,3 +116,5 @@ export default {
   [short_term_debt.name]: "",
   [working_capital.name]: "",
 };
+
+export default values;

@@ -23,6 +23,7 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@material-ui/core/colors";
+import { useParams } from "react-router-dom";
 
 const idtype = [
   {
@@ -97,9 +98,10 @@ const useStyles = makeStyles((theme) => ({
 const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
   const [identityId, setIdentityId] = useState("");
+  const [userId, setUserId] = useState("");
   const [directorId, setDirectorId] = useState("");
   const [director_status, setDirector_status] = useState("");
   const [director_name, setDirector_name] = useState("");
@@ -136,12 +138,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const directorpoaname = "Director Proof of Address";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.directorId;
-    var userId = sub;
-    var sortkey = key;
-    getDirector({ userId, sortkey });
-  }, [value.directorId, value.userId]);
+    getDirector({ id });
+  }, [id]);
 
   async function getDirector(input) {
     try {
@@ -151,6 +149,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       const {
         data: {
           getDirector: {
+            userId,
             identityId,
             directorId,
             director_status,
@@ -166,6 +165,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           },
         },
       } = director;
+      setUserId(userId);
       setIdentityId(identityId);
       setDirectorId(directorId);
       setDirector_status(director_status);
@@ -187,9 +187,9 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectorSuccess(false);
     setDirectorLoading(true);
     try {
-      const userId = sub;
       const sortkey = directorId;
       await updateDirector({
+        id,
         userId,
         sortkey,
         director_status,
@@ -242,7 +242,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectoridimgurl();
     }
-  }, [director_id_attachment, sub, identityId]);
+  }, [director_id_attachment, identityId]);
 
   useEffect(() => {
     if (director_id_attachment) {
@@ -260,7 +260,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectoridpdfurl();
     }
-  }, [director_id_attachment, sub, identityId]);
+  }, [director_id_attachment, identityId]);
 
   function directoridisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -364,7 +364,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   }
 
   async function s3Up(file, name) {
-    const userid = sub;
+    const userid = userId;
     const sectorid = directorId;
     var fileExtension = file.name.split(".").pop();
     const filename = `${userid}${sectorid}${name}.${fileExtension}`;
@@ -382,11 +382,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, 'director_id_attachment') : null;
       var director_id_attachment = u;
-      const sortkey = directorId;
-      const userId = sub;
       await updateDirector({
-        sortkey,
-        userId,
+        id,
         director_id_attachment,
       });
     } catch (e) {
@@ -422,7 +419,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectorpoaimgurl();
     }
-  }, [director_poa_attachment, sub, identityId]);
+  }, [director_poa_attachment, identityId]);
 
   useEffect(() => {
     if (director_poa_attachment) {
@@ -440,7 +437,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectorpoapdfurl();
     }
-  }, [director_poa_attachment, sub, identityId]);
+  }, [director_poa_attachment, identityId]);
 
   function directorpoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -549,11 +546,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, 'director_poa_attachment') : null;
       var director_poa_attachment = u;
-      const sortkey = directorId;
-      const userId = sub;
       await updateDirector({
-        sortkey,
-        userId,
+        id,
         director_poa_attachment,
       });
     } catch (e) {

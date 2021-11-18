@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
 const DocumentListView = (value) => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
   const { ident } = useParams();
   const [document, setDocument] = useState([]);
 
@@ -55,7 +54,6 @@ const DocumentListView = (value) => {
     async function getDocuments() {
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "document-buyer" },
       };
       const {
         data: {

@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -16,7 +17,7 @@ import {
   Typography,
   makeStyles,
   MuiThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -25,7 +26,6 @@ import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import { green, orange } from "@material-ui/core/colors";
-import AdminUpdateUboView from "src/admin/views/ubo/AdminUpdateUboView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,20 +45,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
 const UboListView = (value) => {
   const classes = useStyles();
-  const sub = value.value.value.value.userId;
+  const id = value.value;
   const [ubo, setUbo] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [uboId, setUboId] = useState("");
-  const [isclicked, setIsclicked] = useState("");
 
   const [selectedUboIds, setSelectedUboIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -66,33 +63,22 @@ const UboListView = (value) => {
 
   useEffect(() => {
     async function getUbos() {
-      const id = await sub;
       let filter = {
-        userId: { eq: id },
-        sortkey: { contains: "ubo-investor" },
+        investorId: { eq: id },
       };
       const {
         data: {
-          listsUBO: { items: itemsPage1, nextToken },
+          listUBOs: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUbo, { filter: filter })
+        graphqlOperation(queries.listUbOs, { filter: filter })
       );
-      const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsUBO.items;
+      const n = { data: { listUBOs: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listUBOs.items;
       setUbo(items);
     }
     getUbos();
-  }, [sub]);
-
-  const handler = useCallback(() => {
-    if (!ubo || !ubo.length) {
-      return;
-    } else {
-      const d = ubo;
-      return d;
-    }
-  }, [ubo]);
+  }, [id]);
 
   const handleSelectAll = (event) => {
     let newSelectedUboIds;
@@ -162,15 +148,8 @@ const UboListView = (value) => {
     }
   }
 
-  function getidandident(sortkey, userId) {
-    setUserId(userId);
-    setUboId(sortkey);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
         <Page className={clsx(classes.root)} title="Ubos">
           <Container maxWidth="lg">
             <Box mt={3}>
@@ -218,15 +197,14 @@ const UboListView = (value) => {
                             </TableCell>
                             <TableCell>
                               <Box alignItems="center" display="flex">
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={ubo.avatarUrl}
-                                  onClick={() =>
-                                    getidandident(ubo.sortkey, ubo.userId)
-                                  }
-                                >
-                                  {getInitials(ubo.ubo_name)}
-                                </Avatar>
+                                <Link to={`/admin/ubo/${ubo.id}/`}>
+                                  <Avatar
+                                    className={classes.avatar}
+                                    src={`${ubo.avatarUrl}`}
+                                  >
+                                    {getInitials(ubo.ubo_name)}
+                                  </Avatar>
+                                </Link>
                                 <Typography color="textPrimary" variant="body1">
                                   {ubo.ubo_name}
                                 </Typography>
@@ -259,11 +237,6 @@ const UboListView = (value) => {
             </Box>
           </Container>
         </Page>
-      ) : (
-        <>
-          <AdminUpdateUboView value={{ userId, uboId }} />
-        </>
-      )}
     </React.Fragment>
   );
 };

@@ -81,9 +81,8 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const [avatar, setAvatar] = useState("");
   const [investor_name, setInvestor_name] = useState("");
   const [investor_country, setInvestor_country] = useState("");
-  const [investor_industry, setInvestor_industry] = useState("");
-  const [investor_logo, setInvestor_logo] = useState("");
-
+  //const [investor_industry, setInvestor_industry] = useState("");
+  //const [investor_logo, setInvestor_logo] = useState("");
 
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
@@ -91,32 +90,32 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       let user = await Auth.currentAuthenticatedUser();
       const { attributes = {} } = user;
       const b = attributes["custom:groupid"];
-      let filter = { userId: { eq: b }, sortkey: { contains: "investor-" } };
+      let filter = { userId: { eq: b } };
       const {
         data: {
-          listsInvestor: { items: itemsPage1, nextToken },
+          listInvestors: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsInvestor, { filter: filter })
+        graphqlOperation(queries.listInvestors, { filter: filter })
       );
-      const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
-      const investor = n.data.listsInvestor.items[0];
-      if (investor){
-      const {
-        investor_name,
-        investor_country,
-        investor_industry,
-        investor_logo,
-      } = investor; 
-      setInvestor_name(investor_name);
-      setInvestor_country(investor_country);
-      setInvestor_industry(investor_industry);
-      setInvestor_logo(investor_logo);
-      const z = await Storage.vault.get(investor_logo);
-      setAvatar(z);
-    } else {
-      return
-    }
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const investor = n.data.listInvestors.items[0];
+      if (investor) {
+        const {
+          investor_name,
+          investor_country,
+          //investor_industry,
+          investor_logo,
+        } = investor;
+        setInvestor_name(investor_name);
+        setInvestor_country(investor_country);
+        //setInvestor_industry(investor_industry);
+        //setInvestor_logo(investor_logo);
+        const z = await Storage.vault.get(investor_logo);
+        setAvatar(z);
+      } else {
+        return;
+      }
     }
     onLoad();
   }, []);

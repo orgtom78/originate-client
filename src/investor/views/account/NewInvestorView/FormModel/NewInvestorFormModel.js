@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewInvestor",
   formField: {
     investor_logo: {
@@ -229,3 +229,5 @@ export default {
     },
   },
 };
+
+export default model;

@@ -13,7 +13,7 @@ const {
   },
 } = NewSupplierDirectorFormModel;
 
-export default {
+const values = {
   [director_name.name]: "",
   [director_email.name]: "",
   [director_phone_number.name]: "",
@@ -24,3 +24,5 @@ export default {
   [director_poa_attachment.name]: "",
   [director_country_of_residence.name]: undefined,
 };
+
+export default values;

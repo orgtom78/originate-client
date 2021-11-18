@@ -17,7 +17,7 @@ const {
   },
 } = NewTransactionFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [invoice_attachment.name]: Yup.string().required(
       `${invoice_attachment.requiredErrorMsg}`
@@ -45,3 +45,5 @@ export default [
     [cargo_insurance_name.name]: Yup.string(),
   }),
 ];
+
+export default yup;

@@ -67,11 +67,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UpdateBankForm = ({ className, value, ...rest }) => {
+const UpdateBankForm = ({ className, value, user, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.value.value.userId;
+  const sub = value;
+  const userId = user;
 
+  const [id, setId] = useState("");
   const [bankId, setBankId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [
@@ -105,26 +107,26 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
   const accountname = "Bank Statement";
 
   useEffect(() => {
-    var userId = sub;
-    getBank(userId);
+    var supplierId = sub;
+    getBank(supplierId);
   }, [sub]);
 
   async function getBank(input) {
     let filter = {
-      userId: { eq: input },
-      sortkey: { contains: "bank-supplier" },
+      supplierId: { eq: input },
     };
     try {
       const {
         data: {
-          listsBank: { items: itemsPage1, nextToken },
+          listBanks: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBank, { filter: filter })
+        graphqlOperation(queries.listBanks, { filter: filter })
       );
-      const n = { data: { listsBank: { items: itemsPage1, nextToken } } };
-      const bank = n.data.listsBank.items[0];
+      const n = { data: { listBanks: { items: itemsPage1, nextToken } } };
+      const bank = n.data.listBanks.items[0];
       const {
+        id,
         bankId,
         identityId,
         bank_name,
@@ -141,6 +143,7 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
         iban,
         account_statement_attachment,
       } = bank;
+      setId(id);
       setBankId(bankId);
       setIdentityId(identityId);
       setBank_name(bank_name);
@@ -165,11 +168,11 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
     setBankSuccess(false);
     setBankLoading(true);
     try {
-      const userId = sub;
-      const sortkey = bankId;
-      await updateBank({
+      if (id === ""){
+      const supplierId = sub;
+      await createBank({
         userId,
-        sortkey,
+        supplierId,
         bank_name,
         bank_account_name,
         bank_account_number,
@@ -182,18 +185,40 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
         bank_routing_number,
         bic_swift_code,
         iban,
-      });
+      });}
+      else {
+        await updateBank({
+          id,
+          bank_name,
+          bank_account_name,
+          bank_account_number,
+          bank_account_sortcode,
+          bank_address_city,
+          bank_address_street,
+          bank_address_number,
+          bank_address_postalcode,
+          bank_country,
+          bank_routing_number,
+          bic_swift_code,
+          iban,
+        });
+      }
     } catch (e) {
       onError(e);
     }
     setBankSuccess(true);
     setBankLoading(false);
-    navigate("/admin/suppliers");
   }
 
   function updateBank(input) {
     return API.graphql(
       graphqlOperation(mutations.updateBank, { input: input })
+    );
+  }
+
+  function createBank(input) {
+    return API.graphql(
+      graphqlOperation(mutations.createBank, { input: input })
     );
   }
 
@@ -375,10 +400,9 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
       const u = newfile ? await s3Up(newfile, 'account_statement_attachment') : null;
       console.log(u);
       var account_statement_attachment = u;
-      const sortkey = bankId;
       const userId = sub;
       await updateBank({
-        sortkey,
+        id,
         userId,
         account_statement_attachment,
       });

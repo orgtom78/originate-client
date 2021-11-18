@@ -51,7 +51,7 @@ const {
   },
 } = NewFinancialsFormModel;
 
-export default {
+const values = {
   [supplierId.name]: "",
   [buyerId.name]: "",
   [identityId.name]: "",
@@ -100,3 +100,5 @@ export default {
   [cash.name]: "",
   [working_capital.name]: "",
 };
+
+export default values;

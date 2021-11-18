@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -7,7 +7,6 @@ import {
   Card,
   Chip,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -17,7 +16,7 @@ import {
   Typography,
   makeStyles,
   MuiThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -46,10 +45,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -59,7 +58,6 @@ const UboListView = () => {
   const sub = context.sub;
   const [ubo, setUbo] = useState([]);
 
-  const [selectedUboIds, setSelectedUboIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
@@ -68,62 +66,20 @@ const UboListView = () => {
       const id = await sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "ubo-supplier" },
       };
       const {
         data: {
-          listsUBO: { items: itemsPage1, nextToken },
+          listUBOs: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUbo, { filter: filter })
+        graphqlOperation(queries.listUbOs, { filter: filter })
       );
-      const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsUBO.items;
+      const n = { data: { listUBOs: { items: itemsPage1, nextToken } } };
+      const items = n.data.listUBOs.items;
       setUbo(items);
     }
     getUbos();
   }, [sub]);
-
-  const handler = useCallback(() => {
-    if (!ubo || !ubo.length) {
-      return;
-    } else {
-      const d = ubo;
-      return d;
-    }
-  }, [ubo]);
-
-  const handleSelectAll = (event) => {
-    let newSelectedUboIds;
-
-    if (event.target.checked) {
-      newSelectedUboIds = ubo.map((ubo) => ubo.uboId);
-    } else {
-      newSelectedUboIds = [];
-    }
-
-    setSelectedUboIds(newSelectedUboIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUboIds.indexOf(id);
-    let newSelectedUboIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(1));
-    } else if (selectedIndex === selectedUboIds.length - 1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(
-        selectedUboIds.slice(0, selectedIndex),
-        selectedUboIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedUboIds(newSelectedUboIds);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -180,14 +136,10 @@ const UboListView = () => {
                   </TableHead>
                   <TableBody>
                     {ubo.slice(0, limit).map((ubo) => (
-                      <TableRow
-                        hover
-                        key={ubo.uboId}
-                        selected={selectedUboIds.indexOf(ubo.uboId) !== -1}
-                      >
+                      <TableRow hover key={ubo.uboId}>
                         <TableCell>
                           <Box alignItems="center" display="flex">
-                            <Link to={`/app/updateubo/${ubo.uboId}`}>
+                            <Link to={`/app/updateubo/${ubo.id}`}>
                               <Avatar
                                 className={classes.avatar}
                                 src={ubo.avatarUrl}
@@ -201,9 +153,7 @@ const UboListView = () => {
                           </Box>
                         </TableCell>
                         <TableCell>{ubo.ubo_email}</TableCell>
-                        <TableCell>
-                          {`${ubo.ubo_nationality}`}
-                        </TableCell>
+                        <TableCell>{`${ubo.ubo_nationality}`}</TableCell>
                         <TableCell>{checkstatus(ubo.ubo_status)}</TableCell>
                         <TableCell>
                           {moment(ubo.createdAt).format("DD/MM/YYYY")}

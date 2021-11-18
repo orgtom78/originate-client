@@ -34,7 +34,7 @@
     "@material-ui/styles": "^4.10.0",
     "@mrmlnc/readdir-enhanced": "^2.2.1",
     "@sentry/browser": "^5.27.1",
-    "aws-amplify": "^3.3.20",
+    "aws-amplify": "^4.3.4",
     "aws-sdk": "^2.802.0",
     "chart.js": "^2.9.3",
     "clsx": "^1.1.1",
@@ -57,7 +57,7 @@
     "react-perfect-scrollbar": "^1.5.8",
     "react-router": "^6.0.0-beta.0",
     "react-router-dom": "^6.0.0-beta.0",
-    "react-scripts": "^4.0.3",
+    "react-scripts": "^4.0.0",
     "react-simple-maps": "^2.3.0",
     "uuid": "^8.3.0",
     "yup": "^0.29.3"

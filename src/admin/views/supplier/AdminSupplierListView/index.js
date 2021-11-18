@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -24,7 +24,6 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import AdminSupplierView from "src/admin/views/supplier/AdminSupplierView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,10 +40,6 @@ const useStyles = makeStyles((theme) => ({
 const AdminSupplierListView = () => {
   const classes = useStyles();
   const [supplier, setSupplier] = useState([]);
-  const [isclicked, setIsclicked] = useState("");
-  const [userId, setUserId] = useState("");
-  const [supplierId, setSupplierId] = useState("");
-  const [identityId, setIdentityId] = useState("");
 
   const [selectedSupplierIds, setSelectedSupplierIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -52,31 +47,17 @@ const AdminSupplierListView = () => {
 
   React.useEffect(() => {
     async function getSuppliers() {
-      let filter = {
-        sortkey: { contains: "supplier-" },
-      };
       const {
         data: {
-          listsSupplier: { items: itemsPage1, nextToken },
+          listSuppliers: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsSupplier, { filter: filter })
-      );
-      const n = { data: { listsSupplier: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsSupplier.items;
+      } = await API.graphql(graphqlOperation(queries.listSuppliers));
+      const n = { data: { listSuppliers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listSuppliers.items;
       setSupplier(items);
     }
     getSuppliers();
   }, []);
-
-  const handler = useCallback(() => {
-    if (!supplier || !supplier.length) {
-      console.log("test");
-    } else {
-      const d = supplier;
-      return d;
-    }
-  }, [supplier]);
 
   const handleSelectAll = (event) => {
     let newSelectedSupplierIds;
@@ -125,47 +106,41 @@ const AdminSupplierListView = () => {
     setPage(newPage);
   };
 
-  function getidandident(supplierId, userId, identityId) {
-    setUserId(userId);
-    setSupplierId(supplierId);
-    setIdentityId(identityId);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <Page className={clsx(classes.root)} title="Suppliers">
-          <Container maxWidth={false}>
-            <Box mt={3}>
-              <Card>
-                <PerfectScrollbar>
-                  <Box minWidth={1050}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                selectedSupplierIds.length === supplier.length
-                              }
-                              color="primary"
-                              indeterminate={
-                                selectedSupplierIds.length > 0 &&
-                                selectedSupplierIds.length < supplier.length
-                              }
-                              onChange={handleSelectAll}
-                            />
-                          </TableCell>
-                          <TableCell>Supplier's Name</TableCell>
-                          <TableCell>Country</TableCell>
-                          <TableCell>Industry</TableCell>
-                          <TableCell>Website</TableCell>
-                          <TableCell>Latest update</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {supplier.slice(page * limit, page * limit + limit).map((supplier) => (
+      <Page className={clsx(classes.root)} title="Suppliers">
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            <Card>
+              <PerfectScrollbar>
+                <Box minWidth={1050}>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={
+                              selectedSupplierIds.length === supplier.length
+                            }
+                            color="primary"
+                            indeterminate={
+                              selectedSupplierIds.length > 0 &&
+                              selectedSupplierIds.length < supplier.length
+                            }
+                            onChange={handleSelectAll}
+                          />
+                        </TableCell>
+                        <TableCell>Supplier's Name</TableCell>
+                        <TableCell>Country</TableCell>
+                        <TableCell>Industry</TableCell>
+                        <TableCell>Website</TableCell>
+                        <TableCell>Latest update</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {supplier
+                        .slice(page * limit, page * limit + limit)
+                        .map((supplier) => (
                           <TableRow
                             hover
                             key={supplier.supplierId}
@@ -190,20 +165,14 @@ const AdminSupplierListView = () => {
                             </TableCell>
                             <TableCell>
                               <Box alignItems="center" display="flex">
-                                <Avatar
-                                  className={classes.avatar}
-                                  src={`${supplier.supplier_logo}`}
-                                  onClick={() =>
-                                    getidandident(
-                                      supplier.supplierId,
-                                      supplier.userId,
-                                      supplier.identityId
-                                    )
-                                  }
-                                >
-                                  {getInitials(supplier.supplier_name)}
-                                </Avatar>
-
+                                <Link to={`/admin/supplier/${supplier.id}/`}>
+                                  <Avatar
+                                    className={classes.avatar}
+                                    src={`${supplier.supplier_logo}`}
+                                  >
+                                    {getInitials(supplier.supplier_name)}
+                                  </Avatar>
+                                </Link>
                                 <Typography color="textPrimary" variant="body1">
                                   {supplier.supplier_name}
                                 </Typography>
@@ -223,34 +192,29 @@ const AdminSupplierListView = () => {
                             </TableCell>
                           </TableRow>
                         ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </PerfectScrollbar>
-                <TablePagination
-                  component="div"
-                  count={supplier.length}
-                  onChangePage={handlePageChange}
-                  onChangeRowsPerPage={handleLimitChange}
-                  page={page}
-                  rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25]}
-                />
-              </Card>
-            </Box>
-            <Divider />
-            <Box display="flex" justifyContent="flex-end" p={2}>
-              <Link to={''}>
-                <Button>Add Supplier</Button>
-              </Link>
-            </Box>
-          </Container>
-        </Page>
-      ) : (
-        <>
-          <AdminSupplierView value={{ userId, supplierId, identityId }} />
-        </>
-      )}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </PerfectScrollbar>
+              <TablePagination
+                component="div"
+                count={supplier.length}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25]}
+              />
+            </Card>
+          </Box>
+          <Divider />
+          <Box display="flex" justifyContent="flex-end" p={2}>
+            <Link to={`/admin/suppliergroups/`}>
+              <Button>Add Supplier</Button>
+            </Link>
+          </Box>
+        </Container>
+      </Page>
     </React.Fragment>
   );
 };

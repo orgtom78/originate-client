@@ -16,7 +16,7 @@ const {
   },
 } = NewTransactionFormModel;
 
-export default {
+const values = {
   [purchase_order_attachment.name]: "",
   [invoice_amount.name]: "",
   [invoice_currency.name]: "",
@@ -30,3 +30,5 @@ export default {
   [bill_of_lading_attachment.name]: "",
   [sold_goods_description.name]: "",
 };
+
+export default values;

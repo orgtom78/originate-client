@@ -26,7 +26,6 @@ import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
-import * as queries from "src/graphql/queries.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -85,6 +84,7 @@ const status = [
 const RequestForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const [id, setId] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
@@ -99,17 +99,12 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [requestsuccess, setRequestSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.userId;
-    const sortkey = value.requestId;
-    getRequest({ userId, sortkey });
-    async function getRequest(input) {
+    getRequest();
+    async function getRequest() {
       try {
-        const request = await API.graphql(
-          graphqlOperation(queries.getRequest, input)
-        );
+        const request = value;
         const {
-          data: {
-            getRequest: {
+              id,
               request_status,
               buyer_name,
               supplier_name,
@@ -119,9 +114,8 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_date,
               invoice_due_date,
               cargo_insurance_name,
-            },
-          },
-        } = request;
+            } = request;
+        setId(id);
         setRequest_status(request_status);
         setBuyer_name(buyer_name);
         setSupplier_name(supplier_name);
@@ -135,20 +129,17 @@ const RequestForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.userId, value.requestId]);
+  }, [value]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      const userId = value.userId;
-      const sortkey = value.requestId;
       if (request_status === "Approved") {
         var now = new Date();
         const payout_date = now.toISOString();
         await updateRequest({
-          userId,
-          sortkey,
+          id,
           request_status,
           buyer_name,
           supplier_name,
@@ -162,8 +153,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         });
       } else {
         await updateRequest({
-          userId,
-          sortkey,
+          id,
           request_status,
           buyer_name,
           supplier_name,

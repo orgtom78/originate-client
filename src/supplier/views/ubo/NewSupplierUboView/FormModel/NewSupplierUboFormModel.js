@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewUbo",
   formField: {
     ubo_name: {
@@ -48,3 +48,5 @@ export default {
     },
   },
 };
+
+export default model;

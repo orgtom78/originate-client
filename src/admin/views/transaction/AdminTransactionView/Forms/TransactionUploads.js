@@ -55,6 +55,7 @@ const useStyles = makeStyles(() => ({
 function BuyerUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [id, setId] = useState("");
   const [sub, setSub] = useState("");
   const [requestId, setRequestId] = useState("");
   const [identityId, setIdentityId] = useState("");
@@ -112,12 +113,9 @@ function BuyerUploads(value) {
   const cargoiname = "Cargo Insurance";
 
   useEffect(() => {
-    const sub = value.value.value.value.userId;
-    const key = value.value.value.value.requestId;
-    var userId = sub;
-    var sortkey = key;
-    getTransaction({ userId, sortkey });
-  }, [value.value.value.value.userId, value.value.value.value.requestId]);
+    const id = value.value.value
+    getTransaction({id});
+  }, [value]);
 
   async function getTransaction(input) {
     try {
@@ -127,6 +125,7 @@ function BuyerUploads(value) {
       const {
         data: {
           getRequest: {
+            id,
             identityId,
             userId,
             requestId,
@@ -139,6 +138,7 @@ function BuyerUploads(value) {
           },
         },
       } = request;
+      setId(id);
       setSub(userId);
       setRequestId(requestId);
       setIdentityId(identityId);
@@ -323,11 +323,8 @@ function BuyerUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, "invoice_attachment") : null;
       var invoice_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         invoice_attachment,
       });
     } catch (e) {
@@ -335,7 +332,7 @@ function BuyerUploads(value) {
     }
     setInvoiceSuccess(true);
     setInvoiceLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   useEffect(() => {
@@ -492,12 +489,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "purchase_order_attachment")
         : null;
       var purchase_order_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
-      console.log(sub);
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         purchase_order_attachment,
       });
     } catch (e) {
@@ -505,7 +498,7 @@ function BuyerUploads(value) {
     }
     setPurchaseoSuccess(true);
     setPurchaseoLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   useEffect(() => {
@@ -660,11 +653,8 @@ function BuyerUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, "offer_notice_attachment") : null;
       var offer_notice_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         offer_notice_attachment,
       });
     } catch (e) {
@@ -672,7 +662,7 @@ function BuyerUploads(value) {
     }
     setOffernSuccess(true);
     setOffernLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   useEffect(() => {
@@ -827,11 +817,8 @@ function BuyerUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, "ipu_attachment") : null;
       var ipu_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         ipu_attachment,
       });
     } catch (e) {
@@ -839,7 +826,7 @@ function BuyerUploads(value) {
     }
     setIpuSuccess(true);
     setIpuLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   useEffect(() => {
@@ -996,11 +983,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "bill_of_lading_attachment")
         : null;
       var bill_of_lading_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         bill_of_lading_attachment,
       });
     } catch (e) {
@@ -1008,7 +992,7 @@ function BuyerUploads(value) {
     }
     setBlSuccess(true);
     setBlLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   useEffect(() => {
@@ -1165,11 +1149,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "cargo_insurance_attachment")
         : null;
       var cargo_insurance_attachment = u;
-      const sortkey = requestId;
-      const userId = sub;
       await updateRequest({
-        sortkey,
-        userId,
+        id,
         cargo_insurance_attachment,
       });
     } catch (e) {
@@ -1177,7 +1158,7 @@ function BuyerUploads(value) {
     }
     setCargoiSuccess(true);
     setCargoiLoading(false);
-    navigate("/admin/requests");
+    navigate("/admin/transactions");
   }
 
   return (

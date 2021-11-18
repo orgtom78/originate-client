@@ -15,6 +15,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
+import * as queries from "src/graphql/queries.js";
 
 import Page from "src/components/Page";
 
@@ -63,7 +64,7 @@ export default function NewSupplier() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
-  const { id } = useParams();
+  const { ID } = useParams();
   const { ident } = useParams();
   const { sub } = useParams();
 
@@ -76,7 +77,7 @@ export default function NewSupplier() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const userId = id;
+      const userId = ID;
       const identityId = ident;
       const supplier_logo = values["supplier_logo"];
       const supplier_name = values["supplier_name"];
@@ -112,7 +113,7 @@ export default function NewSupplier() {
       const director_poa_attachment = values["director_poa_attachment"];
       const director_country_of_residence =
         values["director_country_of_residence"];
-      const director_status = "under review";
+      const director_status = "Under Review";
 
       const ubo_name = values["ubo_name"];
       const ubo_email = values["ubo_email"];
@@ -123,7 +124,7 @@ export default function NewSupplier() {
       const ubo_nationality = values["ubo_nationality"];
       const ubo_poa_attachment = values["ubo_poa_attachment"];
       const ubo_country_of_residence = values["ubo_country_of_residence"];
-      const ubo_status = "under review";
+      const ubo_status = "Under Review";
 
       const financials_attachment = values["financial_accounts_attachment"];
       const financials_reporting_period = values["financials_reporting_period"];
@@ -133,7 +134,7 @@ export default function NewSupplier() {
       const total_assets = values["total_assets"];
       const total_liabilities = values["total_liabilities"];
       const ebit = values["ebit"];
-      const financials_status = "under review";
+      const financials_status = "Under Review";
       const accounts_payable = values["accounts_payable"];
       const accounts_receivable = values["accounts_receivable"];
       const cash = values["cash"];
@@ -144,7 +145,6 @@ export default function NewSupplier() {
       const retained_earnings = values["retained_earnings"];
       const short_term_debt = values["short_term_debt"];
       const working_capital = values["working_capital"];
-      const buyerId = values["buyerId"];
 
       await createSupplier({
         userId,
@@ -172,6 +172,7 @@ export default function NewSupplier() {
 
       await createDirector({
         userId,
+        supplierId,
         directorId,
         identityId,
         director_name,
@@ -188,6 +189,7 @@ export default function NewSupplier() {
 
       await createUbo({
         userId,
+        supplierId,
         uboId,
         identityId,
         ubo_name,
@@ -206,7 +208,6 @@ export default function NewSupplier() {
         userId,
         financialsId,
         supplierId,
-        buyerId,
         identityId,
         accounts_payable,
         accounts_receivable,
@@ -260,10 +261,23 @@ export default function NewSupplier() {
     );
   }
 
-  function updateUsergroup() {
+  function getUsergroupid(input) {
+    return API.graphql(
+      graphqlOperation(queries.listUsergroups, { input: input })
+    );
+  }
+
+  async function updateUsergroup() {
     var userId = sub;
-    var sortkey = id;
-    var input = { userId, sortkey, supplierId };
+    var groupId = ID;
+    const { data: {
+      listUsergroups: { items: itemsPage1, nextToken },
+    }}  = await getUsergroupid({ userId, groupId});
+    const n = { data: { listUsergroupss: { items: itemsPage1, nextToken } } };
+    const items = n.data.listUsergroupss.items;
+    const id = items[0].id;
+    console.log(items)
+    var input = { userId, groupId, supplierId, id};
     return API.graphql(
       graphqlOperation(mutations.updateUsergroup, { input: input })
     );

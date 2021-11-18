@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewBuyer",
   formField: {
     buyer_loan_request_amount: {
@@ -158,3 +158,5 @@ export default {
     },
   },
 };
+
+export default model;

@@ -85,12 +85,11 @@ const useStyles = makeStyles((theme) => ({
 const UpdateDocumentForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
-  const buyid = useParams();
-  const docid = value.documentId;
+  const { id } = useParams();
 
+  const [userId, setUserId] = useState("");
+  const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
-  const [documentId, setDocumentId] = useState("");
   const [document_type, setDocument_type] = useState("");
   const [document_attachment, setDocument_attachment] = useState("");
 
@@ -105,10 +104,8 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
   const docname = "Document";
 
   useEffect(() => {
-    var userId = sub;
-    var sortkey = docid;
-    getDocument({ userId, sortkey });
-  }, [docid, sub]);
+    getDocument({ id });
+  }, [id]);
 
   async function getDocument(input) {
     try {
@@ -118,15 +115,17 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
       const {
         data: {
           getDocument: {
+            userId,
+            buyerId,
             identityId,
-            documentId,
             document_attachment,
             document_type,
           },
         },
       } = document;
+      setUserId(userId);
+      setBuyerId(buyerId);
       setIdentityId(identityId);
-      setDocumentId(documentId);
       setDocument_attachment(document_attachment);
       setDocument_type(document_type);
     } catch (err) {
@@ -165,7 +164,7 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
       }
       getdocumentimgurl();
     }
-  }, [document_attachment, sub, identityId]);
+  }, [document_attachment, identityId]);
 
   useEffect(() => {
     if (document_attachment) {
@@ -183,7 +182,7 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
       }
       getdocumentpdfurl();
     }
-  }, [document_attachment, sub, identityId]);
+  }, [document_attachment, identityId]);
 
   function documentisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -287,11 +286,10 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
   }
 
   async function s3Up(file) {
-    var userid = sub;
     var name = document_type;
-    var sectorid = buyid;
+    var sectorid = buyerId;
     var fileExtension = file.name.split(".").pop();
-    const filename = `${userid}${sectorid}${name}.${fileExtension}`;
+    const filename = `${userId}${sectorid}${name}.${fileExtension}`;
     const stored = await Storage.put(filename, file, {
       level: "private",
       identityId: identityId,
@@ -306,11 +304,8 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile) : null;
       var document_attachment = u;
-      const sortkey = documentId;
-      const userId = sub;
       await updateDocument({
-        sortkey,
-        userId,
+        id,
         document_attachment,
         document_type,
       });
@@ -323,34 +318,36 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
   }
 
   return (
-    <Page title="Update Document">
-      <Container maxWidth={false}>
-        <Grid container spacing={3}>
-          <Grid item sm={12} xs={12}>
-            <Select
-              fullWidth
-              label="Document Type"
-              name="document_type"
-              onChange={(e) => setDocument_type(e.target.value)}
-              required
-              value={document_type || ""}
-              variant="outlined"
-            >
-              {type.map((item, index) => (
-                <MenuItem key={index} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Select>
+    <Page className={classes.root} title="Update Document">
+      <Container maxWidth="lg">
+        <React.Fragment>
+          <Grid container spacing={3}>
+            <Grid item sm={12} xs={12}>
+              <Select
+                fullWidth
+                label="Document Type"
+                name="document_type"
+                onChange={(e) => setDocument_type(e.target.value)}
+                required
+                value={document_type || ""}
+                variant="outlined"
+              >
+                {type.map((item, index) => (
+                  <MenuItem key={index} value={item.value}>
+                    {item.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Grid>
           </Grid>
-        </Grid>
-        <Divider />
-        <Grid item sm={12} xs={12}>
-          <>
-            <Typography>Document:</Typography>
-            {documentisimageorpdf(doclabel, docname)}
-          </>
-        </Grid>
+          <Divider />
+          <Grid item sm={12} xs={12}>
+            <>
+              <Typography>Document:</Typography>
+              {documentisimageorpdf(doclabel, docname)}
+            </>
+          </Grid>
+        </React.Fragment>
       </Container>
     </Page>
   );

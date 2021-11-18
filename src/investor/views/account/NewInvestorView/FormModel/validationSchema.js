@@ -51,7 +51,7 @@ const {
   },
 } = NewInvestorFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [investor_logo.name]: Yup.string(),
     [investor_name.name]: Yup.string().required(
@@ -166,3 +166,4 @@ export default [
     [iban.name]: Yup.string(),
   }),
 ];
+export default yup;

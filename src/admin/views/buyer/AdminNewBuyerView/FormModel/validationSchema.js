@@ -3,10 +3,7 @@ import moment from "moment";
 import NewBuyerFormModel from "./NewBuyerFormModel";
 const {
   formField: {
-    userId,
-    identityId,
     investorId,
-    supplierId,
     buyer_address_city,
     buyer_address_number,
     buyer_address_postalcode,
@@ -21,7 +18,8 @@ const {
     buyer_sold_goods_description,
 
     ebit,
-    financials_attachment,
+    balance_sheet_attachment,
+    income_statement_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
@@ -38,12 +36,9 @@ const {
   },
 } = NewBuyerFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
-    [userId.name]: Yup.string().required(`${userId.requiredErrorMsg}`),
     [investorId.name]: Yup.string().required(`${investorId.requiredErrorMsg}`),
-    [identityId.name]: Yup.string().required(`${identityId.requiredErrorMsg}`),
-    [supplierId.name]: Yup.string().required(`${supplierId.requiredErrorMsg}`),
     [buyer_address_city.name]: Yup.string().required(
       `${buyer_address_city.requiredErrorMsg}`
     ),
@@ -72,15 +67,15 @@ export default [
     [buyer_payment_terms.name]: Yup.string().required(
       `${buyer_payment_terms.requiredErrorMsg}`
     ),
-    [buyer_sample_trading_docs_attachment.name]: Yup.string().required(
-      `${buyer_sample_trading_docs_attachment.requiredErrorMsg}`
-    ),
+    [buyer_sample_trading_docs_attachment.name]: Yup.string(),
+
     [buyer_sold_goods_description.name]: Yup.string().nullable(),
   }),
 
   Yup.object().shape({
     [ebit.name]: Yup.number().nullable(),
-    [financials_attachment.name]: Yup.string(),
+    [balance_sheet_attachment.name]: Yup.string(),
+    [income_statement_attachment.name]: Yup.string(),
     [net_profit.name]: Yup.number().nullable(),
     [financials_rating.name]: Yup.string().nullable(),
     [financials_reporting_period.name]: Yup.string()
@@ -121,3 +116,5 @@ export default [
     ),
   }),
 ];
+
+export default yup;

@@ -31,7 +31,9 @@ export default function UploadField(props) {
     const name = await props.name;
     var fileExtension = file.name.split(".").pop();
     const filename = `${id}${ident}${name}.${fileExtension}`;
-    const stored = await Storage.vault.put(filename, file, {
+    const stored = await Storage.put(filename, file, {
+      level: "private",
+      identityId: await props.identityid,
       contentType: file.type,
     });
     return stored.key;

@@ -12,7 +12,6 @@ import {
   TableCell,
   TableHead,
   TableBody,
-  Typography,
   colors,
   makeStyles,
 } from "@material-ui/core";

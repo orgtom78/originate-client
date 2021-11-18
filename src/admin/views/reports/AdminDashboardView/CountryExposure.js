@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TrafficByDevice = ({ className, ...rest }) => {
+const CountryExposure = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -89,7 +89,7 @@ const TrafficByDevice = ({ className, ...rest }) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Top 3 Exposure per Country (%)" />
       <Divider />
       <CardContent>
         <Box height={300} position="relative">
@@ -113,8 +113,8 @@ const TrafficByDevice = ({ className, ...rest }) => {
   );
 };
 
-TrafficByDevice.propTypes = {
+CountryExposure.propTypes = {
   className: PropTypes.string,
 };
 
-export default TrafficByDevice;
+export default CountryExposure;

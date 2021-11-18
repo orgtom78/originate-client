@@ -36,6 +36,8 @@ export default function Profile({ className, ...rest }) {
   const [supplier_industry, setSupplier_industry] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [sub, setSub] = useState("");
+  const [id, setId] = useState("");
+  const [identityId, setIdentityId] = useState("");
   const context = useUser();
 
   const [loading, setLoading] = useState(false);
@@ -43,11 +45,13 @@ export default function Profile({ className, ...rest }) {
   const [uploadedFile, setUploadedFile] = useState("");
   const file = useRef(null);
 
-  React.useEffect(() => {
+ useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
       const data = await context;
       const {
+        id,
+        identityId,
         sub,
         supplierId,
         supplier_logo,
@@ -57,6 +61,8 @@ export default function Profile({ className, ...rest }) {
         supplier_industry,
       } = data;
       setSub(sub);
+      setId(id);
+      setIdentityId(identityId);
       setSupplierId(supplierId);
       setSupplier_name(supplier_name);
       setSupplier_address_city(supplier_address_city);
@@ -78,13 +84,16 @@ export default function Profile({ className, ...rest }) {
     if (uploadedFile) {
       async function geturl() {
         await Auth.currentAuthenticatedUser();
-        const u = await Storage.vault.get(uploadedFile);
+        const u = await Storage.get(uploadedFile, {
+          level: "private",
+          identityId: identityId,
+        });
         setSupplier_logo(uploadedFile);
         setAvatar(u);
       }
       geturl();
     }
-  }, [uploadedFile]);
+  }, [uploadedFile, identityId]);
 
   function handleFileChange(event) {
     file.current = event.target.files[0];
@@ -96,7 +105,10 @@ export default function Profile({ className, ...rest }) {
   }
 
   async function deleteold() {
-    await Storage.vault.remove(supplier_logo);
+    await Storage.remove(supplier_logo, {
+      level: "private",
+      identityId: identityId,
+    });
   }
 
   async function handleLogoSubmit(a) {
@@ -109,6 +121,7 @@ export default function Profile({ className, ...rest }) {
       const userId = sub;
       const sortkey = supplierId;
       await updateSupplier({
+        id,
         userId,
         sortkey,
         supplier_logo,

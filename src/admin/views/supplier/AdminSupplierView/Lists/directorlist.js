@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -16,7 +17,7 @@ import {
   Typography,
   makeStyles,
   MuiThemeProvider,
-  createMuiTheme,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -25,7 +26,6 @@ import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import { green, orange } from "@material-ui/core/colors";
-import AdminUpdateDirectorView from "src/admin/views/director/AdminUpdateDirectorView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,20 +45,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
 const DirectorListView = (value) => {
   const classes = useStyles();
-  const sub = value.value.value.value.userId;
+  const sub = value.value;
   const [director, setDirector] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [directorId, setDirectorId] = useState("");
-  const [isclicked, setIsclicked] = useState("");
 
   const [selectedDirectorIds, setSelectedDirectorIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -68,31 +65,21 @@ const DirectorListView = (value) => {
     async function getDirectors() {
       const id = await sub;
       let filter = {
-        userId: { eq: id },
-        sortkey: { contains: "director-supplier" },
+        supplierId: { eq: id },
       };
       const {
         data: {
-          listsDirector: { items: itemsPage1, nextToken },
+          listDirectors: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsDirector, { filter: filter })
+        graphqlOperation(queries.listDirectors, { filter: filter })
       );
-      const n = { data: { listsDirector: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsDirector.items;
+      const n = { data: { listDirectors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listDirectors.items;
       setDirector(items);
     }
     getDirectors();
   }, [sub]);
-
-  const handler = useCallback(() => {
-    if (!director || !director.length) {
-      return;
-    } else {
-      const d = director;
-      return d;
-    }
-  }, [director]);
 
   const handleSelectAll = (event) => {
     let newSelectedDirectorIds;
@@ -169,121 +156,104 @@ const DirectorListView = (value) => {
     }
   }
 
-  function getidandident(sortkey, userId) {
-    setUserId(userId);
-    setDirectorId(sortkey);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <Page className={clsx(classes.root)} title="Directors">
-          <Container maxWidth="lg">
-            <Box mt={3}>
-              <Card>
-                <PerfectScrollbar>
-                  <Box maxWidth="100%" maxHeight="100%">
-                    <Table>
-                      <TableHead>
-                        <TableRow>
+      <Page className={clsx(classes.root)} title="Directors">
+        <Container maxWidth="lg">
+          <Box mt={3}>
+            <Card>
+              <PerfectScrollbar>
+                <Box maxWidth="100%" maxHeight="100%">
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={
+                              selectedDirectorIds.length === director.length
+                            }
+                            color="primary"
+                            indeterminate={
+                              selectedDirectorIds.length > 0 &&
+                              selectedDirectorIds.length < director.length
+                            }
+                            onChange={handleSelectAll}
+                          />
+                        </TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>Email</TableCell>
+                        <TableCell>Country</TableCell>
+                        <TableCell>Status</TableCell>
+                        <TableCell>Latest update</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {director.slice(0, limit).map((director) => (
+                        <TableRow
+                          hover
+                          key={director.directorId}
+                          selected={
+                            selectedDirectorIds.indexOf(director.directorId) !==
+                            -1
+                          }
+                        >
                           <TableCell padding="checkbox">
                             <Checkbox
                               checked={
-                                selectedDirectorIds.length === director.length
+                                selectedDirectorIds.indexOf(
+                                  director.directorId
+                                ) !== -1
                               }
-                              color="primary"
-                              indeterminate={
-                                selectedDirectorIds.length > 0 &&
-                                selectedDirectorIds.length < director.length
+                              onChange={(event) =>
+                                handleSelectOne(event, director.directorId)
                               }
-                              onChange={handleSelectAll}
+                              value="true"
                             />
                           </TableCell>
-                          <TableCell>Name</TableCell>
-                          <TableCell>Email</TableCell>
-                          <TableCell>Country</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Latest update</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {director.slice(0, limit).map((director) => (
-                          <TableRow
-                            hover
-                            key={director.directorId}
-                            selected={
-                              selectedDirectorIds.indexOf(
-                                director.directorId
-                              ) !== -1
-                            }
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  selectedDirectorIds.indexOf(
-                                    director.directorId
-                                  ) !== -1
-                                }
-                                onChange={(event) =>
-                                  handleSelectOne(event, director.directorId)
-                                }
-                                value="true"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Box alignItems="center" display="flex">
+                          <TableCell>
+                            <Box alignItems="center" display="flex">
+                              <Link to={`/admin/director/${director.id}/`}>
                                 <Avatar
                                   className={classes.avatar}
-                                  src={director.avatarUrl}
-                                  onClick={() =>
-                                    getidandident(
-                                      director.sortkey,
-                                      director.userId
-                                    )
-                                  }
+                                  src={`${director.avatarUrl}`}
                                 >
                                   {getInitials(director.director_name)}
                                 </Avatar>
-                                <Typography color="textPrimary" variant="body1">
-                                  {director.director_name}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>{director.director_email}</TableCell>
-                            <TableCell>
-                              {`${director.director_country_of_residence}`}
-                            </TableCell>
-                            <TableCell>
-                              {checkstatus(director.director_status)}
-                            </TableCell>
-                            <TableCell>
-                              {moment(director.createdAt).format("DD/MM/YYYY")}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </PerfectScrollbar>
-                <TablePagination
-                  component="div"
-                  count={director.length}
-                  onChangePage={handlePageChange}
-                  onChangeRowsPerPage={handleLimitChange}
-                  page={page}
-                  rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25]}
-                />
-              </Card>
-            </Box>
-          </Container>
-        </Page>
-      ) : (
-        <>
-          <AdminUpdateDirectorView value={{ userId, directorId }} />
-        </>
-      )}
+                              </Link>
+                              <Typography color="textPrimary" variant="body1">
+                                {director.director_name}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>{director.director_email}</TableCell>
+                          <TableCell>
+                            {`${director.director_country_of_residence}`}
+                          </TableCell>
+                          <TableCell>
+                            {checkstatus(director.director_status)}
+                          </TableCell>
+                          <TableCell>
+                            {moment(director.createdAt).format("DD/MM/YYYY")}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Box>
+              </PerfectScrollbar>
+              <TablePagination
+                component="div"
+                count={director.length}
+                onChangePage={handlePageChange}
+                onChangeRowsPerPage={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25]}
+              />
+            </Card>
+          </Box>
+        </Container>
+      </Page>
     </React.Fragment>
   );
 };

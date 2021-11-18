@@ -60,8 +60,7 @@ function BuyerUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+
   const [sub, setSub] = useState("");
   const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
@@ -81,6 +80,10 @@ function BuyerUploads(value) {
     buyer_articles_of_association_attachment,
     setBuyer_articles_of_association_attachment,
   ] = useState("");
+  const [
+    buyer_sample_trading_docs_attachment,
+    setBuyer_sample_trading_docs_attachment,
+  ] = useState("");
   const [regcertloading, setRegcertLoading] = useState(false);
   const [regcertsuccess, setRegcertSuccess] = useState(false);
   const [shareholderlloading, setShareholderlLoading] = useState(false);
@@ -89,6 +92,8 @@ function BuyerUploads(value) {
   const [directorlsuccess, setDirectorlSuccess] = useState(false);
   const [aoaloading, setAoaLoading] = useState(false);
   const [aoasuccess, setAoaSuccess] = useState(false);
+  const [sampletloading, setSampletLoading] = useState(false);
+  const [sampletsuccess, setSampletSuccess] = useState(false);
   const [regcertimg, setRegcertImg] = useState("");
   const [regcertpdf, setRegcertpdf] = useState("");
   const [shareholderlimg, setShareholderlImg] = useState("");
@@ -97,6 +102,8 @@ function BuyerUploads(value) {
   const [directorlpdf, setDirectorlpdf] = useState("");
   const [aoaimg, setAoaImg] = useState("");
   const [aoapdf, setAoapdf] = useState("");
+  const [sampletimg, setSampletImg] = useState("");
+  const [sampletpdf, setSampletpdf] = useState("");
 
   const file = useRef(null);
 
@@ -108,14 +115,12 @@ function BuyerUploads(value) {
   const directorlname = "Buyer Director List";
   const aoalabel = "buyer_articles_of_association_attachment";
   const aoaname = "Buyer Articles of Association";
+  const sampletlabel = "buyer_sample_trading_docs_attachment";
+  const sampletname = "Buyer Sample Trading Documents";
 
   useEffect(() => {
-    const sub = id;
-    const key = buyId;
-    var userId = sub;
-    var sortkey = key;
-    getBuyer({ userId, sortkey });
-  }, [id, buyId]);
+    getBuyer({ id });
+  }, [id]);
 
   async function getBuyer(input) {
     try {
@@ -132,12 +137,16 @@ function BuyerUploads(value) {
             buyer_shareholder_list_attachment,
             buyer_director_list_attachment,
             buyer_articles_of_association_attachment,
+            buyer_sample_trading_docs_attachment,
           },
         },
       } = buyer;
       setSub(userId);
       setBuyerId(buyerId);
       setIdentityId(identityId);
+      setBuyer_sample_trading_docs_attachment(
+        buyer_sample_trading_docs_attachment
+      );
       setBuyer_registration_cert_attachment(buyer_registration_cert_attachment);
       setBuyer_shareholder_list_attachment(buyer_shareholder_list_attachment);
       setBuyer_director_list_attachment(buyer_director_list_attachment);
@@ -165,6 +174,172 @@ function BuyerUploads(value) {
     return API.graphql(
       graphqlOperation(mutations.updateBuyer, { input: input })
     );
+  }
+
+  useEffect(() => {
+    if (buyer_sample_trading_docs_attachment) {
+      async function getsampletimgurl() {
+        var uploadext = buyer_sample_trading_docs_attachment.split(".").pop();
+        var imageExtensions = [
+          "jpg",
+          "jpeg",
+          "bmp",
+          "gif",
+          "png",
+          "tiff",
+          "eps",
+          "svg",
+        ];
+        const x = imageExtensions.includes(uploadext);
+        if (x === true) {
+          const y = await Storage.get(buyer_sample_trading_docs_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
+          setSampletImg(y);
+        }
+      }
+      getsampletimgurl();
+    }
+  }, [buyer_sample_trading_docs_attachment, identityId]);
+
+  useEffect(() => {
+    if (buyer_sample_trading_docs_attachment) {
+      async function getsampletpdfurl() {
+        var uploadext = buyer_sample_trading_docs_attachment.split(".").pop();
+        var imageExtensions = ["pdf", "PDF"];
+        const x = imageExtensions.includes(uploadext);
+        if (x === true) {
+          const y = await Storage.get(buyer_sample_trading_docs_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
+          setSampletpdf(y);
+        }
+      }
+      getsampletpdfurl();
+    }
+  }, [buyer_sample_trading_docs_attachment, identityId]);
+
+  function sampletisimageorpdf(label, name) {
+    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    if (regex.test(regcertimg)) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={sampletimg} />
+          <div>
+            <input
+              id={sampletimg}
+              accept="image/*,application/pdf"
+              style={{ display: "none" }}
+              type="file"
+              onChange={(event) => handlesampletChange(event)}
+            />
+            <label htmlFor={sampletimg}>
+              <LoaderButton
+                id={sampletimg}
+                fullWidth
+                component="span"
+                startIcon={<UploadIcon />}
+                disabled={sampletloading}
+                success={sampletsuccess}
+                loading={sampletloading}
+              >
+                {" "}
+                Update File
+              </LoaderButton>
+            </label>
+          </div>
+        </>
+      );
+    } else if (regex.test(sampletpdf)) {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            allowFullScreen
+            src={sampletpdf}
+          />
+          <div>
+            <input
+              id={sampletpdf}
+              accept="image/*,application/pdf"
+              style={{ display: "none" }}
+              type="file"
+              onChange={(event) => handlesampletChange(event)}
+            />
+            <label htmlFor={sampletpdf}>
+              <LoaderButton
+                id={sampletpdf}
+                fullWidth
+                component="span"
+                startIcon={<UploadIcon />}
+                disabled={sampletloading}
+                success={sampletsuccess}
+                loading={sampletloading}
+              >
+                {" "}
+                Update File
+              </LoaderButton>
+            </label>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <input
+            name={label}
+            id={label}
+            accept="image/*,application/pdf"
+            style={{ display: "none" }}
+            type="file"
+            onChange={(event) => handlesampletChange(event)}
+          />
+          <label htmlFor={label}>
+            <LoaderButton
+              id={label}
+              fullWidth
+              component="span"
+              startIcon={<UploadIcon />}
+              disabled={sampletloading}
+              success={sampletsuccess}
+              loading={sampletloading}
+            >
+              {" "}
+              {name}
+            </LoaderButton>
+          </label>
+        </>
+      );
+    }
+  }
+
+  function handlesampletChange(event) {
+    file.current = event.target.files[0];
+    const newsampletfile = file.current;
+    onsampletChange(newsampletfile);
+  }
+
+  async function onsampletChange(newfile) {
+    setSampletSuccess(false);
+    setSampletLoading(true);
+    try {
+      const u = newfile
+        ? await s3Up(newfile, "buyer_sample_trading_docs_attachment")
+        : null;
+      var buyer_sample_trading_docs_attachment = u;
+      await updateBuyer({
+        id,
+        buyer_sample_trading_docs_attachment,
+      });
+    } catch (e) {
+      onError(e);
+    }
+    setSampletSuccess(true);
+    setSampletLoading(false);
+    navigate(`/admin/buyer/${id}`);
   }
 
   useEffect(() => {
@@ -321,11 +496,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "buyer_registration_cert_attachment")
         : null;
       var buyer_registration_cert_attachment = u;
-      const sortkey = buyerId;
-      const userId = sub;
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_registration_cert_attachment,
       });
     } catch (e) {
@@ -490,12 +662,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "buyer_shareholder_list_attachment")
         : null;
       var buyer_shareholder_list_attachment = u;
-      const sortkey = buyerId;
-      const userId = sub;
-      console.log(sub);
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_shareholder_list_attachment,
       });
     } catch (e) {
@@ -660,11 +828,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "buyer_director_list_attachment")
         : null;
       var buyer_director_list_attachment = u;
-      const sortkey = buyerId;
-      const userId = sub;
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_director_list_attachment,
       });
     } catch (e) {
@@ -839,11 +1004,8 @@ function BuyerUploads(value) {
         ? await s3Up(newfile, "buyer_articles_of_association_attachment")
         : null;
       var buyer_articles_of_association_attachment = u;
-      const sortkey = buyerId;
-      const userId = sub;
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_articles_of_association_attachment,
       });
     } catch (e) {
@@ -865,6 +1027,12 @@ function BuyerUploads(value) {
           </AccordionSummary>
           <AccordionDetails>
             <Card>
+              <Grid item md={12} xs={12}>
+                <>
+                  <Typography>Sample Trading Documents:</Typography>
+                  {sampletisimageorpdf(sampletlabel, sampletname)}
+                </>
+              </Grid>
               <Grid item md={12} xs={12}>
                 <>
                   <Typography>Registration Certificate:</Typography>
@@ -903,10 +1071,10 @@ function BuyerUploads(value) {
           </AccordionSummary>
           <AccordionDetails>
             <Card>
-              <DocumentListView />
+              <DocumentListView user={sub} buyer={buyerId} ident={identityId} />
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewdocument/${id}/${buyId}/${ident}`}>
+                <Link to={`/admin/adminnewdocument/${id}`}>
                   <Button>Add Document</Button>
                 </Link>
               </Box>

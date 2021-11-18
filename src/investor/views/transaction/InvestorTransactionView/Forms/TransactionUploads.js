@@ -11,10 +11,8 @@ import {
   Typography,
   makeStyles,
 } from "@material-ui/core";
-import { API, graphqlOperation } from "aws-amplify";
 import { green } from "@material-ui/core/colors";
 import { Storage } from "aws-amplify";
-import * as queries from "src/graphql/queries.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -93,19 +91,13 @@ function BuyerUploads(value) {
   const cargoiname = "Cargo Insurance";
 
   useEffect(() => {
-    const userId = value.value.userId;
-    const sortkey = value.value.requestId;
-    getTransaction({ userId, sortkey });
-  }, [value.value.userId, value.value.requestId]);
+    getTransaction(value.value);
+  }, [value]);
 
   async function getTransaction(input) {
     try {
-      const request = await API.graphql(
-        graphqlOperation(queries.getRequest, input)
-      );
+      const request = input;
       const {
-        data: {
-          getRequest: {
             identityId,
             userId,
             requestId,
@@ -115,8 +107,6 @@ function BuyerUploads(value) {
             ipu_attachment,
             bill_of_lading_attachment,
             cargo_insurance_attachment
-          },
-        },
       } = request;
       setSub(userId);
       setRequestId(requestId);

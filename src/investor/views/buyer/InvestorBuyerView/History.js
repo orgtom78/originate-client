@@ -48,10 +48,9 @@ const Limits = ({ className, value, ...rest }) => {
 
   async function get() {
     try {
-      const data = await value;
-      const ar = await data.data.getBuyer;
-      if (ar) {
-        setArr(ar);
+      const data = await value.data.getBuyer;
+      if (data) {
+        setArr(data);
       }
       return;
     } catch (err) {

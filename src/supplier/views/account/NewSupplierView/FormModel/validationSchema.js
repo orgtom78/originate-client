@@ -51,7 +51,7 @@ const {
   },
 } = NewSupplierFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [supplier_logo.name]: Yup.string(),
     [supplier_name.name]: Yup.string().required(
@@ -110,20 +110,28 @@ export default [
     ),
     [director_email.name]: Yup.string().email(),
     [director_phone_number.name]: Yup.string(),
-    [director_id_attachment.name]: Yup.string().required(`${director_id_attachment.requiredErrorMsg}`),
+    [director_id_attachment.name]: Yup.string().required(
+      `${director_id_attachment.requiredErrorMsg}`
+    ),
     [director_id_number.name]: Yup.string(),
     [director_id_type.name]: Yup.string(),
     [director_nationality.name]: Yup.string(),
-    [director_poa_attachment.name]: Yup.string().required(`${director_poa_attachment.requiredErrorMsg}`),
+    [director_poa_attachment.name]: Yup.string().required(
+      `${director_poa_attachment.requiredErrorMsg}`
+    ),
     [director_country_of_residence.name]: Yup.string(),
     [ubo_name.name]: Yup.string().required(`${ubo_name.requiredErrorMsg}`),
     [ubo_email.name]: Yup.string().email(),
     [ubo_phone_number.name]: Yup.string(),
-    [ubo_id_attachment.name]: Yup.string().required(`${ubo_id_attachment.requiredErrorMsg}`),
+    [ubo_id_attachment.name]: Yup.string().required(
+      `${ubo_id_attachment.requiredErrorMsg}`
+    ),
     [ubo_id_number.name]: Yup.string(),
     [ubo_id_type.name]: Yup.string(),
     [ubo_nationality.name]: Yup.string(),
-    [ubo_poa_attachment.name]: Yup.string().required(`${ubo_poa_attachment.requiredErrorMsg}`),
+    [ubo_poa_attachment.name]: Yup.string().required(
+      `${ubo_poa_attachment.requiredErrorMsg}`
+    ),
     [ubo_country_of_residence.name]: Yup.string(),
   }),
 
@@ -168,3 +176,5 @@ export default [
     [iban.name]: Yup.string(),
   }),
 ];
+
+export default yup;

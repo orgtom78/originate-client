@@ -15,6 +15,7 @@ import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@material-ui/core/colors";
 import countries from "src/components/FormLists/countries.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
 const idtype = [
@@ -68,6 +69,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ShareholderForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
@@ -104,6 +106,7 @@ export default function ShareholderForm(props) {
   const ubo_updatepoa = updatefields.values.ubo_poa_attachment;
   const ubo_updateid = updatefields.values.ubo_id_attachment;
 
+  const [identityId, setIdentityId] = useState("");
   const [dpoaimg, setDpoaimg] = useState("");
   const [didimg, setDidimg] = useState("");
   const [dpoapdf, setDpoapdf] = useState("");
@@ -125,22 +128,38 @@ export default function ShareholderForm(props) {
   const [ubopoasuccess, setUbopoaSuccess] = useState(false);
 
   useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { identity } = data;
+      setIdentityId(identity);
+    }
+    onLoad();
+  }, [context]);
+
+  useEffect(() => {
     if (director_updateid) {
       async function geturl() {
         var uploadext = director_updateid.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(director_updateid);
+          const u = await Storage.get(director_updateid, {
+            level: "private",
+            identityId: identityId,
+          });
           setDidimg(u);
         } else {
-          const h = await Storage.vault.get(director_updateid);
+          const h = await Storage.get(director_updateid, {
+            level: "private",
+            identityId: identityId,
+          });
           setDidpdf(h);
         }
       }
       geturl();
     }
-  }, [director_updateid]);
+  }, [director_updateid, identityId]);
 
   async function handleDIdClick() {
     setDirectoridSuccess(false);
@@ -179,16 +198,22 @@ export default function ShareholderForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(director_updatepoa);
+          const u = await Storage.get(director_updatepoa, {
+            level: "private",
+            identityId: identityId,
+          });
           setDpoaimg(u);
         } else {
-          const h = await Storage.vault.get(director_updatepoa);
+          const h = await Storage.get(director_updatepoa, {
+            level: "private",
+            identityId: identityId,
+          });
           setDpoapdf(h);
         }
       }
       geturl();
     }
-  }, [director_updatepoa]);
+  }, [director_updatepoa, identityId]);
 
   async function handleDPoaClick() {
     setDirectorpoaSuccess(false);
@@ -227,16 +252,22 @@ export default function ShareholderForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(ubo_updateid);
+          const u = await Storage.get(ubo_updateid, {
+            level: "private",
+            identityId: identityId,
+          });
           setUidimg(u);
         } else {
-          const h = await Storage.vault.get(ubo_updateid);
+          const h = await Storage.get(ubo_updateid, {
+            level: "private",
+            identityId: identityId,
+          });
           setUidpdf(h);
         }
       }
       geturl();
     }
-  }, [ubo_updateid]);
+  }, [ubo_updateid, identityId]);
 
   async function handleUIdClick() {
     setUboidSuccess(false);
@@ -275,16 +306,22 @@ export default function ShareholderForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(ubo_updatepoa);
+          const u = await Storage.get(ubo_updatepoa, {
+            level: "private",
+            identityId: identityId,
+          });
           setUpoaimg(u);
         } else {
-          const h = await Storage.vault.get(ubo_updatepoa);
+          const h = await Storage.get(ubo_updatepoa, {
+            level: "private",
+            identityId: identityId,
+          });
           setUpoapdf(h);
         }
       }
       geturl();
     }
-  }, [ubo_updatepoa]);
+  }, [ubo_updatepoa, identityId]);
 
   async function handleUPoaClick() {
     setUbopoaSuccess(false);
@@ -393,6 +430,7 @@ export default function ShareholderForm(props) {
                     style={{ display: "none" }}
                     ident={directorId}
                     userid={userId}
+                    identityid={identityId}
                   />
                   <label htmlFor={director_id_attachment.name}>
                     <LoaderButton
@@ -425,6 +463,7 @@ export default function ShareholderForm(props) {
                     style={{ display: "none" }}
                     ident={directorId}
                     userid={userId}
+                    identityid={identityId}
                   />
                   <label htmlFor={director_poa_attachment.name}>
                     <LoaderButton
@@ -516,6 +555,7 @@ export default function ShareholderForm(props) {
                     style={{ display: "none" }}
                     ident={uboId}
                     userid={userId}
+                    identityid={identityId}
                   />
                   <label htmlFor={ubo_id_attachment.name}>
                     <LoaderButton
@@ -548,6 +588,7 @@ export default function ShareholderForm(props) {
                     style={{ display: "none" }}
                     ident={uboId}
                     userid={userId}
+                    identityid={identityId}
                   />
                   <label htmlFor={ubo_poa_attachment.name}>
                     <LoaderButton

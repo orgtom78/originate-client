@@ -50,7 +50,7 @@ const {
   },
 } = NewSupplierFormModel;
 
-export default {
+const values = {
   [supplier_logo.name]: "",
   [supplier_name.name]: "",
   [supplier_type.name]: "",
@@ -98,3 +98,5 @@ export default {
   [bic_swift_code.name]: "",
   [iban.name]: "",
 };
+
+export default values;

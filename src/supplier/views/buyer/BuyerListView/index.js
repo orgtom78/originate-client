@@ -75,18 +75,17 @@ const BuyerList = () => {
     async function getBuyers() {
       const id = await loadUser();
       let filter = {
-        userId: { eq: id },
-        sortkey: { contains: "buyer-", notContains: "financials-" },
+        userId: { eq: id }
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBuyers.items;
       return items;
     }
 
@@ -147,7 +146,7 @@ const BuyerList = () => {
                 <Card>
                   <CardActionArea>
                     <Link
-                      to={getLink(buyerdata.buyer_status, buyerdata.buyerId)}
+                      to={getLink(buyerdata.buyer_status, buyerdata.id)}
                     >
                       <CardContent>
                         <Box display="flex" justifyContent="center" mb={3}>

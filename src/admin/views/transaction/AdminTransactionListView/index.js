@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
@@ -31,7 +31,6 @@ import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import { green, orange } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
-import AdminTransactionView from "src/admin/views/transaction/AdminTransactionView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,10 +54,6 @@ const orangeTheme = createTheme({
 const AdminTransactionListView = () => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
-  const [isclicked, setIsclicked] = useState("");
-  const [userId, setUserId] = useState("");
-  const [requestId, setRequestId] = useState("");
-  const [identityId, setIdentityId] = useState("");
 
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -69,36 +64,25 @@ const AdminTransactionListView = () => {
 
   useEffect(() => {
     async function getRequests() {
-      let filter = { sortkey: { contains: "request-" } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
-      );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsRequest.items;
+      } = await API.graphql(graphqlOperation(queries.listRequests));
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = n.data.listRequests.items;
       return items;
     }
 
     async function test() {
       const c = await getRequests();
-      const d = c.sort(function(a,b){
-        return new Date(b.createdAt) - new Date(a.createdAt)});
+      const d = c.sort(function(a, b) {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
       setRequest(d);
     }
     test();
   }, []);
-
-  const handler = useCallback(() => {
-    if (!request || !request.length) {
-      console.log("test");
-    } else {
-      const d = request;
-      return d;
-    }
-  }, [request]);
 
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -284,6 +268,123 @@ const AdminTransactionListView = () => {
         </>
       );
     } else {
+      async function postData(
+        url = "https://api.waveapps.com/businesses/4e22c17d-b69c-4f05-a9ef-e89ad6fae555/invoices/"
+      ) {
+        // Default options are marked with *
+        const response = await fetch(url, {
+          method: "POST", // *GET, POST, PUT, DELETE, etc.
+          mode: "cors", // no-cors, *cors, same-origin
+          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+          credentials: "same-origin", // include, *same-origin, omit
+          headers: {
+            authorization: "Bearer p2VwR2YuCXziUgL0tazMExdJM8joKG",
+            "Content-Type": "application/json",
+            // 'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          redirect: "follow", // manual, *follow, error
+          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+          body: JSON.stringify({
+            amount_title: "Amount",
+            customer: {
+              postal_code: "10118",
+              __typename: "Customer",
+              mobile_number: "",
+              city: "New York",
+              name: "BroadRiver Asset Management, L.P.",
+              fax_number: "",
+              province: {
+                name: "New York",
+                slug: "new-york",
+                __typename: "Province",
+              },
+              currency: {
+                code: "USD",
+                symbol: "$",
+                name: "United States dollar",
+                __typename: "Currency",
+              },
+              shipping_details: null,
+              last_name: "",
+              address: {
+                address1: "Empire State Building",
+                address2: "350 5th Avenue, Suite 3100",
+                city: "New York",
+                province: {
+                  name: "New York",
+                  slug: "new-york",
+                  __typename: "Province",
+                },
+                country: {
+                  name: "United States",
+                  country_code: "US",
+                  __typename: "Country",
+                },
+                postal_code: "10118",
+                __typename: "Address",
+              },
+              country: {
+                name: "United States",
+                country_code: "US",
+                __typename: "Country",
+              },
+              date_created: "2021-11-12T09:27:58.000Z",
+              toll_free_number: "",
+              date_modified: "2021-11-12T09:27:58.000Z",
+              first_name: "",
+              phone_number: "",
+              website: "",
+              id: 58901626,
+              account_number: "",
+              email: "",
+              address1: "Empire State Building",
+              address2: "350 5th Avenue, Suite 3100",
+              internal_notes: "",
+            },
+            discounts: [],
+            due_date: "2021-11-12",
+            exchange_rate: "1.0000000000",
+            footer: "",
+            hide_amount: false,
+            hide_description: false,
+            hide_item: false,
+            hide_price: false,
+            hide_quantity: false,
+            invoice_currency: {
+              code: "USD",
+              symbol: "$",
+              name: "United States dollar",
+              __typename: "Currency",
+            },
+            invoice_date: "2021-11-12",
+            invoice_number: "4",
+            invoice_number_label: "Invoice",
+            item_title: "Items",
+            items: [
+              {
+                description: "Transaction Fee",
+                price: "100.00",
+                product: {
+                  id: null,
+                  income_account: { id: 661393781 },
+                  name: "Origination",
+                },
+                quantity: "1",
+                taxes: [],
+              },
+            ],
+            memo: "",
+            po_so_number: "",
+            price_title: "Price",
+            quantity_title: "Quantity",
+            require_terms_of_service_agreement: false,
+            status: "draft",
+            subhead: "",
+          }), // body data type must match "Content-Type" header
+        });
+        return response.json(); // parses JSON response into native JavaScript objects
+      }
+
       return (
         <>
           <MuiThemeProvider theme={greenTheme}>
@@ -294,135 +395,116 @@ const AdminTransactionListView = () => {
     }
   }
 
-  function getidandident(requestId, userId, identityId) {
-    setUserId(userId);
-    setRequestId(requestId);
-    setIdentityId(identityId);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <Page className={clsx(classes.root)} title="Customers">
-          <Container maxWidth={false}>
-            <Box mt={3}>
-              <Card>
-                <PerfectScrollbar>
-                  <Box minWidth={1050}>
-                    <TableContainer>
-                      <Table>
-                        <EnhancedTableHead
-                          classes={classes}
-                          numSelected={selectedCustomerIds.length}
-                          onSelectAllClick={handleSelectAll}
-                          onRequestSort={handleRequestSort}
-                          rowCount={request.length}
-                        />
-                        <TableBody>
-                          {request
-                            .slice(page * limit, page * limit + limit)
-                            .map((request, index) => {
-                              return (
-                                <TableRow
-                                  hover
-                                  key={request.requestId}
-                                  selected={
-                                    selectedCustomerIds.indexOf(
-                                      request.requestId
-                                    ) !== -1
-                                  }
-                                  tabIndex={-1}
-                                >
-                                  <TableCell padding="checkbox">
-                                    <Checkbox
-                                      checked={
-                                        selectedCustomerIds.indexOf(
-                                          request.requestId
-                                        ) !== -1
-                                      }
-                                      onChange={(event) =>
-                                        handleSelectOne(
-                                          event,
-                                          request.requestId
-                                        )
-                                      }
-                                      value="true"
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    <Box alignItems="center" display="flex">
+      <Page className={clsx(classes.root)} title="Customers">
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            <Card>
+              <PerfectScrollbar>
+                <Box minWidth={1050}>
+                  <TableContainer>
+                    <Table>
+                      <EnhancedTableHead
+                        classes={classes}
+                        numSelected={selectedCustomerIds.length}
+                        onSelectAllClick={handleSelectAll}
+                        onRequestSort={handleRequestSort}
+                        rowCount={request.length}
+                      />
+                      <TableBody>
+                        {request
+                          .slice(page * limit, page * limit + limit)
+                          .map((request, index) => {
+                            return (
+                              <TableRow
+                                hover
+                                key={request.requestId}
+                                selected={
+                                  selectedCustomerIds.indexOf(
+                                    request.requestId
+                                  ) !== -1
+                                }
+                                tabIndex={-1}
+                              >
+                                <TableCell padding="checkbox">
+                                  <Checkbox
+                                    checked={
+                                      selectedCustomerIds.indexOf(
+                                        request.requestId
+                                      ) !== -1
+                                    }
+                                    onChange={(event) =>
+                                      handleSelectOne(event, request.requestId)
+                                    }
+                                    value="true"
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Box alignItems="center" display="flex">
+                                    <Link
+                                      to={`/admin/transaction/${request.id}/`}
+                                    >
                                       <Avatar
                                         className={classes.avatar}
-                                        src={request.avatarUrl}
-                                        onClick={() =>
-                                          getidandident(
-                                            request.requestId,
-                                            request.userId,
-                                            request.identityId
-                                          )
-                                        }
+                                        src={`${request.buyer_logo}`}
                                       >
                                         {getInitials(request.buyer_name)}
                                       </Avatar>
-                                      <Typography
-                                        color="textPrimary"
-                                        variant="body1"
-                                      >
-                                        {request.buyer_name}
-                                      </Typography>
-                                    </Box>
-                                  </TableCell>
-                                  <TableCell>{`${request.supplier_name}`}</TableCell>
-                                  <TableCell>
-                                    <NumberFormat
+                                    </Link>
+                                    <Typography
                                       color="textPrimary"
-                                      variant="h3"
-                                      value={request.invoice_amount}
-                                      displayType={"text"}
-                                      thousandSeparator={true}
-                                      prefix={"$"}
-                                    />
-                                  </TableCell>
-                                  <TableCell>
-                                    {checkstatus(request.request_status)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {moment(request.createdAt).format(
-                                      "DD/MM/YYYY"
-                                    )}
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                        </TableBody>
-                      </Table>
-                    </TableContainer>
-                  </Box>
-                </PerfectScrollbar>
-                <TablePagination
-                  component="div"
-                  count={request.length}
-                  onPageChange={handleChangePage}
-                  onChangeRowsPerPage={handleLimitChange}
-                  page={page}
-                  rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25, 50]}
-                />
-              </Card>
-            </Box>
-            <Box display="flex" justifyContent="flex-end" p={2}>
-              <Link to={`/admin/newtransactionlist/`}>
-                <Button>Add Transaction</Button>
-              </Link>
-            </Box>
-          </Container>
-        </Page>
-      ) : (
-        <>
-          <AdminTransactionView value={{ userId, requestId, identityId }} />
-        </>
-      )}
+                                      variant="body1"
+                                    >
+                                      {request.buyer_name}
+                                    </Typography>
+                                  </Box>
+                                </TableCell>
+                                <TableCell>{`${request.supplier_name}`}</TableCell>
+                                <TableCell>
+                                  <NumberFormat
+                                    color="textPrimary"
+                                    variant="h3"
+                                    value={request.invoice_amount}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    prefix={"$"}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {checkstatus(request.request_status)}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(request.createdAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </Box>
+              </PerfectScrollbar>
+              <TablePagination
+                component="div"
+                count={request.length}
+                onPageChange={handleChangePage}
+                onChangeRowsPerPage={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25, 50]}
+              />
+            </Card>
+          </Box>
+          <Box display="flex" justifyContent="flex-end" p={2}>
+            <Link to={`/admin/newtransactionlist/`}>
+              <Button>Add Transaction</Button>
+            </Link>
+          </Box>
+        </Container>
+      </Page>
     </React.Fragment>
   );
 };
