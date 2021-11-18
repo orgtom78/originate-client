@@ -77,7 +77,7 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
   const routes = (isAuthenticated, isAdmin, isInvestor) =>
   [{
     path: 'app',
-    element: !isAuthenticated ? <MainLayout /> : <DashboardLayout />,
+    element: !isAuthenticated? <MainLayout /> : <DashboardLayout />,
     children: [
       { path: '', element: !isAuthenticated ? <LoginView /> : <SupplierView /> },
       { path: 'account', element: !isAuthenticated ? <LoginView /> : <SupplierView /> },
