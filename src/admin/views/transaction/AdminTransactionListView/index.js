@@ -491,7 +491,7 @@ const AdminTransactionListView = () => {
                 component="div"
                 count={request.length}
                 onPageChange={handleChangePage}
-                onChangeRowsPerPage={handleLimitChange}
+                onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
                 rowsPerPageOptions={[5, 10, 25, 50]}

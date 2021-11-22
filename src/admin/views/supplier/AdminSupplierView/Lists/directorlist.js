@@ -244,8 +244,8 @@ const DirectorListView = (value) => {
               <TablePagination
                 component="div"
                 count={director.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
                 rowsPerPageOptions={[5, 10, 25]}

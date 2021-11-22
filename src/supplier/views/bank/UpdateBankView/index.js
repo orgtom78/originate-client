@@ -187,6 +187,7 @@ const UpdateBankForm = ({ className, ...rest }) => {
     try {
       const userId = sub;
       const id = dynamobankid;
+      if (id) {
       await updateBank({
         id,
         userId,
@@ -203,6 +204,23 @@ const UpdateBankForm = ({ className, ...rest }) => {
         bic_swift_code,
         iban,
       });
+      } else {
+        await createBank({
+          userId,
+          bank_name,
+          bank_account_name,
+          bank_account_number,
+          bank_account_sortcode,
+          bank_address_city,
+          bank_address_street,
+          bank_address_number,
+          bank_address_postalcode,
+          bank_country,
+          bank_routing_number,
+          bic_swift_code,
+          iban,
+        });
+      }
     } catch (e) {
       onError(e);
     }
@@ -215,6 +233,12 @@ const UpdateBankForm = ({ className, ...rest }) => {
   function updateBank(input) {
     return API.graphql(
       graphqlOperation(mutations.updateBank, { input: input })
+    );
+  }
+
+  function createBank(input) {
+    return API.graphql(
+      graphqlOperation(mutations.createBank, { input: input })
     );
   }
 

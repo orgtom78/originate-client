@@ -65,6 +65,8 @@ import AdminGroupListView from 'src/admin/views/user/AdminGroupListView';
 import AdminGroupView from 'src/admin/views/user/AdminGroupView';
 import AdminNewUserGroupView from 'src/admin/views/user/AdminNewUserGroupView';
 
+import AdminNewInsuranceView from 'src/admin/views/insurance/AdminNewInsuranceView';
+
 import InvestorDashboardView from 'src/investor/views/reports/InvestorDashboardView';
 import InvestorLoginView from 'src/investor/views/auth/InvestorLoginView';
 import InvestorBuyerView from 'src/investor/views/buyer/InvestorBuyerView';
@@ -155,7 +157,9 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'groups', element: !isAdmin ? <AdminLoginView /> : <AdminGroupListView />  },
       { path: 'user/:sub/:groupId', element: !isAdmin ? <AdminLoginView /> : <AdminGroupView />  },
       { path: 'newuser', element: !isAdmin ? <AdminLoginView /> : <AdminNewUserGroupView />  },
-      { path: '*', element: <Navigate to="admin/404" /> }
+      { path: '*', element: <Navigate to="admin/404" /> }, 
+
+      { path: 'newinsurance', element: !isAdmin ? <AdminLoginView /> : <AdminNewInsuranceView />  },
     ]
   },
   {

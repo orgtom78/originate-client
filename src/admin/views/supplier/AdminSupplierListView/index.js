@@ -199,8 +199,8 @@ const AdminSupplierListView = () => {
               <TablePagination
                 component="div"
                 count={supplier.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
                 rowsPerPageOptions={[5, 10, 25]}
