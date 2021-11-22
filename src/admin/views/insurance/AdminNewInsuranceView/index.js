@@ -104,7 +104,7 @@ export default function NewInsuranceRequest() {
   }
 
   return (
-    <Page className={classes.root} title="Register a new User">
+    <Page className={classes.root} title="Request Insurance Cover">
       <Container maxWidth="lg">
         <React.Fragment>
           <Typography component="h1" variant="h4" align="center">
