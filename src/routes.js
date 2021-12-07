@@ -67,6 +67,9 @@ import AdminNewUserGroupView from 'src/admin/views/user/AdminNewUserGroupView';
 
 import AdminNewInsuranceView from 'src/admin/views/insurance/AdminNewInsuranceView';
 
+import AdminNewBookkeepingListView from 'src/admin/views/bookkeeping/AdminNewBookkeepingListView';
+import AdminBookkeepingView from 'src/admin/views/bookkeeping/AdminBookkeepingView';
+
 import InvestorDashboardView from 'src/investor/views/reports/InvestorDashboardView';
 import InvestorLoginView from 'src/investor/views/auth/InvestorLoginView';
 import InvestorBuyerView from 'src/investor/views/buyer/InvestorBuyerView';
@@ -160,6 +163,9 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: '*', element: <Navigate to="admin/404" /> }, 
 
       { path: 'newinsurance', element: !isAdmin ? <AdminLoginView /> : <AdminNewInsuranceView />  },
+
+      { path: 'bookkeeping', element: !isAdmin ? <AdminLoginView /> : <AdminNewBookkeepingListView />  },
+      { path: 'bookkeeping/:id', element: !isAdmin ? <AdminLoginView /> : <AdminBookkeepingView />  },
     ]
   },
   {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Container, makeStyles, Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -15,7 +15,6 @@ import validationSchema from "./FormModel/validationSchema";
 import NewInsuranceRequestFormModel from "./FormModel/NewInsuranceRequestFormModel";
 import formInitialValues from "./FormModel/formInitialValues";
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -31,6 +30,7 @@ export default function NewInsuranceRequest() {
   const classes = useStyles();
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
+  const [token, setToken] = useState("");
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -43,51 +43,96 @@ export default function NewInsuranceRequest() {
     try {
       const buyerduns = values["insurance_buyer_duns"];
       const supplierduns = values["insurance_supplier_duns"];
-      const buyeruuid = await getInsuranceuuid({
-        buyerduns
+      const buyeruuid = await getInsuranceuuidBuyer({
+        buyerduns,
       });
-      const supplieruuid = await getInsuranceuuid({
-        supplierduns
+      const supplieruuid = await getInsuranceuuidSupplier({
+        supplierduns,
       });
-
     } catch (e) {
       onError(e);
     }
-    navigate("/admin/groups");
+    navigate("/admin/newinsurance");
   }
 
-  async function getInsuranceuuid(input) {
-    const url = 'https://api-demo.single-invoice.co/v2/transactor/'
-    let request = {
-      countrycode: "US",
-      service: 'dun',
-      id: input
-    };
-
+  async function getInsuranceuuidBuyer(input) {
+    // Default options are marked with *
+    const c = await eulerauth();
+    setToken(c);
+    var url =
+      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/search/uatm-v2/companies/matching";
     const response = await fetch(url, {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        authorization: "Bearer p2VwR2YuCXziUgL0tazMExdJM8joKG",
+        authorization: `Bearer ${c.access_token}`,
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
-      redirect: "follow", // manual, *follow, error
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(
-        request
-        )
-  });
-  return response.json();
-}
+      body: JSON.stringify({
+        requestedSize: 1,
+        companyName: `${input.buyerduns}`,
+        companyIdentifiers: [
+          {
+            idTypeCode: "string",
+            idValue: "string",
+          },
+        ],
+        countryCode: "US",
+        minimumScore: 0,
+        companyIdentifierTypeCode: "EH",
+      }),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function getInsuranceuuidSupplier(input) {
+    // Default options are marked with *
+    const c = await eulerauth();
+    setToken(c);
+    var url =
+      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/search/uatm-v2/companies/matching";
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        authorization: `Bearer ${c.access_token}`,
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        requestedSize: 3,
+        companyName: `${input.supplierduns}`,
+        countryCode: "US",
+        minimumScore: 0,
+        companyIdentifierTypeCode: "EH",
+      }),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function eulerauth() {
+    // Default options are marked with *
+    var url =
+      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/uatm/v1/idp/oauth2/authorize";
+
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        "Accept-Encoding": "gzip, deflate, br",
+        Accept: "*/*",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        apiKey: process.env.REACT_APP_EH_API_KEY,
+      }),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
 
   async function createInsurances(input) {
     try {
-      await createInsurance({
-        
-      });
+      await createInsurance({});
     } catch (e) {
       onError(e);
     }
@@ -108,7 +153,7 @@ export default function NewInsuranceRequest() {
       <Container maxWidth="lg">
         <React.Fragment>
           <Typography component="h1" variant="h4" align="center">
-            Request Insurance Cover 
+            Request Insurance Cover
           </Typography>
           <br></br>
           <React.Fragment>

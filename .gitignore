@@ -45,3 +45,6 @@ amplifytools.xcconfig
 #graphql 
 src/graphql
 schema.json
+
+#env
+*.env

@@ -18,6 +18,8 @@ import {
   DollarSign as DollarSignIcon,
   Briefcase as BriefcaseIcon,
   Truck as TruckIcon,
+  BookOpen as BookOpenIcon,
+  Shield as ShieldIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 
@@ -48,9 +50,19 @@ const items = [
     title: "Limit requests",
   },
   {
+    href: "/admin/newinsurance",
+    icon: ShieldIcon,
+    title: "Insurance",
+  },
+  {
     href: "/admin/transactions",
     icon: CreditCardIcon,
     title: "Transactions",
+  },
+  {
+    href: "/admin/bookkeeping",
+    icon: BookOpenIcon,
+    title: "Bookkeeping",
   },
 ];
 

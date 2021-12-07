@@ -29,7 +29,7 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange, red } from "@material-ui/core/colors";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -49,6 +49,9 @@ const greenTheme = createTheme({
 });
 const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
+});
+const redTheme = createTheme({
+  palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
 });
 
 const AdminTransactionListView = () => {
@@ -161,7 +164,7 @@ const AdminTransactionListView = () => {
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? "right" : "left"}
+              align={"left"}
               padding={headCell.disablePadding ? "none" : "normal"}
               sortDirection={orderBy === headCell.id ? order : false}
             >
@@ -267,124 +270,15 @@ const AdminTransactionListView = () => {
           </MuiThemeProvider>
         </>
       );
+    } else if (request === "Declined") {
+      return (
+        <>
+          <MuiThemeProvider theme={redTheme}>
+            <Chip label={request} color="secondary" />
+          </MuiThemeProvider>
+        </>
+      );
     } else {
-      async function postData(
-        url = "https://api.waveapps.com/businesses/4e22c17d-b69c-4f05-a9ef-e89ad6fae555/invoices/"
-      ) {
-        // Default options are marked with *
-        const response = await fetch(url, {
-          method: "POST", // *GET, POST, PUT, DELETE, etc.
-          mode: "cors", // no-cors, *cors, same-origin
-          cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-          credentials: "same-origin", // include, *same-origin, omit
-          headers: {
-            authorization: "Bearer p2VwR2YuCXziUgL0tazMExdJM8joKG",
-            "Content-Type": "application/json",
-            // 'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          redirect: "follow", // manual, *follow, error
-          referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-          body: JSON.stringify({
-            amount_title: "Amount",
-            customer: {
-              postal_code: "10118",
-              __typename: "Customer",
-              mobile_number: "",
-              city: "New York",
-              name: "BroadRiver Asset Management, L.P.",
-              fax_number: "",
-              province: {
-                name: "New York",
-                slug: "new-york",
-                __typename: "Province",
-              },
-              currency: {
-                code: "USD",
-                symbol: "$",
-                name: "United States dollar",
-                __typename: "Currency",
-              },
-              shipping_details: null,
-              last_name: "",
-              address: {
-                address1: "Empire State Building",
-                address2: "350 5th Avenue, Suite 3100",
-                city: "New York",
-                province: {
-                  name: "New York",
-                  slug: "new-york",
-                  __typename: "Province",
-                },
-                country: {
-                  name: "United States",
-                  country_code: "US",
-                  __typename: "Country",
-                },
-                postal_code: "10118",
-                __typename: "Address",
-              },
-              country: {
-                name: "United States",
-                country_code: "US",
-                __typename: "Country",
-              },
-              date_created: "2021-11-12T09:27:58.000Z",
-              toll_free_number: "",
-              date_modified: "2021-11-12T09:27:58.000Z",
-              first_name: "",
-              phone_number: "",
-              website: "",
-              id: 58901626,
-              account_number: "",
-              email: "",
-              address1: "Empire State Building",
-              address2: "350 5th Avenue, Suite 3100",
-              internal_notes: "",
-            },
-            discounts: [],
-            due_date: "2021-11-12",
-            exchange_rate: "1.0000000000",
-            footer: "",
-            hide_amount: false,
-            hide_description: false,
-            hide_item: false,
-            hide_price: false,
-            hide_quantity: false,
-            invoice_currency: {
-              code: "USD",
-              symbol: "$",
-              name: "United States dollar",
-              __typename: "Currency",
-            },
-            invoice_date: "2021-11-12",
-            invoice_number: "4",
-            invoice_number_label: "Invoice",
-            item_title: "Items",
-            items: [
-              {
-                description: "Transaction Fee",
-                price: "100.00",
-                product: {
-                  id: null,
-                  income_account: { id: 661393781 },
-                  name: "Origination",
-                },
-                quantity: "1",
-                taxes: [],
-              },
-            ],
-            memo: "",
-            po_so_number: "",
-            price_title: "Price",
-            quantity_title: "Quantity",
-            require_terms_of_service_agreement: false,
-            status: "draft",
-            subhead: "",
-          }), // body data type must match "Content-Type" header
-        });
-        return response.json(); // parses JSON response into native JavaScript objects
-      }
-
       return (
         <>
           <MuiThemeProvider theme={greenTheme}>
@@ -464,7 +358,7 @@ const AdminTransactionListView = () => {
                                 <TableCell>
                                   <NumberFormat
                                     color="textPrimary"
-                                    variant="h3"
+                                    variant="body1"
                                     value={request.invoice_amount}
                                     displayType={"text"}
                                     thousandSeparator={true}
