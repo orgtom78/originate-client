@@ -91,7 +91,7 @@ const scheme = [
       .required(`${financials_reporting_period.requiredErrorMsg}`)
       .test("incdate", financials_reporting_period.invalidErrorMsg, (val) => {
         if (val) {
-          const startDate = new Date(2018, 12, 31);
+          const startDate = new Date(2018, 11, 31);
           const endDate = new Date();
           if (moment(val, moment.ISO_8601).isValid()) {
             return moment(val).isBetween(startDate, endDate);

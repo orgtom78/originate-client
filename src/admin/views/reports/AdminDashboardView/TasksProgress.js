@@ -69,7 +69,7 @@ const TasksProgress = ({ className, value, ...rest }) => {
       const sum = app + rev || 1;
       const perc = (app / sum) * 100;
       const n = Number(perc);
-      if (isNaN(n)) {
+      if (Number.isNaN(n)) {
         return "0";
       } else if (n !== "NaN" && n > 100) {
         return "100";

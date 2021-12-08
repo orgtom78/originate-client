@@ -833,9 +833,9 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
             download: true,
           }
         );
-        console.log(y)
+        console.log(y);
         const s = await new Response(y.Body).json();
-        console.log(s)
+        console.log(s);
         if (s) {
           const t = s[0].Blocks.map((item) => item.Text !== "");
           setSheet(t);
@@ -1740,7 +1740,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               onChange={(e) =>
                                 setInventory_turnover(e.target.value)
                               }
-                              value={inventory_turnover | ""}
+                              value={inventory_turnover || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1756,7 +1756,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               onChange={(e) =>
                                 setInterest_coverage(e.target.value)
                               }
-                              value={interest_coverage | ""}
+                              value={interest_coverage || ""}
                               variant="outlined"
                             />
                           </TableCell>

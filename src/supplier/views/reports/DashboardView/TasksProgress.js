@@ -46,7 +46,7 @@ const TasksProgress = ({ className, ...rest }) => {
     const getRequests = async () => {
       const id = sub;
       let filter = {
-        userId: { eq: id }
+        userId: { eq: id },
       };
       const {
         data: {
@@ -87,7 +87,7 @@ const TasksProgress = ({ className, ...rest }) => {
       const rev = p["Under Review"];
       const sum = app + rev;
       const perc = (app / sum) * 100;
-      if (isNaN(perc)) {
+      if (Number.isNaN(perc)) {
         return "100";
       } else if (perc !== "NaN") {
         return perc;

@@ -104,7 +104,7 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
     var a = Limits();
     var b = payouts();
     const sum = (b / a) * 100;
-    if (isNaN(sum)) {
+    if (Number.isNaN(sum)) {
       return "0";
     } else if (sum !== "NaN") {
       return sum;
@@ -127,7 +127,7 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
                 variant="h3"
                 value={calcutil()}
                 displayType={"text"}
-                decimalScale='2'
+                decimalScale="2"
               />
               %
             </Typography>

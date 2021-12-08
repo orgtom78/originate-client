@@ -63,7 +63,7 @@ const PastDue = ({ className, value, ...rest }) => {
       var num = 0;
       for (i = 0; i < actualdatearr.length; i++) {
         var ne = (actualdatearr[i] - createdatearr[i]) / 1000 / 60 / 60 / 24;
-        if (isNaN(ne)) {
+        if (Number.isNaN(ne)) {
           return 0;
         } else if (ne) {
           num += +ne;
