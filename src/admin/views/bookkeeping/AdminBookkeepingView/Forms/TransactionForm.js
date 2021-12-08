@@ -260,7 +260,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        authorization: "Bearer kcO66AEXTTfHtEfacXTVs0gkNc3vqX",
+        authorization: `Bearer ${process.env.REACT_APP_WAVE_API_KEY}`,
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -407,7 +407,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        authorization: "Bearer kcO66AEXTTfHtEfacXTVs0gkNc3vqX",
+        authorization: `Bearer ${process.env.REACT_APP_WAVE_API_KEY}`,
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
