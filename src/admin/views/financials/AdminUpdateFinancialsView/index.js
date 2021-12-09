@@ -833,11 +833,9 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
             download: true,
           }
         );
-        console.log(y);
         const s = await new Response(y.Body).json();
-        console.log(s);
         if (s) {
-          const t = s[0].Blocks.map((item) => item.Text !== "");
+          const t = s.Blocks.map((item) => item.Text);
           setSheet(t);
         }
       }
@@ -858,7 +856,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         );
         const s = await new Response(y.Body).json();
         if (s) {
-          const t = s.Blocks[0].map((item) => item.Text !== "");
+          const t = s.Blocks.map((item) => item.Text);
           setIncome(t);
         } else {
           return;
