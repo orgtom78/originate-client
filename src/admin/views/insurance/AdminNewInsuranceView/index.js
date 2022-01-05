@@ -81,9 +81,19 @@ export default function NewInsuranceRequest() {
     try {
       const buyer_eulerid = values["buyer_eulerid"];
       const supplier_eulerid = values["supplier_eulerid"];
+      const invoice_amount = values["invoice_amount"];
+      const invoice_currency = values["invoice_currency"];
+      const invoice_number = values["invoice_number"];
+      const invoice_issue_date = values["invoice_issue_date"];
+      const invoice_due_date = values["invoice_due_date"];
       const insurancecover = await getBuyerSupplierLimit({
         buyer_eulerid,
         supplier_eulerid,
+        invoice_amount,
+        invoice_currency,
+        invoice_due_date,
+        invoice_issue_date,
+        invoice_number,
       });
       setSingleInsurance(insurancecover);
     } catch (e) {
@@ -140,6 +150,10 @@ export default function NewInsuranceRequest() {
     // Default options are marked with *
     const eulercompid = "99184313";
     const eulercompid2 = "127805632";
+    console.log(input.invoice_due_date);
+    console.log(input.invoice_issue_date);
+    console.log(input.invoice_amount);
+    console.log(input.invoice_currency);
     const buyeruuid = await getsingleinvoiceuuid(input.buyer_eulerid);
     const supplieruuid = await getsingleinvoiceuuid(input.supplier_eulerid);
     console.log(buyeruuid.Id);
@@ -158,11 +172,11 @@ export default function NewInsuranceRequest() {
         sellerId: `${supplieruuid.Id}`,
         buyerId: `${buyeruuid.Id}`,
         invoice: {
-          amount: 10000,
-          currency: "usd",
-          dueAt: "2022-03-25T14:23:21.811Z",
-          issuedAt: "2022-01-03T15:23:21.811Z",
-          number: "001",
+          amount: `${input.invoice_amount}`,
+          currency: `${input.invoice_currency}`,
+          dueAt: `${input.invoice_due_date}`,
+          issuedAt: `${input.invoice_issue_date}`,
+          number: `${input.invoice_number}`,
         },
       }),
     });

@@ -40,7 +40,6 @@ const AdminCompanyIDListView = (input) => {
   const [page, setPage] = useState(0);
   const [company, setCompany] = useState([]);
   const [companyName, setCompanyName] = useState("");
-  const [companyWebsite, setCompanyWebsite] = useState("");
   const [companyCreation, setCompanyCreation] = useState("");
 
   React.useEffect(() => {
@@ -55,15 +54,8 @@ const AdminCompanyIDListView = (input) => {
           const {
             legalData: { companyName },
           } = input;
-          const {
-            communicationChannels: [
-              { value: phoneNumber },
-              { value: companyWebsite },
-            ],
-          } = input;
           setCompanyCreation(creationDate);
           setCompanyName(companyName);
-          setCompanyWebsite(companyWebsite);
           if (key === "companyId") {
             setCompany(`${value}`);
           }
@@ -133,7 +125,6 @@ const AdminCompanyIDListView = (input) => {
                   <TableRow>
                     <TableCell>Company's Name</TableCell>
                     <TableCell>Euler ID</TableCell>
-                    <TableCell>Website</TableCell>
                     <TableCell>Incorporation Date</TableCell>
                   </TableRow>
                 </TableHead>
@@ -151,7 +142,6 @@ const AdminCompanyIDListView = (input) => {
                       </Box>
                     </TableCell>
                     <TableCell>{`${company}`}</TableCell>
-                    <TableCell>{`${companyWebsite}`}</TableCell>
                     <TableCell>
                       {moment(companyCreation).format("DD/MM/YYYY")}
                     </TableCell>
