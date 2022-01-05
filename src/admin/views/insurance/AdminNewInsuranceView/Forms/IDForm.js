@@ -1,10 +1,14 @@
 import React from "react";
 import { InputField } from "src/components/FormFields";
+import SelectListField from "src/components/FormFields/SelectISO2.jsx";
 import { Card, CardContent, Divider, Grid } from "@material-ui/core";
+import countries from "src/components/FormLists/countries.js";
+
+const cr = countries;
 
 export default function DunsForm(props) {
   const {
-    formField: { insurance_buyer_duns, insurance_supplier_duns },
+    formField: { buyer_name, buyer_country },
   } = props;
 
   return (
@@ -15,16 +19,17 @@ export default function DunsForm(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={insurance_buyer_duns.name}
-                label={insurance_buyer_duns.label}
+                name={buyer_name.name}
+                label={buyer_name.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputField
-                name={insurance_supplier_duns.name}
-                label={insurance_supplier_duns.label}
+              <SelectListField
+                name={buyer_country.name}
+                label={buyer_country.label}
+                data={cr}
                 fullWidth
                 variant="outlined"
               />
