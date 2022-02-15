@@ -124,12 +124,18 @@ const TransactionListView = () => {
 
   function checkpayout(date) {
     if (date !== null) {
-      return moment(date).format("DD/MM/YYYY");
+      return (
+        <>
+          <MuiThemeProvider theme={orangeTheme}>
+            <Chip label={moment(date).format("DD/MM/YYYY")} color="secondary" />
+          </MuiThemeProvider>
+        </>
+      );
     } else {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
-            <Chip label="Pending" color="secondary" />
+            <Chip label="N/A" color="secondary" />
           </MuiThemeProvider>
         </>
       );
@@ -150,7 +156,7 @@ const TransactionListView = () => {
                       <TableCell>Amount</TableCell>
                       <TableCell>Goods</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Payout Date</TableCell>
+                      <TableCell>Due Date</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -188,7 +194,7 @@ const TransactionListView = () => {
                             {checkstatus(request.request_status)}
                           </TableCell>
                           <TableCell>
-                            {checkpayout(request.payout_date)}
+                            {checkpayout(request.invoice_due_date)}
                           </TableCell>
                         </TableRow>
                       ))}

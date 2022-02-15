@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
 import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   AppBar,
   Box,
   Button,
@@ -21,6 +24,7 @@ import Page from "src/components/Page";
 import IDForm from "./Forms/IDForm";
 import RequestForm from "./Forms/RequestForm";
 import IDResult from "./IDResults";
+import CreditRequestForm from "./Forms/CreditRequestForm";
 
 import IDvalidationSchema from "./FormModel/IDvalidationSchema";
 import IDFormModel from "./FormModel/IDFormModel";
@@ -30,7 +34,9 @@ import RequestvalidationSchema from "./FormModel/RequestvalidationSchema";
 import RequestFormModel from "./FormModel/RequestFormModel";
 import RequestformInitialValues from "./FormModel/RequestformInitialValues";
 
-import exresults from "./exresults";
+import CreditRequestvalidationSchema from "./FormModel/CreditRequestvalidationSchema";
+import CreditRequestFormModel from "./FormModel/CreditRequestFormModel";
+import CreditRequestformInitialValues from "./FormModel/CreditRequestformInitialValues";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,17 +49,17 @@ const useStyles = makeStyles((theme) => ({
 
 const { formId, formField } = IDFormModel;
 const { formId2, formField2 } = RequestFormModel;
+const { formId3, formField3 } = CreditRequestFormModel;
 
 export default function NewInsuranceRequest() {
   const classes = useStyles();
   const currentValidationSchema = IDvalidationSchema[0];
   const requestValidationSchema = RequestvalidationSchema[0];
+  const creditValidationSchema = CreditRequestvalidationSchema[0];
   const [token, setToken] = useState("");
   const [value, setValue] = useState(0);
   const [company, setCompany] = useState("");
   const [singleInsurance, setSingleInsurance] = useState("");
-
-  const testcompany = exresults;
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -101,11 +107,29 @@ export default function NewInsuranceRequest() {
     }
   }
 
+  async function _submitForm3(values, actions) {
+    await _sleep(1000);
+    try {
+      const debtor_eulerid = values["debtor_eulerid"];
+      const credit_amount = values["credit_amount"];
+      const credit_currency = values["credit_currency"];
+      const insurancecover = await getBuyerLimit({
+        debtor_eulerid,
+        credit_amount,
+        credit_currency,
+      });
+      setSingleInsurance(insurancecover);
+    } catch (e) {
+      onError(e);
+    }
+  }
+
   async function getInsuranceuuidBuyer(input) {
     // Default options are marked with *
     const c = await eulerauth();
     setToken(c);
     var url =
+      //remove proxy for online version
       "http://localhost:8080/https://api-services.uat.1placedessaisons.com/search/uatm-v2/companies/matching";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -132,13 +156,12 @@ export default function NewInsuranceRequest() {
   }
 
   async function getsingleinvoiceuuid(input) {
-    console.log(input);
+    //remove proxy for online version
     var url = `http://localhost:8080/https://api-demo.single-invoice.co/v2/transactor/eulerid/${input}`;
     const response = await fetch(url, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        apikey:
-          "Kn17xpP4e7qVLAxNOsofitGXBz1XEpirO1y479jfczyS8IuOtNGDWymcVKoHmbK",
+        apikey: process.env.REACT_APP_EH_SINGLE_INVOICE_KEY,
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -148,23 +171,15 @@ export default function NewInsuranceRequest() {
 
   async function getBuyerSupplierLimit(input) {
     // Default options are marked with *
-    const eulercompid = "99184313";
-    const eulercompid2 = "127805632";
-    console.log(input.invoice_due_date);
-    console.log(input.invoice_issue_date);
-    console.log(input.invoice_amount);
-    console.log(input.invoice_currency);
     const buyeruuid = await getsingleinvoiceuuid(input.buyer_eulerid);
     const supplieruuid = await getsingleinvoiceuuid(input.supplier_eulerid);
-    console.log(buyeruuid.Id);
-    console.log(supplieruuid.Id);
     var url =
+      //remove proxy for online version
       "http://localhost:8080/https://api-demo.single-invoice.co/v2/coverage";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        apikey:
-          "Kn17xpP4e7qVLAxNOsofitGXBz1XEpirO1y479jfczyS8IuOtNGDWymcVKoHmbK",
+        apikey: process.env.REACT_APP_EH_SINGLE_INVOICE_KEY,
         "Content-Type": "application/json",
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
@@ -187,8 +202,8 @@ export default function NewInsuranceRequest() {
     // Default options are marked with *
     const c = await eulerauth();
     setToken(c);
-    const eulercompid = "99184313";
     var url =
+      //remove proxy for online version
       "http://localhost:8080/https://api-services.uat.1placedessaisons.com/uatm/riskinfo/v2/covers";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
@@ -201,14 +216,14 @@ export default function NewInsuranceRequest() {
         coverTypeCode: "CreditLimit",
         requestOrigin: "ExternalPlatform",
         requestData: {
-          amount: 100000,
-          currencyCode: "USD",
-          companyId: eulercompid,
+          amount: input.credit_amount,
+          currencyCode: input.credit_currency,
+          companyId: input.buyer_eulerid,
           comment: "",
           isRequestUrgent: "true",
         },
         policy: {
-          policyId: "P1000932",
+          policyId: process.env.REACT_APP_EH_POLICY_ID,
           extensionId: "",
           businessUnitCode: "ACI",
         },
@@ -258,6 +273,10 @@ export default function NewInsuranceRequest() {
 
   function _handleSubmit2(values, actions) {
     _submitForm2(values, actions);
+  }
+
+  function _handleSubmit3(values, actions) {
+    _submitForm3(values, actions);
   }
 
   function TabPanel(props) {
@@ -356,35 +375,80 @@ export default function NewInsuranceRequest() {
             </Container>
           </TabPanel>
           <TabPanel value={value} index={1}>
-            <Container maxWidth="lg">
-              <React.Fragment>
-                <Formik
-                  initialValues={RequestformInitialValues}
-                  validationSchema={requestValidationSchema}
-                  onSubmit={_handleSubmit2}
+            <React.Fragment>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
                 >
-                  {({ isSubmitting }) => (
-                    <Form id={formId2}>
-                      <RequestForm formField={formField2} />
-                      <br></br>
-                      <div className={classes.buttons}>
-                        <div className={classes.wrapper}>
-                          <Button
-                            disabled={isSubmitting}
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                          >
-                            Submit
-                          </Button>
+                  <Typography>Single Invoice Cover</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Formik
+                    initialValues={RequestformInitialValues}
+                    validationSchema={requestValidationSchema}
+                    onSubmit={_handleSubmit2}
+                  >
+                    {({ isSubmitting }) => (
+                      <Form id={formId2}>
+                        <RequestForm formField={formField2} />
+                        <br></br>
+                        <div className={classes.buttons}>
+                          <div className={classes.wrapper}>
+                            <Button
+                              disabled={isSubmitting}
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Submit
+                            </Button>
+                          </div>
                         </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-              </React.Fragment>
-            </Container>
+                      </Form>
+                    )}
+                  </Formik>
+                </AccordionDetails>
+              </Accordion>
+            </React.Fragment>
+            <React.Fragment>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Debtor Credit Cover</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Formik
+                    initialValues={CreditRequestformInitialValues}
+                    validationSchema={creditValidationSchema}
+                    onSubmit={_handleSubmit3}
+                  >
+                    {({ isSubmitting }) => (
+                      <Form id={formId3}>
+                        <CreditRequestForm formField={formField3} />
+                        <br></br>
+                        <div className={classes.buttons}>
+                          <div className={classes.wrapper}>
+                            <Button
+                              disabled={isSubmitting}
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+                </AccordionDetails>
+              </Accordion>
+            </React.Fragment>
           </TabPanel>
         </SwipeableViews>
       </React.Fragment>
