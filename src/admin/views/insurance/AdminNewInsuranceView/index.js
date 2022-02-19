@@ -130,7 +130,7 @@ export default function NewInsuranceRequest() {
     setToken(c);
     var url =
       //remove proxy for online version
-      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/search/uatm-v2/companies/matching";
+      "https://cors-anywhere-oc.herokuapp.com/https://api-services.uat.1placedessaisons.com/search/uatm-v2/companies/matching";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -157,7 +157,7 @@ export default function NewInsuranceRequest() {
 
   async function getsingleinvoiceuuid(input) {
     //remove proxy for online version
-    var url = `http://localhost:8080/https://api-demo.single-invoice.co/v2/transactor/eulerid/${input}`;
+    var url = `https://cors-anywhere-oc.herokuapp.com/https://api-demo.single-invoice.co/v2/transactor/eulerid/${input}`;
     const response = await fetch(url, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -175,7 +175,7 @@ export default function NewInsuranceRequest() {
     const supplieruuid = await getsingleinvoiceuuid(input.supplier_eulerid);
     var url =
       //remove proxy for online version
-      "http://localhost:8080/https://api-demo.single-invoice.co/v2/coverage";
+      "https://cors-anywhere-oc.herokuapp.com/https://api-demo.single-invoice.co/v2/coverage";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -204,7 +204,7 @@ export default function NewInsuranceRequest() {
     setToken(c);
     var url =
       //remove proxy for online version
-      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/uatm/riskinfo/v2/covers";
+      "https://cors-anywhere-oc.herokuapp.com/https://api-services.uat.1placedessaisons.com/uatm/riskinfo/v2/covers";
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
       headers: {
@@ -235,7 +235,7 @@ export default function NewInsuranceRequest() {
   async function eulerauth() {
     // Default options are marked with *
     var url =
-      "http://localhost:8080/https://api-services.uat.1placedessaisons.com/uatm/v1/idp/oauth2/authorize";
+      "https://cors-anywhere-oc.herokuapp.com/https://api-services.uat.1placedessaisons.com/uatm/v1/idp/oauth2/authorize";
 
     const response = await fetch(url, {
       method: "POST", // *GET, POST, PUT, DELETE, etc.
