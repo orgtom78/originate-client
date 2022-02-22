@@ -1,0 +1,662 @@
+type Bank
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  bankId: String
+  buyerId: String
+  supplierId: String
+  investorId: String
+  identityId: String
+  account_statement_attachment: String
+  balance: String
+  balance_available: String
+  bank_account_name: String
+  bank_account_number: String
+  bank_account_sortcode: String
+  bank_address_city: String
+  bank_address_number: String
+  bank_address_postalcode: String
+  bank_address_refinment: String
+  bank_address_street: String
+  bank_branch: String
+  bank_country: String
+  bank_name: String
+  bank_routing_number: String
+  bank_status: String
+  bic_swift_code: String
+  createdAt: String
+  iban: String
+  iso_currency_code: String
+  overdraft: String
+  payments_incoming: String
+  payments_outgoing: String
+  pre_auth_amount: String
+  reporting_end_date: String
+  reporting_start_date: String
+  sortkey: String
+  userId: String!
+}
+
+type Buyer
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  buyerId: String!
+  supplierId: String
+  investorId: String
+  identityId: String
+  brokerId: String
+  buyer_address_city: String
+  buyer_address_number: String
+  buyer_address_postalcode: String
+  buyer_address_refinment: String
+  buyer_address_street: String
+  buyer_name: String
+  buyer_trading_name: String
+  buyer_country: String
+  buyer_contact_name: String
+  buyer_contact_email: String
+  buyer_contact_phone: String
+  buyer_contact_position: String
+  buyer_website: String
+  createdAt: String
+  buyer_currency: String
+  buyer_date_of_incorporation: String
+  buyer_description: String
+  buyer_industry: String
+  buyer_industry_code: String
+  buyer_insurance_name: String
+  buyer_insurance_rating: String
+  buyer_insurance_status: String
+  buyer_loan_request_amount: String
+  buyer_loan_approved_amount: String
+  buyer_one_off_ipu_attachment: String
+  buyer_loan_collateral: String
+  buyer_loan_covenants: String
+  buyer_loan_transaction_fee: String
+  buyer_loan_discount_fee: String
+  buyer_loan_purpose: String
+  buyer_loan_rate: String
+  buyer_loan_type: String
+  buyer_logo: String
+  buyer_next_year_projected_transaction_amount: String
+  buyer_next_year_projected_number_invoices: String
+  buyer_payment_terms: String
+  buyer_previous_year_transaction_amount: String
+  buyer_previous_year_number_invoices: String
+  buyer_reporting_year: String
+  buyer_reporting_year_transaction_amount: String
+  buyer_reporting_year_number_invoices: String
+  buyer_sample_trading_docs_attachment: String
+  buyer_sold_goods_description: String
+  buyer_supplier_year_business_relation_started: String
+  buyer_status: String
+  buyer_type: String
+  buyer_registration_cert_attachment: String
+  buyer_shareholder_list_attachment: String
+  buyer_director_list_attachment: String
+  buyer_articles_of_association_attachment: String
+  buyer_duns_number: String
+  sortkey: String
+  userId: String!
+}
+
+type Bookkeeping @model @auth(rules: [{ allow: groups, groups: ["Admin"] }]) {
+  id: ID!
+  bookkeeping_status: String
+  bookkeepingId: String
+  buyerId: String
+  supplierId: String
+  investorId: String
+  identityId: String
+  requestId: String
+  transactionId: String
+  createdAt: String
+  sortkey: String
+  invoiceId_3party: String
+  invoiceurl_3party: String
+  invoicepdfurl_3party: String
+}
+
+type Director
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  directorId: String!
+  supplierId: String
+  buyerId: String
+  investorId: String
+  identityId: String
+  director_appointment_date: String
+  director_country_of_residence: String
+  director_date_of_birth: String
+  director_email: String
+  director_id_attachment: String
+  director_id_expiry_date: String
+  director_id_issue_date: String
+  director_id_issuer_country: String
+  director_id_issuer_state: String
+  director_id_number: String
+  director_id_type: String
+  director_jobtitle: String
+  director_name: String
+  director_nationality: String
+  director_pep_status: String
+  director_phone_number: String
+  director_poa_attachment: String
+  director_ubo_status: String
+  createdAt: String
+  director_status: String
+  sortkey: String
+  userId: String!
+}
+
+type Document
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  documentId: String
+  userId: String!
+  identityId: String
+  bankId: String
+  brokerId: String
+  buyerId: String
+  directorId: String
+  financialsId: String
+  investorId: String
+  requestId: String
+  supplierId: String
+  transactionId: String
+  uboId: String
+  document_type: String
+  document_attachment: String
+  createdAt: String
+  sortkey: String
+}
+
+type Financials
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  financialsId: String!
+  supplierId: String
+  buyerId: String
+  investorId: String
+  identityId: String
+  financials_attachment: String
+  balance_sheet_attachment: String
+  income_statement_attachment: String
+  current_assets: String
+  cash_flow: String
+  current_long_term_debt: String
+  current_liabilities: String
+  gross_margin: String
+  operating_income: String
+  other_expenses: String
+  ebt: String
+  ebitda: String
+  current_ratio: String
+  debt_equity_ratio: String
+  debt_ebitda_ratio: String
+  inventory_turnover: String
+  interest_coverage: String
+  income_tax_expense: String
+  total_liabilities_and_equity: String
+  cash: String
+  marketable_securities: String
+  accounts_receivable: String
+  inventory: String
+  property: String
+  goodwill: String
+  other_current_assets: String
+  other_non_current_assets: String
+  accumulated_depreciation: String
+  total_assets: String
+  short_term_debt: String
+  accounts_payable: String
+  accured_expenses: String
+  unearned_revenue: String
+  long_term_debt: String
+  other_current_liabilities: String
+  other_long_term_liabilities: String
+  income_tax_payable: String
+  dividends_payable: String
+  total_liabilities: String
+  common_stock: String
+  preferred_stock: String
+  paid_in_capital: String
+  retained_earnings: String
+  total_equity: String
+  equity_book_value: String
+  equity_market_value: String
+  sales: String
+  cost_of_goods_sold: String
+  operating_expenses: String
+  marketing_expenses: String
+  bad_debt_expenses: String
+  createdAt: String
+  ebit: String
+  interest_expenses: String
+  depreciation_expenses: String
+  sale_purchase_of_fixed_asset: String
+  extraordinary_income: String
+  tax_expenses: String
+  net_profit: String
+  financials_rating: String
+  financials_reporting_period: String
+  working_capital: String
+  financials_status: String
+  userId: String!
+  sortkey: String
+}
+
+type Investor
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  investorId: String!
+  identityId: String
+  investor_address_city: String
+  investor_address_number: String
+  investor_address_postalcode: String
+  investor_address_refinment: String
+  investor_articles_of_association_attachment: String
+  investor_shareholder_list_attachment: String
+  investor_director_list_attachment: String
+  investor_country: String
+  investor_industry: String
+  investor_industry_code: String
+  investor_logo: String
+  investor_name: String
+  investor_register_number: String
+  investor_trading_name: String
+  investor_type: String
+  investor_website: String
+  investor_address_street: String
+  createdAt: String
+  investor_date_of_incorporation: String
+  investor_registration_cert_attachment: String
+  investor_duns_number: String
+  sortkey: String
+  userId: String!
+}
+
+type Originate
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  sortkey: String!
+  userId: String!
+}
+
+type Request
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read, update] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  requestId: String!
+  buyerId: String
+  supplierId: String
+  investorId: String
+  identityId: String
+  buyer_name: String
+  supplier_name: String
+  advance_rate: String
+  discount_fee_rate: String
+  transaction_fee_rate: String
+  transaction_fee_amount: String
+  purchase_order_amount: String
+  purchase_order_attachment: String
+  purchase_order_date: String
+  sold_goods_description: String
+  invoice_amount: String
+  invoice_currency: String
+  invoice_payout_date: String
+  invoice_date: String
+  invoice_due_date: String
+  invoice_attachment: String
+  offer_notice_attachment: String
+  ipu_attachment: String
+  cargo_insurance_name: String
+  cargo_insurance_attachment: String
+  bill_of_lading_no: String
+  bill_of_lading_attachment: String
+  container_no: String
+  packing_list_attachment: String
+  createdAt: String
+  payout_date: String
+  payback_date: String
+  request_status: String
+  bookkeeping_status: String
+  sortkey: String
+  userId: String!
+}
+
+type Supplier
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  supplierId: String!
+  identityId: String
+  supplier_address_city: String
+  supplier_address_number: String
+  supplier_address_postalcode: String
+  supplier_address_refinment: String
+  supplier_articles_of_association_attachment: String
+  supplier_shareholder_list_attachment: String
+  supplier_description: String
+  supplier_director_list_attachment: String
+  supplier_country: String
+  supplier_industry: String
+  supplier_industry_code: String
+  supplier_logo: String
+  supplier_name: String
+  supplier_register_number: String
+  supplier_trading_name: String
+  supplier_type: String
+  supplier_website: String
+  supplier_address_street: String
+  createdAt: String
+  supplier_date_of_incorporation: String
+  supplier_registration_cert_attachment: String
+  supplier_duns_number: String
+  sortkey: String
+  userId: String!
+}
+
+type Transaction
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  transactionId: String!
+  buyerId: String
+  supplierId: String
+  investorId: String
+  identityId: String
+  authorized_date: String
+  category: String
+  iso_currency_code: String
+  location: String
+  merchant_name: String
+  payment_channel: String
+  pending: String
+  recipient_account_name: String
+  recipient_bank_account_number: String
+  recipient_bank_account_sortcode: String
+  recipient_bank_address_city: String
+  recipient_bank_address_number: String
+  recipient_bank_address_postalcode: String
+  recipient_bank_address_refinment: String
+  recipient_bank_address_street: String
+  recipient_bank_branch: String
+  recipient_bank_country: String
+  recipient_bank_name: String
+  recipient_bank_routing_number: String
+  recipient_bic_swift_code: String
+  recipient_iban: String
+  recipientaccountId: String
+  sender_account_name: String
+  sender_bank_account_number: String
+  sender_bank_account_sortcode: String
+  sender_bank_branch: String
+  sender_bank_name: String
+  sender_bank_routing_number: String
+  sender_bic_swift_code: String
+  sender_iban: String
+  senderaccountId: String
+  transaction_code: String
+  transaction_date: String
+  transaction_description: String
+  transaction_exchange_rate: String
+  transaction_exchange_rate_fee: String
+  transaction_source_amount: String
+  transaction_source_currency: String
+  transaction_status: String
+  transaction_target_amount: String
+  transaction_target_currency: String
+  userId: String!
+  sortkey: String
+}
+
+type UBO
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  uboId: String!
+  supplierId: String
+  buyerId: String
+  investorId: String
+  identityId: String
+  ubo_appointment_date: String
+  ubo_country_of_residence: String
+  ubo_date_of_birth: String
+  ubo_email: String
+  ubo_id_attachment: String
+  ubo_id_expiry_date: String
+  ubo_id_issue_date: String
+  ubo_id_issuer_country: String
+  ubo_id_issuer_state: String
+  ubo_id_number: String
+  ubo_id_type: String
+  ubo_jobtitle: String
+  ubo_name: String
+  ubo_nationality: String
+  ubo_ownership_percentage: String
+  ubo_pep_status: String
+  ubo_phone_number: String
+  ubo_poa_attachment: String
+  createdAt: String
+  ubo_status: String
+  sortkey: String
+  userId: String!
+}
+
+type Usergroup
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  groupId: String!
+  userId: String!
+  user_name: String
+  investorId: String
+  supplierId: String
+  brokerId: String
+  sub: String
+  identityId: String
+  group_type: String
+  group_name: String
+  group_contact_name: String
+  group_contact_email: String
+  group_contact_phone: String
+  user_email: String
+  user_role: String
+  createdAt: String
+  sortkey: String
+}
+
+type Insurance
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+    ]
+  ) {
+  id: ID!
+  groupId: String
+  userId: String
+  investorId: String
+  supplierId: String
+  brokerId: String
+  buyerId: String
+  insuranceId: String!
+  identityId: String
+  insurance_type: String
+  insurance_name: String
+  insurance_supplier_uuid: String
+  insurance_supplier_duns: String
+  insurance_buyer_uuid: String
+  insurance_buyer_duns: String
+  insurance_cover_amount: String
+  insurance_cover_currency: String
+  insurance_cover_start_date: String
+  insurance_cover_end_date: String
+  insurance_cover_status: String
+  insurance_cover_type: String
+  insurance_cover_premium: String
+  insurance_cover_premium_currency: String
+  insurance_cover_collateral_currency: String
+  insurance_cover_exchange_rate: String
+  insurance_single_invoice_cover_amount: String
+  insurance_single_invoice_cover_currency: String
+  insurance_single_invoice_cover_start_date: String
+  insurance_single_invoice_cover_end_date: String
+  insurance_single_invoice_cover_status: String
+  insurance_single_invoice_cover_premium: String
+  insurance_single_invoice_cover_premium_currency: String
+  insurance_single_invoice_cover_collateral_currency: String
+  insurance_single_invoice_exchange_rate: String
+  group_contact_name: String
+  group_contact_email: String
+  group_contact_phone: String
+  user_email: String
+  user_role: String
+  createdAt: String
+  sortkey: String
+}

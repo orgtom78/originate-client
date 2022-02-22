@@ -53,6 +53,7 @@ const AdminSupplierListView = () => {
         },
       } = await API.graphql(graphqlOperation(queries.listSuppliers));
       const n = { data: { listSuppliers: { items: itemsPage1, nextToken } } };
+      console.log(n);
       const items = n.data.listSuppliers.items;
       setSupplier(items);
     }

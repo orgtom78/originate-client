@@ -12,6 +12,7 @@ import {
 } from "@material-ui/core";
 import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
 import NumberFormat from "react-number-format";
+import moment from "moment";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -53,8 +54,10 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
   function addamounts() {
     if (handle) {
       var x = request.filter((e) => e.request_status === "Approved");
-      var y = x.filter((e) => e.payback_date === null);
-      var fin = y.map((e) => e.invoice_amount);
+      let today = moment().toISOString();
+      var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) > 0);
+      var fin = z.map((e) => e.invoice_amount);
+      var b = fin.map(Number);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       return sum;
@@ -69,7 +72,7 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              TOTAL UTILIZATION AMOUNT
+              CURRENT UTILIZATION AMOUNT
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat

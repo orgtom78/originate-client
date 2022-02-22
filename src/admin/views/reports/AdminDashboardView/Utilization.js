@@ -14,6 +14,7 @@ import {
 } from "@material-ui/core";
 import BlurLinearIcon from "@material-ui/icons/BlurLinear";
 import NumberFormat from "react-number-format";
+import moment from "moment";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -56,7 +57,9 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
   function payouts() {
     if (handle) {
       var x = request.filter((e) => e.request_status === "Approved");
-      var fin = x.map((e) => e.invoice_amount);
+      let today = moment().toISOString();
+      var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) > 0);
+      var fin = z.map((e) => e.invoice_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       return sum;
@@ -106,7 +109,7 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
     const sum = (b / a) * 100;
     if (Number.isNaN(sum)) {
       return "0";
-    } else if (sum !== "NaN") {
+    } else if (sum !== null) {
       return sum;
     } else {
       return;
