@@ -38,6 +38,8 @@ import CreditRequestvalidationSchema from "./FormModel/CreditRequestvalidationSc
 import CreditRequestFormModel from "./FormModel/CreditRequestFormModel";
 import CreditRequestformInitialValues from "./FormModel/CreditRequestformInitialValues";
 
+import AdminInsuranceListView from "../AdminInsuranceListView";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -448,6 +450,11 @@ export default function NewInsuranceRequest() {
                   </Formik>
                 </AccordionDetails>
               </Accordion>
+            </React.Fragment>
+          </TabPanel>
+          <TabPanel value={value} index={2}>
+            <React.Fragment>
+              <AdminInsuranceListView />
             </React.Fragment>
           </TabPanel>
         </SwipeableViews>

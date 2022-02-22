@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -6,17 +7,21 @@ import {
   Box,
   Button,
   Card,
+  Chip,
   Container,
   Checkbox,
-  Divider,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
   Typography,
   makeStyles,
+  MuiThemeProvider,
+  createTheme,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -24,6 +29,8 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
+import { green, orange, red } from "@material-ui/core/colors";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,176 +44,360 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AdminUserGroupListView = () => {
-  const classes = useStyles();
-  const [usergroup, setUsergroup] = useState([]);
+const greenTheme = createTheme({
+  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
+});
+const orangeTheme = createTheme({
+  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
+});
+const redTheme = createTheme({
+  palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
+});
 
-  const [selectedUsergroupIds, setSelectedUsergroupIds] = useState([]);
+const AdminInsuranceListView = () => {
+  const classes = useStyles();
+  const [request, setRequest] = useState([]);
+
+  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  React.useEffect(() => {
-    async function getUsergroups() {
-      const {
-        data: {
-          listUsergroups: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(graphqlOperation(queries.listUsergroups));
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("status");
 
-      const n = { data: { listUsergroups: { items: itemsPage1, nextToken } } };
-      const items = n.data.listUsergroups.items;
-      setUsergroup(items);
+  useEffect(() => {
+    async function getRequests() {
+      //remove proxy for online version
+      var url = `https://cors-anywhere-oc.herokuapp.com/https://api-demo.single-invoice.co/v2/coverage?page=0&amp;`;
+      const response = await fetch(url, {
+        method: "GET", // *GET, POST, PUT, DELETE, etc.
+        headers: {
+          apikey: process.env.REACT_APP_EH_SINGLE_INVOICE_KEY,
+          "Content-Type": "application/json",
+          // 'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      return response.json(); // parses JSON response into native JavaScript objects
     }
-    getUsergroups();
+    async function test() {
+      const c = await getRequests();
+      const d = c.sort(function(a, b) {
+        return new Date(b.coverage.quotedAt) - new Date(a.coverage.quotedAt);
+      });
+      console.log(d);
+      setRequest(d);
+    }
+    test();
   }, []);
 
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function getComparator(order, orderBy) {
+    return order === "desc"
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function stableSort(array, comparator) {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map((el) => el[0]);
+  }
+
+  const headCells = [
+    {
+      id: "buyersId",
+      numeric: false,
+      disablePadding: false,
+      label: "Buyers ID",
+    },
+    { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
+    { id: "cover_price", numeric: true, disablePadding: false, label: "Cover Price" },
+    { id: "status", numeric: false, disablePadding: false, label: "Status" },
+    {
+      id: "quotedAt",
+      numeric: false,
+      disablePadding: false,
+      label: "Quoted At",
+    },
+  ];
+
+  function EnhancedTableHead(props) {
+    const {
+      classes,
+      onSelectAllClick,
+      order,
+      orderBy,
+      numSelected,
+      rowCount,
+      onRequestSort,
+    } = props;
+    const createSortHandler = (property) => (event) => {
+      onRequestSort(event, property);
+    };
+
+    return (
+      <TableHead>
+        <TableRow>
+          <TableCell padding="checkbox">
+            <Checkbox
+              indeterminate={numSelected > 0 && numSelected < rowCount}
+              checked={rowCount > 0 && numSelected === rowCount}
+              onChange={onSelectAllClick}
+              inputProps={{ "aria-label": "select all desserts" }}
+            />
+          </TableCell>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={"left"}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  }
+
+  EnhancedTableHead.propTypes = {
+    classes: PropTypes.object.isRequired,
+    numSelected: PropTypes.number.isRequired,
+    onRequestSort: PropTypes.func.isRequired,
+    onSelectAllClick: PropTypes.func.isRequired,
+    order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+    orderBy: PropTypes.string.isRequired,
+    rowCount: PropTypes.number.isRequired,
+  };
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
   const handleSelectAll = (event) => {
-    let newSelectedUsergroupIds;
+    let newSelectedCustomerIds;
 
     if (event.target.checked) {
-      newSelectedUsergroupIds = usergroup.map(
-        (usergroup) => usergroup.usergroupId
-      );
+      newSelectedCustomerIds = request.map((request) => request.requestId);
     } else {
-      newSelectedUsergroupIds = [];
+      newSelectedCustomerIds = [];
     }
 
-    setSelectedUsergroupIds(newSelectedUsergroupIds);
+    setSelectedCustomerIds(newSelectedCustomerIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUsergroupIds.indexOf(id);
-    let newSelectedUsergroupIds = [];
+    const selectedIndex = selectedCustomerIds.indexOf(id);
+    let newSelectedCustomerIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedUsergroupIds = newSelectedUsergroupIds.concat(
-        selectedUsergroupIds,
+      newSelectedCustomerIds = newSelectedCustomerIds.concat(
+        selectedCustomerIds,
         id
       );
     } else if (selectedIndex === 0) {
-      newSelectedUsergroupIds = newSelectedUsergroupIds.concat(
-        selectedUsergroupIds.slice(1)
+      newSelectedCustomerIds = newSelectedCustomerIds.concat(
+        selectedCustomerIds.slice(1)
       );
-    } else if (selectedIndex === selectedUsergroupIds.length - 1) {
-      newSelectedUsergroupIds = newSelectedUsergroupIds.concat(
-        selectedUsergroupIds.slice(0, -1)
+    } else if (selectedIndex === selectedCustomerIds.length - 1) {
+      newSelectedCustomerIds = newSelectedCustomerIds.concat(
+        selectedCustomerIds.slice(0, -1)
       );
     } else if (selectedIndex > 0) {
-      newSelectedUsergroupIds = newSelectedUsergroupIds.concat(
-        selectedUsergroupIds.slice(0, selectedIndex),
-        selectedUsergroupIds.slice(selectedIndex + 1)
+      newSelectedCustomerIds = newSelectedCustomerIds.concat(
+        selectedCustomerIds.slice(0, selectedIndex),
+        selectedCustomerIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedUsergroupIds(newSelectedUsergroupIds);
+    setSelectedCustomerIds(newSelectedCustomerIds);
   };
 
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setLimit(+event.target.value);
+    setPage(0);
   };
 
-  const handlePageChange = (event, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
+  function checkstatus(request) {
+    if (request === "Expired") {
+      return (
+        <>
+          <MuiThemeProvider theme={orangeTheme}>
+            <Chip label={request} color="primary" />
+          </MuiThemeProvider>
+        </>
+      );
+    } else if (request === "Under Review" || request === "Pending") {
+      return (
+        <>
+          <MuiThemeProvider theme={orangeTheme}>
+            <Chip label={request} color="secondary" />
+          </MuiThemeProvider>
+        </>
+      );
+    } else if (request === "Rejected") {
+      return (
+        <>
+          <MuiThemeProvider theme={redTheme}>
+            <Chip label={request} color="secondary" />
+          </MuiThemeProvider>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <MuiThemeProvider theme={greenTheme}>
+            <Chip label={request} color="primary" />
+          </MuiThemeProvider>
+        </>
+      );
+    }
+  }
+
   return (
     <React.Fragment>
-      <Page className={clsx(classes.root)} title="Users and Usergroups">
+      <Page className={clsx(classes.root)} title="Customers">
         <Container maxWidth={false}>
           <Box mt={3}>
             <Card>
               <PerfectScrollbar>
                 <Box minWidth={1050}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={
-                              selectedUsergroupIds.length === usergroup.length
-                            }
-                            color="primary"
-                            indeterminate={
-                              selectedUsergroupIds.length > 0 &&
-                              selectedUsergroupIds.length < usergroup.length
-                            }
-                            onChange={handleSelectAll}
-                          />
-                        </TableCell>
-                        <TableCell>Group's Name</TableCell>
-                        <TableCell>Username</TableCell>
-                        <TableCell>Group Type</TableCell>
-                        <TableCell>ID</TableCell>
-                        <TableCell>Created at</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {usergroup
-                        .slice(page * limit, page * limit + limit)
-                        .map((usergroup) => (
-                          <TableRow
-                            hover
-                            key={usergroup.userId}
-                            selected={
-                              selectedUsergroupIds.indexOf(usergroup.userId) !==
-                              -1
-                            }
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={
-                                  selectedUsergroupIds.indexOf(
-                                    usergroup.userId
+                  <TableContainer>
+                    <Table>
+                      <EnhancedTableHead
+                        classes={classes}
+                        numSelected={selectedCustomerIds.length}
+                        onSelectAllClick={handleSelectAll}
+                        onRequestSort={handleRequestSort}
+                        rowCount={request.length}
+                      />
+                      <TableBody>
+                        {request
+                          .slice(page * limit, page * limit + limit)
+                          .map((request, index) => {
+                            return (
+                              <TableRow
+                                hover
+                                key={request.requestId}
+                                selected={
+                                  selectedCustomerIds.indexOf(
+                                    request.requestId
                                   ) !== -1
                                 }
-                                onChange={(event) =>
-                                  handleSelectOne(event, usergroup.userId)
-                                }
-                                value="true"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <Box alignItems="center" display="flex">
-                                <Link
-                                  to={`/admin/user/${usergroup.userId}/${usergroup.groupId}`}
-                                >
-                                  <Avatar className={classes.avatar}>
-                                    {getInitials(usergroup.user_name)}
-                                  </Avatar>
-                                </Link>
-                                <Typography color="textPrimary" variant="body1">
-                                  {usergroup.group_name}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>{`${usergroup.user_name}`}</TableCell>
-                            <TableCell>{`${usergroup.group_type}`}</TableCell>
-                            <TableCell>{`${usergroup.groupId}`}</TableCell>
-                            <TableCell>
-                              {moment(usergroup.createdAt).format("DD/MM/YYYY")}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
+                                tabIndex={-1}
+                              >
+                                <TableCell padding="checkbox">
+                                  <Checkbox
+                                    checked={
+                                      selectedCustomerIds.indexOf(
+                                        request.requestId
+                                      ) !== -1
+                                    }
+                                    onChange={(event) =>
+                                      handleSelectOne(event, request.requestId)
+                                    }
+                                    value="true"
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <Box alignItems="center" display="flex">
+                                    <Link
+                                      to={``}
+                                    >
+                                      <Avatar
+                                        className={classes.avatar}
+                                        src={`${request.buyer_logo}`}
+                                      >
+                                        {getInitials(request.buyer_name)}
+                                      </Avatar>
+                                    </Link>
+                                    <Typography
+                                      color="textPrimary"
+                                      variant="body1"
+                                    >
+                                      {request.buyerId}
+                                    </Typography>
+                                  </Box>
+                                </TableCell>
+                                <TableCell>
+                                  <NumberFormat
+                                    color="textPrimary"
+                                    variant="body1"
+                                    value={request.invoice.Amount}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    prefix={"$"}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  <NumberFormat
+                                    color="textPrimary"
+                                    variant="body1"
+                                    value={request.coverage.coverPrice}
+                                    displayType={"text"}
+                                    thousandSeparator={true}
+                                    prefix={"$"}
+                                  />
+                                </TableCell>
+                                <TableCell>
+                                  {checkstatus(request.status)}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(request.coverage.quotedAt).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
                 </Box>
               </PerfectScrollbar>
               <TablePagination
                 component="div"
-                count={usergroup.length}
-                onPageChange={handlePageChange}
+                count={request.length}
+                onPageChange={handleChangePage}
                 onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={[5, 10, 25, 50]}
               />
             </Card>
-          </Box>
-          <Divider />
-          <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={`/admin/newuser`}>
-              <Button>Add User+Group</Button>
-            </Link>
           </Box>
         </Container>
       </Page>
@@ -214,4 +405,4 @@ const AdminUserGroupListView = () => {
   );
 };
 
-export default AdminUserGroupListView;
+export default AdminInsuranceListView;
