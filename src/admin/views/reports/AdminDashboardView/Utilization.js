@@ -62,7 +62,8 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
       var fin = z.map((e) => e.invoice_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -122,7 +123,7 @@ const Utilization = ({ className, value, buyer, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              AVERAGE UTILIZATION (%)
+              UTILIZATION (Avg.)
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat

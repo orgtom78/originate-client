@@ -58,7 +58,8 @@ const ExposureObligor = ({ className, value, ...rest }) => {
       var c = fin.length;
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       const avg = sum / c;
-      return avg;
+      const round = Math.round(avg);
+      return round;
     } else {
       return;
     }
@@ -70,7 +71,7 @@ const ExposureObligor = ({ className, value, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              MAXIMUM EXPOSURE PER OBLIGOR (Avg.)
+              MAX EXPOSURE (Avg.)
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -80,7 +81,6 @@ const ExposureObligor = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
-                decimalScale='2'
               />
             </Typography>
           </Grid>

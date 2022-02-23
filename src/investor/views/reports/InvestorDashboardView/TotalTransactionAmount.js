@@ -56,7 +56,8 @@ const TotalTransactionAmount = ({ className, value, ...rest }) => {
       var fin = x.map((e) => e.invoice_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -68,7 +69,7 @@ const TotalTransactionAmount = ({ className, value, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              TOTAL TRANSACTION AMOUNT
+              TOTAL TRANSACTIONS
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -78,7 +79,6 @@ const TotalTransactionAmount = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
-                decimalScale='2'
               />
             </Typography>
           </Grid>

@@ -49,27 +49,24 @@ const LatestLimits = ({ className, ...rest }) => {
   useEffect(() => {
     const getRequests = async () => {
       let filter = {
-        buyer_status: { eq: "Investor Offer Pending" || "Approved" },
+        request_status: { eq: "Under Review" },
       };
       const {
         data: {
-          listBuyers: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listBuyers, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listBuyers.items;
-      var x = items.filter(
-        (e) => e.buyer_status === "Investor Offer Pending" || "Approved"
-      );
-      setLimitdata(x);
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
+      setLimitdata(items);
     };
     getRequests();
   }, []);
 
   function checkstatus(status) {
-    if (status === "Investor Offer Pending") {
+    if (status === "Under Review") {
       return (
         <>
           <MuiThemeProvider theme={orangeTheme}>
@@ -90,7 +87,7 @@ const LatestLimits = ({ className, ...rest }) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Latest Limit Requests" />
+      <CardHeader title="Latest Transactions" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
@@ -98,7 +95,7 @@ const LatestLimits = ({ className, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell>Buyer</TableCell>
-                <TableCell>Requested Limit</TableCell>
+                <TableCell>Amount</TableCell>
                 <TableCell sortDirection="desc">
                   <Tooltip enterDelay={300} title="Sort">
                     <TableSortLabel active direction="desc">
@@ -113,13 +110,13 @@ const LatestLimits = ({ className, ...rest }) => {
               {limitdata.map((limit) => (
                 <TableRow hover key={limit.buyerId}>
                   <TableCell>
-                    <Link to={`/investor/buyer/${limit.id}`}>
+                    <Link to={`/investor/transaction/${limit.id}`}>
                       {limit.buyer_name}
                     </Link>
                   </TableCell>
                   <TableCell>
                     <NumberFormat
-                      value={limit.buyer_loan_request_amount}
+                      value={limit.invoice_amount}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"$"}
@@ -128,7 +125,7 @@ const LatestLimits = ({ className, ...rest }) => {
                   <TableCell>
                     {moment(limit.createdAt).format("DD/MM/YYYY")}
                   </TableCell>
-                  <TableCell>{checkstatus(limit.buyer_status)}</TableCell>
+                  <TableCell>{checkstatus(limit.request_status)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -136,7 +133,7 @@ const LatestLimits = ({ className, ...rest }) => {
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>
-        <Link to={`/investor/requests`}>
+        <Link to={`/investor/transactions`}>
           <Button
             color="primary"
             endIcon={<ArrowRightIcon />}

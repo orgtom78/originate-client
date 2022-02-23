@@ -58,9 +58,9 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
       var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) > 0);
       var fin = z.map((e) => e.invoice_amount);
       var b = fin.map(Number);
-      var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -72,7 +72,7 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              CURRENT UTILIZATION AMOUNT
+              CURRENT UTILIZATION
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -82,7 +82,6 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
-                decimalScale='2'
               />
             </Typography>
           </Grid>

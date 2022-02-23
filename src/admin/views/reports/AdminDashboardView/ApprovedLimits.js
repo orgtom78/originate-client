@@ -65,7 +65,8 @@ const Limits = ({ className, value, ...rest }) => {
       var fin = x.map((e) => e.buyer_loan_approved_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -87,7 +88,6 @@ const Limits = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
-                decimalScale='2'
               />
             </Typography>
           </Grid>
