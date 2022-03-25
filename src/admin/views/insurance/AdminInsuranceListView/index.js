@@ -25,8 +25,6 @@ import {
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import { green, orange, red } from "@material-ui/core/colors";
@@ -124,7 +122,12 @@ const AdminInsuranceListView = () => {
       label: "Buyers ID",
     },
     { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
-    { id: "cover_price", numeric: true, disablePadding: false, label: "Cover Price" },
+    {
+      id: "cover_price",
+      numeric: true,
+      disablePadding: false,
+      label: "Cover Price",
+    },
     { id: "status", numeric: false, disablePadding: false, label: "Status" },
     {
       id: "quotedAt",
@@ -334,9 +337,7 @@ const AdminInsuranceListView = () => {
                                 </TableCell>
                                 <TableCell>
                                   <Box alignItems="center" display="flex">
-                                    <Link
-                                      to={``}
-                                    >
+                                    <Link to={``}>
                                       <Avatar
                                         className={classes.avatar}
                                         src={`${request.buyer_logo}`}

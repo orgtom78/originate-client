@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "auth": {
+      "originateclient84cf992c": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "api": {
+      "originateclientdev": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "storage": {
+      "ocdynamoplaiddb": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ],
+      "Plaidauth:@model(appsync)": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "clientId",
+      "environmentVariableName": "CLIENT_ID"
+    }
+  ],
+  "secretNames": [
+    "PLAID_SECRET"
+  ]
+}

@@ -53,6 +53,7 @@ const AdminInvestorListView = () => {
         },
       } = await API.graphql(graphqlOperation(queries.listInvestors));
       const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      console.log(n)
       const items = n.data.listInvestors.items;
       setInvestor(items);
     }

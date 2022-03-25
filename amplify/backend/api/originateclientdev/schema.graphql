@@ -365,6 +365,26 @@ type Originate
   userId: String!
 }
 
+type Plaidauth
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "userId"
+        identityClaim: "custom:groupid"
+        operations: [create, update, delete, read]
+      }
+      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Admin"] }
+      { allow: private, provider: iam, operations: [create, update, delete, read] }
+    ]
+  ) {
+  id: ID!
+  accessToken1: String
+  accessToken2: String
+  }
+
 type Request
   @model
   @auth(

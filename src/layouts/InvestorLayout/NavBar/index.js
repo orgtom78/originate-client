@@ -17,6 +17,7 @@ import {
   User as UserIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon,
+  Home as HomeIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
@@ -43,6 +44,11 @@ const items = [
     href: "/investor/transactions",
     icon: CreditCardIcon,
     title: "Transactions",
+  },
+  {
+    href: "/investor/bank",
+    icon: HomeIcon,
+    title: "Bank",
   },
   {
     href: "/investor/settings",
