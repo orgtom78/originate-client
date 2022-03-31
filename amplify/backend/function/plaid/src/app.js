@@ -1,18 +1,4 @@
 /*
-Use the following code to retrieve configured secrets from SSM:
-
-const aws = require('aws-sdk');
-
-const { Parameters } = await (new aws.SSM())
-  .getParameters({
-    Names: ["PLAID_SECRET"].map(secretName => process.env[secretName]),
-    WithDecryption: true,
-  })
-  .promise();
-
-Parameters will be of the form { Name: 'secretName', Value: 'secretValue', ... }[]
-*/
-/*
 Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
     http://aws.amazon.com/apache2.0/
@@ -21,16 +7,15 @@ See the License for the specific language governing permissions and limitations 
 */
 
 /* Amplify Params - DO NOT EDIT
-	API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT
-	API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT
-	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_ARN
-	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME
-	AUTH_ORIGINATECLIENT84CF992C_USERPOOLID
 	ENV
 	REGION
-	STORAGE_OCDYNAMOPLAIDDB_ARN
-	STORAGE_OCDYNAMOPLAIDDB_NAME
-	STORAGE_OCDYNAMOPLAIDDB_STREAMARN
+	AUTH_ORIGINATECLIENT84CF992C_USERPOOLID
+	API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT
+	API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT
+	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME
+	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_ARN
+	CLIENT_ID
+	PLAID_SECRET
 Amplify Params - DO NOT EDIT */
 
 const AWS = require("aws-sdk");
@@ -38,7 +23,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require("aws-serverless-express/middleware");
 const { Configuration, PlaidApi, PlaidEnvironments } = require("plaid");
-var moment = require("moment");
 
 AWS.config.update({ region: process.env.TABLE_REGION });
 const dynamodb = new AWS.DynamoDB.DocumentClient();
@@ -60,7 +44,7 @@ const configuration = new Configuration({
   baseOptions: {
     headers: {
       "PLAID-CLIENT-ID": process.env.CLIENT_ID,
-      "PLAID-SECRET": "ac990b93abfb9d201235ad31854371",
+      "PLAID-SECRET": process.env.PLAID_SECRET,
       "Plaid-Version": "2020-09-14",
     },
   },
@@ -68,9 +52,9 @@ const configuration = new Configuration({
 
 const client = new PlaidApi(configuration);
 
-/****************************
- * Example post method *
- ****************************/
+/**********************
+ * Example get method *
+ **********************/
 
 app.get("/api/create_link_token", async function(req, res) {
   // Get the client_user_id by searching for the current user
@@ -81,7 +65,7 @@ app.get("/api/create_link_token", async function(req, res) {
       client_user_id: clientUserId,
     },
     client_name: "OCDev",
-    products: ["auth", "transactions"],
+    products: ["auth"],
     language: "en",
     country_codes: ["US"],
   };
@@ -103,22 +87,22 @@ app.get("/api/exchange_public_token1", async function(req, res) {
     const accessToken = response.data.access_token;
     const itemID = response.data.item_id;
     let putItemParams = {
-      TableName: "Plaidauth",
+      TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
       Item: {
         id: userId,
         accessToken1: accessToken,
+        createdAt: "2022-02-13T07:25:09.131Z",
+        updatedAt: "2022-02-13T07:25:09.131Z",
       },
     };
 
     dynamodb.put(putItemParams, (err, data) => {
       if (err) {
-        res.statusCode = 500;
         res.json({ error: "oh no!", url: req.url, body: req.body });
       } else {
         res.json({ success: "post call succeed!", url: req.url, data: data });
       }
     });
-
     res.json(response.data);
   } catch (error) {
     return res.json((error.response && error.response.data) || error);
@@ -135,10 +119,12 @@ app.get("/api/exchange_public_token2", async function(req, res) {
     const accessToken = response.data.access_token;
     const itemID = response.data.item_id;
     let putItemParams = {
-      TableName: "Plaidauth",
+      TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
       Item: {
         id: userId,
         accessToken2: accessToken,
+        createdAt: "2022-02-13T07:25:09.131Z",
+        updatedAt: "2022-02-13T07:25:09.131Z",
       },
     };
 
@@ -157,21 +143,38 @@ app.get("/api/exchange_public_token2", async function(req, res) {
   }
 });
 
-app.get("/api/accounts1", async function(req, res, next) {
-  const accessToken = req.query.accessToken;
-  try {
-    const accountsResponse = await client.accountsGet({
-      access_token: accessToken,
-    });
-    res.json(accountsResponse.data);
-  } catch (error) {
-    return res.json((error.response && error.response.data) || error);
-  }
+app.get("/api/accounts1", async function(req, res) {
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
+  const clientUserId = req.query.id;
+  const params = {
+    TableName: tableName,
+    Key: {
+      id: clientUserId,
+    },
+  };
+  dynamodb.get(params, async (err, data) => {
+    if (err) {
+      return { err };
+    } else {
+      if (data.Item) {
+        try {
+          const token = data.Item.accessToken1;
+          const accountsResponse = await client.accountsGet({
+            access_token: token,
+          });
+          res.json(accountsResponse.data);
+        } catch (error) {
+          return res.json((error.response && error.response.data) || error);
+        }
+      }
+    }
+  });
 });
 
 app.get("/api/transactions1", async function(req, res) {
-  const tableName = "Plaidauth";
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
+  const bankaccountid = req.query.bankid;
   const params = {
     TableName: tableName,
     Key: {
@@ -185,21 +188,18 @@ app.get("/api/transactions1", async function(req, res) {
     } else {
       if (data.Item) {
         try {
-          const token = data.Item.accessToken1
-          console.log(token);
+          const token = data.Item.accessToken1;
           const request = {
             access_token: token,
-            start_date: moment()
-              .subtract(30, "days")
-              .format("YYYY-MM-DD"),
-            end_date: moment().format("YYYY-MM-DD"),
+            start_date: "2020-01-01",
+            end_date: "2022-03-01",
             options: {
+              account_ids: [bankaccountid],
               count: 250,
               offset: 0,
             },
           };
           const transResp = await client.transactionsGet(request);
-          console.log(transResp);
           res.json(transResp.data);
         } catch (error) {
           return res.json((error.response && error.response.data) || error);

@@ -1,6 +1,6 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.23\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
+  "Description": "{\"createdOn\":\"Mac\",\"createdBy\":\"Amplify\",\"createdWith\":\"7.6.26\",\"stackType\":\"function-Lambda\",\"metadata\":{}}",
   "Parameters": {
     "CloudWatchRule": {
       "Type": "String",
@@ -16,6 +16,12 @@
     "s3Key": {
       "Type": "String"
     },
+    "clientId": {
+      "Type": "String"
+    },
+    "plaidSecret": {
+      "Type": "String"
+    },
     "authoriginateclient84cf992cUserPoolId": {
       "Type": "String",
       "Default": "authoriginateclient84cf992cUserPoolId"
@@ -27,24 +33,6 @@
     "apioriginateclientdevGraphQLAPIEndpointOutput": {
       "Type": "String",
       "Default": "apioriginateclientdevGraphQLAPIEndpointOutput"
-    },
-    "storageocdynamoplaiddbName": {
-      "Type": "String",
-      "Default": "storageocdynamoplaiddbName"
-    },
-    "storageocdynamoplaiddbArn": {
-      "Type": "String",
-      "Default": "storageocdynamoplaiddbArn"
-    },
-    "storageocdynamoplaiddbStreamArn": {
-      "Type": "String",
-      "Default": "storageocdynamoplaiddbStreamArn"
-    },
-    "clientId": {
-      "Type": "String"
-    },
-    "secretsPathAmplifyAppId": {
-      "Type": "String"
     }
   },
   "Conditions": {
@@ -77,12 +65,12 @@
         "FunctionName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "plaidlambda",
+            "plaid",
             {
               "Fn::Join": [
                 "",
                 [
-                  "plaidlambda",
+                  "plaid",
                   "-",
                   {
                     "Ref": "env"
@@ -108,15 +96,6 @@
             },
             "API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT": {
               "Ref": "apioriginateclientdevGraphQLAPIEndpointOutput"
-            },
-            "STORAGE_OCDYNAMOPLAIDDB_NAME": {
-              "Ref": "storageocdynamoplaiddbName"
-            },
-            "STORAGE_OCDYNAMOPLAIDDB_ARN": {
-              "Ref": "storageocdynamoplaiddbArn"
-            },
-            "STORAGE_OCDYNAMOPLAIDDB_STREAMARN": {
-              "Ref": "storageocdynamoplaiddbStreamArn"
             },
             "API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME": {
               "Fn::ImportValue": {
@@ -148,26 +127,7 @@
               "Ref": "clientId"
             },
             "PLAID_SECRET": {
-              "Fn::Join": [
-                "",
-                [
-                  {
-                    "Fn::Sub": [
-                      "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                      {
-                        "appId": {
-                          "Ref": "secretsPathAmplifyAppId"
-                        },
-                        "env": {
-                          "Ref": "env"
-                        },
-                        "functionName": "plaidlambda"
-                      }
-                    ]
-                  },
-                  "PLAID_SECRET"
-                ]
-              ]
+              "Ref": "plaidSecret"
             }
           }
         },
@@ -188,12 +148,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "originateclientLambdaRolebab445ca",
+            "originateclientLambdaRolec40f252a",
             {
               "Fn::Join": [
                 "",
                 [
-                  "originateclientLambdaRolebab445ca",
+                  "originateclientLambdaRolec40f252a",
                   "-",
                   {
                     "Ref": "env"
@@ -457,39 +417,6 @@
               ],
               "Resource": [
                 {
-                  "Ref": "storageocdynamoplaiddbArn"
-                },
-                {
-                  "Fn::Join": [
-                    "/",
-                    [
-                      {
-                        "Ref": "storageocdynamoplaiddbArn"
-                      },
-                      "index/*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Effect": "Allow",
-              "Action": [
-                "dynamodb:Put*",
-                "dynamodb:Create*",
-                "dynamodb:BatchWriteItem",
-                "dynamodb:Get*",
-                "dynamodb:BatchGetItem",
-                "dynamodb:List*",
-                "dynamodb:Describe*",
-                "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:Update*",
-                "dynamodb:RestoreTable*",
-                "dynamodb:Delete*"
-              ],
-              "Resource": [
-                {
                   "Fn::Join": [
                     "",
                     [
@@ -537,63 +464,6 @@
           ]
         }
       }
-    },
-    "AmplifyFunctionSecretsPolicy": {
-      "Type": "AWS::IAM::Policy",
-      "Properties": {
-        "PolicyName": "amplify-function-secrets-policy",
-        "Roles": [
-          {
-            "Ref": "LambdaExecutionRole"
-          }
-        ],
-        "PolicyDocument": {
-          "Version": "2012-10-17",
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Action": [
-                "ssm:GetParameter",
-                "ssm:GetParameters"
-              ],
-              "Resource": {
-                "Fn::Join": [
-                  "",
-                  [
-                    "arn:aws:ssm:",
-                    {
-                      "Ref": "AWS::Region"
-                    },
-                    ":",
-                    {
-                      "Ref": "AWS::AccountId"
-                    },
-                    ":parameter",
-                    {
-                      "Fn::Sub": [
-                        "/amplify/${appId}/${env}/AMPLIFY_${functionName}_",
-                        {
-                          "appId": {
-                            "Ref": "secretsPathAmplifyAppId"
-                          },
-                          "env": {
-                            "Ref": "env"
-                          },
-                          "functionName": "plaidlambda"
-                        }
-                      ]
-                    },
-                    "*"
-                  ]
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "DependsOn": [
-        "LambdaExecutionRole"
-      ]
     }
   },
   "Outputs": {

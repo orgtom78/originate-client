@@ -27,13 +27,13 @@
         }
       }
     },
-    "plaidapi": {
+    "plaid": {
       "service": "API Gateway",
       "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "plaidlambda",
+          "resourceName": "plaid",
           "attributes": [
             "Name",
             "Arn"
@@ -46,14 +46,10 @@
     "s330286d4d": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
-    },
-    "ocdynamoplaiddb": {
-      "service": "DynamoDB",
-      "providerPlugin": "awscloudformation"
     }
   },
   "function": {
-    "plaidlambda": {
+    "plaid": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
@@ -71,15 +67,6 @@
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
-          "category": "storage",
-          "resourceName": "ocdynamoplaiddb",
-          "attributes": [
-            "Name",
-            "Arn",
-            "StreamArn"
           ]
         }
       ]

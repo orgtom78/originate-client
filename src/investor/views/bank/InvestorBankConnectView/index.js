@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
-import { API, Auth } from "aws-amplify";
+import * as queries from "src/graphql/queries.js";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import PlaidLink from "./PlaidLink";
 import {
   AppBar,
   Box,
-  Button,
   Container,
   Grid,
   makeStyles,
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const apiName = "plaidapi";
+const apiName = "plaid";
 
 export default function NewBank() {
   const classes = useStyles();
@@ -67,9 +67,28 @@ export default function NewBank() {
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
+  useEffect(() => {
+    async function checkexistingtoken() {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        let id = user.attributes["custom:groupid"];
+        const data = await API.graphql(
+          graphqlOperation(queries.getPlaidauth, { id })
+        );
+        const {data: { getPlaidauth: { accessToken1: token }}} = data;
+        setSuccess(true);
+        setDisabled(true);
+        return token;
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    setLinkToken(checkexistingtoken());
+  }, []);
 
   async function getLinkToken() {
-    setLoading(true);
     const user = await Auth.currentAuthenticatedUser();
     const { attributes = {} } = user;
     const sub = attributes["custom:groupid"];
@@ -81,8 +100,6 @@ export default function NewBank() {
     const token = await API.get(apiName, "/api/create_link_token", myInit);
     var t = token.link_token;
     setLinkToken(t);
-    setLoading(false);
-    setSuccess(true);
   }
 
   function TabPanel(props) {
@@ -159,7 +176,7 @@ export default function NewBank() {
                     fullWidth
                     component="span"
                     startIcon={<KeyIcon />}
-                    disabled={loading}
+                    disabled={disabled}
                     success={success}
                     loading={loading}
                     onClick={getLinkToken}

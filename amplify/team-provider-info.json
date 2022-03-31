@@ -17,11 +17,11 @@
         "originateclient84cf992c": {}
       },
       "function": {
-        "plaidlambda": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaidlambda-5a47626d623334573141-build.zip",
+        "plaid": {
           "clientId": "6115d7d22dd19f00105aa78f",
-          "secretsPathAmplifyAppId": "d1qmf5m44ui2lg"
+          "plaidSecret": "ac990b93abfb9d201235ad31854371",
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/plaid-714e6431706948446d38-build.zip"
         }
       }
     }

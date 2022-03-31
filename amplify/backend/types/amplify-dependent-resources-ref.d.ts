@@ -16,7 +16,7 @@ export type AmplifyDependentResourcesAttributes = {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         },
-        "plaidapi": {
+        "plaid": {
             "RootUrl": "string",
             "ApiName": "string",
             "ApiId": "string"
@@ -26,18 +26,10 @@ export type AmplifyDependentResourcesAttributes = {
         "s330286d4d": {
             "BucketName": "string",
             "Region": "string"
-        },
-        "ocdynamoplaiddb": {
-            "Name": "string",
-            "Arn": "string",
-            "StreamArn": "string",
-            "PartitionKeyName": "string",
-            "PartitionKeyType": "string",
-            "Region": "string"
         }
     },
     "function": {
-        "plaidlambda": {
+        "plaid": {
             "Name": "string",
             "Arn": "string",
             "Region": "string",

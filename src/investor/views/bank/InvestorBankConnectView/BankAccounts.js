@@ -1,5 +1,7 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
+  Button,
   Card,
   Container,
   Table,
@@ -9,79 +11,40 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
-import moment from "moment";
 import NumberFormat from "react-number-format";
+import { Check as CheckIcon } from "react-feather";
+import * as mutations from "src/graphql/mutations";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.dark,
-    minHeight: "100%",
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3),
-  },
-  avatar: {
-    marginRight: theme.spacing(2),
-  },
-}));
-
-const InvestorBankTransactionListView = (input) => {
-  const classes = useStyles();
-  const [selectedCompanyIds, setSelectedCompanyIds] = useState([]);
+const InvestorBankAccountsListView = (input) => {
+  const navigate = useNavigate();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
-
-  const handleSelectAll = (event) => {
-    let newSelectedCompanyIds;
-
-    if (event.target.checked) {
-      newSelectedCompanyIds = Object.keys(input).map(
-        (bankaccount) => bankaccount.transaction_id
-      );
-    } else {
-      newSelectedCompanyIds = [];
-    }
-
-    setSelectedCompanyIds(newSelectedCompanyIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCompanyIds.indexOf(id);
-    let newSelectedCompanyIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds,
-        id
-      );
-    } else if (selectedIndex === 0) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(1)
-      );
-    } else if (selectedIndex === selectedCompanyIds.length - 1) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(0, selectedIndex),
-        selectedCompanyIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedCompanyIds(newSelectedCompanyIds);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
   };
-
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+
+  async function makedefault(input) {
+    try {
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
+      await API.graphql(
+        graphqlOperation(mutations.updatePlaidauth, {
+          input: { id: id, account_id1: input },
+        })
+      );
+      navigate(`/investor/bank/${input}`);
+    } catch (err) {
+      console.log("error fetching data..", err);
+    }
+  }
 
   return (
     <Page title="Company IDs">
@@ -92,16 +55,17 @@ const InvestorBankTransactionListView = (input) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell>Tranaction Name</TableCell>
-                    <TableCell>Amount</TableCell>
-                    <TableCell>Date</TableCell>
+                    <TableCell>Account Name</TableCell>
+                    <TableCell>Balance</TableCell>
+                    <TableCell>Number</TableCell>
+                    <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {Object.keys(input)
                     .slice(page * limit, page * limit + limit)
-                    .map((key, index) => (
-                      <TableRow>
+                    .map((key) => (
+                      <TableRow hover key={input.account_id}>
                         <TableCell>
                           <Typography color="textPrimary" variant="body1">
                             {`${input[key].name}`}
@@ -111,7 +75,7 @@ const InvestorBankTransactionListView = (input) => {
                           <NumberFormat
                             color="textPrimary"
                             variant="h3"
-                            value={`${input[key].amount}`}
+                            value={`${input[key].balances.available}`}
                             displayType={"text"}
                             thousandSeparator={true}
                             prefix={"$"}
@@ -119,8 +83,17 @@ const InvestorBankTransactionListView = (input) => {
                         </TableCell>
                         <TableCell>
                           <Typography color="textPrimary" variant="body1">
-                            {moment(input[key].date).format("DD/MM/YYYY")}
+                            {"****"}
+                            {input[key].mask}
                           </Typography>
+                        </TableCell>
+                        <TableCell>
+                          <Button
+                            onClick={() => makedefault(input[key].account_id)}
+                            endIcon={<CheckIcon />}
+                          >
+                            Make Default
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -143,4 +116,4 @@ const InvestorBankTransactionListView = (input) => {
   );
 };
 
-export default InvestorBankTransactionListView;
+export default InvestorBankAccountsListView;

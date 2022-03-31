@@ -3,13 +3,14 @@
   "paths": {
     "/api": {
       "name": "/api",
-      "lambdaFunction": "plaidlambda",
+      "lambdaFunction": "plaid",
       "permissions": {
         "setting": "private",
         "auth": [
           "create",
           "read",
-          "update"
+          "update",
+          "delete"
         ]
       }
     }

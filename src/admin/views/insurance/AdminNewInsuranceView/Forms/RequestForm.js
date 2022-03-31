@@ -56,8 +56,7 @@ export default function RequestForm(props) {
               <DatePickerField
                 name={invoice_issue_date.name}
                 label={invoice_issue_date.label}
-                format="yyyy/dd/mm"
-                views={["date"]}
+                format="dd/MM/yyyy"
                 minDate={subDays(new Date(), 60)}
                 maxDate={new Date()}
                 fullWidth
@@ -68,8 +67,7 @@ export default function RequestForm(props) {
               <DatePickerField
                 name={invoice_due_date.name}
                 label={invoice_due_date.label}
-                format="yyyy/dd/mm"
-                views={["date"]}
+                format="dd/MM/yyyy"
                 minDate={new Date("2022/01/01")}
                 maxDate={addDays(new Date(), 120)}
                 fullWidth

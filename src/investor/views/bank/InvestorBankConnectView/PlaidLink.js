@@ -1,17 +1,13 @@
-import React, { useState }from "react";
+import React, { useState, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import clsx from "clsx";
-import { API, Auth } from "aws-amplify";
-import {
-  Button,
-  Container,
-  makeStyles,
-} from "@material-ui/core";
+import { Auth, API } from "aws-amplify";
+import { Button, Container, makeStyles } from "@material-ui/core";
 import Page from "src/components/Page";
 
-import BankTransactions from "./BankTransactions";
+import BankAccounts from "./BankAccounts";
 
-const apiName = "plaidapi";
+const apiName = "plaid";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,8 +22,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PlaidLink = (props) => {
-const [trans, setTrans] = useState([]);
+  const [accounts, setAccounts] = useState([]);
   const classes = useStyles();
+
   const onSuccess = async function(token, metadata) {
     const user = await Auth.currentAuthenticatedUser();
     const { attributes = {} } = user;
@@ -41,18 +38,25 @@ const [trans, setTrans] = useState([]);
     API.get(apiName, "/api/exchange_public_token1", myInit);
   };
 
-  async function getTransactions() {
-    const user = await Auth.currentAuthenticatedUser();
-    const { attributes = {} } = user;
-    const sub = attributes["custom:groupid"];
-    const myInit = {
-      queryStringParameters: {
-        id: sub,
-      },
-    };
-    const data = await API.get(apiName, "/api/transactions1", myInit);
-    setTrans(data.transactions);
-  }
+  useEffect(() => {
+    if (props.token !== null && props.token !== undefined) {
+      async function getBankaccounts() {
+        const user = await Auth.currentAuthenticatedUser();
+        const { attributes = {} } = user;
+        const sub = attributes["custom:groupid"];
+        const myInit = {
+          queryStringParameters: {
+            id: sub,
+          },
+        };
+        const data = await API.get(apiName, "/api/accounts1", myInit);
+        setAccounts(data.accounts);
+      }
+      getBankaccounts();
+    } else {
+      setAccounts([]);
+    }
+  }, [props.token]);
 
   const config = {
     token: props.token,
@@ -60,7 +64,7 @@ const [trans, setTrans] = useState([]);
     // ...
   };
 
-  const { open, ready, error } = usePlaidLink(config);
+  const { open, ready } = usePlaidLink(config);
 
   return (
     <React.Fragment>
@@ -69,8 +73,7 @@ const [trans, setTrans] = useState([]);
           <Button onClick={open()} disabled={!ready}>
             Reconnect bank account
           </Button>
-          <Button onClick={getTransactions}>Get Transactions</Button>
-          <BankTransactions {...trans} />
+          <BankAccounts {...accounts} />
         </Container>
       </Page>
     </React.Fragment>

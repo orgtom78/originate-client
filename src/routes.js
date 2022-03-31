@@ -78,6 +78,7 @@ import InvestorObligorListView from 'src/investor/views/buyer/InvestorObligorLis
 import InvestorTransactionListView from 'src/investor/views/transaction/InvestorTransactionListView';
 import InvestorTransactionView from 'src/investor/views/transaction/InvestorTransactionView';
 import InvestorBankConnectView from 'src/investor/views/bank/InvestorBankConnectView';
+import InvestorBankTransactionsView from 'src/investor/views/bank/InvestorBankTransactionsView';
 import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
 
   const routes = (isAuthenticated, isAdmin, isInvestor) =>
@@ -184,6 +185,7 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'transactions', element: !isInvestor ? <InvestorLoginView />  : <InvestorTransactionListView  /> },
       { path: 'transaction/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorTransactionView />},
       { path: 'bank', element: !isInvestor ? <InvestorLoginView /> : <InvestorBankConnectView />},
+      { path: 'bank/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorBankTransactionsView />},
       { path: 'settings', element: !isInvestor ? <InvestorLoginView /> : <InvestorSettingsView /> },
       { path: '*', element: <Navigate to="investor/404" /> }
     ]

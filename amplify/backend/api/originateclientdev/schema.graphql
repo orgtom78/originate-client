@@ -375,7 +375,7 @@ type Plaidauth
         identityClaim: "custom:groupid"
         operations: [create, update, delete, read]
       }
-      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Investor"], operations: [create, update, read] }
       { allow: groups, groups: ["Admin"] }
       { allow: private, provider: iam, operations: [create, update, delete, read] }
     ]
@@ -383,6 +383,10 @@ type Plaidauth
   id: ID!
   accessToken1: String
   accessToken2: String
+  account_id1: String
+  account_id2: String
+  updatedAt: String
+  createdAt: String
   }
 
 type Request
