@@ -34,6 +34,19 @@ export type AmplifyDependentResourcesAttributes = {
             "Arn": "string",
             "Region": "string",
             "LambdaExecutionRole": "string"
+        },
+        "newinvoicenotification": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        }
+    },
+    "analytics": {
+        "originateclient": {
+            "Region": "string",
+            "Id": "string",
+            "appName": "string"
         }
     }
 }

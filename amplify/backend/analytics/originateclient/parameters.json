@@ -1,0 +1,21 @@
+{
+    "appName": "originateclient",
+    "roleName": "pinpointLambdaRolefc2babe1",
+    "cloudformationPolicyName": "cloudformationPolicyfc2babe1",
+    "cloudWatchPolicyName": "cloudWatchPolicyfc2babe1",
+    "pinpointPolicyName": "pinpointPolicyfc2babe1",
+    "authPolicyName": "pinpoint_amplify_fc2babe1",
+    "unauthPolicyName": "pinpoint_amplify_fc2babe1",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

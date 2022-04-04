@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "auth": {
+      "originateclient84cf992c": [
+        "read"
+      ]
+    },
+    "api": {
+      "originateclientdev": [
+        "read"
+      ]
+    },
+    "storage": {
+      "Request:@model(appsync)": [
+        "read"
+      ]
+    },
+    "function": {
+      "plaid": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

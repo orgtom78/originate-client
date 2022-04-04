@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
 import * as queries from "src/graphql/queries.js";
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const apiName = "plaid";
 
 export default function NewBank() {
+  const navigate = useNavigate();
   const classes = useStyles();
   const [linkToken, setLinkToken] = useState("");
   const [value, setValue] = useState(0);
@@ -77,10 +79,14 @@ export default function NewBank() {
         const data = await API.graphql(
           graphqlOperation(queries.getPlaidauth, { id })
         );
-        const {data: { getPlaidauth: { accessToken1: token }}} = data;
+        const {data: { getPlaidauth: { accessToken1: token, account_id1: account }}} = data;
+        if (account) {
+          navigate(`/investor/bank/${account}`);
+        } else {
         setSuccess(true);
         setDisabled(true);
         return token;
+      } 
       } catch (err) {
         console.log("error fetching data..", err);
       }

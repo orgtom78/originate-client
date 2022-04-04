@@ -175,6 +175,8 @@ app.get("/api/transactions1", async function(req, res) {
   const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
   const bankaccountid = req.query.bankid;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
   const params = {
     TableName: tableName,
     Key: {
@@ -191,11 +193,11 @@ app.get("/api/transactions1", async function(req, res) {
           const token = data.Item.accessToken1;
           const request = {
             access_token: token,
-            start_date: "2020-01-01",
-            end_date: "2022-03-01",
+            start_date: startDate,
+            end_date: endDate,
             options: {
               account_ids: [bankaccountid],
-              count: 250,
+              count: 500,
               offset: 0,
             },
           };

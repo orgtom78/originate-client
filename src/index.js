@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Amplify } from "aws-amplify";
-import {Auth} from "aws-amplify";
+import { Auth, Analytics } from "aws-amplify";
 import { BrowserRouter } from "react-router-dom";
 import * as serviceWorker from "./serviceWorker";
 import { initSentry } from "./libs/errorLib";

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Button, Container, makeStyles, Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, Analytics, API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -122,6 +122,7 @@ export default function NewAccount() {
         bill_of_lading_attachment,
         request_status,
       });
+      setAnalytics();
     } catch (e) {
       onError(e);
     }
@@ -136,6 +137,31 @@ export default function NewAccount() {
   function getbuyername(input) {
     return API.graphql(graphqlOperation(queries.getBuyer, input));
   }
+
+  async function setAnalytics() {
+      const mapObj = (f) => (obj) =>
+      Object.keys(obj).reduce(
+        (acc, key) => ({ ...acc, [key]: f(obj[key]) }),
+        {}
+      );
+    const toArrayOfStrings = (value) => [`${value}`];
+    const mapToArrayOfStrings = mapObj(toArrayOfStrings);
+      try {
+        const { attributes } = await Auth.currentAuthenticatedUser();
+        const userAttributes = mapToArrayOfStrings(attributes);
+        Analytics.updateEndpoint({
+          address: attributes.email,
+          channelType: "EMAIL",
+          optOut: "NONE",
+          userId: attributes["custom:groupid"],
+          userAttributes,
+        });
+        Analytics.record({ name: 'newInvoice' });
+      } catch (error) {
+        console.log(error);
+      }
+    } 
+
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
