@@ -317,7 +317,7 @@ const InvestorTransactionListView = () => {
                       {request
                         .slice(page * limit, page * limit + limit)
                         .map((request) => (
-                          <TableRow hover key={request.requestId}>
+                          <TableRow hover key={request.id}>
                             <TableCell>
                               <Box alignItems="center" display="flex">
                                 <Link

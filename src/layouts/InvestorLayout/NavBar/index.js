@@ -4,12 +4,10 @@ import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
-  Collapse,
   Divider,
   Drawer,
   Hidden,
   List,
-  ListItemButton,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -88,7 +86,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   const [avatar, setAvatar] = useState("");
@@ -160,13 +157,6 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
-
-           <NavItem
-              href={''}
-              key={''}
-              title={'Test'}
-              icon={''}
-            />
         </List>
       </Box>
     </Box>

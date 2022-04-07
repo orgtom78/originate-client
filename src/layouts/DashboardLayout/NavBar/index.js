@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { Auth } from "@aws-amplify/auth";
+import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
 import {
   Avatar,
