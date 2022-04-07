@@ -8,7 +8,7 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-} from "@material-ui/core";
+} from "@mui/material";
 
 function SelectListField(props) {
   const { label, data, ...rest } = props;

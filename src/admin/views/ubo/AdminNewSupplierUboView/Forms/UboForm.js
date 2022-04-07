@@ -2,18 +2,13 @@ import React, { useEffect, useState } from "react";
 import { InputField, SelectField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;

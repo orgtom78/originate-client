@@ -18,8 +18,8 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
@@ -31,7 +31,7 @@ import DateFnsUtils from "@date-io/date-fns";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 import DirectorListView from "src/supplier/views/account/SupplierView/Lists/directorlist.js";
 import UboListView from "src/supplier/views/account/SupplierView/Lists/ubolist.js";
@@ -311,7 +311,7 @@ const SupplierForm = ({ className, ...rest }) => {
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <Grid
                         container
-                        justify="space-around"
+                        justifyContent="space-around"
                         item
                         md={6}
                         xs={12}

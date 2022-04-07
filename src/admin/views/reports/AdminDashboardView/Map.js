@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { Box, Card, CardContent, CardHeader, Divider } from "@material-ui/core";
+import { Box, Card, CardContent, CardHeader, Divider } from "@mui/material";
 import { scaleLinear } from "d3-scale";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";

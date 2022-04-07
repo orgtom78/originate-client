@@ -13,10 +13,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
+  ThemeProvider,
+  StyledEngineProvider,
   createTheme,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -24,7 +25,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -39,12 +40,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme({
+const greenTheme = createTheme((theme) => ({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
+}));
+const orangeTheme = createTheme((theme) => ({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+}));
 
 const TransactionListView = () => {
   const classes = useStyles();
@@ -98,25 +99,31 @@ const TransactionListView = () => {
     if (request === "Submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (request === "Under Review" || request === "Documents Pending") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }
@@ -126,17 +133,24 @@ const TransactionListView = () => {
     if (date !== null) {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={moment(date).format("DD/MM/YYYY")} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip
+                label={moment(date).format("DD/MM/YYYY")}
+                color="secondary"
+              />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label="N/A" color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label="N/A" color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }
@@ -205,8 +219,8 @@ const TransactionListView = () => {
             <TablePagination
               component="div"
               count={request.length}
-              onChangePage={handlePageChange}
-              onChangeRowsPerPage={handleLimitChange}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleLimitChange}
               page={page}
               rowsPerPage={limit}
               rowsPerPageOptions={[5, 10, 25]}

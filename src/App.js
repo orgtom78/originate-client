@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 import { onError } from "./libs/errorLib";
 import { useRoutes } from "react-router-dom";
-import { ThemeProvider } from "@material-ui/core";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import GlobalStyles from "src/components/GlobalStyles";
 import "src/mixins/chartjs";
 import theme from "src/theme";
@@ -69,10 +69,12 @@ function App() {
         userisInvestor,
       }}
     >
-      <ThemeProvider theme={theme}>
-        <GlobalStyles />
-        {routing}
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <GlobalStyles />
+          {routing}
+        </ThemeProvider>
+      </StyledEngineProvider>
     </AppContext.Provider>
   );
 }

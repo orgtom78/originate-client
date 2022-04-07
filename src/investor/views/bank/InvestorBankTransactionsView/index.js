@@ -8,7 +8,6 @@ import {
   Box,
   Card,
   Container,
-  makeStyles,
   Table,
   TableBody,
   TableCell,
@@ -18,14 +17,15 @@ import {
   Typography,
   Tab,
   Tabs,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import moment from "moment";
 import NumberFormat from "react-number-format";
 import SwipeableViews from "react-swipeable-views";
 import PropTypes from "prop-types";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {

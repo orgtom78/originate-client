@@ -10,10 +10,10 @@ import {
   CardContent,
   Divider,
   Grid,
-  makeStyles,
   Typography,
-} from "@material-ui/core";
-import CheckBoxIcon from "@material-ui/icons/CheckBox";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +67,7 @@ const SuccessView = () => {
           <Divider />
           <CardContent>
             <Grid container spacing={3}>
-              <Grid container item xs justify="flex-end">
+              <Grid container item xs justifyContent="flex-end">
                 <Box
                   display="flex"
                   justifyContent="center"
@@ -92,7 +92,7 @@ const SuccessView = () => {
                   </Link>
                 </Box>
               </Grid>
-              <Grid container item xs justify="flex-end">
+              <Grid container item xs justifyContent="flex-end">
                 <Box
                   display="flex"
                   justifyContent="center"
@@ -117,7 +117,7 @@ const SuccessView = () => {
                   </Link>
                 </Box>
               </Grid>
-              <Grid container item xs justify="flex-end">
+              <Grid container item xs justifyContent="flex-end">
                 <Box
                   display="flex"
                   justifyContent="center"

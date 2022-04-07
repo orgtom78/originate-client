@@ -1,14 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Container,
-  Divider,
-  Grid,
-  MenuItem,
-  Select,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Container, Divider, Grid, MenuItem, Select, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -17,7 +10,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 const type = [
   {

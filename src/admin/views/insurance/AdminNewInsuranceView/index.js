@@ -9,11 +9,11 @@ import {
   Box,
   Button,
   Container,
-  makeStyles,
   Typography,
   Tab,
   Tabs,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Formik, Form } from "formik";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";

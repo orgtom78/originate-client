@@ -14,22 +14,19 @@ import {
   Grid,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import * as queries from "src/graphql/queries.js";
-
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -65,7 +62,6 @@ const useStyles = makeStyles(() => ({
     marginLeft: -12,
   },
 }));
-
 
 const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
   const navigate = useNavigate();
@@ -119,7 +115,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
               user_email,
               user_role,
               createdAt,
-              sortkey
+              sortkey,
             },
           },
         } = user;
@@ -170,7 +166,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
         user_email,
         user_role,
         createdAt,
-        sortkey
+        sortkey,
       });
     } catch (e) {
       onError(e);
@@ -218,9 +214,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
       <React.Fragment>
         <Accordion defaultExpanded={true}>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
-            <Typography className={classes.heading}>
-              Group Details
-            </Typography>
+            <Typography className={classes.heading}>Group Details</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <form
@@ -240,7 +234,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setGroupId(e.target.value)}
                         required
-                        value={groupId|| ""}
+                        value={groupId || ""}
                         InputProps={{
                           readOnly: true,
                         }}
@@ -254,7 +248,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setInvestorId(e.target.value)}
                         required
-                        value={investorId|| ""}
+                        value={investorId || ""}
                         InputProps={{
                           readOnly: true,
                         }}
@@ -268,7 +262,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setSupplierId(e.target.value)}
                         required
-                        value={supplierId|| ""}
+                        value={supplierId || ""}
                         InputProps={{
                           readOnly: true,
                         }}
@@ -282,12 +276,12 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setBrokerId(e.target.value)}
                         required
-                        value={brokerId|| ""}
+                        value={brokerId || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </Grid>                   
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="identityId"
@@ -296,26 +290,26 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setIdentityId(e.target.value)}
                         required
-                        value={identityId|| ""}
+                        value={identityId || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={12}> 
-                    <TextField
+                    <Grid item xs={12} sm={12}>
+                      <TextField
                         name="group_type"
                         label="Group Type"
                         fullWidth
                         variant="outlined"
                         onChange={(e) => setGroup_type(e.target.value)}
                         required
-                        value={group_type|| ""}
+                        value={group_type || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="group_name"
@@ -324,9 +318,9 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setGroup_name(e.target.value)}
                         required
-                        value={group_name|| ""}
+                        value={group_name || ""}
                       />
-                    </Grid>  
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="group_contact_name"
@@ -335,9 +329,9 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setGroup_contact_name(e.target.value)}
                         required
-                        value={group_contact_name|| ""}
+                        value={group_contact_name || ""}
                       />
-                    </Grid>  
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="group_contact_email"
@@ -346,9 +340,9 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setGroup_contact_email(e.target.value)}
                         required
-                        value={group_contact_email|| ""}
+                        value={group_contact_email || ""}
                       />
-                    </Grid>  
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="group_contact_phone"
@@ -357,7 +351,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setGroup_contact_phone(e.target.value)}
                         required
-                        value={group_contact_phone|| ""}
+                        value={group_contact_phone || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={12}>
@@ -368,12 +362,12 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setUser_email(e.target.value)}
                         required
-                        value={user_email|| ""}
+                        value={user_email || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </Grid>  
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="user_role"
@@ -382,12 +376,12 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setUser_role(e.target.value)}
                         required
-                        value={user_role|| ""}
+                        value={user_role || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </Grid> 
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <TextField
                         name="sortkey"
@@ -396,23 +390,23 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setSortkey(e.target.value)}
                         required
-                        value={sortkey|| ""}
+                        value={sortkey || ""}
                         InputProps={{
                           readOnly: true,
                         }}
                       />
-                    </Grid>      
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        xs={12}
-                        sm={6}
-                      >
-                        <KeyboardDatePicker
+                    </Grid>
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      xs={12}
+                      sm={6}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
                           fullWidth
-                          value={createdAt|| ""}
+                          value={createdAt || ""}
                           margin="normal"
                           variant="outlined"
                           id="createdAt"
@@ -429,9 +423,10 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                   </Grid>
                 </CardContent>
                 <Divider />

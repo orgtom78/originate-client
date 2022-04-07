@@ -14,8 +14,8 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation, Storage } from "aws-amplify";
@@ -226,8 +226,8 @@ const DirectorListView = (value) => {
           <TablePagination
             component="div"
             count={director.length}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handleLimitChange}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleLimitChange}
             page={page}
             rowsPerPage={limit}
             rowsPerPageOptions={[5, 10, 25]}

@@ -12,21 +12,19 @@ import {
   Grid,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 import { Storage } from "aws-amplify";
 
@@ -126,7 +124,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
     const id = input;
     let filter = {
       userId: { eq: id },
-      supplierId: { attributeExists: true }
+      supplierId: { attributeExists: true },
     };
     try {
       const {
@@ -140,7 +138,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
       const finance = await o.data.listFinancialss.items[0];
       const {
         id,
-        identityId, 
+        identityId,
         financialsId,
         ebit,
         balance_sheet_attachment,
@@ -176,7 +174,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
     const stored = await Storage.put(filename, file, {
       contentType: file.type,
       level: "private",
-      identityId: identityId
+      identityId: identityId,
     });
     return stored.key;
   }
@@ -618,9 +616,15 @@ const SupplierFinancials = ({ className, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justify="space-around" item md={12} xs={12}>
-                    <KeyboardDatePicker
+                <Grid
+                  container
+                  justifyContent="space-around"
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DesktopDatePicker
                       fullWidth
                       value={financials_reporting_period || ""}
                       margin="normal"
@@ -642,9 +646,10 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      renderInput={(params) => <TextField {...params} />}
                     />
-                  </Grid>
-                </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
+                </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth

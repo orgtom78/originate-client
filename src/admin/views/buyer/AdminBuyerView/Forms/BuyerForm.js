@@ -16,21 +16,21 @@ import {
   TextField,
   Typography,
   Select,
-  makeStyles,
   MenuItem,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/buyer/AdminBuyerView/Lists/directorlist.js";
 import UboListView from "src/admin/views/buyer/AdminBuyerView/Lists/ubolist.js";
 import FinancialsListView from "src/admin/views/buyer/AdminBuyerView/Lists/financialslist.js";
@@ -475,16 +475,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           fullWidth
                           value={buyer_date_of_incorporation || ""}
                           margin="normal"
@@ -505,9 +504,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
 
                     <Grid item md={6} xs={12}>
                       <Select
@@ -607,9 +607,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewbuyerdirector/${id}`}
-                >
+                <Link to={`/admin/adminnewbuyerdirector/${id}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -630,9 +628,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewbuyerubo/${id}`}
-                >
+                <Link to={`/admin/adminnewbuyerubo/${id}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>

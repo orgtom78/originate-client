@@ -1,14 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Container,
-  Grid,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Accordion, AccordionSummary, AccordionDetails, Container, Grid, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 

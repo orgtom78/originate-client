@@ -12,14 +12,14 @@ import {
   Divider,
   Grid,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Storage } from "aws-amplify";
 import * as queries from "src/graphql/queries.js";
 import DocumentListView from "src/admin/views/buyer/AdminBuyerView/Lists/documentlist.js";

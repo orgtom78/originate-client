@@ -2,17 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Drawer,
-  Hidden,
-  List,
-  Paper,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Divider, Drawer, Hidden, List, Paper, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
@@ -24,7 +15,7 @@ import {
 import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
-import grey from "@material-ui/core/colors/grey";
+import { grey } from '@mui/material/colors';
 
 const items = [
   {
@@ -166,31 +157,29 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     </Box>
   );
 
-  return (
-    <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden lgUp>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.mobileDrawer }}
+        onClose={onMobileClose}
+        open={openMobile}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+    <Hidden lgDown>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.desktopDrawer }}
+        open
+        variant="persistent"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+  </>;
 };
 
 NavBar.propTypes = {

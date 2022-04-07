@@ -18,8 +18,8 @@ import {
   TableBody,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { onError } from "src/libs/errorLib.js";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -29,7 +29,7 @@ import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {

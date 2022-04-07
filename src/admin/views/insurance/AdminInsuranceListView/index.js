@@ -5,7 +5,6 @@ import clsx from "clsx";
 import {
   Avatar,
   Box,
-  Button,
   Card,
   Chip,
   Container,
@@ -19,15 +18,16 @@ import {
   TableRow,
   TableSortLabel,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
+  ThemeProvider,
+  StyledEngineProvider,
   createTheme,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange, red } from "@material-ui/core/colors";
+import { green, orange, red } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -42,15 +42,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme({
+const greenTheme = createTheme((theme) => ({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
+}));
+const orangeTheme = createTheme((theme) => ({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
-const redTheme = createTheme({
+}));
+const redTheme = createTheme((theme) => ({
   palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
-});
+}));
 
 const AdminInsuranceListView = () => {
   const classes = useStyles();
@@ -258,33 +258,41 @@ const AdminInsuranceListView = () => {
     if (request === "Expired") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (request === "Under Review" || request === "Pending") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (request === "Rejected") {
       return (
         <>
-          <MuiThemeProvider theme={redTheme}>
-            <Chip label={request} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={redTheme}>
+              <Chip label={request} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }

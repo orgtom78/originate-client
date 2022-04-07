@@ -15,21 +15,19 @@ import {
   TextField,
   Typography,
   Select,
-  makeStyles,
   MenuItem,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import * as queries from "src/graphql/queries.js";
 import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
@@ -104,7 +102,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [requestsuccess, setRequestSuccess] = useState(false);
 
   useEffect(() => {
-    const id = value.value
+    const id = value.value;
     getRequest({ id });
     async function getRequest(input) {
       try {
@@ -127,7 +125,7 @@ const RequestForm = ({ className, value, ...rest }) => {
             },
           },
         } = request;
-        setInvestorId(investorId)
+        setInvestorId(investorId);
         setRequest_status(request_status);
         setBuyer_name(buyer_name);
         setSupplier_name(supplier_name);
@@ -246,7 +244,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                         onChange={(e) => setInvestorId(e.target.value)}
                         required
-                        value={investorId|| ""}
+                        value={investorId || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -277,15 +275,15 @@ const RequestForm = ({ className, value, ...rest }) => {
                         ))}
                       </Select>
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        xs={12}
-                        sm={6}
-                      >
-                        <KeyboardDatePicker
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      xs={12}
+                      sm={6}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           fullWidth
                           value={invoice_date || ""}
                           margin="normal"
@@ -306,19 +304,19 @@ const RequestForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        xs={12}
-                        sm={6}
-                      >
-                        <KeyboardDatePicker
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      xs={12}
+                      sm={6}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           fullWidth
                           value={invoice_due_date || ""}
                           margin="normal"
@@ -339,9 +337,10 @@ const RequestForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         name="sold_goods_description"

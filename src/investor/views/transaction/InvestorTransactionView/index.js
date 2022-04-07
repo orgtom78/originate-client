@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Container, Grid, makeStyles } from "@material-ui/core";
+import { Container, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import Page from "src/components/Page";

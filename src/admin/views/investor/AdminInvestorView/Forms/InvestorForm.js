@@ -18,20 +18,18 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/investor/AdminInvestorView/Lists/directorlist.js";
 import UboListView from "src/admin/views/investor/AdminInvestorView/Lists/ubolist.js";
 import AdminUpdateInvestorBankView from "src/admin/views/bank/AdminUpdateInvestorBankView/index.js";
@@ -213,7 +211,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
       try {
         let filter = {
           userId: { eq: uid },
-          investorId: { eq: iid }
+          investorId: { eq: iid },
         };
         const {
           data: {
@@ -511,15 +509,15 @@ const InvestorForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           fullWidth
                           value={investor_date_of_incorporation || ""}
                           margin="normal"
@@ -540,9 +538,10 @@ const InvestorForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
@@ -643,9 +642,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewinvestorubo/${dynamoinvestorid}`}
-                >
+                <Link to={`/admin/adminnewinvestorubo/${dynamoinvestorid}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>
@@ -735,15 +732,15 @@ const InvestorForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           fullWidth
                           value={financials_reporting_period || ""}
                           margin="normal"
@@ -765,8 +762,8 @@ const InvestorForm = ({ className, value, ...rest }) => {
                             shrink: true,
                           }}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -898,7 +895,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
-              Company Main Bank 
+              Company Main Bank
             </Typography>
           </AccordionSummary>
           <AccordionDetails>

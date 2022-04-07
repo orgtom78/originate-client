@@ -1,16 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  makeStyles,
-  colors,
-} from "@material-ui/core";
-import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import { Avatar, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import NumberFormat from "react-number-format";
 import moment from "moment";
 
@@ -69,7 +62,7 @@ const UtilizationAmount = ({ className, value, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               CURRENT UTILIZATION

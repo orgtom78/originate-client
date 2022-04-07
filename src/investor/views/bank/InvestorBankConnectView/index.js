@@ -5,19 +5,11 @@ import PropTypes from "prop-types";
 import * as queries from "src/graphql/queries.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import PlaidLink from "./PlaidLink";
-import {
-  AppBar,
-  Box,
-  Container,
-  Grid,
-  makeStyles,
-  Typography,
-  Tab,
-  Tabs,
-} from "@material-ui/core";
+import { AppBar, Box, Container, Grid, Typography, Tab, Tabs } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Key as KeyIcon } from "react-feather";
 
 const useStyles = makeStyles((theme) => ({

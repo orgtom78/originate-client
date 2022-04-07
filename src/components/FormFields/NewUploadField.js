@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useField } from "formik";
-import { FormControl, FormHelperText } from "@material-ui/core";
+import { FormControl, FormHelperText } from "@mui/material";
 import { Storage } from "aws-amplify";
 
 export default function UploadField(props) {

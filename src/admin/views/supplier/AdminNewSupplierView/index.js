@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Button,
-  CircularProgress,
-  Container,
-  makeStyles,
-  Step,
-  Stepper,
-  StepLabel,
-  Typography,
-} from "@material-ui/core";
+import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";

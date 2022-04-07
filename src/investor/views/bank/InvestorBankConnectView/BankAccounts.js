@@ -11,7 +11,7 @@ import {
   TablePagination,
   TableRow,
   Typography,
-} from "@material-ui/core";
+} from "@mui/material";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import NumberFormat from "react-number-format";

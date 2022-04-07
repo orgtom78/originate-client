@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { usePlaidLink } from "react-plaid-link";
 import clsx from "clsx";
 import { Auth, API } from "aws-amplify";
-import { Button, Container, makeStyles } from "@material-ui/core";
+import { Button, Container } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 
 import BankAccounts from "./BankAccounts";

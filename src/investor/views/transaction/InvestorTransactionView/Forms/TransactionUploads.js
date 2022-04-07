@@ -9,9 +9,9 @@ import {
   Container,
   Grid,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
-import { green } from "@material-ui/core/colors";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { green } from "@mui/material/colors";
 import { Storage } from "aws-amplify";
 
 const useStyles = makeStyles(() => ({

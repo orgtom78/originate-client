@@ -2,19 +2,10 @@ import React from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import { Bar } from "react-chartjs-2";
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  useTheme,
-  makeStyles,
-  colors,
-} from "@material-ui/core";
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 
 const useStyles = makeStyles(() => ({
   root: {},

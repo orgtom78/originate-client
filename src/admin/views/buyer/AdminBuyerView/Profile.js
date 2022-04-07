@@ -1,16 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import clsx from "clsx";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Card, CardActions, CardContent, Divider, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";

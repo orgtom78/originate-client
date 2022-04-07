@@ -12,8 +12,8 @@ import {
   TableBody,
   Typography,
   colors,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({

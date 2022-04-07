@@ -8,9 +8,9 @@ import {
   Button,
   Container,
   TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+  Typography
+} from "@mui/material";
+import { makeStyles } from '@mui/styles';
 import Page from "src/components/Page";
 
 const useStyles = makeStyles((theme) => ({

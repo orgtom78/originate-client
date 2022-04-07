@@ -1,15 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import clsx from "clsx";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Card, CardActions, CardContent, Divider, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";

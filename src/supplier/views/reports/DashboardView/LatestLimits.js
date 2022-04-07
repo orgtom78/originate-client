@@ -19,22 +19,23 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  makeStyles,
-  MuiThemeProvider,
-} from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+  ThemeProvider,
+  StyledEngineProvider,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createTheme({
+const greenTheme = createTheme((theme) => ({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
+}));
+const orangeTheme = createTheme((theme) => ({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+}));
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -81,9 +82,11 @@ const LatestLimits = ({ className, ...rest }) => {
     if (status === "submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={status} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (
@@ -92,17 +95,21 @@ const LatestLimits = ({ className, ...rest }) => {
     ) {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={status} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={status} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={status} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }

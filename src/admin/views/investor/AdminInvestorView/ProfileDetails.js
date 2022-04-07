@@ -1,6 +1,6 @@
 import React from "react";
 import "date-fns";
-import { Container } from "@material-ui/core";
+import { Container } from "@mui/material";
 
 import InvestorForm from "./Forms/InvestorForm";
 import InvestorUploads from "./Forms/InvestorUploads";

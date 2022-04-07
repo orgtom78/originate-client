@@ -15,17 +15,18 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
+  ThemeProvider,
+  StyledEngineProvider,
   createTheme,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,12 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme({
+const greenTheme = createTheme((theme) => ({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
+}));
+const orangeTheme = createTheme((theme) => ({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+}));
 
 const DirectorListView = (value) => {
   const classes = useStyles();
@@ -132,25 +133,31 @@ const DirectorListView = (value) => {
     if (director === "submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={director} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={director} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (director === "Under Review") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={director} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={director} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={director} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={director} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }

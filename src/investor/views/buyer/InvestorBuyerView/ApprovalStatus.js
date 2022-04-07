@@ -13,10 +13,10 @@ import {
   TableBody,
   Typography,
   colors,
-  makeStyles,
-} from "@material-ui/core";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import BlockIcon from "@material-ui/icons/Block";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import BlockIcon from "@mui/icons-material/Block";
 import * as mutations from "src/graphql/mutations.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";

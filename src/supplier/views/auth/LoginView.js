@@ -3,15 +3,8 @@ import { Auth } from "aws-amplify";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {
-  Box,
-  Button,
-  Container,
-  Link,
-  TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Box, Button, Container, Link, TextField, Typography } from "@mui/material";
+import { makeStyles } from '@mui/styles';
 import XeroIcon from "src/icons/Xero";
 import Page from "src/components/Page";
 import Googlesignin from "src/supplier/views/auth/Googlesignin.js";

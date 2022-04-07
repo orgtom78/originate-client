@@ -3,17 +3,8 @@ import { useNavigate } from "react-router-dom";
 import "date-fns";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Grid,
-  TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Box, Card, CardContent, Container, Divider, Grid, TextField, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation, Storage } from "aws-amplify";
@@ -26,7 +17,7 @@ import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles((theme) => ({
@@ -613,7 +604,7 @@ const SupplierFinancials = ({ className, ...rest }) => {
             <CardContent>
               <Grid container spacing={3}>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justify="space-around" item md={6} xs={12}>
+                  <Grid container justifyContent="space-around" item md={6} xs={12}>
                     <KeyboardDatePicker
                       fullWidth
                       value={financials_reporting_period || ""}

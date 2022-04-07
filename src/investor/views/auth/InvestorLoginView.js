@@ -3,14 +3,8 @@ import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 
 const useStyles = makeStyles((theme) => ({

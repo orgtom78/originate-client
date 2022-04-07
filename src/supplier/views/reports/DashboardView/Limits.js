@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  colors,
-  makeStyles,
-} from "@material-ui/core";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import MoneyIcon from "@material-ui/icons/Money";
+import { Avatar, Box, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import MoneyIcon from "@mui/icons-material/Money";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
@@ -95,7 +87,7 @@ const Limits = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               AVAILABLE LIMITS

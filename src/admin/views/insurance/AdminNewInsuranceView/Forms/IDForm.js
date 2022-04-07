@@ -1,7 +1,7 @@
 import React from "react";
 import { InputField } from "src/components/FormFields";
 import SelectListField from "src/components/FormFields/SelectISO2.jsx";
-import { Card, CardContent, Divider, Grid } from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;

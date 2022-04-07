@@ -1,8 +1,9 @@
-import { createMuiTheme, colors } from "@material-ui/core";
+import { colors } from '@mui/material';
+import { createTheme } from '@mui/material/styles';
 import shadows from "./shadows";
 import typography from "./typography";
 
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     background: {
       dark: "#F4F6F8",

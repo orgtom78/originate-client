@@ -1,9 +1,9 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { red } from "@material-ui/core/colors";
-import Button from "@material-ui/core/Button";
+import makeStyles from '@mui/styles/makeStyles';
+import CircularProgress from "@mui/material/CircularProgress";
+import { red } from "@mui/material/colors";
+import Button from "@mui/material/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {

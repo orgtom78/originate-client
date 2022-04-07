@@ -2,16 +2,9 @@ import React, { useState, useEffect, useCallback } from "react";
 import moment from "moment";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  makeStyles,
-  colors,
-} from "@material-ui/core";
-import AlarmIcon from "@material-ui/icons/Alarm";
+import { Avatar, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import AlarmIcon from "@mui/icons-material/Alarm";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
@@ -79,7 +72,7 @@ const PastDue = ({ className, value, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               PAST DUE DAYS (Avg.)

@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles(() => ({

@@ -17,26 +17,27 @@ import {
   TableRow,
   TextField,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
-  createTheme,
-} from "@material-ui/core";
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import * as queries from "src/graphql/queries.js";
 import Page from "src/components/Page";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 import LoaderButton from "src/components/LoaderButton.js";
 import { Search as SearchIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import { subDays } from 'date-fns'
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,12 +51,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme({
-  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
-  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+const greenTheme = createTheme((theme) => ({
+    palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
+  })
+);
+const orangeTheme = createTheme((theme) => ({
+    palette: {
+      primary: { main: orange[500] },
+      secondary: { main: orange[200] },
+    },
+  })
+);
 
 const InvestorTransactionListView = () => {
   const classes = useStyles();
@@ -64,10 +70,8 @@ const InvestorTransactionListView = () => {
   const [page, setPage] = useState(0);
   const [investid, setInvestid] = useState("");
   const [searchterm, setSearchterm] = useState("");
-  const [invoicestart, setInvoicestart] = useState(
-    moment().subtract(7, "days")
-  );
-  const [invoiceend, setInvoiceend] = useState(moment());
+  const [invoicestart, setInvoicestart] = useState(subDays(new Date(), 7));
+  const [invoiceend, setInvoiceend] = useState(new Date());
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -178,25 +182,31 @@ const InvestorTransactionListView = () => {
     if (request === "Submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (request === "Under Review" || request === "Documents Pending") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }
@@ -246,56 +256,32 @@ const InvestorTransactionListView = () => {
                       </LoaderButton>
                     </Grid>
                     <Grid item xs={3}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          fullWidth
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
                           value={invoicestart}
-                          margin="normal"
-                          variant="outlined"
-                          id="invoice_start"
                           label="Invoice Date From"
-                          name="invoice_start"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
-                          maxDate={new Date()}
                           onChange={(e) => setInvoicestart(e)}
-                          required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </MuiPickersUtilsProvider>
-                    </Grid>
-
-                    <Grid item xs={3}>
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                          fullWidth
-                          value={invoiceend}
-                          margin="normal"
-                          variant="outlined"
-                          id="invoice_end"
-                          label="Invoice Date To"
-                          name="invoice_end"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
-                          maxDate={new Date()}
-                          onChange={(e) => setInvoiceend(e)}
-                          onClick={(e) =>
+                          onAccept={(e) =>
                             filterRequests({ invoicestart, invoiceend })
                           }
                           required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
+                          renderInput={(params) => <TextField {...params} />}
                         />
-                      </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={3}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          value={invoiceend}
+                          label="Invoice Date To"
+                          onChange={(e) => setInvoiceend(e)}
+                          onAccept={(e) =>
+                            filterRequests({ invoicestart, invoiceend })
+                          }
+                          required
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                   </Grid>
                   <br></br>

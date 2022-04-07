@@ -9,15 +9,15 @@ import {
   CardActionArea,
   CardContent,
   Grid,
-  makeStyles,
   Typography,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { Pagination } from '@mui/material';
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import { orange } from "@material-ui/core/colors";
+import { orange } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {

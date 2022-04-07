@@ -21,17 +21,18 @@ import {
   TableRow,
   TableSortLabel,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
+  ThemeProvider,
+  StyledEngineProvider,
   createTheme,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -46,12 +47,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme({
+const greenTheme = createTheme((theme) => ({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
+}));
+const orangeTheme = createTheme((theme) => ({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+}));
 
 const AdminTransactionListView = () => {
   const classes = useStyles();
@@ -99,9 +100,7 @@ const AdminTransactionListView = () => {
         data: {
           listBookkeepings: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listBookkeepings)
-      );
+      } = await API.graphql(graphqlOperation(queries.listBookkeepings));
       const n = {
         data: { listBookkeepings: { items: itemsPage1, nextToken } },
       };
@@ -294,25 +293,31 @@ const AdminTransactionListView = () => {
     if (request === "Submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (request === "Under Review" || request === "Documents Pending") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={request} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={request} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }
@@ -631,8 +636,9 @@ const AdminTransactionListView = () => {
                                     hover
                                     key={book.id}
                                     selected={
-                                      selectedCustomerIds.indexOf(book.requestId) !==
-                                      -1
+                                      selectedCustomerIds.indexOf(
+                                        book.requestId
+                                      ) !== -1
                                     }
                                     tabIndex={-1}
                                   >
