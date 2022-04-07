@@ -4,10 +4,12 @@ import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
+  Collapse,
   Divider,
   Drawer,
   Hidden,
   List,
+  ListItemButton,
   Typography,
   makeStyles,
 } from "@material-ui/core";
@@ -76,6 +78,11 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -153,6 +160,13 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               icon={item.icon}
             />
           ))}
+
+           <NavItem
+              href={''}
+              key={''}
+              title={'Test'}
+              icon={''}
+            />
         </List>
       </Box>
     </Box>

@@ -66,7 +66,7 @@ export default function PayoutForm(props) {
       invoice_attachment,
       offer_notice_attachment,
       ipu_attachment,
-      cargo_insurance_name,
+      invoice_number,
       cargo_insurance_attachment,
       bill_of_lading_attachment,
     },
@@ -74,7 +74,7 @@ export default function PayoutForm(props) {
 
   const userId = props.vuser;
   const requestId = props.vrequest;
-  const ident = props.vident; 
+  const ident = props.vident;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -738,8 +738,8 @@ export default function PayoutForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={cargo_insurance_name.name}
-                label={cargo_insurance_name.label}
+                name={invoice_number.name}
+                label={invoice_number.label}
                 fullWidth
                 variant="outlined"
               />

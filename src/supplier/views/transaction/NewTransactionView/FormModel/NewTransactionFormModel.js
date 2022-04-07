@@ -56,10 +56,10 @@ const model = {
       label: "Currency*",
       requiredErrorMsg: "Currency is required",
     },
-    cargo_insurance_name: {
-      name: "cargo_insurance_name",
-      label: "Cargo Insurance Name",
-      requiredErrorMsg: "Name is required",
+    invoice_number: {
+      name: "invoice_number",
+      label: "Invoice Number*",
+      requiredErrorMsg: "The invoice number is required",
     },
   },
 };

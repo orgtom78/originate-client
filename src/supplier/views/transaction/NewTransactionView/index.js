@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { Button, Container, makeStyles, Typography } from "@material-ui/core";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
-import { Auth, Analytics, API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -37,8 +37,9 @@ export default function NewAccount() {
   const [supid, setSupid] = useState("");
   const [ident, setIdent] = useState("");
   const [investid, setInvestid] = useState("");
+  const [investEmail, setInvestEmail] = useState("");
   const [buyername, setBuyername] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
+  const [suppliername, setSuppliername] = useState("");
   const context = useUser();
   const { id } = useParams();
   const requestId = "request-" + uuid();
@@ -51,7 +52,7 @@ export default function NewAccount() {
       setSub(sub);
       setIdent(identity);
       setSupid(supplierId);
-      setSupplier_name(supplier_name);
+      setSuppliername(supplier_name);
     }
     onLoad();
   }, [context]);
@@ -72,6 +73,22 @@ export default function NewAccount() {
     load();
   }, [sub, id]);
 
+  React.useEffect(() => {
+    async function load() {
+      const investor = await getInvestoremail(investid);
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = investor;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const res = n.data.listRequests.items[0];
+      const email = res.investor_email;
+      setInvestEmail(email);
+    }
+    load();
+  }, [investid]);
+
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -84,7 +101,9 @@ export default function NewAccount() {
       const supplierId = supid;
       const identityId = ident;
       const buyer_name = buyername;
+      const supplier_name = suppliername;
       const investorId = investid;
+      const investor_email = investEmail;
       const purchase_order_attachment = values["purchase_order_attachment"];
       const sold_goods_description = values["sold_goods_description"];
       const invoice_amount = values["invoice_amount"];
@@ -94,7 +113,7 @@ export default function NewAccount() {
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
       const ipu_attachment = values["ipu_attachment"];
-      const cargo_insurance_name = values["cargo_insurance_name"];
+      const invoice_number = values["invoice_number"];
       const cargo_insurance_attachment = values["cargo_insurance_attachment"];
       const bill_of_lading_attachment = values["bill_of_lading_attachment"];
       const request_status = "Under Review";
@@ -106,6 +125,7 @@ export default function NewAccount() {
         supplierId,
         identityId,
         investorId,
+        investor_email,
         buyer_name,
         supplier_name,
         purchase_order_attachment,
@@ -115,14 +135,13 @@ export default function NewAccount() {
         invoice_date,
         invoice_due_date,
         invoice_attachment,
+        invoice_number,
         offer_notice_attachment,
         ipu_attachment,
-        cargo_insurance_name,
         cargo_insurance_attachment,
         bill_of_lading_attachment,
         request_status,
       });
-      setAnalytics();
     } catch (e) {
       onError(e);
     }
@@ -138,30 +157,12 @@ export default function NewAccount() {
     return API.graphql(graphqlOperation(queries.getBuyer, input));
   }
 
-  async function setAnalytics() {
-      const mapObj = (f) => (obj) =>
-      Object.keys(obj).reduce(
-        (acc, key) => ({ ...acc, [key]: f(obj[key]) }),
-        {}
-      );
-    const toArrayOfStrings = (value) => [`${value}`];
-    const mapToArrayOfStrings = mapObj(toArrayOfStrings);
-      try {
-        const { attributes } = await Auth.currentAuthenticatedUser();
-        const userAttributes = mapToArrayOfStrings(attributes);
-        Analytics.updateEndpoint({
-          address: attributes.email,
-          channelType: "EMAIL",
-          optOut: "NONE",
-          userId: attributes["custom:groupid"],
-          userAttributes,
-        });
-        Analytics.record({ name: 'newInvoice' });
-      } catch (error) {
-        console.log(error);
-      }
-    } 
-
+  function getInvestoremail(input) {
+    let filter = { userId: { eq: input } };
+    return API.graphql(
+      graphqlOperation(queries.listInvestors, { filter: filter })
+    );
+  }
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);

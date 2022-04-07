@@ -25,7 +25,7 @@
         },
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/newinvoicenotification-34446f3470574e36766b-build.zip"
+          "s3Key": "amplify-builds/newinvoicenotification-45524678527266763663-build.zip"
         }
       }
     }

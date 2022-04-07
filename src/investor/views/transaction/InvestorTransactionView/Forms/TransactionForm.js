@@ -92,7 +92,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_due_date, setInvoice_due_date] = useState("");
   const [sold_goods_description, setSold_goods_description] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
-  const [cargo_insurance_name, setCargo_insurance_name] = useState("");
+  const [invoice_number, setInvoice_number] = useState("");
   const [request_status, setRequest_status] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
@@ -104,17 +104,17 @@ const RequestForm = ({ className, value, ...rest }) => {
       try {
         const request = value;
         const {
-              id,
-              request_status,
-              buyer_name,
-              supplier_name,
-              sold_goods_description,
-              invoice_amount,
-              invoice_currency,
-              invoice_date,
-              invoice_due_date,
-              cargo_insurance_name,
-            } = request;
+          id,
+          request_status,
+          buyer_name,
+          supplier_name,
+          sold_goods_description,
+          invoice_amount,
+          invoice_currency,
+          invoice_date,
+          invoice_due_date,
+          invoice_number,
+        } = request;
         setId(id);
         setRequest_status(request_status);
         setBuyer_name(buyer_name);
@@ -124,7 +124,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_currency(invoice_currency);
         setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
-        setCargo_insurance_name(cargo_insurance_name);
+        setInvoice_number(invoice_number);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -148,7 +148,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_currency,
           invoice_date,
           invoice_due_date,
-          cargo_insurance_name,
+          invoice_number,
           payout_date,
         });
       } else {
@@ -162,7 +162,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_currency,
           invoice_date,
           invoice_due_date,
-          cargo_insurance_name,
+          invoice_number,
         });
       }
     } catch (e) {
@@ -309,11 +309,11 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        name="cargo_insurance_name"
-                        label="Cargo Insurance Name"
+                        name="invoice_number"
+                        label="Invoice Number"
                         fullWidth
                         variant="outlined"
-                        value={cargo_insurance_name || ""}
+                        value={invoice_number || ""}
                         InputProps={{
                           readOnly: true,
                         }}

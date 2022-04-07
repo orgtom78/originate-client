@@ -41,12 +41,5 @@ export type AmplifyDependentResourcesAttributes = {
             "Region": "string",
             "LambdaExecutionRole": "string"
         }
-    },
-    "analytics": {
-        "originateclient": {
-            "Region": "string",
-            "Id": "string",
-            "appName": "string"
-        }
     }
 }

@@ -4,9 +4,11 @@ import * as queries from "src/graphql/queries.js";
 import * as mutations from "src/graphql/mutations.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import {
+  AppBar,
   Box,
   Card,
   Container,
+  makeStyles,
   Table,
   TableBody,
   TableCell,
@@ -14,19 +16,66 @@ import {
   TablePagination,
   TableRow,
   Typography,
+  Tab,
+  Tabs,
 } from "@material-ui/core";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import moment from "moment";
 import NumberFormat from "react-number-format";
+import SwipeableViews from "react-swipeable-views";
+import PropTypes from "prop-types";
+import { green } from "@material-ui/core/colors";
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.dark,
+    minHeight: "100%",
+    paddingBottom: theme.spacing(3),
+    paddingTop: theme.spacing(3),
+  },
+  avatar: {
+    marginRight: theme.spacing(2),
+  },
+  image: {
+    width: 128,
+    height: 128,
+  },
+  img: {
+    margin: "auto",
+    display: "block",
+    maxWidth: "100%",
+    maxHeight: "100%",
+  },
+  wrapper: {
+    margin: "auto",
+    position: "relative",
+  },
+  buttonSuccess: {
+    backgroundColor: green[500],
+    "&:hover": {
+      backgroundColor: green[700],
+    },
+  },
+  buttonProgress: {
+    color: green[500],
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    marginTop: -12,
+    marginLeft: -12,
+  },
+}));
 
 const apiName = "plaid";
 
 const InvestorBankTransactionListView = (input) => {
+  const classes = useStyles();
   const { id } = useParams();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [trans, setTrans] = useState(["1"]);
+  const [value, setValue] = useState(0);
 
   useEffect(() => {
     async function getDynamoTransactions() {
@@ -264,65 +313,136 @@ const InvestorBankTransactionListView = (input) => {
     setPage(newPage);
   };
 
-  return (
-    <Page title="Company IDs">
-      <React.Fragment>
-        <Container maxWidth={false}>
-          <Box mt={3}>
-            <Card>
-              <PerfectScrollbar>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Transaction Name</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell>Date</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {trans
-                      .slice(page * limit, page * limit + limit)
-                      .map((dynamotrans) => (
-                        <TableRow hover key={dynamotrans.id}>
-                          <TableCell>
-                            <Typography color="textPrimary" variant="body1">
-                              {`${dynamotrans.transaction_description}`}
-                            </Typography>
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              color="textPrimary"
-                              variant="h3"
-                              value={`${dynamotrans.transaction_source_amount}`}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Typography color="textPrimary" variant="body1">
-                              {moment(dynamotrans.transaction_date).format(
-                                "YYYY-MM-DD"
-                              )}
-                            </Typography>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </PerfectScrollbar>
-              <TablePagination
-                component="div"
-                count={Object.keys(trans).length}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
-              />
-            </Card>
+  function TabPanel(props) {
+    const { children, value, index, ...other } = props;
+
+    return (
+      <div
+        role="tabpanel"
+        hidden={value !== index}
+        id={`simple-tabpanel-${index}`}
+        aria-labelledby={`simple-tab-${index}`}
+        {...other}
+      >
+        {value === index && (
+          <Box sx={{ p: 3 }}>
+            <Typography>{children}</Typography>
           </Box>
-        </Container>
+        )}
+      </div>
+    );
+  }
+
+  TabPanel.propTypes = {
+    children: PropTypes.node,
+    index: PropTypes.number.isRequired,
+    value: PropTypes.number.isRequired,
+  };
+
+  function a11yProps(index) {
+    return {
+      id: `simple-tab-${index}`,
+      "aria-controls": `simple-tabpanel-${index}`,
+    };
+  }
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+
+  return (
+    <Page title="Bank Accounts">
+      <React.Fragment>
+        <AppBar position="static">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="secondary"
+            textColor="inherit"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Remittance Account" {...a11yProps(0)} />
+            <Tab label="Collection Account" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={classes.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
+        >
+          <TabPanel value={value} index={0}>
+            <Container maxWidth="lg">
+              <React.Fragment>
+                <Container maxWidth={false}>
+                  <Box mt={3}>
+                    <Card>
+                      <PerfectScrollbar>
+                        <Table>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Transaction Name</TableCell>
+                              <TableCell>Amount</TableCell>
+                              <TableCell>Date</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {trans
+                              .slice(page * limit, page * limit + limit)
+                              .map((dynamotrans) => (
+                                <TableRow hover key={dynamotrans.id}>
+                                  <TableCell>
+                                    <Typography
+                                      color="textPrimary"
+                                      variant="body1"
+                                    >
+                                      {`${dynamotrans.transaction_description}`}
+                                    </Typography>
+                                  </TableCell>
+                                  <TableCell>
+                                    <NumberFormat
+                                      color="textPrimary"
+                                      variant="h3"
+                                      value={`${dynamotrans.transaction_source_amount}`}
+                                      displayType={"text"}
+                                      thousandSeparator={true}
+                                      prefix={"$"}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Typography
+                                      color="textPrimary"
+                                      variant="body1"
+                                    >
+                                      {moment(
+                                        dynamotrans.transaction_date
+                                      ).format("YYYY-MM-DD")}
+                                    </Typography>
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                          </TableBody>
+                        </Table>
+                      </PerfectScrollbar>
+                      <TablePagination
+                        component="div"
+                        count={Object.keys(trans).length}
+                        onPageChange={handlePageChange}
+                        onRowsPerPageChange={handleLimitChange}
+                        page={page}
+                        rowsPerPage={limit}
+                        rowsPerPageOptions={[5, 10, 25]}
+                      />
+                    </Card>
+                  </Box>
+                </Container>
+              </React.Fragment>
+            </Container>
+          </TabPanel>
+        </SwipeableViews>
       </React.Fragment>
     </Page>
   );

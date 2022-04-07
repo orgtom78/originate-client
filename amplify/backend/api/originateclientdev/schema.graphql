@@ -1,5 +1,6 @@
 type Bank
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -50,6 +51,7 @@ type Bank
 
 type Buyer
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -123,7 +125,10 @@ type Buyer
   userId: String!
 }
 
-type Bookkeeping @model @auth(rules: [{ allow: groups, groups: ["Admin"] }]) {
+type Bookkeeping 
+  @model
+  @searchable 
+  @auth(rules: [{ allow: groups, groups: ["Admin"] }]) {
   id: ID!
   bookkeeping_status: String
   bookkeepingId: String
@@ -142,6 +147,7 @@ type Bookkeeping @model @auth(rules: [{ allow: groups, groups: ["Admin"] }]) {
 
 type Director
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -186,6 +192,7 @@ type Director
 
 type Document
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -220,6 +227,7 @@ type Document
 
 type Financials
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -307,6 +315,7 @@ type Financials
 
 type Investor
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -317,6 +326,7 @@ type Investor
       }
       { allow: groups, groups: ["Investor"], operations: [read] }
       { allow: groups, groups: ["Admin"] }
+      { allow: private, operations: [read]}
     ]
   ) {
   id: ID!
@@ -330,6 +340,7 @@ type Investor
   investor_shareholder_list_attachment: String
   investor_director_list_attachment: String
   investor_country: String
+  investor_email: String
   investor_industry: String
   investor_industry_code: String
   investor_logo: String
@@ -391,6 +402,7 @@ type Plaidauth
 
 type Request
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -411,6 +423,7 @@ type Request
   identityId: String
   buyer_name: String
   supplier_name: String
+  investor_email: String
   advance_rate: String
   discount_fee_rate: String
   transaction_fee_rate: String
@@ -418,6 +431,7 @@ type Request
   purchase_order_amount: String
   purchase_order_attachment: String
   purchase_order_date: String
+  purchase_order_number: String
   sold_goods_description: String
   invoice_amount: String
   invoice_currency: String
@@ -425,6 +439,7 @@ type Request
   invoice_date: String
   invoice_due_date: String
   invoice_attachment: String
+  invoice_number: String
   offer_notice_attachment: String
   ipu_attachment: String
   cargo_insurance_name: String
@@ -444,6 +459,7 @@ type Request
 
 type Supplier
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -487,6 +503,7 @@ type Supplier
 
 type Transaction
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -552,6 +569,7 @@ type Transaction
 
 type UBO
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -596,6 +614,7 @@ type UBO
 
 type Usergroup
   @model
+  @searchable
   @auth(
     rules: [
       {
@@ -630,6 +649,7 @@ type Usergroup
 
 type Insurance
   @model
+  @searchable
   @auth(
     rules: [
       {
