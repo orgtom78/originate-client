@@ -25,7 +25,7 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import DatePicker from "@mui/lab/DatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -223,7 +223,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
         } = await API.graphql(
           graphqlOperation(queries.listFinancialss, { filter: filter })
         );
-        const n = await {
+        const n = {
           data: { listFinancialss: { items: [itemsPage1], nextToken } },
         };
         const financials = await n.data.listFinancialss.items[0];
@@ -240,7 +240,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
           short_term_debt,
           working_capital,
           ebit,
-          //financials_attachment,
           net_profit,
           financials_rating,
           financials_reporting_period,
@@ -250,7 +249,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
         } = financials;
         setFinancialsId(id);
         setEbit(ebit);
-        //setFinancials_attachment(financials_attachment);
         setNet_profit(net_profit);
         setFinancials_rating(financials_rating);
         setFinancials_reporting_period(financials_reporting_period);
@@ -349,33 +347,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
       graphqlOperation(mutations.updateFinancials, { input: input })
     );
   }
-
-  function NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        prefix="$"
-      />
-    );
-  }
-
-  NumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
 
   return (
     <Container maxWidth="lg">
@@ -517,28 +488,23 @@ const InvestorForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          fullWidth
+                        <DatePicker
                           value={investor_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setInvestor_date_of_incorporation(e.target.value)
+                          onChange={(newvalue) =>
+                            setInvestor_date_of_incorporation(newvalue)
                           }
+                          onAccept={(e) => setInvestor_date_of_incorporation(e)}
                           required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>
@@ -656,6 +622,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
               Company Financials
             </Typography>
           </AccordionSummary>
+
           <AccordionDetails>
             <form
               autoComplete="off"
@@ -740,20 +707,15 @@ const InvestorForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          fullWidth
+                        <DatePicker
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"
                           id="financials_reporting_period"
                           label="Company Date of Incorporation"
                           name="financials_reporting_period"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
-                          maxDate={new Date()}
-                          onChange={(e) =>
-                            setFinancials_reporting_period(e.target.value)
-                          }
+                          views={["year"]}
+                          onChange={(e) => setFinancials_reporting_period(e)}
                           required
                           KeyboardButtonProps={{
                             "aria-label": "change date",
@@ -761,6 +723,9 @@ const InvestorForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>

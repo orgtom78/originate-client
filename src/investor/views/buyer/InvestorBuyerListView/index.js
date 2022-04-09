@@ -76,7 +76,7 @@ const InvestorBuyerListView = () => {
 
   return (
     <React.Fragment>
-      {investid ? (
+      {investid ?
         <React.Fragment>
           <Page className={clsx(classes.root)} title="Buyers">
             <Container maxWidth={false}>
@@ -151,11 +151,11 @@ const InvestorBuyerListView = () => {
             </Container>
           </Page>
         </React.Fragment>
-      ) : (
+       : 
         <>
           <NewInvestorView />
         </>
-      )}
+      }
     </React.Fragment>
   );
 };

@@ -366,7 +366,7 @@ const InvestorBankTransactionListView = (input) => {
             aria-label="full width tabs example"
           >
             <Tab label="Remittance Account" {...a11yProps(0)} />
-            <Tab label="Collection Account" {...a11yProps(1)} />
+            <Tab label="Collection Account" href={`/investor/bank/collection`} {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <SwipeableViews

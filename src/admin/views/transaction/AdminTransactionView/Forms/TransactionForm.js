@@ -284,7 +284,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={invoice_date || ""}
                           margin="normal"
                           variant="outlined"
@@ -304,7 +303,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>
@@ -317,7 +318,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={invoice_due_date || ""}
                           margin="normal"
                           variant="outlined"
@@ -337,7 +337,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>

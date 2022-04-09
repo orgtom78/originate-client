@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import {
   InputField,
-  SelectField
+  SelectField,
+  DatePickerField,
 } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
@@ -81,6 +82,7 @@ export default function ShareholderForm(props) {
       director_nationality,
       director_poa_attachment,
       director_country_of_residence,
+      director_date_of_birth,
     },
   } = props;
 
@@ -277,10 +279,18 @@ export default function ShareholderForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <InputField
                 name={director_id_number.name}
                 label={director_id_number.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={director_date_of_birth.name}
+                label={director_date_of_birth.label}
                 fullWidth
                 variant="outlined"
               />

@@ -46,6 +46,11 @@ const model = {
       label: "Owner Country of Residence",
       requiredErrorMsg: "Country of residence is required",
     },
+    ubo_date_of_birth: {
+      name: "ubo_date_of_birth",
+      label: "Date of Birth",
+      requiredErrorMsg: "Date of birth is required",
+    },
   },
 };
 

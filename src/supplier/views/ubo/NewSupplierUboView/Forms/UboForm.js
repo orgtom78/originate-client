@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   InputField,
   SelectField,
+  DatePickerField
 } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
@@ -81,6 +82,7 @@ export default function UboForm(props) {
       ubo_nationality,
       ubo_poa_attachment,
       ubo_country_of_residence,
+      ubo_date_of_birth,
     },
   } = props;
 
@@ -277,10 +279,18 @@ export default function UboForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={6}>
               <InputField
                 name={ubo_id_number.name}
                 label={ubo_id_number.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={ubo_date_of_birth.name}
+                label={ubo_date_of_birth.label}
                 fullWidth
                 variant="outlined"
               />

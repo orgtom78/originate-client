@@ -4,8 +4,8 @@ import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import InvestorLayout from 'src/layouts/InvestorLayout';
 import SupplierView from 'src/supplier/views/account/SupplierView';
-import TransactionListView from 'src/supplier/views/transaction/TransactionListView';
-import NewTransactionView from 'src/supplier/views/transaction/NewTransactionView';
+import RequestListView from 'src/supplier/views/request/RequestListView';
+import NewRequestView from 'src/supplier/views/request/NewRequestView';
 import DashboardView from 'src/supplier/views/reports/DashboardView';
 
 import LoginView from 'src/supplier/views/auth/LoginView';
@@ -75,10 +75,13 @@ import InvestorLoginView from 'src/investor/views/auth/InvestorLoginView';
 import InvestorBuyerView from 'src/investor/views/buyer/InvestorBuyerView';
 import InvestorBuyerListView from 'src/investor/views/buyer/InvestorBuyerListView';
 import InvestorObligorListView from 'src/investor/views/buyer/InvestorObligorListView';
-import InvestorTransactionListView from 'src/investor/views/transaction/InvestorTransactionListView';
-import InvestorTransactionView from 'src/investor/views/transaction/InvestorTransactionView';
-import InvestorBankConnectView from 'src/investor/views/bank/InvestorBankConnectView';
-import InvestorBankTransactionsView from 'src/investor/views/bank/InvestorBankTransactionsView';
+import InvestorRequestListView from 'src/investor/views/request/InvestorRequestListView';
+import InvestorRequestView from 'src/investor/views/request/InvestorRequestView';
+import InvestorBankView from 'src/investor/views/bank/InvestorBankView';
+import InvestorRemittanceConnectView from 'src/investor/views/bank/InvestorRemittanceConnectView';
+import InvestorRemittanceTransactionsView from 'src/investor/views/bank/InvestorRemittanceTransactionsView';
+import InvestorCollectionConnectView from 'src/investor/views/bank/InvestorRemittanceConnectView';
+import InvestorCollectionTransactionsView from 'src/investor/views/bank/InvestorRemittanceTransactionsView';
 import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
 
   const routes = (isAuthenticated, isAdmin, isInvestor) =>
@@ -92,8 +95,8 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'newsupplierubo/:id', element: !isAuthenticated ? <LoginView /> : <NewSupplierUboView /> },
       { path: 'updatedirector/:id', element: !isAuthenticated ? <LoginView /> : <UpdateDirectorView /> },
       { path: 'updateubo/:id', element: !isAuthenticated ? <LoginView /> : <UpdateUboView /> },
-      { path: 'transactions', element: !isAuthenticated ? <LoginView /> : <TransactionListView />  },
-      { path: 'newtransaction/:id', element: !isAuthenticated ? <LoginView /> : <NewTransactionView />  },
+      { path: 'requests', element: !isAuthenticated ? <LoginView /> : <RequestListView />  },
+      { path: 'newrequest/:id', element: !isAuthenticated ? <LoginView /> : <NewRequestView />  },
       { path: 'dashboard', element: !isAuthenticated ? <LoginView /> : <DashboardView /> },
       { path: 'buyers', element: !isAuthenticated ? <LoginView /> : <BuyerListView /> },
       { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },
@@ -160,7 +163,7 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'newinvestor/:groupid/:ident/:id', element: !isAdmin ? <AdminLoginView /> : <AdminNewInvestorView /> },
 
       { path: 'groups', element: !isAdmin ? <AdminLoginView /> : <AdminGroupListView />  },
-      { path: 'user/:sub/:groupId', element: !isAdmin ? <AdminLoginView /> : <AdminGroupView />  },
+      { path: 'user/:id', element: !isAdmin ? <AdminLoginView /> : <AdminGroupView />  },
       { path: 'newuser', element: !isAdmin ? <AdminLoginView /> : <AdminNewUserGroupView />  },
       { path: '*', element: <Navigate to="admin/404" /> }, 
 
@@ -180,12 +183,15 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: '/investor/', element: !isInvestor ? <InvestorLoginView />  : <InvestorDashboardView />},
       { path: 'dashboard', element: !isInvestor ? <InvestorLoginView />  : <InvestorDashboardView /> },
       { path: 'buyer/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorBuyerView />},
-      { path: 'requests', element: !isInvestor ? <InvestorLoginView />  : <InvestorBuyerListView/> },
+      { path: 'limits', element: !isInvestor ? <InvestorLoginView />  : <InvestorBuyerListView/> },
       { path: 'obligors', element: !isInvestor ? <InvestorLoginView />  : <InvestorObligorListView/> },
-      { path: 'transactions', element: !isInvestor ? <InvestorLoginView />  : <InvestorTransactionListView  /> },
-      { path: 'transaction/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorTransactionView />},
-      { path: 'bank', element: !isInvestor ? <InvestorLoginView /> : <InvestorBankConnectView />},
-      { path: 'bank/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorBankTransactionsView />},
+      { path: 'requests', element: !isInvestor ? <InvestorLoginView />  : <InvestorRequestListView  /> },
+      { path: 'request/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorRequestView />},
+      { path: 'bank', element: !isInvestor ? <InvestorLoginView /> : <InvestorBankView />},
+      { path: 'bank/remittance', element: !isInvestor ? <InvestorLoginView /> : <InvestorRemittanceConnectView />},
+      { path: 'bank/remittance/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorRemittanceTransactionsView />},
+      { path: 'bank/collection', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionConnectView />},
+      { path: 'bank/collection/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionTransactionsView />},
       { path: 'settings', element: !isInvestor ? <InvestorLoginView /> : <InvestorSettingsView /> },
       { path: '*', element: <Navigate to="investor/404" /> }
     ]

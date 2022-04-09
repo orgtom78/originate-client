@@ -168,7 +168,7 @@ const AdminUserGroupListView = () => {
                             <TableCell>
                               <Box alignItems="center" display="flex">
                                 <Link
-                                  to={`/admin/user/${usergroup.userId}/${usergroup.groupId}`}
+                                  to={`/admin/user/${usergroup.id}`}
                                 >
                                   <Avatar className={classes.avatar}>
                                     {getInitials(usergroup.user_name)}

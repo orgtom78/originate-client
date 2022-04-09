@@ -1,16 +1,17 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles } from '@mui/styles';
-import { CircularProgress, Button } from "@mui/material";
-import { green } from '@mui/material/colors';
+import { makeStyles } from "@mui/styles";
+import CircularProgress from "@mui/material/CircularProgress";
+import { green } from "@mui/material/colors";
+import Button from "@mui/material/Button";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     display: "flex",
     alignItems: "center",
   },
   wrapper: {
-    margin: theme.spacing(1),
+    margin: '10px',
     position: "relative",
   },
   buttonSuccess: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: -12,
     marginLeft: -12,
   },
-}));
+});
 
 export default function LoaderButton({
   loading,

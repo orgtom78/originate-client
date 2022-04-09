@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Accordion, AccordionSummary, AccordionDetails, Container, Grid, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Container,
+  Grid,
+  Typography,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -26,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Buyer = (value) => {
+const Buyer = () => {
   const classes = useStyles();
   const { id } = useParams();
 
@@ -61,7 +68,6 @@ const Buyer = (value) => {
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
 
   useEffect(() => {
-    getBuyer({ id });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -120,12 +126,14 @@ const Buyer = (value) => {
         console.log("error fetching data..", err);
       }
     }
+    getBuyer({ id });
   }, [id]);
 
   useEffect(() => {
     async function getFinancials() {
+      const id = await buyerId;
       let filter = {
-        buyerId: { eq: buyerId }
+        buyerId: { eq: id },
       };
       const {
         data: {
@@ -136,7 +144,11 @@ const Buyer = (value) => {
       );
       const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
       const items = await n.data.listFinancialss.items;
-      setFin(items);
+      if (items.length > 0) {
+        setFin(items);
+      } else {
+        setFin([]);
+      }
       return items;
     }
     getFinancials();
@@ -147,7 +159,7 @@ const Buyer = (value) => {
       <Page className={classes.root} title="Buyer">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
-          <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
               <AccountDebtor value={item} />
             </Grid>
             <Grid item lg={6} sm={6} xl={6} xs={12}>
@@ -165,8 +177,10 @@ const Buyer = (value) => {
             <Grid item lg={12} sm={12} xl={12} xs={12}>
               <FinancialOverview value={fin} />
             </Grid>
-            <Grid container>
+            <Grid container spacing={1}>
               <Grid item lg={12} sm={12} xl={12} xs={12}>
+                <br></br>
+                <br></br>
                 <Accordion>
                   <AccordionSummary
                     aria-controls="panel1a-content"

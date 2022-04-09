@@ -46,12 +46,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme((theme) => ({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme((theme) => ({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
+});
 
 const DirectorListView = (value) => {
   const classes = useStyles();

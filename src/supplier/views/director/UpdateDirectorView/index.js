@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -25,6 +25,9 @@ import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 const cr = countries;
 
@@ -104,6 +107,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     director_country_of_residence,
     setDirector_country_of_residence,
   ] = useState("");
+  const [director_date_of_birth, setDirector_date_of_birth] = useState("");
 
   const [directorloading, setDirectorLoading] = useState(false);
   const [directorsuccess, setDirectorSuccess] = useState(false);
@@ -148,6 +152,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
             director_nationality,
             director_poa_attachment,
             director_country_of_residence,
+            director_date_of_birth,
           },
         },
       } = director;
@@ -162,6 +167,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
       setDirector_nationality(director_nationality);
       setDirector_poa_attachment(director_poa_attachment);
       setDirector_country_of_residence(director_country_of_residence);
+      setDirector_date_of_birth(director_date_of_birth);
     } catch (err) {
       console.log("error fetching data..", err);
     }
@@ -186,13 +192,14 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
         director_nationality,
         director_poa_attachment,
         director_country_of_residence,
+        director_date_of_birth,
       });
     } catch (e) {
       onError(e);
     }
     setDirectorSuccess(true);
     setDirectorLoading(false);
-    window.location.reload(); 
+    window.location.reload();
   }
 
   function updateDirector(input) {
@@ -364,7 +371,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     const stored = await Storage.put(filename, file, {
       contentType: file.type,
       level: "private",
-      identityId: identity
+      identityId: identity,
     });
     return stored.key;
   }
@@ -393,7 +400,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectoridSuccess(true);
     setDirectoridLoading(false);
-    window.location.reload(); 
+    window.location.reload();
   }
 
   useEffect(() => {
@@ -566,7 +573,7 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
     }
     setDirectorpoaSuccess(true);
     setDirectorpoaLoading(false);
-    window.location.reload(); 
+    window.location.reload();
   }
 
   return (
@@ -641,6 +648,29 @@ const UpdateDirectorForm = ({ className, ...rest }) => {
                     value={director_id_number || ""}
                     variant="outlined"
                   />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={director_date_of_birth || ""}
+                      margin="normal"
+                      variant="outlined"
+                      id="director_date_of_birth"
+                      label="Director Date of Birth"
+                      name="director_date_of_birth"
+                      onChange={(e) => setDirector_date_of_birth(e)}
+                      required
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <Select

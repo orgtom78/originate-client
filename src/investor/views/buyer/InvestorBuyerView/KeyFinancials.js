@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-import clsx from "clsx";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
-import PropTypes from "prop-types";
 import {
   Card,
   CardContent,
@@ -12,66 +10,36 @@ import {
   TableHead,
   TableBody,
   Typography,
-  colors,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
 import NumberFormat from "react-number-format";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    height: "100%",
-  },
-  avatar: {
-    backgroundColor: colors.red[600],
-    height: 56,
-    width: 56,
-  },
-  differenceIcon: {
-    color: colors.red[900],
-  },
-  differenceValue: {
-    color: colors.red[900],
-    marginRight: theme.spacing(1),
-  },
-  table: {
-    minWidth: "100%",
-    maxWidth: "100%",
-  },
-  tableRow: {
-    backgroundColor: colors.teal[400],
-  },
-}));
-
-const Limits = ({ className, value, ...rest }) => {
-  const classes = useStyles();
+const Limits = (input) => {
   const [arr, setArr] = useState([]);
 
-  async function get() {
-    try {
-      const data = await value;
-      const ar = await data[0];
-      if (ar) {
-        setArr(ar);
+  useEffect(() => {
+    async function get() {
+      try {
+        const data = await input.value[0];
+        if (data === undefined || data.length == 0) {
+          setArr([])
+        } else {
+          setArr(data);
+        }
+      } catch (err) {
+        console.log("error fetching data..", err);
       }
-      return;
-    } catch (err) {
-      console.log("error fetching data..", err);
     }
-  }
-  get();
+    get();
+  }, [input]);
 
   return (
-    <Card className={clsx(classes.root, className)} {...rest}>
+    <Card>
       <CardContent>
         <Grid item>
           <Typography color="textSecondary" gutterBottom variant="h6">
             KEY FINANCIALS
           </Typography>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="simple table"
-          >
+          <Table size="small" aria-label="simple table">
             <TableHead>
               <TableRow>
                 <TableCell></TableCell>
@@ -79,7 +47,7 @@ const Limits = ({ className, value, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow className={classes.tableRow}>
+              <TableRow>
                 <TableCell component="th" scope="row" color="pink">
                   Year
                 </TableCell>
@@ -171,10 +139,6 @@ const Limits = ({ className, value, ...rest }) => {
       </CardContent>
     </Card>
   );
-};
-
-Limits.propTypes = {
-  className: PropTypes.string,
 };
 
 export default Limits;

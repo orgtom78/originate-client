@@ -30,12 +30,12 @@ import { useUser } from "src/components/context/usercontext.js";
 import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createTheme((theme) => ({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme((theme) => ({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
+});
 
 const useStyles = makeStyles(() => ({
   root: {},

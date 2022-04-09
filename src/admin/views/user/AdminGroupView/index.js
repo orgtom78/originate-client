@@ -1,6 +1,6 @@
 import React from "react";
 import { Container, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import { useParams } from "react-router-dom";
 import GroupForm from "./Forms/GroupForm";
@@ -16,8 +16,7 @@ const useStyles = makeStyles((theme) => ({
 
 const User = () => {
   const classes = useStyles();
-  const { groupId } = useParams();
-  const { sub } = useParams();
+  const { id } = useParams();
 
   return (
     <React.Fragment>
@@ -25,7 +24,7 @@ const User = () => {
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item lg={12} md={6} xs={12}>
-              <GroupForm groupvalue={groupId} subvalue={sub}/>
+              <GroupForm groupvalue={id} />
             </Grid>
           </Grid>
         </Container>

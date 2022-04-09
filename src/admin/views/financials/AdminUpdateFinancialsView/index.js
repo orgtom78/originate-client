@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { onError } from "src/libs/errorLib.js";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";

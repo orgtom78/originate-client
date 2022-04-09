@@ -167,7 +167,7 @@ export default function NewAccount() {
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
-    navigate("/app/transactions");
+    navigate("/app/requests");
   }
 
   return (

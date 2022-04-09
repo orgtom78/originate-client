@@ -63,7 +63,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
+const GroupForm = ({ className, groupvalue, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [groupId, setGroupId] = useState("");
@@ -88,9 +88,8 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
   const [usersuccess, setUserSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = subvalue;
-    const sortkey = groupvalue;
-    getUser({ userId, sortkey });
+    const id = groupvalue;
+    getUser({ id });
     async function getUser(input) {
       try {
         const user = await API.graphql(
@@ -141,15 +140,15 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [subvalue, groupvalue]);
+  }, [groupvalue]);
 
   async function handleUserSubmit() {
     setUserSuccess(false);
     setUserLoading(true);
     try {
-      const userId = subvalue;
-      const sortkey = groupvalue;
+      const id = groupvalue;
       await updateUser({
+        id,
         groupId,
         userId,
         user_name,
@@ -173,7 +172,7 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
     }
     setUserSuccess(true);
     setUserLoading(false);
-    navigate("/admin/users");
+    navigate("/admin/groups");
   }
 
   function updateUser(input) {
@@ -401,11 +400,10 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                       justifyContent="space-around"
                       item
                       xs={12}
-                      sm={6}
+                      sm={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          fullWidth
                           value={createdAt || ""}
                           margin="normal"
                           variant="outlined"
@@ -423,7 +421,9 @@ const GroupForm = ({ className, groupvalue, subvalue, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>

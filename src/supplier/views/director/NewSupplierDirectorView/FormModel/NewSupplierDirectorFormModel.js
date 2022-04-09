@@ -46,6 +46,11 @@ const model = {
       label: "Director Country of Residence",
       requiredErrorMsg: "Country of residence is required",
     },
+    director_date_of_birth: {
+      name: "director_date_of_birth",
+      label: "Date of Birth",
+      requiredErrorMsg: "Date of birth is required",
+    },
   },
 };
 

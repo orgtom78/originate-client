@@ -19,7 +19,7 @@ import {
   Typography,
   ThemeProvider,
   StyledEngineProvider,
-  createTheme
+  createTheme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
@@ -33,11 +33,11 @@ import NumberFormat from "react-number-format";
 import LoaderButton from "src/components/LoaderButton.js";
 import { Search as SearchIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
-import { subDays } from 'date-fns'
+import { subDays } from "date-fns";
 
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -51,17 +51,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme((theme) => ({
-    palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-  })
-);
-const orangeTheme = createTheme((theme) => ({
-    palette: {
-      primary: { main: orange[500] },
-      secondary: { main: orange[200] },
-    },
-  })
-);
+const greenTheme = createTheme({
+  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
+});
+const orangeTheme = createTheme({
+  palette: {
+    primary: { main: orange[500] },
+    secondary: { main: orange[200] },
+  },
+});
 
 const InvestorTransactionListView = () => {
   const classes = useStyles();
@@ -149,8 +147,8 @@ const InvestorTransactionListView = () => {
 
   async function filterRequests(input) {
     const iid = await investid;
-    const startDate = moment(input.invoicestart);
-    const endDate = moment(input.invoiceend);
+    const startDate = moment(input.invoicestart).format("YYYY-MM-DD");
+    const endDate = moment(input.invoiceend).format("YYYY-MM-DD");
     let filter = {
       investorId: { eq: iid },
       invoice_date: { between: [startDate, endDate] },
@@ -257,7 +255,7 @@ const InvestorTransactionListView = () => {
                     </Grid>
                     <Grid item xs={3}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={invoicestart}
                           label="Invoice Date From"
                           onChange={(e) => setInvoicestart(e)}
@@ -271,7 +269,7 @@ const InvestorTransactionListView = () => {
                     </Grid>
                     <Grid item xs={3}>
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={invoiceend}
                           label="Invoice Date To"
                           onChange={(e) => setInvoiceend(e)}

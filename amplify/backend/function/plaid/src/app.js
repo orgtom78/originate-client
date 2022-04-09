@@ -171,6 +171,34 @@ app.get("/api/accounts1", async function(req, res) {
   });
 });
 
+app.get("/api/accounts2", async function(req, res) {
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
+  const clientUserId = req.query.id;
+  const params = {
+    TableName: tableName,
+    Key: {
+      id: clientUserId,
+    },
+  };
+  dynamodb.get(params, async (err, data) => {
+    if (err) {
+      return { err };
+    } else {
+      if (data.Item) {
+        try {
+          const token = data.Item.accessToken2;
+          const accountsResponse = await client.accountsGet({
+            access_token: token,
+          });
+          res.json(accountsResponse.data);
+        } catch (error) {
+          return res.json((error.response && error.response.data) || error);
+        }
+      }
+    }
+  });
+});
+
 app.get("/api/transactions1", async function(req, res) {
   const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
@@ -191,6 +219,46 @@ app.get("/api/transactions1", async function(req, res) {
       if (data.Item) {
         try {
           const token = data.Item.accessToken1;
+          const request = {
+            access_token: token,
+            start_date: startDate,
+            end_date: endDate,
+            options: {
+              account_ids: [bankaccountid],
+              count: 500,
+              offset: 0,
+            },
+          };
+          const transResp = await client.transactionsGet(request);
+          res.json(transResp.data);
+        } catch (error) {
+          return res.json((error.response && error.response.data) || error);
+        }
+      }
+    }
+  });
+});
+
+app.get("/api/transactions2", async function(req, res) {
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
+  const clientUserId = req.query.id;
+  const bankaccountid = req.query.bankid;
+  const startDate = req.query.startDate;
+  const endDate = req.query.endDate;
+  const params = {
+    TableName: tableName,
+    Key: {
+      id: clientUserId,
+    },
+  };
+
+  dynamodb.get(params, async (err, data) => {
+    if (err) {
+      return { err };
+    } else {
+      if (data.Item) {
+        try {
+          const token = data.Item.accessToken2;
           const request = {
             access_token: token,
             start_date: startDate,

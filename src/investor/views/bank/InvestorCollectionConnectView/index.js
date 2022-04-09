@@ -5,8 +5,16 @@ import PropTypes from "prop-types";
 import * as queries from "src/graphql/queries.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import PlaidLink from "./PlaidLink";
-import { AppBar, Box, Container, Grid, Typography, Tab, Tabs } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  AppBar,
+  Box,
+  Container,
+  Grid,
+  Typography,
+  Tab,
+  Tabs,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
@@ -57,7 +65,7 @@ const apiName = "plaid";
 export default function NewBank() {
   const navigate = useNavigate();
   const classes = useStyles();
-  const [linkToken, setLinkToken] = useState("");
+  const [linkToken2, setLinkToken2] = useState("");
   const [value, setValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -71,14 +79,19 @@ export default function NewBank() {
         const data = await API.graphql(
           graphqlOperation(queries.getPlaidauth, { id })
         );
-        const {data: { getPlaidauth: { accessToken1: token, account_id1: account }}} = data;
-        if (account) {
-          navigate(`/investor/bank/${account}`);
+        const {
+          data: {
+            getPlaidauth: { accessToken2: token2, account_id2: account2 },
+          },
+        } = data;
+        console.log(data);
+        if (account2) {
+          navigate(`/investor/bank/collection/${account2}`);
         } else {
-        setSuccess(true);
-        setDisabled(true);
-        return token;
-      } 
+          setSuccess(true);
+          setDisabled(true);
+          return token2;
+        }
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -97,7 +110,7 @@ export default function NewBank() {
     };
     const token = await API.get(apiName, "/api/create_link_token", myInit);
     var t = token.link_token;
-    setLinkToken(t);
+    setLinkToken2(t);
   }
 
   function TabPanel(props) {
@@ -182,7 +195,7 @@ export default function NewBank() {
                     Connect Bank Account
                   </LoaderButton>
                 </Grid>
-                {linkToken ? <PlaidLink token={linkToken} /> : null}
+                {linkToken2 ? <PlaidLink token={linkToken2} /> : null}
               </React.Fragment>
             </Container>
           </TabPanel>

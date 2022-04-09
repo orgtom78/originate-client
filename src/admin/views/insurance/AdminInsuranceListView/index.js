@@ -32,7 +32,7 @@ import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    backgroundColor: theme.palette.background.dark,
+    backgroundColor: theme.palette.background.primary,
     minHeight: "100%",
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
@@ -42,15 +42,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme((theme) => ({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme((theme) => ({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
-const redTheme = createTheme((theme) => ({
+});
+const redTheme = createTheme({
   palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
-}));
+});
 
 const AdminInsuranceListView = () => {
   const classes = useStyles();
@@ -121,6 +121,7 @@ const AdminInsuranceListView = () => {
       disablePadding: false,
       label: "Buyers ID",
     },
+    { id: "number", numeric: false, disablePadding: false, label: "Number" },
     { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
     {
       id: "cover_price",
@@ -361,6 +362,7 @@ const AdminInsuranceListView = () => {
                                     </Typography>
                                   </Box>
                                 </TableCell>
+                                <TableCell>{request.invoice.Number}</TableCell>
                                 <TableCell>
                                   <NumberFormat
                                     color="textPrimary"
@@ -385,9 +387,7 @@ const AdminInsuranceListView = () => {
                                   {checkstatus(request.status)}
                                 </TableCell>
                                 <TableCell>
-                                  {moment(request.coverage.quotedAt).format(
-                                    "DD/MM/YYYY"
-                                  )}
+                                  {moment(request.coverage.quotedAt).format()}
                                 </TableCell>
                               </TableRow>
                             );

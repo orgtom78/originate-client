@@ -23,7 +23,7 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "/investor/requests",
+    href: "/investor/limits",
     icon: DollarSignIcon,
     title: "New Limits",
   },
@@ -33,9 +33,9 @@ const items = [
     title: "Obligors",
   },
   {
-    href: "/investor/transactions",
+    href: "/investor/requests",
     icon: CreditCardIcon,
-    title: "Transactions",
+    title: "Requests",
   },
   {
     href: "/investor/bank",

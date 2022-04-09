@@ -3,16 +3,30 @@ import { useNavigate } from "react-router-dom";
 import "date-fns";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Box, Card, CardContent, Container, Divider, Grid, TextField, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Box,
+  Card,
+  CardContent,
+  Container,
+  Divider,
+  Grid,
+  TextField,
+  Typography,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation, Storage } from "aws-amplify";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
@@ -603,9 +617,15 @@ const SupplierFinancials = ({ className, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justifyContent="space-around" item md={6} xs={12}>
-                    <KeyboardDatePicker
+                <Grid
+                  container
+                  justifyContent="space-around"
+                  item
+                  md={6}
+                  xs={12}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DesktopDatePicker
                       fullWidth
                       value={financials_reporting_period || ""}
                       margin="normal"
@@ -626,9 +646,10 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      renderInput={(params) => <TextField {...params} />}
                     />
-                  </Grid>
-                </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
+                </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
                     fullWidth

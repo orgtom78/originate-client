@@ -44,10 +44,11 @@ export default function DatePickerField(props) {
           {...props}
           value={selectedDate}
           onChange={_onChange}
+          onAccept={_onChange}
           error={isError}
           invalidDateMessage={isError && error}
           helperText={isError && error}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => <TextField fullWidth {...params} />}
         />
       </LocalizationProvider>
     </Grid>

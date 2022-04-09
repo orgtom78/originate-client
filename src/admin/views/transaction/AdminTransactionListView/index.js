@@ -45,15 +45,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createTheme((theme) => ({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme((theme) => ({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
-const redTheme = createTheme((theme) => ({
+});
+const redTheme = createTheme({
   palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
-}));
+});
 
 const AdminTransactionListView = () => {
   const classes = useStyles();

@@ -12,7 +12,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import moment from "moment";
@@ -41,7 +41,7 @@ const AdminCompanyIDListView = (input) => {
   React.useEffect(() => {
     const getData = async () => {
       if (Object.keys(input).length === 0 && input.constructor === Object) {
-        console.log("test");
+        return;
       } else {
         Object.entries(input).forEach(([key, value]) => {
           const {

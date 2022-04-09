@@ -39,9 +39,9 @@ const items = [
     title: "Payout Request",
   },
   {
-    href: "/app/transactions",
+    href: "/app/requests",
     icon: CreditCardIcon,
-    title: "Transactions",
+    title: "Requests",
   },
   {
     href: "/app/settings",

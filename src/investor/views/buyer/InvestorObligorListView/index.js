@@ -14,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -77,80 +77,84 @@ const InvestorBuyerListView = () => {
 
   return (
     <React.Fragment>
-      <React.Fragment>
-        <Page className={clsx(classes.root)} title="Buyers">
-          <Container maxWidth={false}>
-            <Box mt={3}>
-              <Card>
-                <PerfectScrollbar>
-                  <Box minWidth={1050}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Buyer's Name</TableCell>
-                          <TableCell>Country</TableCell>
-                          <TableCell>Website</TableCell>
-                          <TableCell>Loan Request</TableCell>
-                          <TableCell>Latest update</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {buyer.slice(0, limit).map((buyer) => (
-                          <TableRow hover key={buyer.buyerId}>
-                            <TableCell>
-                              <Box alignItems="center" display="flex">
-                                <Link to={`/investor/buyer/${buyer.id}`}>
-                                  <Avatar
-                                    className={classes.avatar}
-                                    src={`${buyer.buyer_logo}`}
-                                  >
-                                    {getInitials(buyer.buyer_name)}
-                                  </Avatar>
-                                </Link>
-
-                                <Typography color="textPrimary" variant="body1">
-                                  {buyer.buyer_name}
-                                </Typography>
-                              </Box>
-                            </TableCell>
-                            <TableCell>{`${buyer.buyer_country}`}</TableCell>
-                            <TableCell>{`${buyer.buyer_website}`}</TableCell>
-                            <TableCell>
-                              <NumberFormat
-                                value={`${buyer.buyer_loan_request_amount}`}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                prefix={"$"}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {moment(buyer.createdAt).format("DD/MM/YYYY")}
-                            </TableCell>
+      {investid ? (
+        <React.Fragment>
+          <Page className={clsx(classes.root)} title="Buyers">
+            <Container maxWidth={false}>
+              <Box mt={3}>
+                <Card>
+                  <PerfectScrollbar>
+                    <Box minWidth={1050}>
+                      <Table>
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Buyer's Name</TableCell>
+                            <TableCell>Country</TableCell>
+                            <TableCell>Website</TableCell>
+                            <TableCell>Loan Request</TableCell>
+                            <TableCell>Latest update</TableCell>
                           </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </Box>
-                </PerfectScrollbar>
-                <TablePagination
-                  component="div"
-                  count={buyer.length}
-                  onPageChange={handlePageChange}
-                  onRowsPerPageChange={handleLimitChange}
-                  page={page}
-                  rowsPerPage={limit}
-                  rowsPerPageOptions={[5, 10, 25]}
-                />
-              </Card>
-            </Box>
-          </Container>
-        </Page>
-      </React.Fragment>
+                        </TableHead>
+                        <TableBody>
+                          {buyer.slice(0, limit).map((buyer) => (
+                            <TableRow hover key={buyer.buyerId}>
+                              <TableCell>
+                                <Box alignItems="center" display="flex">
+                                  <Link to={`/investor/buyer/${buyer.id}`}>
+                                    <Avatar
+                                      className={classes.avatar}
+                                      src={`${buyer.buyer_logo}`}
+                                    >
+                                      {getInitials(buyer.buyer_name)}
+                                    </Avatar>
+                                  </Link>
+
+                                  <Typography
+                                    color="textPrimary"
+                                    variant="body1"
+                                  >
+                                    {buyer.buyer_name}
+                                  </Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell>{`${buyer.buyer_country}`}</TableCell>
+                              <TableCell>{`${buyer.buyer_website}`}</TableCell>
+                              <TableCell>
+                                <NumberFormat
+                                  value={`${buyer.buyer_loan_request_amount}`}
+                                  displayType={"text"}
+                                  thousandSeparator={true}
+                                  prefix={"$"}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                {moment(buyer.createdAt).format("DD/MM/YYYY")}
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </Box>
+                  </PerfectScrollbar>
+                  <TablePagination
+                    component="div"
+                    count={buyer.length}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleLimitChange}
+                    page={page}
+                    rowsPerPage={limit}
+                    rowsPerPageOptions={[5, 10, 25]}
+                  />
+                </Card>
+              </Box>
+            </Container>
+          </Page>
+        </React.Fragment>
       ) : (
-      <>
-        <NewInvestorView />
-      </>
-      )
+        <>
+          <NewInvestorView />
+        </>
+      )}
     </React.Fragment>
   );
 };

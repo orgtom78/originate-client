@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";

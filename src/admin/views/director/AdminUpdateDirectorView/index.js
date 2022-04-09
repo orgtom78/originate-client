@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -24,6 +24,9 @@ import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@mui/material/colors";
 import { useParams } from "react-router-dom";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 const idtype = [
   {
@@ -112,6 +115,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const [director_id_type, setDirector_id_type] = useState("");
   const [director_nationality, setDirector_nationality] = useState("");
   const [director_poa_attachment, setDirector_poa_attachment] = useState("");
+  const [director_date_of_birth, setDirector_date_of_birth] = useState("");
   const [
     director_country_of_residence,
     setDirector_country_of_residence,
@@ -162,6 +166,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
             director_nationality,
             director_poa_attachment,
             director_country_of_residence,
+            director_date_of_birth,
           },
         },
       } = director;
@@ -178,6 +183,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       setDirector_nationality(director_nationality);
       setDirector_poa_attachment(director_poa_attachment);
       setDirector_country_of_residence(director_country_of_residence);
+      setDirector_date_of_birth(director_date_of_birth);
     } catch (err) {
       console.log("error fetching data..", err);
     }
@@ -202,6 +208,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         director_nationality,
         director_poa_attachment,
         director_country_of_residence,
+        director_date_of_birth,
       });
     } catch (e) {
       onError(e);
@@ -380,7 +387,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectoridSuccess(false);
     setDirectoridLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'director_id_attachment') : null;
+      const u = newfile ? await s3Up(newfile, "director_id_attachment") : null;
       var director_id_attachment = u;
       await updateDirector({
         id,
@@ -544,7 +551,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectorpoaSuccess(false);
     setDirectorpoaLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'director_poa_attachment') : null;
+      const u = newfile ? await s3Up(newfile, "director_poa_attachment") : null;
       var director_poa_attachment = u;
       await updateDirector({
         id,
@@ -570,22 +577,22 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                      <Select
-                        fullWidth
-                        name="director_status"
-                        label="Director Status"
-                        onChange={(e) => setDirector_status(e.target.value)}
-                        required
-                        value={director_status || ""}
-                        variant="outlined"
-                      >
-                        {status.map((item, index) => (
-                          <MenuItem key={index} value={item.label}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                <Grid item xs={12} sm={12}>
+                  <Select
+                    fullWidth
+                    name="director_status"
+                    label="Director Status"
+                    onChange={(e) => setDirector_status(e.target.value)}
+                    required
+                    value={director_status || ""}
+                    variant="outlined"
+                  >
+                    {status.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -647,6 +654,29 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
                     value={director_id_number || ""}
                     variant="outlined"
                   />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={director_date_of_birth || ""}
+                      margin="normal"
+                      variant="outlined"
+                      id="director_date_of_birth"
+                      label="Director Date of Birth"
+                      name="director_date_of_birth"
+                      onChange={(e) => setDirector_date_of_birth(e)}
+                      required
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
             </CardContent>
