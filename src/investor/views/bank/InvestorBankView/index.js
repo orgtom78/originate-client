@@ -16,6 +16,8 @@ import makeStyles from "@mui/styles/makeStyles";
 import { Pagination } from "@mui/material";
 import Page from "src/components/Page";
 import { green, orange } from "@mui/material/colors";
+import { ArrowUp as ArrowUpIcon } from "react-feather";
+import { ArrowDown as ArrowDownIcon } from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,14 +57,22 @@ const Banks = () => {
     <Page className={clsx(classes.root)} title="Bank Accounts">
       <Container maxWidth={false}>
         <Box mt={3}>
-          <Grid container spacing={3}>
-            <Grid lg={4} md={6} xs={12}>
+          <Grid
+            container
+            spacing={3}
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
                   <Link to={`/investor/bank/remittance`}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
-                        <Avatar alt="remittance" src={""} variant="square" />
+                        <Avatar alt="remittance" variant="square">
+                          <ArrowUpIcon />
+                        </Avatar>
                       </Box>
                       <Typography
                         align="center"
@@ -70,7 +80,38 @@ const Banks = () => {
                         gutterBottom
                         variant="h4"
                       >
-                        {"Remittance Accounnt"}
+                        {"Remittance Account"}
+                      </Typography>
+                      <Typography
+                        align="center"
+                        color="textPrimary"
+                        variant="body1"
+                      >
+                        {""}
+                      </Typography>
+                    </CardContent>
+                    <Box flexGrow={1} />
+                  </Link>
+                </CardActionArea>
+              </Card>
+            </Grid>
+            <Grid item spacing={3} xs={6}>
+              <Card>
+                <CardActionArea>
+                  <Link to={`/investor/bank/collection`}>
+                    <CardContent>
+                      <Box display="flex" justifyContent="center" mb={3}>
+                        <Avatar alt="collectionn" variant="square">
+                          <ArrowDownIcon />
+                        </Avatar>
+                      </Box>
+                      <Typography
+                        align="center"
+                        color="textPrimary"
+                        gutterBottom
+                        variant="h4"
+                      >
+                        {"Collection Account"}
                       </Typography>
                       <Typography
                         align="center"
@@ -86,9 +127,6 @@ const Banks = () => {
               </Card>
             </Grid>
           </Grid>
-        </Box>
-        <Box mt={3} display="flex" justifyContent="center">
-          <Pagination color="primary" count={1} size="small" />
         </Box>
       </Container>
     </Page>

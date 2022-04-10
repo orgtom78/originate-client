@@ -40,7 +40,7 @@ const InvestorBankAccountsListView = (input) => {
           input: { id: id, account_id1: input },
         })
       );
-      navigate(`/investor/bank/${input}`);
+      navigate(`/investor/bank/remittance/${input}`);
     } catch (err) {
       console.log("error fetching data..", err);
     }

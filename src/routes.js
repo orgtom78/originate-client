@@ -80,8 +80,8 @@ import InvestorRequestView from 'src/investor/views/request/InvestorRequestView'
 import InvestorBankView from 'src/investor/views/bank/InvestorBankView';
 import InvestorRemittanceConnectView from 'src/investor/views/bank/InvestorRemittanceConnectView';
 import InvestorRemittanceTransactionsView from 'src/investor/views/bank/InvestorRemittanceTransactionsView';
-import InvestorCollectionConnectView from 'src/investor/views/bank/InvestorRemittanceConnectView';
-import InvestorCollectionTransactionsView from 'src/investor/views/bank/InvestorRemittanceTransactionsView';
+import InvestorCollectionConnectView from 'src/investor/views/bank/InvestorCollectionConnectView';
+import InvestorCollectionTransactionsView from 'src/investor/views/bank/InvestorCollectionTransactionsView';
 import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
 
   const routes = (isAuthenticated, isAdmin, isInvestor) =>

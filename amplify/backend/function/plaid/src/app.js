@@ -71,75 +71,75 @@ app.get("/api/create_link_token", async function(req, res) {
   };
   try {
     const createTokenResponse = await client.linkTokenCreate(request);
-    res.json(createTokenResponse.data);
+    return res.json(createTokenResponse.data);
   } catch (error) {
-    return res.json((error.response && error.response.data) || error);
+    return res.json(error);
   }
 });
 
 app.get("/api/exchange_public_token1", async function(req, res) {
-  const publicToken = req.query.token;
+  const publicToken1 = req.query.token;
   const userId = req.query.id;
   try {
-    const response = await client.itemPublicTokenExchange({
-      public_token: publicToken,
+    const response1 = await client.itemPublicTokenExchange({
+      public_token: publicToken1,
     });
-    const accessToken = response.data.access_token;
-    const itemID = response.data.item_id;
+    const accessToken1 = response1.data.access_token;
+    const itemID = response1.data.item_id;
     let putItemParams = {
       TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
-      Item: {
+      Key: {
         id: userId,
-        accessToken1: accessToken,
-        createdAt: "2022-02-13T07:25:09.131Z",
-        updatedAt: "2022-02-13T07:25:09.131Z",
+      },
+      UpdateExpression:
+        "set accessToken1 = :accessToken1, updatedAt = :updatedAt",
+      ExpressionAttributeValues: {
+        ":accessToken1": accessToken1,
+        ":updatedAt": new Date(),
       },
     };
-
-    dynamodb.put(putItemParams, (err, data) => {
+    dynamodb.update(putItemParams, (err, data) => {
       if (err) {
         res.json({ error: "oh no!", url: req.url, body: req.body });
       } else {
-        res.json({ success: "post call succeed!", url: req.url, data: data });
+        return res.json(response1.data);
       }
     });
-    res.json(response.data);
   } catch (error) {
-    return res.json((error.response && error.response.data) || error);
+    res.json(error);
   }
 });
 
 app.get("/api/exchange_public_token2", async function(req, res) {
-  const publicToken = req.query.token;
+  const publicToken2 = req.query.token;
   const userId = req.query.id;
   try {
-    const response = await client.itemPublicTokenExchange({
-      public_token: publicToken,
+    const response2 = await client.itemPublicTokenExchange({
+      public_token: publicToken2,
     });
-    const accessToken = response.data.access_token;
-    const itemID = response.data.item_id;
+    const accessToken2 = response2.data.access_token;
+    const itemID = response2.data.item_id;
     let putItemParams = {
       TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
-      Item: {
+      Key: {
         id: userId,
-        accessToken2: accessToken,
-        createdAt: "2022-02-13T07:25:09.131Z",
-        updatedAt: "2022-02-13T07:25:09.131Z",
+      },
+      UpdateExpression:
+        "set accessToken2 = :accessToken2, updatedAt = :updatedAt",
+      ExpressionAttributeValues: {
+        ":accessToken2": accessToken2,
+        ":updatedAt": new Date(),
       },
     };
-
-    dynamodb.put(putItemParams, (err, data) => {
+    dynamodb.update(putItemParams, (err, data) => {
       if (err) {
-        res.statusCode = 500;
         res.json({ error: "oh no!", url: req.url, body: req.body });
       } else {
-        res.json({ success: "post call succeed!", url: req.url, data: data });
+        return res.json(response2.data);
       }
     });
-
-    res.json(response.data);
   } catch (error) {
-    return res.json((error.response && error.response.data) || error);
+    return res.json(error);
   }
 });
 
@@ -158,13 +158,13 @@ app.get("/api/accounts1", async function(req, res) {
     } else {
       if (data.Item) {
         try {
-          const token = data.Item.accessToken1;
-          const accountsResponse = await client.accountsGet({
-            access_token: token,
+          const token1 = data.Item.accessToken1;
+          const accountsResponse1 = await client.accountsGet({
+            access_token: token1,
           });
-          res.json(accountsResponse.data);
+          return res.json(accountsResponse1.data);
         } catch (error) {
-          return res.json((error.response && error.response.data) || error);
+          return res.json(error);
         }
       }
     }
@@ -186,13 +186,13 @@ app.get("/api/accounts2", async function(req, res) {
     } else {
       if (data.Item) {
         try {
-          const token = data.Item.accessToken2;
-          const accountsResponse = await client.accountsGet({
-            access_token: token,
+          const token2 = data.Item.accessToken2;
+          const accountsResponse2 = await client.accountsGet({
+            access_token: token2,
           });
-          res.json(accountsResponse.data);
+          return res.json(accountsResponse2.data);
         } catch (error) {
-          return res.json((error.response && error.response.data) || error);
+          return res.json(error);
         }
       }
     }
@@ -218,9 +218,9 @@ app.get("/api/transactions1", async function(req, res) {
     } else {
       if (data.Item) {
         try {
-          const token = data.Item.accessToken1;
+          const token1 = data.Item.accessToken1;
           const request = {
-            access_token: token,
+            access_token: token1,
             start_date: startDate,
             end_date: endDate,
             options: {
@@ -229,10 +229,10 @@ app.get("/api/transactions1", async function(req, res) {
               offset: 0,
             },
           };
-          const transResp = await client.transactionsGet(request);
-          res.json(transResp.data);
+          const transResp1 = await client.transactionsGet(request);
+          return res.json(transResp1.data);
         } catch (error) {
-          return res.json((error.response && error.response.data) || error);
+          return res.json(error);
         }
       }
     }
@@ -258,9 +258,9 @@ app.get("/api/transactions2", async function(req, res) {
     } else {
       if (data.Item) {
         try {
-          const token = data.Item.accessToken2;
+          const token2 = data.Item.accessToken2;
           const request = {
-            access_token: token,
+            access_token: token2,
             start_date: startDate,
             end_date: endDate,
             options: {
@@ -269,10 +269,10 @@ app.get("/api/transactions2", async function(req, res) {
               offset: 0,
             },
           };
-          const transResp = await client.transactionsGet(request);
-          res.json(transResp.data);
+          const transResp2 = await client.transactionsGet(request);
+          return res.json(transResp2.data);
         } catch (error) {
-          return res.json((error.response && error.response.data) || error);
+          return res.json(error);
         }
       }
     }

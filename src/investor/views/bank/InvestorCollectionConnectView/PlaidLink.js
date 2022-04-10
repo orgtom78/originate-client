@@ -25,8 +25,10 @@ const useStyles = makeStyles((theme) => ({
 const PlaidLink = (props) => {
   const [accounts, setAccounts] = useState([]);
   const classes = useStyles();
+  console.log(props);
 
   const onSuccess = async function(token, metadata) {
+    console.log(token);
     const user = await Auth.currentAuthenticatedUser();
     const { attributes = {} } = user;
     const sub = attributes["custom:groupid"];

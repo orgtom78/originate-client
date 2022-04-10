@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme) => ({
 
 const apiName = "plaid";
 
-export default function NewBank() {
+export default function NewBank2() {
   const navigate = useNavigate();
   const classes = useStyles();
   const [linkToken2, setLinkToken2] = useState("");
@@ -84,19 +84,26 @@ export default function NewBank() {
             getPlaidauth: { accessToken2: token2, account_id2: account2 },
           },
         } = data;
-        console.log(data);
+        console.log(account2);
+        console.log(linkToken2);
+        setLoading(true);
         if (account2) {
           navigate(`/investor/bank/collection/${account2}`);
-        } else {
+        } else if (token2) {
           setSuccess(true);
           setDisabled(true);
+          setLoading(false);
           return token2;
+        } else {
+          setSuccess(false);
+          setDisabled(false);
+          setLoading(false);
         }
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
-    setLinkToken(checkexistingtoken());
+    setLinkToken2(checkexistingtoken());
   }, []);
 
   async function getLinkToken() {
@@ -164,7 +171,11 @@ export default function NewBank() {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Remittance Account" {...a11yProps(0)} />
+            <Tab
+              label="Remittance Account"
+              href={`/investor/bank/remittance`}
+              {...a11yProps(0)}
+            />
             <Tab label="Collection Account" {...a11yProps(1)} />
           </Tabs>
         </AppBar>

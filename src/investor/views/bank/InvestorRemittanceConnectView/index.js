@@ -5,8 +5,16 @@ import PropTypes from "prop-types";
 import * as queries from "src/graphql/queries.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import PlaidLink from "./PlaidLink";
-import { AppBar, Box, Container, Grid, Typography, Tab, Tabs } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  AppBar,
+  Box,
+  Container,
+  Grid,
+  Typography,
+  Tab,
+  Tabs,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
@@ -71,14 +79,25 @@ export default function NewBank() {
         const data = await API.graphql(
           graphqlOperation(queries.getPlaidauth, { id })
         );
-        const {data: { getPlaidauth: { accessToken1: token, account_id1: account }}} = data;
+        const {
+          data: {
+            getPlaidauth: { accessToken1: token, account_id1: account },
+          },
+        } = data;
+        console.log(data);
         if (account) {
           navigate(`/investor/bank/remittance/${account}`);
+        } else if (token) {
+          console.log(token)
+          setSuccess(true);
+          setDisabled(true);
+          setLoading(false);
+          return token;
         } else {
-        setSuccess(true);
-        setDisabled(true);
-        return token;
-      } 
+          setSuccess(false);
+          setDisabled(false);
+          setLoading(false);
+        }
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -152,7 +171,11 @@ export default function NewBank() {
             aria-label="full width tabs example"
           >
             <Tab label="Remittance Account" {...a11yProps(0)} />
-            <Tab label="Collection Account" {...a11yProps(1)} />
+            <Tab
+              label="Collection Account"
+              href={`/investor/bank/collection`}
+              {...a11yProps(1)}
+            />
           </Tabs>
         </AppBar>
         <SwipeableViews

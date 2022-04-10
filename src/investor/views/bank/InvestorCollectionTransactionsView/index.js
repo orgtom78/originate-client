@@ -18,7 +18,7 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import moment from "moment";
@@ -365,8 +365,12 @@ const InvestorBankTransactionListView = (input) => {
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Remittance Account" href={`/investor/bank/`} {...a11yProps(0)} />
-            <Tab label="Collection Account" href={`/investor/bank/collection/${id}`} {...a11yProps(1)} />
+            <Tab
+              label="Remittance Account"
+              href={`/investor/bank/remittance`}
+              {...a11yProps(0)}
+            />
+            <Tab label="Collection Account" {...a11yProps(1)} />
           </Tabs>
         </AppBar>
         <SwipeableViews
