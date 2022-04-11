@@ -84,8 +84,6 @@ export default function NewBank2() {
             getPlaidauth: { accessToken2: token2, account_id2: account2 },
           },
         } = data;
-        console.log(account2);
-        console.log(linkToken2);
         setLoading(true);
         if (account2) {
           navigate(`/investor/bank/collection/${account2}`);

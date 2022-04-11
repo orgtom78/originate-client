@@ -27,10 +27,10 @@ import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import * as queries from "src/graphql/queries.js";
 import Page from "src/components/Page";
-import { Auth, API, graphqlOperation } from "aws-amplify";
+import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange, red } from "@mui/material/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 import LoaderButton from "src/components/LoaderButton.js";
 import { Search as SearchIcon } from "react-feather";
@@ -59,15 +59,10 @@ const greenTheme = createTheme({
 const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
-const redTheme = createTheme({
-  palette: { primary: { main: red[500] }, secondary: { main: red[200] } },
-});
 
 const AdminTransactionListView = () => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
-
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [searchterm, setSearchterm] = useState("");
@@ -208,76 +203,72 @@ const AdminTransactionListView = () => {
     <React.Fragment>
       <Page className={clsx(classes.root)} title="Customers">
         <Container maxWidth={false}>
+          <Divider />
+          <br></br>
+          <Grid
+            container
+            spacing={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Grid item xs={4}>
+              <TextField
+                fullWidth
+                label="Search Invoice Number"
+                name="Search"
+                onChange={(e) => setSearchterm(e.target.value)}
+                required
+                value={searchterm || ""}
+                variant="outlined"
+                onKeyPress={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearch(e.target.value);
+                  }
+                }}
+              />
+            </Grid>
+            <Grid item xs={2}>
+              <LoaderButton
+                startIcon={<SearchIcon />}
+                disabled={loading}
+                success={success}
+                loading={loading}
+                onClick={handleSearch}
+              >
+                Search
+              </LoaderButton>
+            </Grid>
+            <Grid item xs={3}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DesktopDatePicker
+                  value={invoicestart}
+                  label="Invoice Date From"
+                  onChange={(e) => setInvoicestart(e)}
+                  onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
+                  required
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={3}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                <DesktopDatePicker
+                  value={invoiceend}
+                  label="Invoice Date To"
+                  onChange={(e) => setInvoiceend(e)}
+                  onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
+                  required
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+          <br></br>
+          <Divider />
           <Box mt={3}>
             <Card>
               <PerfectScrollbar>
                 <Box minWidth={1050}>
-                  <Divider />
-                  <br></br>
-                  <Grid
-                    container
-                    spacing={2}
-                    justifyContent="center"
-                    alignItems="center"
-                  >
-                    <Grid item xs={4}>
-                      <TextField
-                        fullWidth
-                        label="Search Invoice Number"
-                        name="Search"
-                        onChange={(e) => setSearchterm(e.target.value)}
-                        required
-                        value={searchterm || ""}
-                        variant="outlined"
-                        onKeyPress={(e) => {
-                          if (e.key === "Enter") {
-                            handleSearch(e.target.value);
-                          }
-                        }}
-                      />
-                    </Grid>
-                    <Grid item xs={2}>
-                      <LoaderButton
-                        startIcon={<SearchIcon />}
-                        disabled={loading}
-                        success={success}
-                        loading={loading}
-                        onClick={handleSearch}
-                      >
-                        Search
-                      </LoaderButton>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          value={invoicestart}
-                          label="Invoice Date From"
-                          onChange={(e) => setInvoicestart(e)}
-                          onAccept={(e) =>
-                            filterRequests({ invoicestart, invoiceend })
-                          }
-                          required
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                    <Grid item xs={3}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          value={invoiceend}
-                          label="Invoice Date To"
-                          onChange={(e) => setInvoiceend(e)}
-                          onAccept={(e) =>
-                            filterRequests({ invoicestart, invoiceend })
-                          }
-                          required
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-                      </LocalizationProvider>
-                    </Grid>
-                  </Grid>
-                  <br></br>
-                  <Divider />
                   <TableContainer>
                     <Table>
                       <TableHead>
@@ -297,21 +288,10 @@ const AdminTransactionListView = () => {
                           .slice(page * limit, page * limit + limit)
                           .map((request, index) => {
                             return (
-                              <TableRow
-                                hover
-                                key={request.requestId}
-                                selected={
-                                  selectedCustomerIds.indexOf(
-                                    request.requestId
-                                  ) !== -1
-                                }
-                                tabIndex={-1}
-                              >
+                              <TableRow hover key={request.requestId}>
                                 <TableCell>
                                   <Box alignItems="center" display="flex">
-                                    <Link
-                                      to={`/admin/transaction/${request.id}/`}
-                                    >
+                                    <Link to={`/admin/request/${request.id}/`}>
                                       <Avatar
                                         className={classes.avatar}
                                         src={`${request.buyer_logo}`}
@@ -373,7 +353,7 @@ const AdminTransactionListView = () => {
             </Card>
           </Box>
           <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={`/admin/newtransactionlist/`}>
+            <Link to={`/admin/newrequestlist/`}>
               <Button>Add Transaction</Button>
             </Link>
           </Box>

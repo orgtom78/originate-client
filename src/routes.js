@@ -50,9 +50,9 @@ import AdminUpdateUboView from 'src/admin/views/ubo/AdminUpdateUboView';
 
 import AdminNewSupplierBuyerView from 'src/admin/views/supplier/AdminSupplierBuyerListView';
 
-import AdminTransactionView from 'src/admin/views/transaction/AdminTransactionView';
-import AdminTransactionListView from 'src/admin/views/transaction/AdminTransactionListView';
-import AdminNewTransactionView from 'src/admin/views/transaction/AdminNewTransactionView';
+import AdminRequestView from 'src/admin/views/request/AdminRequestView';
+import AdminRequestListView from 'src/admin/views/request/AdminRequestListView';
+import AdminNewRequestView from 'src/admin/views/request/AdminNewRequestView';
 import AdminBuyerTransactionListView from 'src/admin/views/buyer/AdminBuyerTransactionListView';
 
 import AdminNewFinancialsView from 'src/admin/views/financials/AdminNewFinancialsView';
@@ -69,6 +69,10 @@ import AdminNewInsuranceView from 'src/admin/views/insurance/AdminNewInsuranceVi
 
 import AdminNewBookkeepingListView from 'src/admin/views/bookkeeping/AdminNewBookkeepingListView';
 import AdminBookkeepingView from 'src/admin/views/bookkeeping/AdminBookkeepingView';
+
+import AdminInvestorTransactionListView from 'src/admin/views/transaction/AdminInvestorTransactionListView';
+import AdminInvestorBankView from 'src/admin/views/transaction/AdminInvestorBankView';
+import AdminAccountTranscationView from 'src/admin/views/transaction/AdminAccountTransactionView';
 
 import InvestorDashboardView from 'src/investor/views/reports/InvestorDashboardView';
 import InvestorLoginView from 'src/investor/views/auth/InvestorLoginView';
@@ -152,10 +156,10 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin  ? <AdminLoginView /> : <AdminNewFinancialsView />},
       { path: 'financials/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminFinancialsView />},
 
-      { path: 'transactions', element: !isAdmin ? <AdminLoginView /> : <AdminTransactionListView  />},
-      { path: 'transaction/:id', element: !isAdmin ? <AdminLoginView /> : <AdminTransactionView  />},
-      { path: 'newtransactionlist', element: !isAdmin ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
-      { path: 'newtransaction/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewTransactionView />  },
+      { path: 'requests', element: !isAdmin ? <AdminLoginView /> : <AdminRequestListView  />},
+      { path: 'request/:id', element: !isAdmin ? <AdminLoginView /> : <AdminRequestView  />},
+      { path: 'newrequestlist', element: !isAdmin ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
+      { path: 'newrequest/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewRequestView />  },
 
       { path: 'investors', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorListView />  },
       { path: 'investor/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorView />  },
@@ -171,6 +175,10 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
 
       { path: 'bookkeeping', element: !isAdmin ? <AdminLoginView /> : <AdminNewBookkeepingListView />  },
       { path: 'bookkeeping/:id', element: !isAdmin ? <AdminLoginView /> : <AdminBookkeepingView />  },
+
+      { path: 'transactions', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorTransactionListView />  },
+      { path: 'transaction/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorBankView />  },
+      { path: 'transaction/account/:id', element: !isAdmin ? <AdminLoginView /> : <AdminAccountTranscationView />  },
     ]
   },
   {

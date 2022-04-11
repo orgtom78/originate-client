@@ -124,7 +124,7 @@ export default function NewAccount() {
     } catch (e) {
       onError(e);
     }
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
     window.location.reload();
   }
 

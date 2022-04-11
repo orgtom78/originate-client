@@ -12,6 +12,7 @@ import {
   Truck as TruckIcon,
   BookOpen as BookOpenIcon,
   Shield as ShieldIcon,
+  Repeat as RepeatIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 
@@ -47,8 +48,13 @@ const items = [
     title: "Insurance",
   },
   {
-    href: "/admin/transactions",
+    href: "/admin/requests",
     icon: CreditCardIcon,
+    title: "Requests",
+  },
+  {
+    href: "/admin/transactions",
+    icon: RepeatIcon,
     title: "Transactions",
   },
   {

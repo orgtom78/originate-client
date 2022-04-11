@@ -164,7 +164,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
     setRequestSuccess(true);
     setRequestLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   function updateRequest(input) {

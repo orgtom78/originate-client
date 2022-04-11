@@ -332,7 +332,7 @@ function BuyerUploads(value) {
     }
     setInvoiceSuccess(true);
     setInvoiceLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   useEffect(() => {
@@ -498,7 +498,7 @@ function BuyerUploads(value) {
     }
     setPurchaseoSuccess(true);
     setPurchaseoLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   useEffect(() => {
@@ -662,7 +662,7 @@ function BuyerUploads(value) {
     }
     setOffernSuccess(true);
     setOffernLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   useEffect(() => {
@@ -826,7 +826,7 @@ function BuyerUploads(value) {
     }
     setIpuSuccess(true);
     setIpuLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   useEffect(() => {
@@ -992,7 +992,7 @@ function BuyerUploads(value) {
     }
     setBlSuccess(true);
     setBlLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   useEffect(() => {
@@ -1158,7 +1158,7 @@ function BuyerUploads(value) {
     }
     setCargoiSuccess(true);
     setCargoiLoading(false);
-    navigate("/admin/transactions");
+    navigate("/admin/requests");
   }
 
   return (
