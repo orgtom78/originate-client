@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -22,7 +22,6 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;
@@ -51,20 +50,6 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     position: "relative",
   },
-  buttonSuccess: {
-    backgroundColor: green[500],
-    "&:hover": {
-      backgroundColor: green[700],
-    },
-  },
-  buttonProgress: {
-    color: green[500],
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
-  },
 }));
 
 const UpdateBankForm = ({ className, value, user, ...rest }) => {
@@ -76,10 +61,8 @@ const UpdateBankForm = ({ className, value, user, ...rest }) => {
   const [id, setId] = useState("");
   const [bankId, setBankId] = useState("");
   const [identityId, setIdentityId] = useState("");
-  const [
-    account_statement_attachment,
-    setAccount_statement_attachment,
-  ] = useState("");
+  const [account_statement_attachment, setAccount_statement_attachment] =
+    useState("");
   const [bank_account_name, setBank_account_name] = useState("");
   const [bank_account_number, setBank_account_number] = useState("");
   const [bank_account_sortcode, setBank_account_sortcode] = useState("");
@@ -168,25 +151,25 @@ const UpdateBankForm = ({ className, value, user, ...rest }) => {
     setBankSuccess(false);
     setBankLoading(true);
     try {
-      if (id === ""){
-      const supplierId = sub;
-      await createBank({
-        userId,
-        supplierId,
-        bank_name,
-        bank_account_name,
-        bank_account_number,
-        bank_account_sortcode,
-        bank_address_city,
-        bank_address_street,
-        bank_address_number,
-        bank_address_postalcode,
-        bank_country,
-        bank_routing_number,
-        bic_swift_code,
-        iban,
-      });}
-      else {
+      if (id === "") {
+        const supplierId = sub;
+        await createBank({
+          userId,
+          supplierId,
+          bank_name,
+          bank_account_name,
+          bank_account_number,
+          bank_account_sortcode,
+          bank_address_city,
+          bank_address_street,
+          bank_address_number,
+          bank_address_postalcode,
+          bank_country,
+          bank_routing_number,
+          bic_swift_code,
+          iban,
+        });
+      } else {
         await updateBank({
           id,
           bank_name,
@@ -281,7 +264,8 @@ const UpdateBankForm = ({ className, value, user, ...rest }) => {
   }, [account_statement_attachment, identityId]);
 
   function accountisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(accountimg)) {
       return (
         <>
@@ -392,12 +376,14 @@ const UpdateBankForm = ({ className, value, user, ...rest }) => {
     const newbankidfile = file.current;
     onbankidChange(newbankidfile);
   }
-  
+
   async function onbankidChange(newfile) {
     setAccountSuccess(false);
     setAccountLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'account_statement_attachment') : null;
+      const u = newfile
+        ? await s3Up(newfile, "account_statement_attachment")
+        : null;
       console.log(u);
       var account_statement_attachment = u;
       const userId = sub;
