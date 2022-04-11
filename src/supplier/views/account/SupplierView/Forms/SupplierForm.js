@@ -26,6 +26,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -314,7 +315,6 @@ const SupplierForm = ({ className, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={supplier_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -332,7 +332,7 @@ const SupplierForm = ({ className, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => <TextField fullWidth {...params} />}
                         />
                       </LocalizationProvider>
                     </Grid>

@@ -1,12 +1,22 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Box, Card, CardContent, Grid, LinearProgress, Typography, colors } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  LinearProgress,
+  Typography,
+  colors,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import InsertChartIcon from "@mui/icons-material/InsertChartOutlined";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -97,7 +107,14 @@ const TasksProgress = ({ className, ...rest }) => {
               APPROVAL PROGRESS
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {calcperecentage()}%
+              <NumberFormat
+                color="textPrimary"
+                variant="h3"
+                value={calcperecentage()}
+                displayType={"text"}
+                decimalScale="2"
+              />
+              %
             </Typography>
           </Grid>
           <Grid item>

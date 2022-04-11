@@ -1,8 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Box, Card, CardContent, Grid, LinearProgress, Typography, colors } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  LinearProgress,
+  Typography,
+  colors,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import InsertChartIcon from "@mui/icons-material/InsertChartOutlined";
 import NumberFormat from "react-number-format";
 

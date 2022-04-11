@@ -20,13 +20,6 @@ import { API, graphqlOperation, Storage } from "aws-amplify";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
-
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
-
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
