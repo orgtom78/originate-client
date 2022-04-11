@@ -15,12 +15,31 @@ export type AmplifyDependentResourcesAttributes = {
         "originateclientprod": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
+        },
+        "plaid": {
+            "RootUrl": "string",
+            "ApiName": "string",
+            "ApiId": "string"
         }
     },
     "storage": {
         "originateprodstorage": {
             "BucketName": "string",
             "Region": "string"
+        }
+    },
+    "function": {
+        "plaid": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
+        },
+        "newinvoicenotification": {
+            "Name": "string",
+            "Arn": "string",
+            "Region": "string",
+            "LambdaExecutionRole": "string"
         }
     }
 }
