@@ -1,14 +1,14 @@
-import "react-perfect-scrollbar/dist/css/styles.css";
+import "core-js/stable";
 import React, { useState, useEffect } from "react";
 import { Auth } from "aws-amplify";
 import { onError } from "./libs/errorLib";
 import { useRoutes } from "react-router-dom";
 import { ThemeProvider, StyledEngineProvider } from "@mui/material";
 import GlobalStyles from "src/components/GlobalStyles";
-import "src/mixins/chartjs";
 import theme from "src/theme";
 import routes from "src/routes";
 import { AppContext } from "./libs/contextLib";
+import "react-perfect-scrollbar/dist/css/styles.css";
 
 function App() {
   const [isAuthenticated, userHasAuthenticated] = useState();
