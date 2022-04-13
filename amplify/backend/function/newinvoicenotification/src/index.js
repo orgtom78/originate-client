@@ -172,7 +172,7 @@ exports.handler = async (event) => {
                                       <table role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: auto;">
                                         <tbody>
                                           <tr>
-                                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; text-align: center; background-color: #171a2b;" valign="top" align="center" bgcolor="#171a2b"> <a href="https://app.originate.capital/investor/transaction/${newInvoiceData.id}" target="_blank" style="border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; background-color: #171a2b; border-color: #171a2b; color: #ffffff;">Review Now</a> </td>
+                                          <td style="font-family: sans-serif; font-size: 14px; vertical-align: top; border-radius: 5px; text-align: center; background-color: #171a2b;" valign="top" align="center" bgcolor="#171a2b"> <a href="https://app.originate.capital/investor/request/${newInvoiceData.id}" target="_blank" style="border: solid 1px #3498db; border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none; text-transform: capitalize; background-color: #171a2b; border-color: #171a2b; color: #ffffff;">Review Now</a> </td>
                                           </tr>
                                         </tbody>
                                       </table>
@@ -228,7 +228,7 @@ exports.handler = async (event) => {
               Charset: "UTF-8",
               Data: `Hello,\n
 			  Your client, ${newInvoiceData.supName}, just uploaded an invoice to Originate Capital which is addressed to ${newInvoiceData.name}. Please process the request in due course.\n
-			  https://app.originate.capital/investor/transaction/${newInvoiceData.id}\n 
+			  https://app.originate.capital/investor/request/${newInvoiceData.id}\n 
 			  Best regards.\n 
 			  \n 
 			  `,

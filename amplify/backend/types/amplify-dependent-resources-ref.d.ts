@@ -1,6 +1,6 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "originateclient84cf992c": {
+        "originateclientprod796edffc": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -12,7 +12,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "api": {
-        "originateclientdev": {
+        "originateclientprod": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         },
@@ -23,7 +23,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "s330286d4d": {
+        "originateprodstorage": {
             "BucketName": "string",
             "Region": "string"
         }

@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "originateclient84cf992c_identitypool_84cf992c",
-    "allowUnauthenticatedIdentities": true,
-    "resourceNameTruncated": "origin84cf992c",
-    "userPoolName": "originateclient84cf992c_userpool_84cf992c",
+    "identityPoolName": "originateclientprod796edffc_identitypool_796edffc",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "origin796edffc",
+    "userPoolName": "originateclientprod796edffc_userpool_796edffc",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -20,7 +20,7 @@
     "requiredAttributes": [
         "email"
     ],
-    "userpoolClientGenerateSecret": true,
+    "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [
         "email"
@@ -28,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "origin84cf992c_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "origin796edffc_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "84cf992c",
-    "resourceName": "originateclient84cf992c",
+    "sharedId": "796edffc",
+    "resourceName": "originateclientprod796edffc",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -50,10 +50,10 @@
     "usernameAttributes": [
         "email, phone_number"
     ],
-    "hostedUIDomainName": "originateclient84cf992c-84cf992c",
+    "hostedUIDomainName": "originateclientprod796edffc-796edffc",
     "authProvidersUserPool": [],
     "hostedUIProviderMeta": "[]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\",\"https://dev.originate.capital/\"],\"LogoutURLs\":[\"https://dev.originate.capital/\",\"http://localhost:3000/\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:3000/\",\"https://app.originate.capital/\"],\"LogoutURLs\":[\"https://app.originate.capital/\",\"http://localhost:3000/\"]}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "dependsOn": []

@@ -1,6 +1,6 @@
 {
   "auth": {
-    "originateclient84cf992c": {
+    "originateclientprod796edffc": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -8,7 +8,7 @@
     }
   },
   "api": {
-    "originateclientdev": {
+    "originateclientprod": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -16,7 +16,7 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authoriginateclient84cf992c"
+              "userPoolId": "authoriginateclientprod796edffc"
             }
           },
           "additionalAuthenticationProviders": [
@@ -43,7 +43,7 @@
     }
   },
   "storage": {
-    "s330286d4d": {
+    "originateprodstorage": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
     }
@@ -56,14 +56,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclient84cf992c",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientdev",
+          "resourceName": "originateclientprod",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
@@ -78,14 +78,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclient84cf992c",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientdev",
+          "resourceName": "originateclientprod",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
@@ -100,6 +100,5 @@
         }
       ]
     }
-  },
-  "analytics": {}
+  }
 }
