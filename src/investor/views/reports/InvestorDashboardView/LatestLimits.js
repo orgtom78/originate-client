@@ -21,21 +21,20 @@ import {
   Tooltip,
   ThemeProvider,
   StyledEngineProvider,
-  adaptV4Theme,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createTheme(adaptV4Theme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme(adaptV4Theme({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
+});
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -50,8 +49,11 @@ const LatestLimits = ({ className, ...rest }) => {
 
   useEffect(() => {
     const getRequests = async () => {
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
       let filter = {
         request_status: { eq: "Under Review" },
+        investorId: { eq: id },
       };
       const {
         data: {
@@ -69,21 +71,25 @@ const LatestLimits = ({ className, ...rest }) => {
 
   function checkstatus(status) {
     if (status === "Under Review") {
-      return <>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="secondary" />
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </>;
+      return (
+        <>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={status} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </>
+      );
     } else {
-      return <>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={greenTheme}>
-            <Chip label={status} color="primary" />
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </>;
+      return (
+        <>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={status} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </>
+      );
     }
   }
 

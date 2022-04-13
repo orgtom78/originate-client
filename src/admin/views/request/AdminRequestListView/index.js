@@ -281,6 +281,7 @@ const AdminTransactionListView = () => {
                           <TableCell>Status</TableCell>
                           <TableCell>Invoice Date</TableCell>
                           <TableCell>Invoice Due Date</TableCell>
+                          <TableCell>Created At</TableCell>
                         </TableRow>
                       </TableHead>
                       <TableBody>
@@ -330,6 +331,11 @@ const AdminTransactionListView = () => {
                                 </TableCell>
                                 <TableCell>
                                   {moment(request.invoice_due_date).format(
+                                    "DD/MM/YYYY"
+                                  )}
+                                </TableCell>
+                                <TableCell>
+                                  {moment(request.createdAt).format(
                                     "DD/MM/YYYY"
                                   )}
                                 </TableCell>

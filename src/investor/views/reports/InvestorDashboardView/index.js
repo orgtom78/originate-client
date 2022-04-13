@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Container, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 import Page from "src/components/Page";
 import ApprovedLimits from "./ApprovedLimits";
@@ -28,14 +28,21 @@ const InvestorDashboard = () => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState([]);
   const [transaction, setTransaction] = useState([]);
+  const [investid, setInvestid] = useState("");
 
   useEffect(() => {
     async function getBuyers() {
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
+      setInvestid(id);
+      let filter = { investorId: { eq: id } };
       const {
         data: {
           listBuyers: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(graphqlOperation(queries.listBuyers));
+      } = await API.graphql(
+        graphqlOperation(queries.listBuyers, { filter: filter })
+      );
       const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
       const items = await n.data.listBuyers.items;
       setBuyer(items);
@@ -46,18 +53,21 @@ const InvestorDashboard = () => {
 
   useEffect(() => {
     async function getRequests() {
+      let filter = { investorId: { eq: investid } };
       const {
         data: {
           listRequests: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(graphqlOperation(queries.listRequests));
+      } = await API.graphql(
+        graphqlOperation(queries.listRequests, { filter: filter })
+      );
       const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
       const items = await n.data.listRequests.items;
       setTransaction(items);
       return items;
     }
     getRequests();
-  }, []);
+  }, [investid]);
 
   return (
     <Page className={classes.root} title="Dashboard">
