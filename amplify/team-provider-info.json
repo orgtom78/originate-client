@@ -30,33 +30,33 @@
       }
     }
   },
-  "prod": {
+  "test": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-originateclientprod-prod-120522-authRole",
-      "UnauthRoleArn": "arn:aws:iam::068888566157:role/amplify-originateclientprod-prod-120522-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::068888566157:role/amplify-originateclientprod-prod-120522-authRole",
+      "AuthRoleName": "amplify-originateclient-test-115620-authRole",
+      "UnauthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-authRole",
       "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-      "UnauthRoleName": "amplify-originateclientprod-prod-120522-unauthRole",
-      "StackName": "amplify-originateclientprod-prod-120522",
-      "StackId": "arn:aws:cloudformation:us-east-2:068888566157:stack/amplify-originateclientprod-prod-120522/5a631900-93cf-11ec-9f7d-06575b39d18e",
-      "AmplifyAppId": "d2bs01vokrsu8c",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-originateclientprod-prod-120522-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+      "DeploymentBucketName": "amplify-originateclient-test-115620-deployment",
+      "UnauthRoleName": "amplify-originateclient-test-115620-unauthRole",
+      "StackName": "amplify-originateclient-test-115620",
+      "StackId": "arn:aws:cloudformation:us-east-2:361659031315:stack/amplify-originateclient-test-115620/788910a0-5ad3-11eb-b40c-065ebb0fed20",
+      "AmplifyAppId": "d1qmf5m44ui2lg",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-originateclient-test-115620-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
-        "originateclientprod796edffc": {}
+        "originateclient84cf992c": {}
       },
       "function": {
         "plaid": {
           "clientId": "6115d7d22dd19f00105aa78f",
-          "plaidSecret": "29dcf3a5fee5f9d6dbbf8475409617",
-          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/plaid-65307667724f6d795166-build.zip"
+          "plaidSecret": "ac990b93abfb9d201235ad31854371",
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/plaid-4769746e743446697345-build.zip"
         },
         "newinvoicenotification": {
-          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/newinvoicenotification-76486759424a2b484f31-build.zip"
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/newinvoicenotification-45524678527266763663-build.zip"
         }
       }
     }
