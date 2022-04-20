@@ -1,10 +1,10 @@
 {
-  "AppSyncApiName": "originateclientprod",
+  "AppSyncApiName": "originateclientdev",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
   "DynamoDBEnableServerSideEncryption": false,
   "AuthCognitoUserPoolId": {
     "Fn::GetAtt": [
-      "authoriginateclientprod796edffc",
+      "authoriginateclient84cf992c",
       "Outputs.UserPoolId"
     ]
   }

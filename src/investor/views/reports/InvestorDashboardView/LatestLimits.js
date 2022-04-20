@@ -52,7 +52,7 @@ const LatestLimits = ({ className, ...rest }) => {
       let user = await Auth.currentAuthenticatedUser();
       let id = user.attributes["custom:groupid"];
       let filter = {
-        request_status: { eq: "Under Review" },
+        request_status: {eq: "Under Review" },
         investorId: { eq: id },
       };
       const {
@@ -95,7 +95,7 @@ const LatestLimits = ({ className, ...rest }) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Latest Transactions" />
+      <CardHeader title="Latest Requests" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
@@ -118,7 +118,7 @@ const LatestLimits = ({ className, ...rest }) => {
               {limitdata.map((limit) => (
                 <TableRow hover key={limit.buyerId}>
                   <TableCell>
-                    <Link to={`/investor/transaction/${limit.id}`}>
+                    <Link to={`/investor/request/${limit.id}`}>
                       {limit.buyer_name}
                     </Link>
                   </TableCell>
@@ -141,7 +141,7 @@ const LatestLimits = ({ className, ...rest }) => {
         </Box>
       </PerfectScrollbar>
       <Box display="flex" justifyContent="flex-end" p={2}>
-        <Link to={`/investor/transactions`}>
+        <Link to={`/investor/requests`}>
           <Button
             color="primary"
             endIcon={<ArrowRightIcon />}

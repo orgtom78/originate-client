@@ -33,7 +33,11 @@ schema.json
 #env
 *.env
 
+<<<<<<< HEAD
 #amplify
+=======
+#ammplify
+>>>>>>> bc070dfe042f20dabdc0916e144bf4e0e754b366
 /amplify
 
 #amplify-do-not-edit-begin

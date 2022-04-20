@@ -64,7 +64,7 @@ const Limits = ({ className, value, ...rest }) => {
             previousyear
         );
         const a = await previousfinancials[0];
-        if (a !== undefined || a.length !== 0) {
+        if (a !== undefined) {
           setFinancials(a);
         }
         return;
@@ -88,7 +88,7 @@ const Limits = ({ className, value, ...rest }) => {
             previousyear
         );
         const a = await previousfinancials[0];
-        if (a !== undefined || a.length !== 0) {
+        if (a !== undefined) {
           setFinancials2(a);
         }
         return;
@@ -112,7 +112,7 @@ const Limits = ({ className, value, ...rest }) => {
             previousyear
         );
         const a = await previousfinancials[0];
-        if (a !== undefined || a.length !== 0) {
+        if (a !== undefined) {
           setFinancials3(a);
         }
         return;

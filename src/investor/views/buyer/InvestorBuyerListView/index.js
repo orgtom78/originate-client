@@ -14,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -76,7 +76,7 @@ const InvestorBuyerListView = () => {
 
   return (
     <React.Fragment>
-      {investid ?
+      {investid ? (
         <React.Fragment>
           <Page className={clsx(classes.root)} title="Buyers">
             <Container maxWidth={false}>
@@ -99,9 +99,7 @@ const InvestorBuyerListView = () => {
                             <TableRow hover key={buyer.buyerId}>
                               <TableCell>
                                 <Box alignItems="center" display="flex">
-                                  <Link
-                                    to={`/investor/buyer/${buyer.userId}/${buyer.buyerId}/${buyer.identityId}`}
-                                  >
+                                  <Link to={`/investor/buyer/${buyer.id}`}>
                                     <Avatar
                                       className={classes.avatar}
                                       src={`${buyer.buyer_logo}`}
@@ -151,11 +149,11 @@ const InvestorBuyerListView = () => {
             </Container>
           </Page>
         </React.Fragment>
-       : 
+      ) : (
         <>
           <NewInvestorView />
         </>
-      }
+      )}
     </React.Fragment>
   );
 };

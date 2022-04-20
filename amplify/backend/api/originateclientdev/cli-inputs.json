@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authoriginateclient84cf992c"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "AWS_IAM"
+      }
+    ],
+    "conflictResolution": {},
+    "apiName": "originateclientdev",
+    "gqlSchemaPath": "/Users/tobiaspfuetze/Documents/VSCode/Originate/Frontend/originate-client/amplify/backend/api/originateclientdev/schema.graphql"
+  }
+}
