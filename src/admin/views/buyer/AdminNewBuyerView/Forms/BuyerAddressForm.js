@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import { InputField, SelectField } from "src/components/FormFields";
+import { InputField, SelectField, DatePickerField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
@@ -105,7 +105,7 @@ export default function BuyerAddressForm(props) {
       buyer_loan_request_amount,
       buyer_payment_terms,
       buyer_sample_trading_docs_attachment,
-      buyer_sold_goods_description,
+      buyer_date_of_incorporation,
     },
   } = props;
   const { id } = useParams();
@@ -256,6 +256,15 @@ export default function BuyerAddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={buyer_date_of_incorporation.name}
+                label={buyer_date_of_incorporation.label}
+                maxDate={new Date()}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <SelectListField
                 name={buyer_country.name}
                 label={buyer_country.label}
@@ -300,14 +309,6 @@ export default function BuyerAddressForm(props) {
               <InputField
                 name={buyer_website.name}
                 label={buyer_website.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={buyer_sold_goods_description.name}
-                label={buyer_sold_goods_description.label}
                 fullWidth
                 variant="outlined"
               />

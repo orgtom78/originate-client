@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import moment from "moment";
 import PropTypes from "prop-types";
@@ -46,6 +46,7 @@ const Limits = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [arr, setArr] = useState([]);
 
+useEffect(() => {
   async function get() {
     try {
       const data = await value.data.getBuyer;
@@ -58,6 +59,7 @@ const Limits = ({ className, value, ...rest }) => {
     }
   }
   get();
+}, [value]);
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>

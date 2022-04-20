@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import moment from "moment";
@@ -46,12 +46,16 @@ const Limits = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [financials, setFinancials] = useState([]);
 
+useEffect(() => {
   async function get() {
     try {
       const data = await value;
-      const ar = await data[0];
-      if (ar) {
-        setFinancials(ar);
+      if (data) {
+        const d = data.sort(function(a, b) {
+          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+        });
+        console.log(d)
+        setFinancials(d[0]);
       }
       return;
     } catch (err) {
@@ -59,6 +63,7 @@ const Limits = ({ className, value, ...rest }) => {
     }
   }
   get();
+}, [value]);
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>

@@ -20,7 +20,7 @@ const Limits = (input) => {
     async function get() {
       try {
         const data = await input.value[0];
-        if (data === undefined || data.length == 0) {
+        if (data === undefined || data.length === 0) {
           setArr([])
         } else {
           setArr(data);

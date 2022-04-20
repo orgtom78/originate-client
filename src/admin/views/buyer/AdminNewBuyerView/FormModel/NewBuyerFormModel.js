@@ -152,6 +152,136 @@ const model = {
       label: "Working Capital",
       requiredErrorMsg: "Working Capital is required",
     },
+    financials_status: {
+      name: "financials_status",
+      label: "Financials Type of Audit",
+      requiredErrorMsg: "Tyype of audit for financials is required",
+    },
+    total_equity: {
+      name: "total_equity",
+      label: "Ending total equity",
+      requiredErrorMsg: "Total equity is required",
+    },
+    net_operating_loss: {
+      name: "net_operating_loss",
+      label: "Net Operating Loss",
+      requiredErrorMsg: "Net operating loss is required",
+    },
+    cash_flow_from_operating_activities: {
+      name: "cash_flow_from_operating_activities",
+      label: "Cash Flow from operating activities",
+      requiredErrorMsg: "Cash flow from operating activities loss is required",
+    },
+    current_assets: {
+      name: "current_assets",
+      label: "Current Assets",
+      requiredErrorMsg: "Current assets is required",
+    },
+    current_liabilities: {
+      name: "current_liabilities",
+      label: "Current Liabilities",
+      requiredErrorMsg: "Current liabilities is required",
+    },
+    inventory_beginning: {
+      name: "inventory_beginning",
+      label: "Inventory beginning",
+      requiredErrorMsg: "Inventory beginning is required",
+    },
+    inventory_end: {
+      name: "inventory_end",
+      label: "Inventory end",
+      requiredErrorMsg: "Inventory end is required",
+    },
+    cost_of_goods_sold: {
+      name: "cost_of_goods_sold",
+      label: "Cost of goods sold",
+      requiredErrorMsg: "Cost of goods sold is required",
+    },
+    interest_expenses: {
+      name: "interest_expenses",
+      label: "Interest Expenses",
+      requiredErrorMsg: "Interest Expenses is required",
+    },
+    buyer_existing_disputes: {
+      name: "buyer_existing_disputes",
+      label: "Existing Disputes",
+      requiredErrorMsg: "Existing Disputes is required",
+    },
+    buyer_existing_disputes_source: {
+      name: "buyer_existing_disputes_source",
+      label: "Existing Disputes Source",
+      requiredErrorMsg: "Existing Disputes Source is required",
+    },
+    buyer_insurance_status: {
+      name: "buyer_insurance_status",
+      label: "Credit Insurance Status",
+      requiredErrorMsg: "Credit Insurance Status is required",
+    },
+    buyer_country_year_of_rating_downgrade: {
+      name: "buyer_country_year_of_rating_downgrade",
+      label: "Country Year of Rating Downgrade",
+      requiredErrorMsg: "Country Year of Rating Downgrade is required",
+    },
+    buyer_finance_department_contact_exists: {
+      name: "buyer_finance_department_contact_exists",
+      label: "Finance Department Contact Exists",
+      requiredErrorMsg: "Finance Department Contact Exists is required",
+    },
+    buyer_field_visit_conducted: {
+      name: "buyer_field_visit_conducted",
+      label: "Field Visit Conducted",
+      requiredErrorMsg: "Field Visit Conducted is required",
+    },
+    buyer_finance_department_contact_email: {
+      name: "buyer_finance_departmment_contact_email",
+      label: "Finance Department Contact Email",
+      requiredErrorMsg: "Finance Department Contact Email is required",
+    },
+    buyer_supplier_year_business_relation_started: {
+      name: "buyer_supplier_year_business_relation_started",
+      label: "Supplier Year Business Relation Started",
+      requiredErrorMsg: "Supplier Year Business Relation Started is required",
+    },
+    buyer_invoices_paid_on_time: {
+      name: "buyer_invoices_paid_on_time",
+      label: "Invoices paid on time (%)",
+      requiredErrorMsg: "Invoices paid is required",
+    },
+    buyer_invoices_past_due: {
+      name: "buyer_invoices_past_due",
+      label: "Invoices past due (%)",
+      requiredErrorMsg: "Invoices past due is required",
+    },
+    buyer_invoices_past_due_30_days: {
+      name: "buyer_invoices_past_due_30_days",
+      label: "Invoices past due 30 days (%)",
+      requiredErrorMsg: "Invoices past due 30 days is required",
+    },
+    buyer_invoices_past_due_60_days: {
+      name: "buyer_invoices_past_due_60_days",
+      label: "Invoices past due 60 days (%)",
+      requiredErrorMsg: "Invoices past due 60 days is required",
+    },
+    buyer_invoices_past_due_90_days: {
+      name: "buyer_invoices_past_due_90_days",
+      label: "Invoices past due 90 days (%)",
+      requiredErrorMsg: "Invoices past due 90 days is required",
+    },
+    buyer_use_of_goods_purchased: {
+      name: "buyer_use_of_goods_purchased",
+      label: "Use of goods purchased",
+      requiredErrorMsg: "Use of goods purchased is required",
+    },
+    inventory: {
+      name: "inventory",
+      label: "Inventory",
+      requiredErrorMsg: "Inventory is required",
+    },
+    buyer_date_of_incorporation: {
+      name: "buyer_date_of_incorporation",
+      label: "Date of incorporation",
+      requiredErrorMsg: "Date of incorporation is required",
+    },
   },
 };
 

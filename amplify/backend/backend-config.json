@@ -25,7 +25,16 @@
             }
           ]
         }
-      }
+      },
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "originateclient84cf992c",
+          "attributes": [
+            "UserPoolId"
+          ]
+        }
+      ]
     },
     "plaid": {
       "service": "API Gateway",
@@ -45,7 +54,8 @@
   "storage": {
     "s330286d4d": {
       "service": "S3",
-      "providerPlugin": "awscloudformation"
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   },
   "function": {

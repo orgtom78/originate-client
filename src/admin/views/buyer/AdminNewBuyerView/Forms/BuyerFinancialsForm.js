@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { InputField, DatePickerField } from "src/components/FormFields";
+import {
+  InputField,
+  DatePickerField,
+  SelectField,
+} from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -45,20 +49,46 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const auditType = [
+  {
+    value: "audited-big4",
+    label: "Big 4 Auditor",
+  },
+  {
+    value: "audited-2nd-tier",
+    label: "2nd Tier Auditor",
+  },
+  {
+    value: "audited-other",
+    label: "Other Auditor",
+  },
+  {
+    value: "management-prepared",
+    label: "Management Prepared",
+  },
+];
+
 export default function BuyerFinancialsForm(props) {
   const classes = useStyles();
   const {
     formField: {
+      sales,
+      financials_status,
+      net_profit,
+      total_equity,
+      net_operating_loss,
+      cash_flow_from_operating_activities,
+      current_assets,
+      current_liabilities,
+      inventory_beginning,
+      inventory_end,
+      cost_of_goods_sold,
       ebit,
+      interest_expenses,
+      financials_reporting_period,
+      inventory,
       balance_sheet_attachment,
       income_statement_attachment,
-      net_profit,
-      financials_rating,
-      financials_reporting_period,
-      sales,
-      total_assets,
-      retained_earnings,
-      working_capital,
     },
   } = props;
 
@@ -259,9 +289,22 @@ export default function BuyerFinancialsForm(props) {
               )}
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputField
-                name={ebit.name}
-                label={ebit.label}
+              <SelectField
+                name={financials_status.name}
+                label={financials_status.label}
+                data={auditType}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={financials_reporting_period.name}
+                label={financials_reporting_period.label}
+                format="yyyy"
+                views={["year"]}
+                minDate={new Date("2000/12/31")}
+                maxDate={new Date()}
                 fullWidth
                 variant="outlined"
               />
@@ -276,14 +319,6 @@ export default function BuyerFinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={financials_rating.name}
-                label={financials_rating.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={sales.name}
                 label={sales.label}
                 fullWidth
@@ -292,36 +327,88 @@ export default function BuyerFinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
+                name={net_operating_loss.name}
+                label={net_operating_loss.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={working_capital.name}
-                label={working_capital.label}
+                name={ebit.name}
+                label={ebit.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={total_assets.name}
-                label={total_assets.label}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={financials_reporting_period.name}
-                label={financials_reporting_period.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
+              <InputField
+                name={cash_flow_from_operating_activities.name}
+                label={cash_flow_from_operating_activities.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={interest_expenses.name}
+                label={interest_expenses.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={current_assets.name}
+                label={current_assets.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={current_liabilities.name}
+                label={current_liabilities.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={inventory_beginning.name}
+                label={inventory_beginning.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={inventory_end.name}
+                label={inventory_end.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={cost_of_goods_sold.name}
+                label={cost_of_goods_sold.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={inventory.name}
+                label={inventory.label}
                 fullWidth
                 variant="outlined"
               />

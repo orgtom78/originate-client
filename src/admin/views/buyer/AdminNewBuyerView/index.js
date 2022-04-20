@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Step,
+  Stepper,
+  StepLabel,
+  Typography,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
@@ -70,45 +78,74 @@ export default function NewAccount() {
       const identityId = ident;
 
       const investorId = values["investorId"];
-      const buyer_address_city = values["buyer_address_city"];
-      const buyer_address_number = values["buyer_address_number"];
-      const buyer_address_postalcode = values["buyer_address_postalcode"];
-      const buyer_address_street = values["buyer_address_street"];
-      const buyer_name = values["buyer_name"];
-      const buyer_country = values["buyer_country"];
-      const buyer_website = values["buyer_website"];
-      const buyer_currency = values["buyer_currency"];
       const buyer_loan_request_amount = values["buyer_loan_request_amount"];
       const buyer_payment_terms = values["buyer_payment_terms"];
+      const buyer_currency = values["buyer_currency"];
+      const buyer_name = values["buyer_name"];
+      const buyer_date_of_incorporation = values["buyer_date_of_incorporation"];
+      const buyer_country = values["buyer_country"];
+      const buyer_address_postalcode = values["buyer_address_postalcode"];
+      const buyer_address_city = values["buyer_address_city"];
+      const buyer_address_street = values["buyer_address_street"];
+      const buyer_address_number = values["buyer_address_number"];
+      const buyer_website = values["buyer_website"];
       const buyer_sample_trading_docs_attachment =
         values["buyer_sales_contract_attachment"];
-      const buyer_sold_goods_description =
-        values["buyer_sold_goods_description"];
 
-      const ebit = values["ebit"];
       const balance_sheet_attachment = values["balance_sheet_attachment"];
       const income_statement_attachment = values["income_statement_attachment"];
-      const net_profit = values["net_profit"];
-      const financials_rating = values["financials_rating"];
+      const financials_status = values["financials_status"];
       const financials_reporting_period = values["financials_reporting_period"];
+      const net_profit = values["net_profit"];
       const sales = values["sales"];
-      const total_assets = values["total_assets"];
-      const retained_earnings = values["retained_earnings"];
-      const working_capital = values["working_capital"];
-      const financials_status = "Under Review";
+      const net_operating_loss = values["net_operating_loss"];
+      const ebit = values["ebit"];
+      const total_equity = values["total_equity"];
+      const cash_flow_from_operating_activities =
+        values["cash_flow_from_operating_activities"];
+      const interest_expenses = values["interest_expenses"];
+      const current_assets = values["current_assets"];
+      const current_liabilities = values["current_liabilities"];
+      const inventory_beginning = values["inventory_beginning"];
+      const inventory_end = values["inventory_end"];
+      const inventory = values["inventory"];
+      const cost_of_goods_sold = values["cost_of_goods_sold"];
 
-      const buyer_insurance_name = values["buyer_insurance_name"];
-      const buyer_one_off_ipu_attachment =
-        values["buyer_one_off_ipu_attachment"];
+      const buyer_reporting_year = values["buyer_reporting_year"];
+      const buyer_supplier_year_business_relation_started =
+        values["buyer_supplier_year_business_relation_started"];
       const buyer_next_year_projected_transaction_amount =
         values["buyer_next_year_projected_transaction_amount"];
-      const buyer_previous_year_transaction_amount =
-        values["buyer_previous_year_transaction_amount"];
-      const buyer_reporting_year = values["buyer_reporting_year"];
       const buyer_reporting_year_transaction_amount =
         values["buyer_reporting_year_transaction_amount"];
+      const buyer_previous_year_transaction_amount =
+        values["buyer_previous_year_transaction_amount"];
       const buyer_previous_year_number_invoices =
         values["buyer_previous_year_number_invoices"];
+      const buyer_insurance_name = values["buyer_insurance_name"];
+      const buyer_insurance_status = values["buyer_insurance_status"];
+      const buyer_existing_disputes = values["buyer_existing_disputes"];
+      const buyer_existing_disputes_source =
+        values["buyer_existing_disputes_source"];
+      const buyer_country_year_of_rating_downgrade =
+        values["buyer_country_year_of_rating_downgrade"];
+      const buyer_finance_department_contact_exists =
+        values["buyer_finance_department_contact_exists"];
+      const buyer_finance_department_contact_email =
+        values["buyer_finance_department_contact_email"];
+      const buyer_field_visit_conducted = values["buyer_field_visit_conducted"];
+      const buyer_invoices_paid_on_time = values["buyer_invoices_paid_on_time"];
+      const buyer_invoices_past_due = values["buyer_invoices_past_due"];
+      const buyer_invoices_past_due_30_days =
+        values["buyer_invoices_past_due_30_days"];
+      const buyer_invoices_past_due_60_days =
+        values["buyer_invoices_past_due_60_days"];
+      const buyer_invoices_past_due_90_days =
+        values["buyer_invoices_past_due_90_days"];
+      const buyer_use_of_goods_purchased =
+        values["buyer_use_of_goods_purchased"];
+      const buyer_one_off_ipu_attachment =
+        values["buyer_one_off_ipu_attachment"];
       const buyer_status = "Under Review";
 
       await createBuyer({
@@ -128,7 +165,7 @@ export default function NewAccount() {
         buyer_loan_request_amount,
         buyer_payment_terms,
         buyer_sample_trading_docs_attachment,
-        buyer_sold_goods_description,
+        buyer_date_of_incorporation,
         buyer_insurance_name,
         buyer_one_off_ipu_attachment,
         buyer_next_year_projected_transaction_amount,
@@ -136,6 +173,20 @@ export default function NewAccount() {
         buyer_reporting_year,
         buyer_reporting_year_transaction_amount,
         buyer_previous_year_number_invoices,
+        buyer_existing_disputes,
+        buyer_existing_disputes_source,
+        buyer_insurance_status,
+        buyer_country_year_of_rating_downgrade,
+        buyer_finance_department_contact_exists,
+        buyer_finance_department_contact_email,
+        buyer_field_visit_conducted,
+        buyer_supplier_year_business_relation_started,
+        buyer_invoices_paid_on_time,
+        buyer_invoices_past_due,
+        buyer_invoices_past_due_30_days,
+        buyer_invoices_past_due_60_days,
+        buyer_invoices_past_due_90_days,
+        buyer_use_of_goods_purchased,
         buyer_status,
       });
 
@@ -144,17 +195,23 @@ export default function NewAccount() {
         financialsId,
         identityId,
         buyerId,
+        sales,
+        financials_status,
+        net_profit,
+        total_equity,
+        net_operating_loss,
+        cash_flow_from_operating_activities,
+        current_assets,
+        current_liabilities,
+        inventory_beginning,
+        inventory_end,
+        cost_of_goods_sold,
         ebit,
+        interest_expenses,
+        financials_reporting_period,
+        inventory,
         balance_sheet_attachment,
         income_statement_attachment,
-        net_profit,
-        financials_rating,
-        financials_reporting_period,
-        sales,
-        total_assets,
-        retained_earnings,
-        working_capital,
-        financials_status,
       });
       navigate("/admin/buyers");
     } catch (e) {

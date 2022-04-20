@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Grid,
+  Stack,
   Table,
   TableRow,
   TableCell,
@@ -50,9 +51,8 @@ const Limits = (input) => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState("");
   const [id, setId] = useState("");
-  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
-    ""
-  );
+  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
+    useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
 
   const [approveloading, setApproveloading] = useState(false);
@@ -187,7 +187,7 @@ const Limits = (input) => {
               </TableRow>
             </TableBody>
           </Table>
-          <Grid>
+          <Stack spacing={2} direction="row">
             <LoaderButtonRed
               startIcon={<BlockIcon />}
               onClick={() => ondeclinedclick()}
@@ -200,9 +200,6 @@ const Limits = (input) => {
             >
               Decline
             </LoaderButtonRed>
-          </Grid>
-          <br />
-          <Grid>
             <LoaderButton
               startIcon={<CheckCircleOutlineIcon />}
               onClick={() => onapprovedclick()}
@@ -215,7 +212,7 @@ const Limits = (input) => {
             >
               Approve
             </LoaderButton>
-          </Grid>
+          </Stack>
         </Grid>
       </CardContent>
     </Card>
