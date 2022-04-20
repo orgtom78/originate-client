@@ -1,22 +1,30 @@
 {
   "permissions": {
     "auth": {
-      "originateclient84cf992c": [
-        "read"
+      "originateclientprod796edffc": [
+        "create",
+        "read",
+        "update",
+        "delete"
       ]
     },
     "api": {
-      "originateclientdev": [
-        "read"
+      "originateclientprod": [
+        "create",
+        "read",
+        "update"
       ]
     },
     "storage": {
       "Request:@model(appsync)": [
-        "read"
+        "create",
+        "read",
+        "update"
       ]
     },
     "function": {
       "plaid": [
+        "create",
         "read"
       ]
     }

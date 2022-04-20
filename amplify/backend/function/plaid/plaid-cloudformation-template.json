@@ -16,23 +16,23 @@
     "s3Key": {
       "Type": "String"
     },
-    "authoriginateclient84cf992cUserPoolId": {
-      "Type": "String",
-      "Default": "authoriginateclient84cf992cUserPoolId"
-    },
-    "apioriginateclientdevGraphQLAPIIdOutput": {
-      "Type": "String",
-      "Default": "apioriginateclientdevGraphQLAPIIdOutput"
-    },
-    "apioriginateclientdevGraphQLAPIEndpointOutput": {
-      "Type": "String",
-      "Default": "apioriginateclientdevGraphQLAPIEndpointOutput"
-    },
     "clientId": {
       "Type": "String"
     },
     "plaidSecret": {
       "Type": "String"
+    },
+    "authoriginateclientprod796edffcUserPoolId": {
+      "Type": "String",
+      "Default": "authoriginateclientprod796edffcUserPoolId"
+    },
+    "apioriginateclientprodGraphQLAPIIdOutput": {
+      "Type": "String",
+      "Default": "apioriginateclientprodGraphQLAPIIdOutput"
+    },
+    "apioriginateclientprodGraphQLAPIEndpointOutput": {
+      "Type": "String",
+      "Default": "apioriginateclientprodGraphQLAPIEndpointOutput"
     }
   },
   "Conditions": {
@@ -88,21 +88,21 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "AUTH_ORIGINATECLIENT84CF992C_USERPOOLID": {
-              "Ref": "authoriginateclient84cf992cUserPoolId"
+            "AUTH_ORIGINATECLIENTPROD796EDFFC_USERPOOLID": {
+              "Ref": "authoriginateclientprod796edffcUserPoolId"
             },
-            "API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apioriginateclientdevGraphQLAPIIdOutput"
+            "API_ORIGINATECLIENTPROD_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
             },
-            "API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apioriginateclientdevGraphQLAPIEndpointOutput"
+            "API_ORIGINATECLIENTPROD_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apioriginateclientprodGraphQLAPIEndpointOutput"
             },
-            "API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME": {
+            "API_ORIGINATECLIENTPROD_PLAIDAUTHTABLE_NAME": {
               "Fn::ImportValue": {
-                "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
+                "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
               }
             },
-            "API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_ARN": {
+            "API_ORIGINATECLIENTPROD_PLAIDAUTHTABLE_ARN": {
               "Fn::Join": [
                 "",
                 [
@@ -117,7 +117,7 @@
                   ":table/",
                   {
                     "Fn::ImportValue": {
-                      "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
+                      "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
                     }
                   }
                 ]
@@ -148,12 +148,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "originateclientLambdaRolec40f252a",
+            "originateclientprodLambdaRole2108633f",
             {
               "Fn::Join": [
                 "",
                 [
-                  "originateclientLambdaRolec40f252a",
+                  "originateclientprodLambdaRole2108633f",
                   "-",
                   {
                     "Ref": "env"
@@ -339,7 +339,7 @@
                       },
                       ":userpool/",
                       {
-                        "Ref": "authoriginateclient84cf992cUserPoolId"
+                        "Ref": "authoriginateclientprod796edffcUserPoolId"
                       }
                     ]
                   ]
@@ -372,7 +372,7 @@
                       },
                       ":apis/",
                       {
-                        "Ref": "apioriginateclientdevGraphQLAPIIdOutput"
+                        "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
                       },
                       "/*"
                     ]
@@ -392,7 +392,7 @@
                       },
                       ":apis/",
                       {
-                        "Ref": "apioriginateclientdevGraphQLAPIIdOutput"
+                        "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
                       }
                     ]
                   ]
@@ -431,7 +431,7 @@
                       ":table/",
                       {
                         "Fn::ImportValue": {
-                          "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
+                          "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
                         }
                       }
                     ]
@@ -452,7 +452,7 @@
                       ":table/",
                       {
                         "Fn::ImportValue": {
-                          "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
+                          "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:PlaidauthTable:Name"
                         }
                       },
                       "/index/*"
