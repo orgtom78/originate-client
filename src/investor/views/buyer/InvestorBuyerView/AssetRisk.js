@@ -267,6 +267,7 @@ const Limits = ({ className, value, data, ...rest }) => {
             setFinancialsid(d[0].id);
             setSales(d[0].sales);
             setSales_risk(d[0].sales_risk);
+            console.log(sales_risk)
             setFinancials_status(d[0].financials_status);
             setFinancials_status_risk(d[0].financials_status_risk);
             setNet_profit(d[0].net_profit);
@@ -379,7 +380,7 @@ const Limits = ({ className, value, data, ...rest }) => {
   }, [data]);
 
   function checkstatusSales(currentRisk, staticRisk, label) {
-    if (currentRisk === "Low") {
+    if (sales_risk === "Low") {
       return (
         <>
           <Button
@@ -391,7 +392,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           </Button>
         </>
       );
-    } else if (currentRisk === "Medium") {
+    } else if (sales_risk === "Medium") {
       return (
         <>
           <Button
@@ -403,13 +404,13 @@ const Limits = ({ className, value, data, ...rest }) => {
           </Button>
         </>
       );
-    } else if (currentRisk === "High") {
+    } else if (sales_risk === "High") {
       return (
         <>
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickSales(staticRisk)}
           >
             {label}
           </Button>
@@ -420,7 +421,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickSales(staticRisk)}
           >
             {label}
           </Button>
@@ -476,7 +477,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickDate(staticRisk)}
           >
             {label}
           </Button>
@@ -487,7 +488,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickDate(staticRisk)}
           >
             {label}
           </Button>
@@ -543,7 +544,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickFinancials(staticRisk)}
           >
             {label}
           </Button>
@@ -554,7 +555,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickFinancials(staticRisk)}
           >
             {label}
           </Button>
@@ -610,7 +611,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickProfit(staticRisk)}
           >
             {label}
           </Button>
@@ -621,7 +622,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickProfit(staticRisk)}
           >
             {label}
           </Button>
@@ -677,7 +678,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickEquityRatio(staticRisk)}
           >
             {label}
           </Button>
@@ -688,7 +689,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickEquityRatio(staticRisk)}
           >
             {label}
           </Button>
@@ -744,7 +745,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickCashFlow(staticRisk)}
           >
             {label}
           </Button>
@@ -755,7 +756,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickCashFlow(staticRisk)}
           >
             {label}
           </Button>
@@ -811,7 +812,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickCurrentRatio(staticRisk)}
           >
             {label}
           </Button>
@@ -822,7 +823,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickCurrentRatio(staticRisk)}
           >
             {label}
           </Button>
@@ -878,7 +879,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInventoryTurnover(staticRisk)}
           >
             {label}
           </Button>
@@ -889,7 +890,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInventoryTurnover(staticRisk)}
           >
             {label}
           </Button>
@@ -945,7 +946,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInventoryTurnoverTrend(staticRisk)}
           >
             {label}
           </Button>
@@ -956,7 +957,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInventoryTurnoverTrend(staticRisk)}
           >
             {label}
           </Button>
@@ -1012,7 +1013,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInterestCoverage(staticRisk)}
           >
             {label}
           </Button>
@@ -1023,7 +1024,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInterestCoverage(staticRisk)}
           >
             {label}
           </Button>
@@ -1079,7 +1080,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickBuyerDisputes(staticRisk)}
           >
             {label}
           </Button>
@@ -1090,7 +1091,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickBuyerDisputes(staticRisk)}
           >
             {label}
           </Button>
@@ -1146,7 +1147,7 @@ const Limits = ({ className, value, data, ...rest }) => {
           <Button
             variant="outlined"
             className={classes.Button3}
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInsurance(staticRisk)}
           >
             {label}
           </Button>
@@ -1157,7 +1158,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         <>
           <Button
             variant="outlined"
-            onClick={() => handleclickRelationship(staticRisk)}
+            onClick={() => handleclickInsurance(staticRisk)}
           >
             {label}
           </Button>
@@ -1503,7 +1504,7 @@ const Limits = ({ className, value, data, ...rest }) => {
   }
   async function handleclickInvoicesPD30(riskStatus) {
     try {
-      setBuyer_invoices_past_due_60_days_risk(riskStatus);
+      setBuyer_invoices_past_due_30_days_risk(riskStatus);
       const input = {
         id: id,
         buyer_invoices_past_due_30_days_risk: riskStatus,

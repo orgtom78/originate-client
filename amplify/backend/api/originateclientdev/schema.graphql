@@ -258,7 +258,7 @@ type Financials
         identityClaim: "custom:groupid"
         operations: [create, update, delete, read]
       }
-      { allow: groups, groups: ["Investor"], operations: [read] }
+      { allow: groups, groups: ["Investor"], operations: [read, update] }
       { allow: groups, groups: ["Admin"] }
     ]
   ) {
