@@ -79,7 +79,7 @@ const InvestorTransactionListView = () => {
       let id = user.attributes["custom:groupid"];
       setInvestid(id);
       const c = await getRequests(id);
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -118,7 +118,7 @@ const InvestorTransactionListView = () => {
     if (input === "" || input === undefined) {
       const iid = await investid;
       const c = await getRequests(iid);
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -135,7 +135,7 @@ const InvestorTransactionListView = () => {
       );
       if (result.data.searchRequests.items.length > 0) {
         let array = await result.data.searchRequests.items;
-        const d = array.sort(function(a, b) {
+        const d = array.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
         setRequest(d);
@@ -162,7 +162,7 @@ const InvestorTransactionListView = () => {
     );
     const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
     const items = n.data.listRequests.items;
-    const d = items.sort(function(a, b) {
+    const d = items.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setRequest(d);
@@ -300,9 +300,7 @@ const InvestorTransactionListView = () => {
                           <TableRow hover key={request.id}>
                             <TableCell>
                               <Box alignItems="center" display="flex">
-                                <Link
-                                  to={`/investor/transaction/${request.id}`}
-                                >
+                                <Link to={`/investor/request/${request.id}`}>
                                   <Avatar
                                     className={classes.avatar}
                                     src={request.avatarUrl}
@@ -311,9 +309,7 @@ const InvestorTransactionListView = () => {
                                   </Avatar>
                                 </Link>
                                 <Typography color="textPrimary" variant="body1">
-                                  <Link
-                                    to={`/investor/transaction/${request.id}`}
-                                  >
+                                  <Link to={`/investor/request/${request.id}`}>
                                     {request.buyer_name}
                                   </Link>
                                 </Typography>

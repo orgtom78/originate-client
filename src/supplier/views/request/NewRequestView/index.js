@@ -82,8 +82,8 @@ export default function NewAccount() {
           listInvestors: { items: itemsPage1, nextToken },
         },
       } = investor;
-      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
-      const res = n.data.listRequests.items[0];
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const res = n.data.listInvestors.items[0];
       const email = res.investor_email;
       setInvestEmail(email);
     }

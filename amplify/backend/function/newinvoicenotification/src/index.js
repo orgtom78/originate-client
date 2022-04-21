@@ -217,6 +217,7 @@ exports.handler = async (event) => {
         ReplyToAddresses: [FROM_EMAIL_ADDRESS],
         Destination: {
           ToAddresses: [newInvoiceData.email],
+          BccAddresses: ['admin@originatecapital.co']
         },
         Message: {
           Body: {
