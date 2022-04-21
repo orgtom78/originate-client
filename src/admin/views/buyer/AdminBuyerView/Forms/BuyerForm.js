@@ -294,7 +294,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   return (
     <Container maxWidth={false}>
       <React.Fragment>
-        <Accordion defaultExpanded={true}>
+        <Accordion defaultExpanded={false}>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>Company Details</Typography>
           </AccordionSummary>

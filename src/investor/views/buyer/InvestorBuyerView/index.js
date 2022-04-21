@@ -169,7 +169,7 @@ const Buyer = () => {
           <br></br>
           <Grid container spacing={1}>
             <Grid item lg={12} sm={12} xl={12} xs={12}>
-              <AssetRisk value={fin} data={item}/>
+              <AssetRisk value={fin} data={item} />
             </Grid>
             <Grid item lg={12} sm={12} xl={12} xs={12}>
               <Accordion>
