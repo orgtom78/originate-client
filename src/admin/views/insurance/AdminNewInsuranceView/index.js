@@ -141,7 +141,7 @@ export default function NewInsuranceRequest() {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
-        requestedSize: 1,
+        requestedSize: 2,
         companyName: `${input.buyername}`,
         companyIdentifiers: [
           {

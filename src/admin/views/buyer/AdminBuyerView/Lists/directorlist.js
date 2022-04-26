@@ -163,7 +163,6 @@ const DirectorListView = (value) => {
   return (
     <React.Fragment>
       <PerfectScrollbar>
-        <Box maxWidth={false}>
           <Table>
             <TableHead>
               <TableRow>
@@ -232,7 +231,6 @@ const DirectorListView = (value) => {
               ))}
             </TableBody>
           </Table>
-        </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"

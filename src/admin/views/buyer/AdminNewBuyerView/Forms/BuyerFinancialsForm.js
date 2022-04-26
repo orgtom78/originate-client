@@ -49,6 +49,21 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const denominationValue = [
+  {
+    value: "",
+    label: "As stated",
+  },
+  {
+    value: "'000",
+    label: "In Thousands '000",
+  },
+  {
+    value: "'000,000",
+    label: "In Millions '000,000",
+  },
+];
+
 const auditType = [
   {
     value: "audited-big4",
@@ -74,6 +89,7 @@ export default function BuyerFinancialsForm(props) {
     formField: {
       sales,
       financials_status,
+      financials_denomination,
       net_profit,
       total_equity,
       net_operating_loss,
@@ -293,6 +309,15 @@ export default function BuyerFinancialsForm(props) {
                 name={financials_status.name}
                 label={financials_status.label}
                 data={auditType}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={financials_denomination.name}
+                label={financials_denomination.label}
+                data={denominationValue}
                 fullWidth
                 variant="outlined"
               />

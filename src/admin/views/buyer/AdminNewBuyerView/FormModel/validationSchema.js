@@ -16,6 +16,7 @@ const {
     buyer_one_off_ipu_attachment,
     sales,
     financials_status,
+    financials_denomination,
     net_profit,
     total_equity,
     net_operating_loss,
@@ -113,6 +114,7 @@ const yup = [
         }
         return false;
       }),
+    [financials_denomination.name]: Yup.string(),
     [sales.name]: Yup.number().nullable(),
     [financials_status.name]: Yup.string(),
     [net_profit.name]: Yup.number().nullable(),

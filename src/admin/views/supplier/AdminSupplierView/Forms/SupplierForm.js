@@ -739,7 +739,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"
@@ -759,7 +758,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => <TextField fullWidth {...params} />}
                         />
                       </LocalizationProvider>
                     </Grid>

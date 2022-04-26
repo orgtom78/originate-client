@@ -96,12 +96,7 @@ const yup = [
       `${supplier_address_street.requiredErrorMsg}`
     ),
     [supplier_address_postalcode.name]: Yup.string()
-      .required(`${supplier_address_postalcode.requiredErrorMsg}`)
-      .test(
-        "len",
-        `${supplier_address_postalcode.invalidErrorMsg}`,
-        (val) => val && val.length === 5
-      ),
+      .required(`${supplier_address_postalcode.requiredErrorMsg}`),
     [supplier_address_refinment.name]: Yup.string(),
     [supplier_country.name]: Yup.string().required(
       `${supplier_country.requiredErrorMsg}`

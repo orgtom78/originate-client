@@ -132,6 +132,11 @@ const model = {
       label: "Financial Reporting Period",
       requiredErrorMsg: "Financial Reporting Period is required",
     },
+    financials_denomination: {
+      name: "financials_denomination",
+      label: "Financial Denomination",
+      requiredErrorMsg: "Financial Denomination is required",
+    },
     sales: {
       name: "sales",
       label: "Sales/Revenue",
