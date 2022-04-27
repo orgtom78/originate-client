@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
 
 const denominationValue = [
   {
-    value: "",
+    value: "'",
     label: "As stated",
   },
   {

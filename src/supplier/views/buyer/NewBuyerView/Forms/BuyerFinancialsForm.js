@@ -54,12 +54,12 @@ export default function BuyerFinancialsForm(props) {
       balance_sheet_attachment,
       income_statement_attachment,
       net_profit,
-      financials_rating,
       financials_reporting_period,
-      retained_earnings,
-      working_capital,
       sales,
-      total_assets,
+      current_assets,
+      current_liabilities,
+      cost_of_goods_sold,
+      total_equity,
     },
   } = props;
 
@@ -205,6 +205,14 @@ export default function BuyerFinancialsForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+              <InputField
+                name={sales.name}
+                label={sales.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={ebit.name}
@@ -223,40 +231,32 @@ export default function BuyerFinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={financials_rating.name}
-                label={financials_rating.label}
+                name={cost_of_goods_sold.name}
+                label={cost_of_goods_sold.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={sales.name}
-                label={sales.label}
+                name={current_assets.name}
+                label={current_assets.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
+                name={current_liabilities.name}
+                label={current_liabilities.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={working_capital.name}
-                label={working_capital.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={total_assets.name}
-                label={total_assets.label}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />

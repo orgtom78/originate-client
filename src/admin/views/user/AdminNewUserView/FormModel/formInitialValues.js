@@ -3,8 +3,10 @@ const {
   formField: { email, password, confirmpassword },
 } = NewUserFormModel;
 
-export default {
+const values = {
   [email.name]: "",
   [password.name]: "",
   [confirmpassword.name]: "",
 };
+
+export default values;

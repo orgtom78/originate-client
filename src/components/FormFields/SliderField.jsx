@@ -14,14 +14,6 @@ export default function DatePickerField(props) {
   const { setValue } = helper;
   const isError = touched && error && true;
   const { value } = field;
-  const [selectedPercentage, setSelectedPercentage] = useState(0);
-
-  useEffect(() => {
-    if (value) {
-      const percentage = value;
-      setSelectedPercentage(percentage);
-    }
-  }, [value]);
 
   const handleSliderChange = (event, newValue) => {
     setValue(newValue);
@@ -31,11 +23,10 @@ export default function DatePickerField(props) {
     setValue(event.target.value === '' ? '' : Number(event.target.value));
   };
 
-
   const handleBlur = () => {
-    if (value < 0) {
+    if (value <= 0) {
       setValue(0);
-    } else if (value > 100) {
+    } else if (value >= 100) {
       setValue(100);
     }
   };
@@ -50,9 +41,7 @@ export default function DatePickerField(props) {
         <Slider
           {...field}
           {...props}
-          value={
-            typeof selectedPercentage === "number" ? selectedPercentage : 0
-          }
+          value={typeof value === 'number' ? value : 0}
           onChange={handleSliderChange}
           error={isError}
           invalidDateMessage={isError && error}
@@ -62,7 +51,7 @@ export default function DatePickerField(props) {
       </Grid>
       <Grid item>
         <Input
-          value={selectedPercentage}
+          value={value}
           size="small"
           onChange={handleInputChange}
           onBlur={handleBlur}
@@ -70,7 +59,7 @@ export default function DatePickerField(props) {
           invalidDateMessage={isError && error}
           helperText={isError && error}
           inputProps={{
-            step: 5,
+            step: 1,
             min: 0,
             max: 100,
             type: "number",

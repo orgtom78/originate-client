@@ -95,6 +95,7 @@ export default function NewAccount() {
       const balance_sheet_attachment = values["balance_sheet_attachment"];
       const income_statement_attachment = values["income_statement_attachment"];
       const financials_status = values["financials_status"];
+      const financials_denomination = values["financials_denomination"];
       const financials_reporting_period = values["financials_reporting_period"];
       const net_profit = values["net_profit"];
       const sales = values["sales"];
@@ -197,6 +198,7 @@ export default function NewAccount() {
         buyerId,
         sales,
         financials_status,
+        financials_denomination,
         net_profit,
         total_equity,
         net_operating_loss,

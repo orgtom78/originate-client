@@ -71,16 +71,12 @@ const SupplierFinancials = ({ className, ...rest }) => {
   const [dynamofinid, setdynamofinId] = useState("");
   const [financialsId, setFinancialsId] = useState("");
   const [balance_sheet_attachment, setBalance_sheet_attachment] = useState("");
-  const [
-    income_statement_attachment,
-    setIncome_statement_attachment,
-  ] = useState("");
+  const [income_statement_attachment, setIncome_statement_attachment] =
+    useState("");
   const [ebit, setEbit] = useState("");
   const [net_profit, setNet_profit] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [retained_earnings, setRetained_earnings] = useState("");
@@ -259,7 +255,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   }, [balance_sheet_attachment, identityId]);
 
   function balanceisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(balanceimg)) {
       return (
         <>
@@ -441,7 +438,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   }, [income_statement_attachment, identityId]);
 
   function incomeisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(incomeimg)) {
       return (
         <>
@@ -625,7 +623,6 @@ const SupplierFinancials = ({ className, ...rest }) => {
                 >
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                     <DesktopDatePicker
-                      fullWidth
                       value={financials_reporting_period || ""}
                       margin="normal"
                       variant="outlined"
@@ -646,85 +643,123 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       InputLabelProps={{
                         shrink: true,
                       }}
-                      renderInput={(params) => <TextField {...params} />}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
                     />
                   </LocalizationProvider>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Earnings Before Interest and Tax"
                     name="ebit"
-                    onChange={(e) => setEbit(e.target.value)}
                     required
                     value={ebit || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setEbit(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Net Profit"
                     name="net_profit"
-                    onChange={(e) => setNet_profit(e.target.value)}
                     required
                     value={net_profit || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setNet_profit(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Sales/Revenue"
                     name="sales"
-                    onChange={(e) => setSales(e.target.value)}
                     required
                     value={sales || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setSales(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Retained Earnings"
                     name="retained_earnings"
-                    onChange={(e) => setRetained_earnings(e.target.value)}
                     required
                     value={retained_earnings || ""}
-                    variant="outlined"
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setRetained_earnings(value);
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Working Capital"
                     name="working_capital"
-                    onChange={(e) => setWorking_capital(e.target.value)}
                     required
                     value={working_capital || ""}
-                    variant="outlined"
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setWorking_capital(value);
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Total Assets"
                     name="total_assets"
-                    onChange={(e) => setTotal_assets(e.target.value)}
                     required
                     value={total_assets || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setTotal_assets(value);
                     }}
                   />
                 </Grid>

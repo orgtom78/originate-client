@@ -196,8 +196,8 @@ export default function HistoryForm(props) {
                 label={buyer_reporting_year.label}
                 format="yyyy"
                 views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
+                minDate={new Date("2021/12/31")}
+                maxDate={new Date("2021/12/31")}
                 fullWidth
                 variant="outlined"
               />

@@ -14,6 +14,7 @@ const {
     buyer_currency,
     buyer_loan_request_amount,
     buyer_one_off_ipu_attachment,
+    buyer_contact_email,
     sales,
     financials_status,
     financials_denomination,
@@ -91,6 +92,12 @@ const yup = [
     ),
     [buyer_sample_trading_docs_attachment.name]: Yup.string(),
     [buyer_date_of_incorporation.name]: Yup.string().required(
+      `${buyer_date_of_incorporation.requiredErrorMsg}`
+    ),
+    [buyer_contact_email.name]: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required(
       `${buyer_date_of_incorporation.requiredErrorMsg}`
     ),
   }),

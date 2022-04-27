@@ -106,6 +106,7 @@ export default function BuyerAddressForm(props) {
       buyer_payment_terms,
       buyer_sample_trading_docs_attachment,
       buyer_date_of_incorporation,
+      buyer_contact_email
     },
   } = props;
   const { id } = useParams();
@@ -309,6 +310,14 @@ export default function BuyerAddressForm(props) {
               <InputField
                 name={buyer_website.name}
                 label={buyer_website.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_contact_email.name}
+                label={buyer_contact_email.label}
                 fullWidth
                 variant="outlined"
               />

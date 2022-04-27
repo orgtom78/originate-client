@@ -4,7 +4,7 @@ const {
   formField: { email, password, confirmpassword },
 } = NewUserFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [email.name]: Yup.string()
       .email("Must be a valid email")
@@ -19,3 +19,5 @@ export default [
     ),
   }),
 ];
+
+export default yup;
