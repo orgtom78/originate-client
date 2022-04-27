@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import clsx from "clsx";
 import PropTypes from "prop-types";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
   Box,
   Card,
   CardContent,
   Container,
   Divider,
   Grid,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -431,15 +433,20 @@ const GroupForm = ({ className, groupvalue, ...rest }) => {
                 </CardContent>
                 <Divider />
                 <Box display="flex" justifyContent="flex-end" p={2}>
-                  <LoaderButton
-                    startIcon={<UploadIcon />}
-                    disabled={userloading}
-                    success={usersuccess}
-                    loading={userloading}
-                    onClick={handleUserSubmit}
-                  >
-                    Update details
-                  </LoaderButton>
+                  <Stack direction="row" spacing={2}>
+                    <Link to={`/admin/newuser/${groupvalue}`}>
+                      <Button>Add User to Group</Button>
+                    </Link>
+                    <LoaderButton
+                      startIcon={<UploadIcon />}
+                      disabled={userloading}
+                      success={usersuccess}
+                      loading={userloading}
+                      onClick={handleUserSubmit}
+                    >
+                      Update details
+                    </LoaderButton>
+                  </Stack>
                 </Box>
               </Card>
             </form>
