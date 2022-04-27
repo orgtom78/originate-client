@@ -120,7 +120,6 @@ const FinancialsListView = (value) => {
   return (
     <React.Fragment>
       <PerfectScrollbar>
-        <Box maxWidth={false}>
           <Table>
             <TableHead>
               <TableRow>
@@ -218,7 +217,6 @@ const FinancialsListView = (value) => {
               ))}
             </TableBody>
           </Table>
-        </Box>
       </PerfectScrollbar>
       <TablePagination
         component="div"

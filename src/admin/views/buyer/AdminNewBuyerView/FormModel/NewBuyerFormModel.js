@@ -53,6 +53,11 @@ const model = {
       label: "Website/URL*",
       requiredErrorMsg: "URL is required",
     },
+    buyer_contact_email: {
+      name: "buyer_contact_email",
+      label: "Main Contact Email*",
+      requiredErrorMsg: "Main email address is required",
+    },
     buyer_currency: {
       name: "buyer_currency",
       label: "Invoicing Currency*",
@@ -78,29 +83,29 @@ const model = {
     },
     buyer_next_year_projected_transaction_amount: {
       name: "buyer_next_year_projected_transaction_amount",
-      label: "Next Year Anticipated Invoicing Amount",
+      label: "Next Year (2022) Anticipated Invoice Amount",
       requiredErrorMsg: "Anticipated Invoice Amount is required",
     },
     buyer_previous_year_transaction_amount: {
       name: "buyer_previous_year_transaction_amount",
-      label: "Previous Year Invoicing Amount",
+      label: "Previous Year (2020) Invoice Amount",
       requiredErrorMsg: "Previous Invoice Amount is required",
     },
     buyer_reporting_year: {
       name: "buyer_reporting_year",
-      label: "Invoicing Reporting Year*",
-      requiredErrorMsg: "Transaction Reporting Year is required",
+      label: "Invoice Reporting Year (2021)",
+      requiredErrorMsg: "The Reporting Year (2021) is required",
     },
     buyer_reporting_year_transaction_amount: {
       name: "buyer_reporting_year_transaction_amount",
-      label: "Reporting Year Invoicing Amount*",
-      requiredErrorMsg: "Invoicing Amount is required",
+      label: "Reporting Year (2021) Invoice Amount*",
+      requiredErrorMsg: "Invoice Amount for 2021 is required",
     },
     buyer_previous_year_number_invoices: {
       name: "buyer_previous_year_number_invoices",
-      label: "Previous Year Number of Invoices issued*",
+      label: "Previous Year (2020) Number of Invoices issued*",
       requiredErrorMsg:
-        "The Number of Invoices issued in the previous year is required",
+        "The Number of Invoices issued in the previous year (2020) is required",
     },
     ebit: {
       name: "ebit",
@@ -131,6 +136,11 @@ const model = {
       name: "financials_reporting_period",
       label: "Financial Reporting Period",
       requiredErrorMsg: "Financial Reporting Period is required",
+    },
+    financials_denomination: {
+      name: "financials_denomination",
+      label: "Financial Denomination",
+      requiredErrorMsg: "Financial Denomination is required",
     },
     sales: {
       name: "sales",
@@ -224,8 +234,8 @@ const model = {
     },
     buyer_finance_department_contact_exists: {
       name: "buyer_finance_department_contact_exists",
-      label: "Finance Department Contact Exists",
-      requiredErrorMsg: "Finance Department Contact Exists is required",
+      label: "Finance Department Contacted (Call/Email)",
+      requiredErrorMsg: "Finance Department Contact Status is required",
     },
     buyer_field_visit_conducted: {
       name: "buyer_field_visit_conducted",

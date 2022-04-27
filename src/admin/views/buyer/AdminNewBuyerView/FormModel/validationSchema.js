@@ -14,8 +14,10 @@ const {
     buyer_currency,
     buyer_loan_request_amount,
     buyer_one_off_ipu_attachment,
+    buyer_contact_email,
     sales,
     financials_status,
+    financials_denomination,
     net_profit,
     total_equity,
     net_operating_loss,
@@ -92,6 +94,12 @@ const yup = [
     [buyer_date_of_incorporation.name]: Yup.string().required(
       `${buyer_date_of_incorporation.requiredErrorMsg}`
     ),
+    [buyer_contact_email.name]: Yup.string()
+    .email("Must be a valid email")
+    .max(255)
+    .required(
+      `${buyer_date_of_incorporation.requiredErrorMsg}`
+    ),
   }),
 
   Yup.object().shape({
@@ -113,6 +121,7 @@ const yup = [
         }
         return false;
       }),
+    [financials_denomination.name]: Yup.string(),
     [sales.name]: Yup.number().nullable(),
     [financials_status.name]: Yup.string(),
     [net_profit.name]: Yup.number().nullable(),

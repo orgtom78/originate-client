@@ -22,7 +22,7 @@ const Toolbar = ({ className, ...rest }) => {
   return (
     <div className={clsx(classes.root, className)} {...rest}>
       <Box display="flex" justifyContent="flex-end">
-        <Link to={`/admin/newbuyer/`}>
+        <Link to={`/admin/newsupplierbuyer`}>
           <Button color="primary" variant="contained">
             Add Buyer
           </Button>

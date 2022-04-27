@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminCompanyIDListView = (input) => {
   const classes = useStyles();
-  const [selectedCompanyIds, setSelectedCompanyIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [company, setCompany] = useState([]);
@@ -62,45 +61,6 @@ const AdminCompanyIDListView = (input) => {
     };
     getData();
   }, [input]);
-
-  const handleSelectAll = (event) => {
-    let newSelectedCompanyIds;
-
-    if (event.target.checked) {
-      newSelectedCompanyIds = company.map((company) => company.companyId);
-    } else {
-      newSelectedCompanyIds = [];
-    }
-
-    setSelectedCompanyIds(newSelectedCompanyIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCompanyIds.indexOf(id);
-    let newSelectedCompanyIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds,
-        id
-      );
-    } else if (selectedIndex === 0) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(1)
-      );
-    } else if (selectedIndex === selectedCompanyIds.length - 1) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedCompanyIds = newSelectedCompanyIds.concat(
-        selectedCompanyIds.slice(0, selectedIndex),
-        selectedCompanyIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedCompanyIds(newSelectedCompanyIds);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);

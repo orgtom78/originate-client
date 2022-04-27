@@ -7,15 +7,13 @@ See the License for the specific language governing permissions and limitations 
 */
 
 /* Amplify Params - DO NOT EDIT
+	API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT
+	API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT
+	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_ARN
+	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME
+	AUTH_ORIGINATECLIENT84CF992C_USERPOOLID
 	ENV
 	REGION
-	AUTH_ORIGINATECLIENT84CF992C_USERPOOLID
-	API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT
-	API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT
-	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_NAME
-	API_ORIGINATECLIENTDEV_PLAIDAUTHTABLE_ARN
-	CLIENT_ID
-	PLAID_SECRET
 Amplify Params - DO NOT EDIT */
 
 const AWS = require("aws-sdk");
@@ -40,7 +38,7 @@ app.use(function(req, res, next) {
 });
 
 const configuration = new Configuration({
-  basePath: PlaidEnvironments.development,
+  basePath: PlaidEnvironments.sandbox,
   baseOptions: {
     headers: {
       "PLAID-CLIENT-ID": process.env.CLIENT_ID,
@@ -85,8 +83,9 @@ app.get("/api/exchange_public_token1", async function(req, res) {
       public_token: publicToken1,
     });
     const accessToken1 = response1.data.access_token;
+    const itemID = response1.data.item_id;
     let putItemParams = {
-      TableName: "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod",
+      TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
       Key: {
         id: userId,
       },
@@ -117,8 +116,9 @@ app.get("/api/exchange_public_token2", async function(req, res) {
       public_token: publicToken2,
     });
     const accessToken2 = response2.data.access_token;
+    const itemID = response2.data.item_id;
     let putItemParams = {
-      TableName: "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod",
+      TableName: "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test",
       Key: {
         id: userId,
       },
@@ -142,7 +142,7 @@ app.get("/api/exchange_public_token2", async function(req, res) {
 });
 
 app.get("/api/accounts1", async function(req, res) {
-  const tableName = "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod";
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
   const params = {
     TableName: tableName,
@@ -170,7 +170,7 @@ app.get("/api/accounts1", async function(req, res) {
 });
 
 app.get("/api/accounts2", async function(req, res) {
-  const tableName = "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod";
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
   const params = {
     TableName: tableName,
@@ -198,7 +198,7 @@ app.get("/api/accounts2", async function(req, res) {
 });
 
 app.get("/api/transactions1", async function(req, res) {
-  const tableName = "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod";
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
   const bankaccountid = req.query.bankid;
   const startDate = req.query.startDate;
@@ -238,7 +238,7 @@ app.get("/api/transactions1", async function(req, res) {
 });
 
 app.get("/api/transactions2", async function(req, res) {
-  const tableName = "Plaidauth-fqtl5gb3rravtfuhnfslasj35u-prod";
+  const tableName = "Plaidauth-inyjwyok2ralnd7utuj4ctspbi-test";
   const clientUserId = req.query.id;
   const bankaccountid = req.query.bankid;
   const startDate = req.query.startDate;

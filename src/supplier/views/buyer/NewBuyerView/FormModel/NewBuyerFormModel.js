@@ -82,29 +82,77 @@ const model = {
     },
     buyer_next_year_projected_transaction_amount: {
       name: "buyer_next_year_projected_transaction_amount",
-      label: "Next Year Anticipated Invoicing Amount",
+      label: "Next Year (2022) Anticipated Invoice Amount*",
       requiredErrorMsg: "Anticipated Invoice Amount is required",
     },
     buyer_previous_year_transaction_amount: {
       name: "buyer_previous_year_transaction_amount",
-      label: "Previous Year Invoicing Amount",
+      label: "Previous Year (2020) Invoice Amount*",
       requiredErrorMsg: "Previous Invoice Amount is required",
     },
     buyer_reporting_year: {
       name: "buyer_reporting_year",
-      label: "Invoicing Reporting Year*",
-      requiredErrorMsg: "Transaction Reporting Year is required",
+      label: "Invoice Reporting Year (2021)*",
+      requiredErrorMsg: "The Reporting Year (2021) is required",
     },
     buyer_reporting_year_transaction_amount: {
       name: "buyer_reporting_year_transaction_amount",
-      label: "Reporting Year Invoicing Amount*",
-      requiredErrorMsg: "Invoicing Amount is required",
+      label: "Reporting Year (2021) Invoice Amount*",
+      requiredErrorMsg: "Invoice Amount for 2021 is required",
     },
     buyer_previous_year_number_invoices: {
       name: "buyer_previous_year_number_invoices",
-      label: "Previous Year Number of Invoices issued*",
+      label: "Previous Year (2020) Number of Invoices issued*",
       requiredErrorMsg:
-        "The Number of Invoices issued in the previous year is required",
+        "The Number of Invoices issued in the previous year (2020) is required",
+    },
+    buyer_supplier_year_business_relation_started: {
+      name: "buyer_supplier_year_business_relation_started",
+      label: "Year Business Relation started*",
+      requiredErrorMsg:
+        "The Year in which your business relation with your buyer/client started is required",
+    },
+    buyer_existing_disputes: {
+      name: "buyer_existing_disputes",
+      label: "Do disputes with the Buyer exist?*",
+      requiredErrorMsg:
+        "Existing disputes between your company and your buyer/client is a required field",
+    },
+    buyer_finance_department_contact_email: {
+      name: "buyer_finance_department_contact_email",
+      label: "Finance Department Contact Email Address",
+      requiredErrorMsg:
+      "Finance Department Contact Email Address is required",
+    },
+    buyer_invoices_paid_on_time: {
+      name: "buyer_invoices_paid_on_time",
+      label: "Buyer invoices paid on time",
+      requiredErrorMsg:
+      "Buyer invoices paid on time is required",
+    },
+    buyer_invoices_past_due_30_days: {
+      name: "buyer_invoices_past_due_30_days",
+      label: "Buyer Invoices past due 30 Days",
+      requiredErrorMsg:
+      "Buyer Invoices past due 30 days is required",
+    },
+    buyer_invoices_past_due_60_days: {
+      name: "buyer_invoices_past_due_60_days",
+      label: "Buyer Invoices past due 60 Days",
+      requiredErrorMsg:
+      "Buyer Invoices past due 60 days is required",
+    },
+    buyer_invoices_past_due_90_days: {
+      name: "buyer_invoices_past_due_90_days",
+      label: "Buyer Invoices past due 90 Days",
+      requiredErrorMsg:
+      "Buyer Invoices past due 90 days is required",
+    },
+    buyer_use_of_goods_purchased: {
+      name: "buyer_use_of_goods_purchased",
+      label: "How is your Buyer using the purchased Goods?",
+      requiredErrorMsg:
+      "Buyer usage of purchased goods is required",
     },
     ebit: {
       name: "ebit",
@@ -130,6 +178,26 @@ const model = {
       name: "financials_rating",
       label: "Financial Rating",
       requiredErrorMsg: "Rating is required",
+    },
+    current_assets: {
+      name: "current_assets",
+      label: "Current Assets",
+      requiredErrorMsg: "Current Assets is required",
+    },
+    current_liabilities: {
+      name: "current_liabilities",
+      label: "Current Liabilities",
+      requiredErrorMsg: "Current Liabilities is required",
+    },
+    cost_of_goods_sold: {
+      name: "cost_of_goods_sold",
+      label: "Cost of Goods Sold",
+      requiredErrorMsg: "Cost of Goods Sold is required",
+    },
+    total_equity: {
+      name: "total_equity",
+      label: "Total Equity",
+      requiredErrorMsg: "Total Equity is required",
     },
     financials_reporting_period: {
       name: "financials_reporting_period",

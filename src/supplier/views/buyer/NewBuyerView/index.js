@@ -104,14 +104,12 @@ export default function NewAccount() {
       const balance_sheet_attachment = values["balance_sheet_attachment"];
       const income_statement_attachment = values["income_statement_attachment"];
       const net_profit = values["net_profit"];
-      const financials_rating = values["financials_rating"];
       const financials_reporting_period = values["financials_reporting_period"];
       const sales = values["sales"];
-      const total_assets = values["total_assets"];
-      const total_liabilities = total_assets;
-      const retained_earnings = values["retained_earnings"];
-      const working_capital = values["working_capital"];
-      const financials_status = "Under Review";
+      const current_assets = values["current_assets"];
+      const current_liabilities = values["current_liabilities"];
+      const cost_of_goods_sold = values["cost_of_goods_sold"];
+      const total_equity = values["total_equity"];
 
       const buyer_insurance_name = values["buyer_insurance_name"];
       const buyer_one_off_ipu_attachment =
@@ -125,6 +123,22 @@ export default function NewAccount() {
         values["buyer_reporting_year_transaction_amount"];
       const buyer_previous_year_number_invoices =
         values["buyer_previous_year_number_invoices"];
+      const buyer_supplier_year_business_relation_started =
+        values["buyer_supplier_year_business_relation_started"];
+      const buyer_existing_disputes =
+        values["buyer_existing_disputes"];
+      const buyer_finance_department_contact_email =
+        values["buyer_finance_department_contact_emails"];
+      const buyer_invoices_paid_on_time =
+        values["buyer_invoices_paid_on_time"];
+      const buyer_invoices_past_due_30_days =
+        values["buyer_invoices_past_due_30_days"];
+      const buyer_invoices_past_due_60_days =
+        values["buyer_invoices_past_due_60_days"];
+      const buyer_invoices_past_due_90_days =
+        values["buyer_invoices_past_due_90_days"];
+      const buyer_use_of_goods_purchased =
+        values["buyer_use_of_goods_purchased"];
       const buyer_status = "Under Review";
 
       await createBuyer({
@@ -153,6 +167,14 @@ export default function NewAccount() {
         buyer_reporting_year_transaction_amount,
         buyer_previous_year_number_invoices,
         buyer_status,
+        buyer_supplier_year_business_relation_started,
+        buyer_existing_disputes,
+        buyer_finance_department_contact_email,
+        buyer_invoices_paid_on_time,
+        buyer_invoices_past_due_30_days,
+        buyer_invoices_past_due_60_days,
+        buyer_invoices_past_due_90_days,
+        buyer_use_of_goods_purchased
       });
 
       await createFinancials({
@@ -160,18 +182,16 @@ export default function NewAccount() {
         financialsId,
         identityId,
         buyerId,
-        ebit,
         balance_sheet_attachment,
         income_statement_attachment,
-        net_profit,
-        financials_rating,
-        financials_reporting_period,
         sales,
-        total_assets,
-        total_liabilities,
-        retained_earnings,
-        working_capital,
-        financials_status,
+        net_profit,
+        ebit,
+        cost_of_goods_sold,
+        current_assets,
+        current_liabilities,
+        total_equity,
+        financials_reporting_period,
       });
     } catch (e) {
       onError(e);

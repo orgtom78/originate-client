@@ -1,4 +1,4 @@
-export default {
+const model =  {
   formId: "NewUser",
   formField: {
     email: {
@@ -18,3 +18,4 @@ export default {
     },
   },
 };
+export default model;

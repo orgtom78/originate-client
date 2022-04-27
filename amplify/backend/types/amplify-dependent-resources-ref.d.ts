@@ -1,18 +1,18 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
-        "originateclientprod796edffc": {
+        "originateclient84cf992c": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
-            "HostedUIDomain": "string",
-            "OAuthMetadata": "string",
             "UserPoolId": "string",
+            "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string"
+            "AppClientID": "string",
+            "CreatedSNSRole": "string"
         }
     },
     "api": {
-        "originateclientprod": {
+        "originateclientdev": {
             "GraphQLAPIIdOutput": "string",
             "GraphQLAPIEndpointOutput": "string"
         },
@@ -23,7 +23,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "originateprodstorage": {
+        "s330286d4d": {
             "BucketName": "string",
             "Region": "string"
         }

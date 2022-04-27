@@ -484,7 +484,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={buyer_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -504,7 +503,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => <TextField fullWidth {...params} />}
                         />
                       </LocalizationProvider>
                     </Grid>

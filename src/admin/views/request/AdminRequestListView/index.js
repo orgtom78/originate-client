@@ -360,7 +360,7 @@ const AdminTransactionListView = () => {
           </Box>
           <Box display="flex" justifyContent="flex-end" p={2}>
             <Link to={`/admin/newrequestlist/`}>
-              <Button>Add Transaction</Button>
+              <Button>Add Request</Button>
             </Link>
           </Box>
         </Container>

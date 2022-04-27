@@ -48,25 +48,25 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "100%",
   },
   tableRow: {
-    backgroundColor: colors.teal[400],
+    backgroundColor: colors.green[100],
   },
   tableRow2: {
-    backgroundColor: colors.teal[200],
+    backgroundColor: colors.teal[300],
   },
   tableCellRed: {
-    backgroundColor: colors.red[200],
+    backgroundColor: colors.red[400],
   },
   tableCellOrange: {
     backgroundColor: colors.orange[200],
   },
   Button1: {
-    background: colors.green[200],
+    background: colors.green[100],
   },
   Button2: {
     background: colors.orange[200],
   },
   Button3: {
-    background: colors.red[200],
+    background: colors.red[400],
   },
 }));
 
@@ -130,6 +130,21 @@ const productUse = [
   },
 ];
 
+const denominationValue = [
+  {
+    value: "",
+    label: "As stated",
+  },
+  {
+    value: "'000",
+    label: "In Thousands '000",
+  },
+  {
+    value: "'000,000",
+    label: "In Millions '000,000",
+  },
+];
+
 const Limits = ({ className, value, data, ...rest }) => {
   const classes = useStyles();
   const { id } = useParams();
@@ -145,6 +160,7 @@ const Limits = ({ className, value, data, ...rest }) => {
     setBuyer_date_of_incorporation_risk,
   ] = useState("");
   const [financials_status, setFinancials_status] = useState("");
+  const [financials_denomination, setFinancials_denomination] = useState("");
   const [financials_status_risk, setFinancials_status_risk] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [net_profit_risk, setNet_profit_risk] = useState("");
@@ -269,6 +285,7 @@ const Limits = ({ className, value, data, ...rest }) => {
             setSales_risk(d[0].sales_risk);
             setFinancials_status(d[0].financials_status);
             setFinancials_status_risk(d[0].financials_status_risk);
+            setFinancials_denomination(d[0].financials_denomination);
             setNet_profit(d[0].net_profit);
             setNet_profit_risk(d[0].net_profit_risk);
             setNet_profit_previous_year(d[0].net_profit_previous_year);
@@ -1800,6 +1817,7 @@ const Limits = ({ className, value, data, ...rest }) => {
         net_operating_loss: net_operating_loss,
         inventory: inventory,
         cost_of_goods_sold: cost_of_goods_sold,
+        financials_denomination: financials_denomination,
       };
       await API.graphql(
         graphqlOperation(mutations.updateFinancials, { input: input })
@@ -1867,6 +1885,39 @@ const Limits = ({ className, value, data, ...rest }) => {
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Amounts 
+                </TableCell>
+                <TableCell align="right">
+                  <Select
+                    fullWidth
+                    id="financials_denomination"
+                    onChange={(e) => setFinancials_denomination(e.target.value)}
+                    required
+                    value={financials_denomination|| ""}
+                    variant="standard"
+                  >
+                    {denominationValue.map((item, index) => (
+                      <MenuItem key={index} value={item.value}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </TableCell>
+                <TableCell align="right">
+                <Button
+                    variant="outlined"
+                    onClick={() => updateProfitabilityPY()}
+                  >
+                    Update
+                  </Button>
+                </TableCell>
+                <TableCell align="right">
+                </TableCell>
+                <TableCell align="right">
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">

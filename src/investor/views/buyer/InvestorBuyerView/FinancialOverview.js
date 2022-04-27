@@ -14,7 +14,7 @@ import {
   TableBody,
   colors,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,14 +50,14 @@ const Limits = ({ className, value, ...rest }) => {
   const [financials, setFinancials] = useState([]);
   const [financials2, setFinancials2] = useState([]);
   const [financials3, setFinancials3] = useState([]);
+  const [reportingYear2, setReportingYear2] = useState([]);
+  const [reportingYear3, setReportingYear3] = useState([]);
 
   useEffect(() => {
     async function get1() {
       try {
         const data = await value;
-        var previousyear = moment()
-          .subtract(365, "days")
-          .format("YYYY");
+        var previousyear = moment().subtract(1, "years").format("YYYY");
         var previousfinancials = await data.filter(
           (e) =>
             moment(e.financials_reporting_period).format("YYYY") ===
@@ -79,9 +79,8 @@ const Limits = ({ className, value, ...rest }) => {
     async function get2() {
       try {
         const data = await value;
-        var previousyear = moment()
-          .subtract(730, "days")
-          .format("YYYY");
+        var previousyear = moment().subtract(2, "years").format("YYYY");
+        setReportingYear2(previousyear);
         var previousfinancials = await data.filter(
           (e) =>
             moment(e.financials_reporting_period).format("YYYY") ===
@@ -103,9 +102,8 @@ const Limits = ({ className, value, ...rest }) => {
     async function get3() {
       try {
         const data = await value;
-        var previousyear = moment()
-          .subtract(1095, "days")
-          .format("YYYY");
+        var previousyear = moment().subtract(3, "years").format("YYYY");
+        setReportingYear3(previousyear);
         var previousfinancials = await data.filter(
           (e) =>
             moment(e.financials_reporting_period).format("YYYY") ===
@@ -152,14 +150,14 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(financials2.financials_reporting_period).format(
+                    {moment(reportingYear2).format(
                       "YYYY"
                     )}
                   </Box>
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(financials3.financials_reporting_period).format(
+                    {moment(reportingYear3).format(
                       "YYYY"
                     )}
                   </Box>
@@ -705,9 +703,7 @@ const Limits = ({ className, value, ...rest }) => {
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
                     <NumberFormat
-                      value={
-                        financials.total_liabilities_and_equity
-                      }
+                      value={financials.total_liabilities_and_equity}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"$"}
@@ -717,9 +713,7 @@ const Limits = ({ className, value, ...rest }) => {
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
                     <NumberFormat
-                      value={
-                        financials2.total_liabilities_and_equity
-                      }
+                      value={financials2.total_liabilities_and_equity}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"$"}
@@ -729,9 +723,7 @@ const Limits = ({ className, value, ...rest }) => {
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
                     <NumberFormat
-                      value={
-                        financials3.total_liabilities_and_equity
-                      }
+                      value={financials3.total_liabilities_and_equity}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"$"}
@@ -1171,7 +1163,7 @@ const Limits = ({ className, value, ...rest }) => {
                   Cash Flow from Operations
                 </TableCell>
                 <TableCell align="right">
-                <NumberFormat
+                  <NumberFormat
                     value={financials.cash_flow}
                     displayType={"text"}
                     thousandSeparator={true}
@@ -1241,7 +1233,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials.current_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1249,7 +1241,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials2.current_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1257,7 +1249,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials3.current_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
               </TableRow>
@@ -1270,7 +1262,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials.debt_equity_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1278,7 +1270,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials2.debt_equity_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1286,7 +1278,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials3.debt_equity_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
               </TableRow>
@@ -1299,7 +1291,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials.debt_ebitda_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1307,7 +1299,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials2.debt_ebitda_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1315,7 +1307,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials3.debt_ebitda_ratio}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
               </TableRow>
@@ -1328,7 +1320,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials.inventory_turnover}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1336,7 +1328,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials2.inventory_turnover}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1344,7 +1336,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials3.inventory_turnover}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
               </TableRow>
@@ -1357,7 +1349,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials.interest_coverage}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1365,7 +1357,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials2.interest_coverage}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
                 <TableCell align="right">
@@ -1373,7 +1365,7 @@ const Limits = ({ className, value, ...rest }) => {
                     value={financials3.interest_coverage}
                     displayType={"text"}
                     thousandSeparator={true}
-                    decimalScale='2'
+                    decimalScale="2"
                   />
                 </TableCell>
               </TableRow>

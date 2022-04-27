@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { InputField, DatePickerField } from "src/components/FormFields";
+import { InputField, DatePickerField, SelectField } from "src/components/FormFields";
+import SliderField from "src/components/FormFields/SliderField";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
@@ -45,6 +46,32 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const boolean = [
+  {
+    value: "yes",
+    label: "Yes",
+  },
+  {
+    value: "no",
+    label: "No",
+  },
+];
+
+const productUse = [
+  {
+    value: "direct-resale",
+    label: "Direct Resale",
+  },
+  {
+    value: "incorporation-into-product",
+    label: "Incorporation into Product",
+  },
+  {
+    value: "other",
+    label: "Other",
+  },
+];
+
 export default function HistoryForm(props) {
   const context = useUser();
   const classes = useStyles();
@@ -57,6 +84,14 @@ export default function HistoryForm(props) {
       buyer_reporting_year,
       buyer_reporting_year_transaction_amount,
       buyer_previous_year_number_invoices,
+      buyer_supplier_year_business_relation_started,
+      buyer_existing_disputes,
+      buyer_finance_department_contact_email,
+      buyer_invoices_paid_on_time,
+      buyer_invoices_past_due_30_days,
+      buyer_invoices_past_due_60_days,
+      buyer_invoices_past_due_90_days,
+      buyer_use_of_goods_purchased
     },
   } = props;
 
@@ -144,13 +179,24 @@ export default function HistoryForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}>
               <DatePickerField
                 name={buyer_reporting_year.name}
                 label={buyer_reporting_year.label}
                 format="yyyy"
                 views={["year"]}
-                minDate={new Date("2000/12/31")}
+                minDate={new Date("2021/12/31")}
+                maxDate={new Date("2021/12/31")}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={buyer_supplier_year_business_relation_started.name}
+                label={buyer_supplier_year_business_relation_started.label}
+                format="yyyy"
+                views={["year"]}
                 maxDate={new Date()}
                 fullWidth
                 variant="outlined"
@@ -193,6 +239,64 @@ export default function HistoryForm(props) {
               <InputField
                 name={buyer_insurance_name.name}
                 label={buyer_insurance_name.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_existing_disputes.name}
+                label={buyer_existing_disputes.label}
+                data={boolean}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_finance_department_contact_email.name}
+                label={buyer_finance_department_contact_email.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_use_of_goods_purchased.name}
+                label={buyer_use_of_goods_purchased.label}
+                data={productUse}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_paid_on_time.name}
+                label={buyer_invoices_paid_on_time.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_30_days.name}
+                label={buyer_invoices_past_due_30_days.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_60_days.name}
+                label={buyer_invoices_past_due_60_days.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_90_days.name}
+                label={buyer_invoices_past_due_90_days.label}
                 fullWidth
                 variant="outlined"
               />
