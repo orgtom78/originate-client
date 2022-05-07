@@ -167,7 +167,6 @@ export default function NewAccount() {
       const invoice_due_date = values["invoice_due_date"];
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
-      const ipu_attachment = values["ipu_attachment"];
       const invoice_number = values["invoice_number"];
       const cargo_insurance_attachment = values["cargo_insurance_attachment"];
       const bill_of_lading_attachment = values["bill_of_lading_attachment"];
@@ -194,7 +193,6 @@ export default function NewAccount() {
         invoice_attachment,
         invoice_number,
         offer_notice_attachment,
-        ipu_attachment,
         cargo_insurance_attachment,
         bill_of_lading_attachment,
         ipu_signature_name,

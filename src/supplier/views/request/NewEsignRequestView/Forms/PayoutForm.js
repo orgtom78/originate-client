@@ -60,12 +60,11 @@ export default function PayoutForm(props) {
       invoice_due_date,
       invoice_attachment,
       offer_notice_attachment,
-      ipu_attachment,
       invoice_number,
       cargo_insurance_attachment,
       bill_of_lading_attachment,
       ipu_signature_name,
-      ipu_signature_email
+      ipu_signature_email,
     },
   } = props;
 
@@ -78,7 +77,6 @@ export default function PayoutForm(props) {
   const updateinvoice = updatefields.values.invoice_attachment;
   const updatepo = updatefields.values.purchase_order_attachment;
   const updateoffer = updatefields.values.offer_notice_attachment;
-  const updateipu = updatefields.values.ipu_attachment;
   const updatecargo = updatefields.values.cargo_insurance_attachment;
   const updatebl = updatefields.values.bill_of_lading_attachment;
 
@@ -88,8 +86,6 @@ export default function PayoutForm(props) {
   const [popdf, setPopdf] = useState("");
   const [offerimg, setOfferImg] = useState("");
   const [offerpdf, setOfferpdf] = useState("");
-  const [ipuimg, setIpuImg] = useState("");
-  const [ipupdf, setIpupdf] = useState("");
   const [cargoimg, setCargoImg] = useState("");
   const [cargopdf, setCargopdf] = useState("");
   const [blimg, setBlImg] = useState("");
@@ -101,8 +97,6 @@ export default function PayoutForm(props) {
   const [posuccess, setPoSuccess] = useState(false);
   const [offerloading, setOfferLoading] = useState(false);
   const [offersuccess, setOfferSuccess] = useState(false);
-  const [ipuloading, setIpuLoading] = useState(false);
-  const [ipusuccess, setIpuSuccess] = useState(false);
   const [cargoloading, setCargoLoading] = useState(false);
   const [cargosuccess, setCargoSuccess] = useState(false);
   const [blloading, setBlLoading] = useState(false);
@@ -268,59 +262,6 @@ export default function PayoutForm(props) {
   }
 
   useEffect(() => {
-    if (updateipu) {
-      async function geturl() {
-        var uploadext = updateipu.split(".").pop();
-        var imageExtensions = [
-          "jpg",
-          "jpeg",
-          "bmp",
-          "gif",
-          "png",
-          "tiff",
-          "eps",
-          "svg",
-        ];
-        const j = imageExtensions.includes(uploadext);
-        if (j === true) {
-          const k = await Storage.get(updateipu, {
-            level: "private",
-            identityId: ident,
-          });
-          setIpuImg(k);
-        } else {
-          const l = await Storage.get(updateipu, {
-            level: "private",
-            identityId: ident,
-          });
-          setIpupdf(l);
-        }
-      }
-      geturl();
-    }
-  }, [updateipu, ident]);
-
-  function ipuisimageorpdf() {
-    if (ipuimg) {
-      return (
-        <>
-          <img className={classes.img} alt="complex" src={ipuimg} />
-        </>
-      );
-    } else {
-      return (
-        <>
-          <iframe
-            title="file"
-            style={{ width: "100%", height: "100%" }}
-            src={ipupdf}
-          />
-        </>
-      );
-    }
-  }
-
-  useEffect(() => {
     if (updatecargo) {
       async function geturl() {
         var uploadext = updatecargo.split(".").pop();
@@ -443,16 +384,6 @@ export default function PayoutForm(props) {
     if (b) {
       setCargoSuccess(true);
       setCargoLoading(false);
-    }
-  }
-
-  async function handleIpuClick() {
-    setIpuSuccess(false);
-    setIpuLoading(true);
-    const b = await ipuimg;
-    if (b) {
-      setIpuSuccess(true);
-      setIpuLoading(false);
     }
   }
 
@@ -584,38 +515,6 @@ export default function PayoutForm(props) {
                     >
                       {" "}
                       Offer File*
-                    </LoaderButton>
-                  </label>
-                </>
-              )}
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              {updateipu ? (
-                <>{ipuisimageorpdf()}</>
-              ) : (
-                <>
-                  <NewUploadField
-                    name={ipu_attachment.name}
-                    id={ipu_attachment.name}
-                    accept="image/*,application/pdf"
-                    style={{ display: "none" }}
-                    ident={requestId}
-                    userid={userId}
-                    identityid={ident}
-                  />
-                  <label htmlFor={ipu_attachment.name}>
-                    <LoaderButton
-                      id={ipu_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={ipuloading}
-                      success={ipusuccess}
-                      loading={ipuloading}
-                      onClick={handleIpuClick}
-                    >
-                      {" "}
-                      IPU File*
                     </LoaderButton>
                   </label>
                 </>
