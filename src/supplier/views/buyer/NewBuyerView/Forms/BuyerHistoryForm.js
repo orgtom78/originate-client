@@ -179,18 +179,6 @@ export default function HistoryForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={buyer_reporting_year.name}
-                label={buyer_reporting_year.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2021/12/31")}
-                maxDate={new Date("2021/12/31")}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerField
                 name={buyer_supplier_year_business_relation_started.name}
@@ -204,13 +192,12 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_next_year_projected_transaction_amount.name}
-                label={buyer_next_year_projected_transaction_amount.label}
+                name={buyer_previous_year_transaction_amount.name}
+                label={buyer_previous_year_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <InputField
                 name={buyer_reporting_year_transaction_amount.name}
@@ -221,8 +208,8 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_previous_year_transaction_amount.name}
-                label={buyer_previous_year_transaction_amount.label}
+                name={buyer_next_year_projected_transaction_amount.name}
+                label={buyer_next_year_projected_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
@@ -300,43 +287,6 @@ export default function HistoryForm(props) {
                 fullWidth
                 variant="outlined"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              {buyeripu ? (
-                <>{isimageorpdf()}</>
-              ) : (
-                <>
-                  <NewUploadField
-                    name={buyer_one_off_ipu_attachment.name}
-                    id={buyer_one_off_ipu_attachment.name}
-                    accept="image/*,application/pdf"
-                    style={{ display: "none" }}
-                    ident={buyerId}
-                    userid={usergroupId}
-                    identityid={identity}
-                  />
-                  <label htmlFor={buyer_one_off_ipu_attachment.name}>
-                    <LoaderButton
-                      id={buyer_one_off_ipu_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
-                    >
-                      {" "}
-                      Irrevocable Payment Undertaking
-                    </LoaderButton>
-                  </label>
-                </>
-              )}
-              <Typography variant="subtitle2">
-                <a href="https://originatesampledocs.s3.us-east-2.amazonaws.com/Originate-Capital-IPU-clean.docx">
-                  Download Sample
-                </a>
-              </Typography>
             </Grid>
           </Grid>
         </CardContent>

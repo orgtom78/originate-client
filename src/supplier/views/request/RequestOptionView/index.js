@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
-import { ArrowUp as ArrowUpIcon } from "react-feather";
-import { ArrowDown as ArrowDownIcon } from "react-feather";
+import { Clipboard as ClipBoardIcon } from "react-feather";
+import { AtSign as AtSignIcon } from "react-feather";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -37,8 +37,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Banks = () => {
+const Invoice = () => {
   const classes = useStyles();
+  const { id } = useParams();
 
   return (
     <Page className={clsx(classes.root)} title="Bank Accounts">
@@ -54,11 +55,11 @@ const Banks = () => {
             <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
-                  <Link to={`/investor/bank/remittance`}>
+                  <Link to={`/app/newrequest/${id}/`}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
                         <Avatar alt="remittance" variant="square">
-                          <ArrowUpIcon />
+                          <ClipBoardIcon />
                         </Avatar>
                       </Box>
                       <Typography
@@ -67,7 +68,7 @@ const Banks = () => {
                         gutterBottom
                         variant="h4"
                       >
-                        {"Remittance Account"}
+                        {"Manual New Invoice"}
                       </Typography>
                       <Typography
                         align="center"
@@ -85,11 +86,11 @@ const Banks = () => {
             <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
-                  <Link to={`/investor/bank/collection`}>
+                  <Link to={`/app/newesignrequest/${id}/`}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
-                        <Avatar alt="collectionn" variant="square">
-                          <ArrowDownIcon />
+                        <Avatar alt="collection" variant="square">
+                          <AtSignIcon />
                         </Avatar>
                       </Box>
                       <Typography
@@ -98,7 +99,7 @@ const Banks = () => {
                         gutterBottom
                         variant="h4"
                       >
-                        {"Collection Account"}
+                        {"E-Signature New Invoice"}
                       </Typography>
                       <Typography
                         align="center"
@@ -120,4 +121,4 @@ const Banks = () => {
   );
 };
 
-export default Banks;
+export default Invoice;

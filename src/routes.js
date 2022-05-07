@@ -5,7 +5,9 @@ import MainLayout from 'src/layouts/MainLayout';
 import InvestorLayout from 'src/layouts/InvestorLayout';
 import SupplierView from 'src/supplier/views/account/SupplierView';
 import RequestListView from 'src/supplier/views/request/RequestListView';
+import RequestOptionView from 'src/supplier/views/request/RequestOptionView';
 import NewRequestView from 'src/supplier/views/request/NewRequestView';
+import NewEsignRequestView from 'src/supplier/views/request/NewEsignRequestView';
 import DashboardView from 'src/supplier/views/reports/DashboardView';
 
 import LoginView from 'src/supplier/views/auth/LoginView';
@@ -102,6 +104,8 @@ import InvestorSettingsView from 'src/investor/views/settings/SettingsView';
       { path: 'updateubo/:id', element: !isAuthenticated ? <LoginView /> : <UpdateUboView /> },
       { path: 'requests', element: !isAuthenticated ? <LoginView /> : <RequestListView />  },
       { path: 'newrequest/:id', element: !isAuthenticated ? <LoginView /> : <NewRequestView />  },
+      { path: 'requestoptions/:id', element: !isAuthenticated ? <LoginView /> : <RequestOptionView />  },
+      { path: 'newesignrequest/:id', element: !isAuthenticated ? <LoginView /> : <NewEsignRequestView />  },
       { path: 'dashboard', element: !isAuthenticated ? <LoginView /> : <DashboardView /> },
       { path: 'buyers', element: !isAuthenticated ? <LoginView /> : <BuyerListView /> },
       { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },

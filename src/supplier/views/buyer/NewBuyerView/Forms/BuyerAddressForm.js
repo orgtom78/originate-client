@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { InputField, SelectField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import { Card, CardContent, Divider, Grid } from "@mui/material";
+import { Card, CardContent, Divider, Grid, Tooltip } from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
@@ -12,7 +12,7 @@ import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
 import currencies from "src/components/FormLists/currencies.js";
-import countries from "src/components/FormLists/countries.js";
+import countries from "src/components/FormLists/countries-obligors.js";
 import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
@@ -20,8 +20,16 @@ const curr = currencies;
 
 const terms = [
   {
+    value: "15",
+    label: "15 days",
+  },
+  {
     value: "30",
     label: "30 days",
+  },
+  {
+    value: "45",
+    label: "45 days",
   },
   {
     value: "60",
@@ -38,18 +46,6 @@ const terms = [
   {
     value: "180",
     label: "180 days",
-  },
-  {
-    value: "210",
-    label: "210 days",
-  },
-  {
-    value: "240",
-    label: "240 days",
-  },
-  {
-    value: "270",
-    label: "270 days",
   },
 ];
 
@@ -225,32 +221,6 @@ export default function BuyerAddressForm(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_loan_request_amount.name}
-                label={buyer_loan_request_amount.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectField
-                name={buyer_payment_terms.name}
-                label={buyer_payment_terms.label}
-                data={terms}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectListField
-                name={buyer_currency.name}
-                label={buyer_currency.label}
-                data={curr}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={buyer_name.name}
                 label={buyer_name.label}
                 fullWidth
@@ -323,6 +293,32 @@ export default function BuyerAddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_loan_request_amount.name}
+                label={buyer_loan_request_amount.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_payment_terms.name}
+                label={buyer_payment_terms.label}
+                data={terms}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectListField
+                name={buyer_currency.name}
+                label={buyer_currency.label}
+                data={curr}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               {updateregcert ? (
                 <>{isimageorpdf()}</>
               ) : (
@@ -337,6 +333,7 @@ export default function BuyerAddressForm(props) {
                     identityid={identity}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
+                  <Tooltip title="A complete set of trading documents (Invoice, PO, BL, Payment Proof) no older than 6 months">
                     <LoaderButton
                       id={buyer_sample_trading_docs_attachment.name}
                       fullWidth
@@ -350,6 +347,7 @@ export default function BuyerAddressForm(props) {
                       {" "}
                       Sample Tading Documents*
                     </LoaderButton>
+                  </Tooltip>
                   </label>
                 </>
               )}

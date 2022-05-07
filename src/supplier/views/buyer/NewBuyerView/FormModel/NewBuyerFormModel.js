@@ -29,8 +29,8 @@ const model = {
     },
     buyer_address_street: {
       name: "buyer_address_street",
-      label: "Street*",
-      requiredErrorMsg: "Street is required",
+      label: "Street/Exact Legal Address*",
+      requiredErrorMsg: "Exact legal address is required",
     },
     buyer_name: {
       name: "buyer_name",
@@ -82,12 +82,12 @@ const model = {
     },
     buyer_next_year_projected_transaction_amount: {
       name: "buyer_next_year_projected_transaction_amount",
-      label: "Next Year (2022) Anticipated Invoice Amount*",
+      label: "Whole Year (2022) Anticipated Invoice Amount*",
       requiredErrorMsg: "Anticipated Invoice Amount is required",
     },
     buyer_previous_year_transaction_amount: {
       name: "buyer_previous_year_transaction_amount",
-      label: "Previous Year (2020) Invoice Amount*",
+      label: "Whole Year (2020) Invoice Amount*",
       requiredErrorMsg: "Previous Invoice Amount is required",
     },
     buyer_reporting_year: {
@@ -97,12 +97,12 @@ const model = {
     },
     buyer_reporting_year_transaction_amount: {
       name: "buyer_reporting_year_transaction_amount",
-      label: "Reporting Year (2021) Invoice Amount*",
+      label: "Whole Year (2021) Invoice Amount*",
       requiredErrorMsg: "Invoice Amount for 2021 is required",
     },
     buyer_previous_year_number_invoices: {
       name: "buyer_previous_year_number_invoices",
-      label: "Previous Year (2020) Number of Invoices issued*",
+      label: "Whole Year (2020) Number of Invoices issued*",
       requiredErrorMsg:
         "The Number of Invoices issued in the previous year (2020) is required",
     },
@@ -110,11 +110,11 @@ const model = {
       name: "buyer_supplier_year_business_relation_started",
       label: "Year Business Relation started*",
       requiredErrorMsg:
-        "The Year in which your business relation with your buyer/client started is required",
+        "The year in which your business relation with your buyer/client started is required",
     },
     buyer_existing_disputes: {
       name: "buyer_existing_disputes",
-      label: "Do disputes with the Buyer exist?*",
+      label: "Do Invoice Disputes with the Buyer exist?*",
       requiredErrorMsg:
         "Existing disputes between your company and your buyer/client is a required field",
     },
@@ -132,19 +132,19 @@ const model = {
     },
     buyer_invoices_past_due_30_days: {
       name: "buyer_invoices_past_due_30_days",
-      label: "Buyer Invoices past due 30 Days",
+      label: "Invoices overdue for more than 30 Days",
       requiredErrorMsg:
       "Buyer Invoices past due 30 days is required",
     },
     buyer_invoices_past_due_60_days: {
       name: "buyer_invoices_past_due_60_days",
-      label: "Buyer Invoices past due 60 Days",
+      label: "Invoices overdue for more than 60 Days",
       requiredErrorMsg:
       "Buyer Invoices past due 60 days is required",
     },
     buyer_invoices_past_due_90_days: {
       name: "buyer_invoices_past_due_90_days",
-      label: "Buyer Invoices past due 90 Days",
+      label: "Invoices overdue for more than 90 Days",
       requiredErrorMsg:
       "Buyer Invoices past due 90 days is required",
     },

@@ -170,7 +170,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
     setRequestSuccess(true);
     setRequestLoading(false);
-    navigate("/investor/transactions");
+    navigate("/investor/requests");
   }
 
   function updateRequest(input) {

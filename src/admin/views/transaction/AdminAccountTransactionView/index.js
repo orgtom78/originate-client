@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import * as queries from "src/graphql/queries.js";
-import * as mutations from "src/graphql/mutations.js";
 import { API, graphqlOperation } from "aws-amplify";
 import {
-  AppBar,
   Box,
   Card,
   Container,
@@ -33,39 +31,11 @@ import AdapterDateFns from "@mui/lab/AdapterDateFns";
 import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.dark,
-    minHeight: "100%",
-    paddingBottom: theme.spacing(3),
-    paddingTop: theme.spacing(3),
-  },
-  avatar: {
-    marginRight: theme.spacing(2),
-  },
-  image: {
-    width: 128,
-    height: 128,
-  },
-  img: {
-    margin: "auto",
-    display: "block",
-    maxWidth: "100%",
-    maxHeight: "100%",
-  },
-  wrapper: {
-    margin: "auto",
-    position: "relative",
-  },
-}));
-
 const AdminAccountTransactionView = () => {
-  const classes = useStyles();
   const { id } = useParams();
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [trans, setTrans] = useState(["1"]);
-  const [value, setValue] = useState(0);
   const [searchterm, setSearchterm] = useState("");
   const [transactionstart, setTransactionstart] = useState(
     subDays(new Date(), 7)
@@ -91,7 +61,7 @@ const AdminAccountTransactionView = () => {
         data: { listTransactions: { items: itemsPage1, nextToken } },
       };
       const items = n.data.listTransactions.items;
-      const d = items.sort(function(a, b) {
+      const d = items.sort(function (a, b) {
         return new Date(b.transaction_date) - new Date(a.transaction_date);
       });
       setTrans(d);
@@ -99,12 +69,12 @@ const AdminAccountTransactionView = () => {
     getDynamoTransactions();
   }, [id]);
 
-  async function handleSearch() {
+  async function handleSearch(input) {
     setSuccess(false);
     setLoading(true);
     try {
-      const term = searchterm;
-      await searchTransactions(term);
+      const intg = input;
+      await searchTransactions(intg);
     } catch (e) {
       onError(e);
     }
@@ -114,8 +84,8 @@ const AdminAccountTransactionView = () => {
 
   async function searchTransactions(input) {
     if (input === "" || input === undefined) {
-      const c = await trans;
-      const d = c.sort(function(a, b) {
+      const c = trans;
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setTrans(d);
@@ -132,7 +102,7 @@ const AdminAccountTransactionView = () => {
       );
       if (result.data.searchTransactions.items.length > 0) {
         let array = await result.data.searchTransactions.items;
-        const d = array.sort(function(a, b) {
+        const d = array.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
         setTrans(d);
@@ -157,7 +127,7 @@ const AdminAccountTransactionView = () => {
     );
     const n = { data: { listTransactions: { items: itemsPage1, nextToken } } };
     const items = n.data.listTransactions.items;
-    const d = items.sort(function(a, b) {
+    const d = items.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setTrans(d);

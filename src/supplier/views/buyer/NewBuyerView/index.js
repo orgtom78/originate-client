@@ -118,7 +118,7 @@ export default function NewAccount() {
         values["buyer_next_year_projected_transaction_amount"];
       const buyer_previous_year_transaction_amount =
         values["buyer_previous_year_transaction_amount"];
-      const buyer_reporting_year = values["buyer_reporting_year"];
+      const buyer_reporting_year = '2021';
       const buyer_reporting_year_transaction_amount =
         values["buyer_reporting_year_transaction_amount"];
       const buyer_previous_year_number_invoices =
