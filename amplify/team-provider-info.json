@@ -45,7 +45,8 @@
     },
     "categories": {
       "auth": {
-        "originateclient84cf992c": {}
+        "originateclient84cf992c": {},
+        "true": {}
       },
       "function": {
         "plaid": {

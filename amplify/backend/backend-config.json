@@ -149,5 +149,10 @@
       ]
     }
   },
-  "analytics": {}
+  "analytics": {
+    "originatetest": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
+  }
 }
