@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Container, Tooltip, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Container,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
@@ -46,6 +53,11 @@ export default function NewAccount() {
   const context = useUser();
   const { id } = useParams();
   const requestId = "request-" + uuid();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   React.useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
@@ -200,7 +212,6 @@ export default function NewAccount() {
         ipu_e_signatureId,
         request_status,
       });
-      await _sleep(1000);
     } catch (e) {
       onError(e);
     }
@@ -223,8 +234,10 @@ export default function NewAccount() {
     );
   }
 
-  function _handleSubmit(values, actions) {
-    _submitForm(values, actions);
+  async function _handleSubmit(values, actions) {
+    setOpen(!open);
+    await _submitForm(values, actions);
+    handleClose();
     navigate("/app/requests");
   }
 
@@ -237,6 +250,13 @@ export default function NewAccount() {
           </Typography>
           <br></br>
           <React.Fragment>
+            <Backdrop
+              sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+              open={open}
+              onClick={handleClose}
+            >
+              <CircularProgress color="inherit" />
+            </Backdrop>
             <Formik
               initialValues={formInitialValues}
               validationSchema={currentValidationSchema}
