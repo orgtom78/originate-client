@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { InputField, DatePickerField, SelectField } from "src/components/FormFields";
+import {
+  InputField,
+  DatePickerField,
+  SelectField,
+} from "src/components/FormFields";
 import SliderField from "src/components/FormFields/SliderField";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
@@ -77,21 +81,19 @@ export default function HistoryForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      buyer_insurance_name,
-      buyer_one_off_ipu_attachment,
-      buyer_next_year_projected_transaction_amount,
-      buyer_previous_year_transaction_amount,
-      buyer_reporting_year,
-      buyer_reporting_year_transaction_amount,
-      buyer_previous_year_number_invoices,
       buyer_supplier_year_business_relation_started,
+      buyer_previous_year_transaction_amount,
+      buyer_reporting_year_transaction_amount,
+      buyer_next_year_projected_transaction_amount,
+      buyer_previous_year_number_invoices,
+      buyer_insurance_name,
       buyer_existing_disputes,
       buyer_finance_department_contact_email,
+      buyer_use_of_goods_purchased,
       buyer_invoices_paid_on_time,
       buyer_invoices_past_due_30_days,
       buyer_invoices_past_due_60_days,
       buyer_invoices_past_due_90_days,
-      buyer_use_of_goods_purchased
     },
   } = props;
 

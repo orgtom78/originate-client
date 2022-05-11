@@ -4,7 +4,7 @@ import { InputField, SelectField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid, Tooltip } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
@@ -121,7 +121,7 @@ export default function BuyerAddressForm(props) {
   const [usergroupId, setUsergroupId] = useState("");
   const [identity, setIdentity] = useState("");
 
- useEffect(() => {
+  useEffect(() => {
     async function onLoad() {
       const data = await context;
       const { sub, identity } = data;
@@ -132,7 +132,7 @@ export default function BuyerAddressForm(props) {
   }, [context]);
 
   useEffect(() => {
-    if (updateregcert !== '') {
+    if (updateregcert !== "") {
       async function geturl() {
         var uploadext = updateregcert.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
@@ -166,7 +166,7 @@ export default function BuyerAddressForm(props) {
   }
 
   function isimageorpdf() {
-  if (img !== ''){
+    if (img !== "") {
       return (
         <>
           <img className={classes.img} alt="complex" src={img} />
@@ -184,34 +184,6 @@ export default function BuyerAddressForm(props) {
       );
     }
   }
-
-  function NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        prefix="$"
-        type="text"
-      />
-    );
-  }
-
-  NumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
 
   return (
     <React.Fragment>
@@ -333,21 +305,21 @@ export default function BuyerAddressForm(props) {
                     identityid={identity}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
-                  <Tooltip title="A complete set of trading documents (Invoice, PO, BL, Payment Proof) no older than 6 months">
-                    <LoaderButton
-                      id={buyer_sample_trading_docs_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
-                    >
-                      {" "}
-                      Sample Tading Documents*
-                    </LoaderButton>
-                  </Tooltip>
+                    <Tooltip title="A complete set of trading documents (Invoice, PO, BL, Payment Proof) no older than 6 months">
+                      <LoaderButton
+                        id={buyer_sample_trading_docs_attachment.name}
+                        fullWidth
+                        component="span"
+                        startIcon={<UploadIcon />}
+                        disabled={loading}
+                        success={success}
+                        loading={loading}
+                        onClick={handleClick}
+                      >
+                        {" "}
+                        Sample Tading Documents*
+                      </LoaderButton>
+                    </Tooltip>
                   </label>
                 </>
               )}

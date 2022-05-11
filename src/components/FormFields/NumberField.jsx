@@ -5,32 +5,29 @@ import { TextField } from "@mui/material";
 import NumberFormat from "react-number-format";
 
 export default function InputField(props) {
-  const { errorText, ...rest } = props;
   const [field, meta, helper] = useField(props);
-  const { value } = field;
+  const { touched, error } = meta;
   const { setValue } = helper;
+  const isError = touched && error && true;
+  const { value } = field;
 
-  console.log(field)
-
-  function _renderHelperText() {
-    const [touched, error] = at(meta, "touched", "error");
-    if (touched && error) {
-      return error;
-    }
-  }
+  const handleChange = (event) => {
+    console.log(event.target)
+    const t = event.floatValue;
+    console.log(t)
+    setValue(Number(event.floatValue));
+  };
 
   return (
     <NumberFormat
+    {...field}
+    {...props}
+      error={isError}
+      invalidDateMessage={isError && error}
+      helperText={isError && error}
       customInput={TextField}
       thousandSeparator={true}
-      error={meta.touched && meta.error && true}
-      helperText={_renderHelperText()}
-      onValueChange={(values) => {
-        const { formattedValue, value } = values;
-        setValue(value);
-      }}
-      {...field}
-      {...rest}
+      onValueChange={handleChange}
     />
   );
 }

@@ -1,6 +1,15 @@
 import React, { useState } from "react";
-import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Button,
+  Backdrop,
+  CircularProgress,
+  Container,
+  Step,
+  Stepper,
+  StepLabel,
+  Typography,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
@@ -59,6 +68,11 @@ export default function NewAccount() {
   const [supid, setSupid] = useState("");
   const [identityId, setIdentityId] = useState("");
   const context = useUser();
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const isLastStep = activeStep === steps.length - 1;
 
@@ -79,66 +93,60 @@ export default function NewAccount() {
   }
 
   async function _submitForm(values, actions) {
-    await _sleep(1000);
     try {
       const userId = sub;
       const supplierId = supid;
-
-      const buyer_address_city = values["buyer_address_city"];
-      const buyer_address_postalcode = values["buyer_address_postalcode"];
-      const buyer_address_street = values["buyer_address_street"];
       const buyer_name = values["buyer_name"];
       const buyer_country = values["buyer_country"];
-      const buyer_website = values["buyer_website"];
+      const buyer_address_postalcode = values["buyer_address_postalcode"];
+      const buyer_address_city = values["buyer_address_city"];
+      const buyer_address_street = values["buyer_address_street"];
       const buyer_contact_name = values["buyer_contact_name"];
       const buyer_contact_email = values["buyer_contact_email"];
-      const buyer_currency = values["buyer_currency"];
+      const buyer_website = values["buyer_website"];
+      const buyer_sold_goods_description =
+        values["buyer_sold_goods_description"];
       const buyer_loan_request_amount = values["buyer_loan_request_amount"];
+      const buyer_currency = values["buyer_currency"];
       const buyer_payment_terms = values["buyer_payment_terms"];
       const buyer_sample_trading_docs_attachment =
         values["buyer_sample_trading_docs_attachment"];
-      const buyer_sold_goods_description =
-        values["buyer_sold_goods_description"];
 
-      const ebit = values["ebit"];
-      const balance_sheet_attachment = values["balance_sheet_attachment"];
-      const income_statement_attachment = values["income_statement_attachment"];
-      const net_profit = values["net_profit"];
       const financials_reporting_period = values["financials_reporting_period"];
       const sales = values["sales"];
+      const ebit = values["ebit"];
+      const net_profit = values["net_profit"];
+      const cost_of_goods_sold = values["cost_of_goods_sold"];
       const current_assets = values["current_assets"];
       const current_liabilities = values["current_liabilities"];
-      const cost_of_goods_sold = values["cost_of_goods_sold"];
       const total_equity = values["total_equity"];
+      const balance_sheet_attachment = values["balance_sheet_attachment"];
+      const income_statement_attachment = values["income_statement_attachment"];
 
-      const buyer_insurance_name = values["buyer_insurance_name"];
-      const buyer_one_off_ipu_attachment =
-        values["buyer_one_off_ipu_attachment"];
-      const buyer_next_year_projected_transaction_amount =
-        values["buyer_next_year_projected_transaction_amount"];
-      const buyer_previous_year_transaction_amount =
-        values["buyer_previous_year_transaction_amount"];
-      const buyer_reporting_year = '2021';
-      const buyer_reporting_year_transaction_amount =
-        values["buyer_reporting_year_transaction_amount"];
-      const buyer_previous_year_number_invoices =
-        values["buyer_previous_year_number_invoices"];
       const buyer_supplier_year_business_relation_started =
         values["buyer_supplier_year_business_relation_started"];
-      const buyer_existing_disputes =
-        values["buyer_existing_disputes"];
+      const buyer_previous_year_transaction_amount =
+        values["buyer_previous_year_transaction_amount"];
+      const buyer_reporting_year_transaction_amount =
+        values["buyer_reporting_year_transaction_amount"];
+      const buyer_next_year_projected_transaction_amount =
+        values["buyer_next_year_projected_transaction_amount"];
+      const buyer_previous_year_number_invoices =
+        values["buyer_previous_year_number_invoices"];
+      const buyer_insurance_name = values["buyer_insurance_name"];
+      const buyer_existing_disputes = values["buyer_existing_disputes"];
       const buyer_finance_department_contact_email =
         values["buyer_finance_department_contact_emails"];
-      const buyer_invoices_paid_on_time =
-        values["buyer_invoices_paid_on_time"];
+      const buyer_use_of_goods_purchased =
+        values["buyer_use_of_goods_purchased"];
+      const buyer_invoices_paid_on_time = values["buyer_invoices_paid_on_time"];
       const buyer_invoices_past_due_30_days =
         values["buyer_invoices_past_due_30_days"];
       const buyer_invoices_past_due_60_days =
         values["buyer_invoices_past_due_60_days"];
       const buyer_invoices_past_due_90_days =
         values["buyer_invoices_past_due_90_days"];
-      const buyer_use_of_goods_purchased =
-        values["buyer_use_of_goods_purchased"];
+      const buyer_reporting_year = "2021";
       const buyer_status = "Under Review";
 
       await createBuyer({
@@ -160,7 +168,6 @@ export default function NewAccount() {
         buyer_sample_trading_docs_attachment,
         buyer_sold_goods_description,
         buyer_insurance_name,
-        buyer_one_off_ipu_attachment,
         buyer_next_year_projected_transaction_amount,
         buyer_previous_year_transaction_amount,
         buyer_reporting_year,
@@ -174,7 +181,7 @@ export default function NewAccount() {
         buyer_invoices_past_due_30_days,
         buyer_invoices_past_due_60_days,
         buyer_invoices_past_due_90_days,
-        buyer_use_of_goods_purchased
+        buyer_use_of_goods_purchased,
       });
 
       await createFinancials({
@@ -212,9 +219,11 @@ export default function NewAccount() {
     );
   }
 
-  function _handleSubmit(values, actions) {
+  async function _handleSubmit(values, actions) {
     if (isLastStep) {
+      setOpen(!open);
       _submitForm(values, actions);
+      handleClose();
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});
@@ -244,6 +253,16 @@ export default function NewAccount() {
                 ))}
               </Stepper>
               <React.Fragment>
+                <Backdrop
+                  sx={{
+                    color: "#fff",
+                    zIndex: (theme) => theme.zIndex.drawer + 1,
+                  }}
+                  open={open}
+                  onClick={handleClose}
+                >
+                  <CircularProgress color="inherit" />
+                </Backdrop>
                 {activeStep === steps.length ? (
                   <BuyerListView />
                 ) : (
