@@ -287,7 +287,7 @@ export default function NewSupplier() {
   }
 
   function createUbo(input) {
-    return API.graphql(graphqlOperation(mutations.createUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.createUBO, { input: input }));
   }
 
   function createFinancials(input) {

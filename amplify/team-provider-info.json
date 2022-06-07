@@ -53,7 +53,7 @@
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "ac990b93abfb9d201235ad31854371",
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaid-6974712b397a436c6241-build.zip"
+          "s3Key": "amplify-builds/plaid-32344372384e742b3039-build.zip"
         },
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
@@ -65,6 +65,10 @@
           "zohoClientId": "1000.B2431PKHZX8NF86FB9VJV5T60P0U7J",
           "zohoClientSecret": "5cbdd5028d4e84106129411e2449400e828e6697fd",
           "zohoToken": "1000.efcbfbfac4b26d09deb9ea63d95f8295.d31aeb86cc808ea54f48d0763470819a"
+        },
+        "ocdefi": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/ocdefi-462f4a566e2f4276586b-build.zip"
         }
       }
     }

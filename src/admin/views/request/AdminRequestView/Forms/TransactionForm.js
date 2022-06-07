@@ -97,6 +97,8 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [cargo_insurance_name, setCargo_insurance_name] = useState("");
   const [request_status, setRequest_status] = useState("");
+  const [discount_fee_rate, setDiscount_fee_rate] = useState("");
+  const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
@@ -122,6 +124,8 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_date,
               invoice_due_date,
               cargo_insurance_name,
+              transaction_fee_rate,
+              discount_fee_rate
             },
           },
         } = request;
@@ -135,6 +139,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
         setCargo_insurance_name(cargo_insurance_name);
+        setDiscount_fee_rate(discount_fee_rate);
+        setTransaction_fee_rate(transaction_fee_rate);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -158,6 +164,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_date,
         invoice_due_date,
         cargo_insurance_name,
+        discount_fee_rate,
+        transaction_fee_rate
       });
     } catch (e) {
       onError(e);
@@ -256,6 +264,28 @@ const RequestForm = ({ className, value, ...rest }) => {
                         onChange={(e) => setInvoice_amount(e.target.value)}
                         required
                         value={invoice_amount || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="transaction_fee_rate"
+                        label="Transaction Fee (pa)"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setTransaction_fee_rate(e.target.value)}
+                        required
+                        value={transaction_fee_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="discount_fee_rate"
+                        label="Discount Fee (pa"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setDiscount_fee_rate(e.target.value)}
+                        required
+                        value={discount_fee_rate || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>

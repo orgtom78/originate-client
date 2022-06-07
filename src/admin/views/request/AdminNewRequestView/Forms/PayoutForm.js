@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
@@ -61,7 +61,7 @@ export default function PayoutForm(props) {
       invoice_attachment,
       offer_notice_attachment,
       ipu_attachment,
-      cargo_insurance_name,
+      invoice_number,
       cargo_insurance_attachment,
       bill_of_lading_attachment,
     },
@@ -733,8 +733,8 @@ export default function PayoutForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={cargo_insurance_name.name}
-                label={cargo_insurance_name.label}
+                name={invoice_number.name}
+                label={invoice_number.label}
                 fullWidth
                 variant="outlined"
               />

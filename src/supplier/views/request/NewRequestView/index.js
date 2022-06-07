@@ -25,6 +25,8 @@ import validationSchema from "./FormModel/validationSchema";
 import NewTransactionFormModel from "./FormModel/NewTransactionFormModel";
 import formInitialValues from "./FormModel/formInitialValues";
 
+const apiName = "ocdefi";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.dark,
@@ -43,10 +45,13 @@ export default function NewAccount() {
   const [sub, setSub] = useState("");
   const [supid, setSupid] = useState("");
   const [ident, setIdent] = useState("");
+  const [buyid, setBuyid] = useState("");
   const [investid, setInvestid] = useState("");
   const [investEmail, setInvestEmail] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
   const context = useUser();
   const { id } = useParams();
   const requestId = "request-" + uuid();
@@ -74,13 +79,17 @@ export default function NewAccount() {
       const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, investorId },
+          getBuyer: { buyer_name, investorId, buyerId, buyer_loan_discount_fee, buyer_loan_transaction_fee },
         },
       } = buyer;
       const buyername = await buyer_name;
       const invid = investorId;
+      const buyid = buyerId;
       setInvestid(invid);
       setBuyername(buyername);
+      setBuyid(buyid);
+      setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+      setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
     }
     load();
   }, [sub, id]);
@@ -101,6 +110,59 @@ export default function NewAccount() {
     load();
   }, [investid]);
 
+  React.useEffect(() => {
+    async function load() {
+      const token = await API.get(apiName, "/api/balance");
+      console.log(token);
+    }
+    load();
+  }, []);
+
+  React.useEffect(() => {
+  }, []);
+
+  async function burn(id) {
+    const myInit = {
+      body: { requestid: id }, // replace this with attributes you need
+    };
+    const res = await API.post(apiName, "/api/burn", myInit);
+    console.log(res);
+  }
+
+  async function mint(id) {
+    const myInit = {
+      body: {
+        url: `https://app.originate.capital/${id}`,
+        requestid: id,
+        amount: "45000",
+      }, // replace this with attributes you need
+    };
+    const res = await API.post(apiName, "/api/mint", myInit);
+    console.log(res);
+  }
+
+
+  async function approve() {
+    const res = await API.post(apiName, "/api/approveall");
+    console.log(res);
+  }
+
+  async function wrap(id) {
+    const myInit = {
+      body: { requestid: id, amount: "45000" }, // replace this with attributes you need
+    };
+    const res = await API.post(apiName, "/api/wrap", myInit);
+    console.log(res);
+  }
+
+  async function withdraw(id) {
+    const myInit = {
+      body: { requestid: id, amount: "45000" }, // replace this with attributes you need
+    };
+    const res = await API.post(apiName, "/api/withdraw", myInit);
+    console.log(res);
+  }
+
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -111,6 +173,9 @@ export default function NewAccount() {
       const sortkey = requestId;
       const supplierId = supid;
       const identityId = ident;
+      const buyerId = id;
+      const transaction_fee_rate = buyer_loan_transaction_fee;
+      const discount_fee_rate = buyer_loan_discount_fee;
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const investorId = investid;
@@ -134,8 +199,11 @@ export default function NewAccount() {
         sortkey,
         requestId,
         supplierId,
+        buyerId,
         identityId,
         investorId,
+        transaction_fee_rate,
+        discount_fee_rate,
         investor_email,
         buyer_name,
         supplier_name,

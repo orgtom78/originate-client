@@ -102,7 +102,7 @@ export default function NewBank2() {
       }
     }
     setLinkToken2(checkexistingtoken());
-  }, []);
+  }, [navigate]);
 
   async function getLinkToken() {
     const user = await Auth.currentAuthenticatedUser();

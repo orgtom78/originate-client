@@ -114,6 +114,22 @@ const status = [
   },
 ];
 
+const rate = [
+  {
+    value: "SOFR(Daily)",
+    label: "SOFR Daily",
+  },
+  {
+    value: "SOFR(1M)",
+    label: "SOFR 1M",
+  },
+  {
+    value: "SOFR(3M)",
+    label: "SOFR 3M",
+  },
+];
+
+
 const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -130,7 +146,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
     ""
   );
+  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
@@ -173,7 +191,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_status,
               buyer_loan_request_amount,
               buyer_loan_approved_amount,
+              buyer_loan_rate,
               buyer_loan_discount_fee,
+              buyer_loan_transaction_fee,
               buyer_logo,
               buyer_name,
               buyer_type,
@@ -199,7 +219,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_status(buyer_status);
         setBuyer_loan_request_amount(buyer_loan_request_amount);
         setBuyer_loan_approved_amount(buyer_loan_approved_amount);
+        setBuyer_loan_rate(buyer_loan_rate);
         setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+        setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
         setBuyer_logo(buyer_logo);
         setBuyer_name(buyer_name);
         setBuyer_date_of_incorporation(buyer_date_of_incorporation);
@@ -233,7 +255,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_status,
         buyer_loan_request_amount,
         buyer_loan_approved_amount,
+        buyer_loan_rate,
         buyer_loan_discount_fee,
+        buyer_loan_transaction_fee,
         buyer_logo,
         buyer_name,
         buyer_type,
@@ -396,15 +420,45 @@ const BuyerForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
+                      <Select
+                        fullWidth
+                        label="Base Rate"
+                        name="buyer_loan_rate"
+                        onChange={(e) => setBuyer_loan_rate(e.target.value)}
+                        required
+                        value={buyer_loan_rate || ""}
+                        variant="outlined"
+                      >
+                        {rate.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Loan discount (pa)"
+                        label="Discount (pa)"
                         name="buyer_loan_discount_fee"
                         onChange={(e) =>
                           setBuyer_loan_discount_fee(e.target.value)
                         }
                         required
                         value={buyer_loan_discount_fee || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Transaction Fee (pa)"
+                        name="buyer_loan_transaction_fee"
+                        onChange={(e) =>
+                          setBuyer_loan_transaction_fee(e.target.value)
+                        }
+                        required
+                        value={buyer_loan_transaction_fee || ""}
                         variant="outlined"
                       />
                     </Grid>

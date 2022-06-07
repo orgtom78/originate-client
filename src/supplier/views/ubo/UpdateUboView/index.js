@@ -128,7 +128,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
 
   async function getUbo(input) {
     try {
-      const ubo = await API.graphql(graphqlOperation(queries.getUbo, input));
+      const ubo = await API.graphql(graphqlOperation(queries.getUBO, input));
       const {
         data: {
           getUBO: {
@@ -190,7 +190,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
   }
 
   function updateUbo(input) {
-    return API.graphql(graphqlOperation(mutations.updateUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.updateUBO, { input: input }));
   }
 
   useEffect(() => {

@@ -10,6 +10,10 @@ import LatestLimits from "./LatestLimits";
 import TasksProgress from "./TasksProgress";
 import TotalTransactions from "./TotalTransactions";
 import TotalTransactionAmount from "./TotalTransactionAmount";
+import DiscountFeeAvg from "./DiscountFeeAvg";
+import TotalDiscountFee from "./TotalDiscountFee";
+import TransactionFeeAvg from "./TransactionFeeAvg";
+import TotalTransactionFee from "./TotalTransactionFee";
 
 import PastDue from "./PastDue";
 import Utilization from "./Utilization";
@@ -91,6 +95,18 @@ const Dashboard = () => {
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <UtilizationAmount value={transaction} />
+          </Grid>
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <DiscountFeeAvg value={transaction} />
+          </Grid>
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TotalDiscountFee value={transaction} />
+          </Grid>
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TransactionFeeAvg value={transaction} />
+          </Grid>
+          <Grid item lg={3} sm={6} xl={3} xs={12}>
+            <TotalTransactionFee value={transaction} />
           </Grid>
           <Grid item lg={12} md={12} xl={12} xs={12}></Grid>
           <Grid item lg={12} md={12} xl={12} xs={12}>

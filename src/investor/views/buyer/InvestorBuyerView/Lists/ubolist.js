@@ -58,7 +58,7 @@ const UboListView = (value) => {
           listUBOs: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listUbOs, { filter: filter })
+        graphqlOperation(queries.listUBOs, { filter: filter })
       );
       const n = { data: { listUBOs: { items: itemsPage1, nextToken } } };
       const items = await n.data.listUBOs.items;

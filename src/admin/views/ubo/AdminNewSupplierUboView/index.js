@@ -117,7 +117,7 @@ export default function NewAccount() {
   }
 
   function createUbo(input) {
-    return API.graphql(graphqlOperation(mutations.createUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.createUBO, { input: input }));
   }
 
   function _handleSubmit(values, actions) {

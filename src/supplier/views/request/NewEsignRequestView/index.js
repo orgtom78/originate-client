@@ -50,6 +50,8 @@ export default function NewAccount() {
   const [supEmail, setSupEmail] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
   const context = useUser();
   const { id } = useParams();
   const requestId = "request-" + uuid();
@@ -77,13 +79,15 @@ export default function NewAccount() {
       const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, investorId },
+          getBuyer: { buyer_name, investorId, buyer_loan_discount_fee, buyer_loan_transaction_fee },
         },
       } = buyer;
       const buyername = await buyer_name;
       const invid = investorId;
       setInvestid(invid);
       setBuyername(buyername);
+      setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+      setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
     }
     load();
   }, [sub, id]);
@@ -167,6 +171,9 @@ export default function NewAccount() {
       const supplierId = supid;
       const identityId = ident;
       const ipu_e_signatureId = iid;
+      const buyerId = id;
+      const transaction_fee_rate = buyer_loan_transaction_fee;
+      const discount_fee_rate = buyer_loan_discount_fee;
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const investorId = investid;
@@ -191,8 +198,11 @@ export default function NewAccount() {
         sortkey,
         requestId,
         supplierId,
+        buyerId,
         identityId,
         investorId,
+        transaction_fee_rate,
+        discount_fee_rate,
         investor_email,
         buyer_name,
         supplier_name,

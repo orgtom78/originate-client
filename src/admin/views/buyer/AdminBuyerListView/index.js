@@ -56,7 +56,9 @@ const AdminBuyerListView = () => {
       );
       const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
       const items = n.data.listBuyers.items;
+      console.log(items)
       var x = items.filter((e) => e.buyer_status !== null);
+      console.log(x)
       setBuyer(x);
     }
     getBuyers();

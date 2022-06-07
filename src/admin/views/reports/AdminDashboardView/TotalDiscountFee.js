@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Box, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import { Avatar, Card, CardContent, Grid, Typography, colors } from "@mui/material";
 import makeStyles from '@mui/styles/makeStyles';
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import MoneyIcon from "@mui/icons-material/Money";
+import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import NumberFormat from "react-number-format";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: "100%",
   },
@@ -16,16 +15,9 @@ const useStyles = makeStyles((theme) => ({
     height: 56,
     width: 56,
   },
-  differenceIcon: {
-    color: colors.green[900],
-  },
-  differenceValue: {
-    color: colors.green[900],
-    marginRight: theme.spacing(1),
-  },
 }));
 
-const Limits = ({ className, value, ...rest }) => {
+const TotalDiscountFee = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
 
@@ -53,8 +45,8 @@ const Limits = ({ className, value, ...rest }) => {
 
   function addamounts() {
     if (handle) {
-      var x = request.filter((e) => e.buyer_status === "Approved");
-      var fin = x.map((e) => e.buyer_loan_approved_amount);
+      var x = request.filter((e) => e.request_status === "Approved");
+      var fin = x.map((e) => e.discount_fee_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       const round = Math.round(sum);
@@ -70,7 +62,7 @@ const Limits = ({ className, value, ...rest }) => {
         <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              APPROVED LIMITS
+              TOTAL DISCOUNT FEE
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -85,26 +77,17 @@ const Limits = ({ className, value, ...rest }) => {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <MoneyIcon />
+              <CreditScoreIcon />
             </Avatar>
           </Grid>
         </Grid>
-        <Box mt={2} display="flex" alignItems="center">
-          <ArrowUpwardIcon className={classes.differenceIcon} />
-          <Typography className={classes.differenceValue} variant="body2">
-            0%
-          </Typography>
-          <Typography color="textSecondary" variant="caption">
-            Since last month
-          </Typography>
-        </Box>
       </CardContent>
     </Card>
   );
 };
 
-Limits.propTypes = {
+TotalDiscountFee.propTypes = {
   className: PropTypes.string,
 };
 
-export default Limits;
+export default TotalDiscountFee;
