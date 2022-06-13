@@ -64,7 +64,7 @@ const DiscountFeeAvg = ({ className, value, ...rest }) => {
         <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              DISCOUNNT FEE (Avg.)
+              DISCOUNT FEE (Avg.)
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat

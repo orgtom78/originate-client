@@ -41,7 +41,6 @@
     "babel-loader": "^8.2.5",
     "chart.js": "^3.7.1",
     "clsx": "^1.1.1",
-    "core-js": "^3.21.1",
     "d3-scale": "^4.0.2",
     "date-fns": "^2.16.1",
     "eslint-config-react-app": "^7.0.1",
@@ -69,6 +68,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.16.7",
+    "@types/uuid": "^8.3.4",
     "prettier": "^2.6.2"
   }
 }

@@ -20,8 +20,16 @@ const curr = currencies;
 
 const terms = [
   {
+    value: "15",
+    label: "15 days",
+  },
+  {
     value: "30",
     label: "30 days",
+  },
+  {
+    value: "45",
+    label: "45 days",
   },
   {
     value: "60",
@@ -38,18 +46,6 @@ const terms = [
   {
     value: "180",
     label: "180 days",
-  },
-  {
-    value: "210",
-    label: "210 days",
-  },
-  {
-    value: "240",
-    label: "240 days",
-  },
-  {
-    value: "270",
-    label: "270 days",
   },
 ];
 

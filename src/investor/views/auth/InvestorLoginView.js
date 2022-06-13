@@ -68,10 +68,10 @@ export default function InvestorLoginView() {
                 <Box mt={3} mb={1}>
                   <Typography
                     align="center"
-                    color="textSecondary"
-                    variant="body1"
+                    color="textPrimary"
+                    variant="h2"
                   >
-                    Login with your investor credentials
+                    Sign in with your investor credentials
                   </Typography>
                 </Box>
                 <TextField

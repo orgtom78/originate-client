@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Container, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { Auth } from "aws-amplify";
@@ -37,7 +37,7 @@ export default function NewUserGroup() {
   AWS.config = new AWS.Config();
   AWS.config.accessKeyId = awsconfig.accessKeyId;
   AWS.config.secretAccessKey = awsconfig.secretAccessKey;
-  AWS.config.region = "us-east-2";  
+  AWS.config.region = "us-east-2";
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -78,14 +78,30 @@ export default function NewUserGroup() {
       Username: input.email,
       UserPoolId: awsconfig.aws_user_pools_id,
     };
-    let params = {
+    let investor = {
       GroupName: "Investor",
+      Username: input.email,
+      UserPoolId: awsconfig.aws_user_pools_id,
+    };
+    let spv = {
+      GroupName: "Spv",
+      Username: input.email,
+      UserPoolId: awsconfig.aws_user_pools_id,
+    };
+    let broker = {
+      GroupName: "Broker",
       Username: input.email,
       UserPoolId: awsconfig.aws_user_pools_id,
     };
     let confirm = await cognito.adminConfirmSignUp(request).promise();
     if (input.group_type === "Investor") {
-      let group = await cognito.adminAddUserToGroup(params).promise();
+      let group = await cognito.adminAddUserToGroup(investor).promise();
+      return group;
+    } else if (input.group_type === "Spv") {
+      let group = await cognito.adminAddUserToGroup(spv).promise();
+      return group;
+    } else if (input.group_type === "Broker") {
+      let group = await cognito.adminAddUserToGroup(broker).promise();
       return group;
     }
     console.log(confirm);

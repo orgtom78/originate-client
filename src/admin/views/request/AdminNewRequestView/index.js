@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Container, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
@@ -37,10 +37,14 @@ export default function NewAccount() {
   const [ident, setIdent] = useState("");
   const [userId, setUserId] = useState("");
   const [investid, setInvestid] = useState("");
+  const [brokerid, setBrokerid] = useState("");
+  const [spvid, setSpvid] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
-  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const { id } = useParams();
   const { buyId } = useParams();
   const { supId } = useParams();
@@ -51,16 +55,29 @@ export default function NewAccount() {
       const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, investorId, identityId, userId, buyer_loan_discount_fee, buyer_loan_transaction_fee },
+          getBuyer: {
+            buyer_name,
+            investorId,
+            brokerId,
+            spvId,
+            identityId,
+            userId,
+            buyer_loan_discount_fee,
+            buyer_loan_transaction_fee,
+            buyer_loan_broker_fee,
+          },
         },
       } = buyer;
       const buyername = await buyer_name;
       setIdent(identityId);
       setUserId(userId);
       setInvestid(investorId);
+      setBrokerid(brokerId);
+      setSpvid(spvId);
       setBuyername(buyername);
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+      setBuyer_loan_broker_fee(buyer_loan_broker_fee);
     }
     load();
   }, [id, buyId]);
@@ -99,11 +116,19 @@ export default function NewAccount() {
       const identityId = ident;
       const investorId = investid;
       const buyerId = id;
+      const brokerId = brokerid;
+      const spvId = spvid;
       const period = moment(values["invoice_due_date"]).diff(moment(), "days");
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
-      const transaction_fee_amount = values["invoice_amount"] * transaction_fee_rate/100 * period / 360;
-      const discount_fee_amount = values["invoice_amount"] * discount_fee_rate/100 * period / 360;
+      const broker_fee_rate = buyer_loan_broker_fee;
+      const transaction_fee_amount =
+        (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
+        360;
+      const discount_fee_amount =
+        (((values["invoice_amount"] * discount_fee_rate) / 100) * period) / 360;
+      const broker_fee_amount =
+        (((values["invoice_amount"] * broker_fee_rate) / 100) * period) / 360;
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const purchase_order_attachment = values["purchase_order_attachment"];
@@ -127,11 +152,14 @@ export default function NewAccount() {
         supplierId,
         buyerId,
         investorId,
+        brokerId,
+        spvId,
         identityId,
         discount_fee_rate,
         transaction_fee_rate,
         discount_fee_amount,
         transaction_fee_amount,
+        broker_fee_amount,
         buyer_name,
         supplier_name,
         purchase_order_attachment,

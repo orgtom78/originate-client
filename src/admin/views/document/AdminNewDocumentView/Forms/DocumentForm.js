@@ -23,6 +23,10 @@ const type = [
     label: "RPA",
   },
   {
+    value: "RAA",
+    label: "RAA",
+  },
+  {
     value: "IPU",
     label: "IPU",
   },

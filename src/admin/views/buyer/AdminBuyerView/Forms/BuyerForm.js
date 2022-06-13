@@ -129,33 +129,43 @@ const rate = [
   },
 ];
 
+const emptyi = [
+  {
+    userId: "",
+    investor_name: "",
+  },
+];
 
 const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { id } = useParams();
 
+  const [investor, setInvestor] = useState([]);
   const [buyerId, setBuyerId] = useState("");
   const [investorId, setInvestorId] = useState("");
   const [userId, setUserId] = useState("");
   const [identityId, setIdentityId] = useState("");
+  const [broker, setBroker] = useState([]);
+  const [brokerId, setBrokerId] = useState("");
+  const [spv, setSpv] = useState([]);
+  const [spvId, setSpvId] = useState("");
+
   const [buyer_status, setBuyer_status] = useState("");
-  const [buyer_loan_request_amount, setBuyer_loan_request_amount] = useState(
-    ""
-  );
-  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
-    ""
-  );
+  const [buyer_loan_request_amount, setBuyer_loan_request_amount] =
+    useState("");
+  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
+    useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
-  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
-  const [
-    buyer_date_of_incorporation,
-    setBuyer_date_of_incorporation,
-  ] = useState("");
+  const [buyer_date_of_incorporation, setBuyer_date_of_incorporation] =
+    useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
@@ -188,12 +198,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
               userId,
               identityId,
               investorId,
+              brokerId,
+              spvId,
               buyer_status,
               buyer_loan_request_amount,
               buyer_loan_approved_amount,
               buyer_loan_rate,
               buyer_loan_discount_fee,
               buyer_loan_transaction_fee,
+              buyer_loan_broker_fee,
               buyer_logo,
               buyer_name,
               buyer_type,
@@ -214,6 +227,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
         } = buyer;
         setBuyerId(buyerId);
         setInvestorId(investorId);
+        setBrokerId(brokerId);
+        setSpvId(spvId);
         setUserId(userId);
         setIdentityId(identityId);
         setBuyer_status(buyer_status);
@@ -222,6 +237,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_loan_rate(buyer_loan_rate);
         setBuyer_loan_discount_fee(buyer_loan_discount_fee);
         setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+        setBuyer_loan_broker_fee(buyer_loan_broker_fee);
         setBuyer_logo(buyer_logo);
         setBuyer_name(buyer_name);
         setBuyer_date_of_incorporation(buyer_date_of_incorporation);
@@ -252,12 +268,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
       await updateBuyer({
         id,
         investorId,
+        brokerId,
+        spvId,
         buyer_status,
         buyer_loan_request_amount,
         buyer_loan_approved_amount,
         buyer_loan_rate,
         buyer_loan_discount_fee,
         buyer_loan_transaction_fee,
+        buyer_loan_broker_fee,
         buyer_logo,
         buyer_name,
         buyer_type,
@@ -281,6 +300,52 @@ const BuyerForm = ({ className, value, ...rest }) => {
     setBuyerLoading(false);
     navigate(`/admin/buyer/${id}`);
   }
+
+  useEffect(() => {
+    async function getInvestors() {
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listInvestors));
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listInvestors.items;
+      const ids = items.map((item) => item.userId);
+      setInvestorId(ids[0]);
+      setInvestor(items);
+    }
+    getInvestors();
+  }, []);
+
+  useEffect(() => {
+    async function getBrokers() {
+      const {
+        data: {
+          listBrokers: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listBrokers));
+      const n = { data: { listBrokers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBrokers.items;
+      const ids = items.map((item) => item.userId);
+      setBroker(items);
+    }
+    getBrokers();
+  }, []);
+
+  useEffect(() => {
+    async function getSpvs() {
+      const {
+        data: {
+          listSpvs: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listSpvs));
+      const n = { data: { listSpvs: { items: itemsPage1, nextToken } } };
+      const items = n.data.listSpvs.items;
+      const ids = items.map((item) => item.userId);
+      setSpv(items);
+    }
+    getSpvs();
+  }, []);
 
   function updateBuyer(input) {
     return API.graphql(
@@ -349,16 +414,68 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         ))}
                       </Select>
                     </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
+                    <Grid item xs={12} sm={12}>
+                      <Select
                         fullWidth
-                        label="Investor ID"
                         name="investorId"
+                        label="Investor"
                         onChange={(e) => setInvestorId(e.target.value)}
                         required
                         value={investorId || ""}
                         variant="outlined"
-                      />
+                      >
+                        {investor ? (
+                          investor.map((item, index) => (
+                            <MenuItem key={index} value={item.userId}>
+                              {item.investor_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="spvId"
+                        label="SPV"
+                        onChange={(e) => setSpvId(e.target.value)}
+                        required
+                        value={spvId || ""}
+                        variant="outlined"
+                      >
+                        {spv ? (
+                          spv.map((item, index) => (
+                            <MenuItem key={index} value={item.userId}>
+                              {item.spv_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="brokerId"
+                        label="Broker"
+                        onChange={(e) => setBrokerId(e.target.value)}
+                        required
+                        value={brokerId || ""}
+                        variant="outlined"
+                      >
+                        {broker ? (
+                          broker.map((item, index) => (
+                            <MenuItem key={index} value={item.brokerId}>
+                              {item.broker_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
                     </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
@@ -463,6 +580,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Broker Fee (pa)"
+                        name="buyer_loan_broker_fee"
+                        onChange={(e) =>
+                          setBuyer_loan_broker_fee(e.target.value)
+                        }
+                        required
+                        value={buyer_loan_broker_fee || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
                         label="Company Type"
@@ -557,7 +687,9 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField fullWidth {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>

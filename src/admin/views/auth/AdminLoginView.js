@@ -72,10 +72,10 @@ export default function LoginView() {
                 <Box mt={3} mb={1}>
                   <Typography
                     align="center"
-                    color="textSecondary"
-                    variant="body1"
+                    color="textPrimary"
+                    variant="h2"
                   >
-                    Login with your admin credentials
+                    Sign in with your admin credentials
                   </Typography>
                 </Box>
                 <TextField
