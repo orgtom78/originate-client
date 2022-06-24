@@ -197,6 +197,16 @@ const InvestorTransactionListView = () => {
           </StyledEngineProvider>
         </>
       );
+    } else if (request === "Declined") {
+      return (
+        <>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={request} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </>
+      );
     } else {
       return (
         <>
@@ -284,9 +294,11 @@ const InvestorTransactionListView = () => {
                     <TableHead>
                       <TableRow>
                         <TableCell>Buyer's Name</TableCell>
-                        <TableCell>Suppliers' Name</TableCell>
+                        <TableCell>Supplier's Name</TableCell>
                         <TableCell>Invoice Number</TableCell>
                         <TableCell>Amount</TableCell>
+                        <TableCell>Discount Fee</TableCell>
+                        <TableCell>Platform Fee</TableCell>
                         <TableCell>Currency</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Invoice Date</TableCell>
@@ -325,6 +337,28 @@ const InvestorTransactionListView = () => {
                                 displayType={"text"}
                                 thousandSeparator={true}
                                 prefix={"$"}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <NumberFormat
+                                color="textPrimary"
+                                variant="h3"
+                                value={request.discount_fee_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                prefix={"$"}
+                                decimalScale="2"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <NumberFormat
+                                color="textPrimary"
+                                variant="h3"
+                                value={request.transaction_fee_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                prefix={"$"}
+                                decimalScale="2"
                               />
                             </TableCell>
                             <TableCell>{`${request.invoice_currency}`}</TableCell>

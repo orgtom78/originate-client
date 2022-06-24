@@ -118,7 +118,8 @@ export default function NewAccount() {
       const buyerId = id;
       const brokerId = brokerid;
       const spvId = spvid;
-      const period = moment(values["invoice_due_date"]).diff(moment(), "days");
+      const payout_date = moment();
+      const period = moment(values["invoice_due_date"]).diff(payout_date, "days");
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
@@ -159,6 +160,7 @@ export default function NewAccount() {
         transaction_fee_rate,
         discount_fee_amount,
         transaction_fee_amount,
+        broker_fee_rate,
         broker_fee_amount,
         buyer_name,
         supplier_name,
@@ -175,6 +177,7 @@ export default function NewAccount() {
         cargo_insurance_attachment,
         bill_of_lading_attachment,
         request_status,
+        payout_date,
       });
     } catch (e) {
       onError(e);

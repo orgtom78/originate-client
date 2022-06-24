@@ -299,7 +299,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleBalanceClick}
                     >
                       {" "}
-                      Buyer Balance Sheet*
+                      Buyer Balance Sheet
                     </LoaderButton>
                   </label>
                 </>
@@ -331,7 +331,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleIncomeClick}
                     >
                       {" "}
-                      Buyer Income Statement*
+                      Buyer Income Statement
                     </LoaderButton>
                   </label>
                 </>

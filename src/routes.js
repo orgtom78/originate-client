@@ -107,6 +107,8 @@ const InvestorRemittanceConnectView = lazy(() => import('src/investor/views/bank
 const InvestorRemittanceTransactionsView = lazy(() => import('src/investor/views/bank/InvestorRemittanceTransactionsView'));
 const InvestorCollectionConnectView = lazy(() => import('src/investor/views/bank/InvestorCollectionConnectView'));
 const InvestorCollectionTransactionsView = lazy(() => import('src/investor/views/bank/InvestorCollectionTransactionsView'));
+const InvestorNewFinancialsView = lazy(() => import('src/investor/views/financials/InvestorNewFinancialsView'));
+const InvestorFinancialsView = lazy(() => import("src/investor/views/financials/InvestorUpdateFinancialsView"));
 const InvestorSettingsView = lazy(() => import('src/investor/views/settings/SettingsView'));
 
 const SpvDashboardView = lazy(() => import('src/spv/views/reports/SpvDashboardView'));
@@ -277,6 +279,8 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'bank/remittance/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorRemittanceTransactionsView />},
       { path: 'bank/collection', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionConnectView />},
       { path: 'bank/collection/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionTransactionsView />},
+      { path: 'investornewfinancials/:id/:buyId/:ident', element: !isInvestor  ? <InvestorLoginView /> : <InvestorNewFinancialsView />},
+      { path: 'financials/:id', element: !isInvestor  ? <InvestorLoginView /> : <InvestorFinancialsView />},
       { path: 'settings', element: !isInvestor ? <InvestorLoginView /> : <InvestorSettingsView /> },
       { path: '*', element: <Navigate to="investor/404" /> }
     ]

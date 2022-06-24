@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
+  Box,
+  Card,
+  CardContent,
   Container,
+  Divider,
   Grid,
   Typography,
 } from "@mui/material";
@@ -197,7 +202,19 @@ const Buyer = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <FinancialsListView value={fin} />
+                  <Card maxWidth={false}>
+                    <CardContent>
+                      <FinancialsListView value={fin} />
+                    </CardContent>
+                    <Divider />
+                    <Box display="flex" justifyContent="flex-end" p={2}>
+                      <Link
+                        to={`/investor/investornewfinancials/${userId}/${buyerId}/${identityId}`}
+                      >
+                        <Button>Add Financials</Button>
+                      </Link>
+                    </Box>
+                  </Card>
                 </AccordionDetails>
               </Accordion>
             </Grid>

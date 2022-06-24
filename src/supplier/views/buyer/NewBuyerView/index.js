@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import {
   Button,
-  Backdrop,
   CircularProgress,
   Container,
   Step,
@@ -68,11 +67,6 @@ export default function NewAccount() {
   const [supid, setSupid] = useState("");
   const [identityId, setIdentityId] = useState("");
   const context = useUser();
-  const [open, setOpen] = React.useState(false);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const isLastStep = activeStep === steps.length - 1;
 
@@ -87,10 +81,6 @@ export default function NewAccount() {
     }
     onLoad();
   }, [context]);
-
-  function _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
 
   async function _submitForm(values, actions) {
     try {
@@ -221,9 +211,7 @@ export default function NewAccount() {
 
   async function _handleSubmit(values, actions) {
     if (isLastStep) {
-      setOpen(!open);
       _submitForm(values, actions);
-      handleClose();
     } else {
       setActiveStep(activeStep + 1);
       actions.setTouched({});
@@ -253,16 +241,6 @@ export default function NewAccount() {
                 ))}
               </Stepper>
               <React.Fragment>
-                <Backdrop
-                  sx={{
-                    color: "#fff",
-                    zIndex: (theme) => theme.zIndex.drawer + 1,
-                  }}
-                  open={open}
-                  onClick={handleClose}
-                >
-                  <CircularProgress color="inherit" />
-                </Backdrop>
                 {activeStep === steps.length ? (
                   <BuyerListView />
                 ) : (

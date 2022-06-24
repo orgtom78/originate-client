@@ -7,18 +7,18 @@ import {
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
-import industries from "src/components/FormLists/industries.js";
+
 import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
-const ind = industries;
+
 const type = [
   {
     value: "Corporation",
@@ -87,7 +87,8 @@ export default function AddressForm(props) {
       supplier_address_number,
       supplier_address_postalcode,
       supplier_country,
-      supplier_industry,
+      supplier_register_number,
+      supplier_website,
       supplier_registration_cert_attachment,
     },
   } = props;
@@ -96,7 +97,8 @@ export default function AddressForm(props) {
   const supplierId = props.vsupplier;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const updateregcert = updatefields.values.supplier_registration_cert_attachment;
+  const updateregcert =
+    updatefields.values.supplier_registration_cert_attachment;
   const updatelogo = updatefields.values.supplier_logo;
 
   const [identity, setIdentity] = useState("");
@@ -275,10 +277,17 @@ export default function AddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <SelectListField
-                name={supplier_industry.name}
-                label={supplier_industry.label}
-                data={ind}
+              <InputField
+                name={supplier_register_number.name}
+                label={supplier_register_number.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={supplier_website.name}
+                label={supplier_website.label}
                 fullWidth
                 variant="outlined"
               />

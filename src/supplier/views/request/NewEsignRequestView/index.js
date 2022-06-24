@@ -42,16 +42,22 @@ export default function NewAccount() {
   const classes = useStyles();
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
+  const [supEmail, setSupEmail] = useState("");
   const [sub, setSub] = useState("");
   const [supid, setSupid] = useState("");
   const [ident, setIdent] = useState("");
+  const [buyid, setBuyid] = useState("");
   const [investid, setInvestid] = useState("");
+  const [brokerid, setBrokerid] = useState("");
+  const [spvid, setSpvid] = useState("");
   const [investEmail, setInvestEmail] = useState("");
-  const [supEmail, setSupEmail] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
-  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
+
   const context = useUser();
   const { id } = useParams();
   const requestId = "request-" + uuid();
@@ -79,15 +85,29 @@ export default function NewAccount() {
       const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, investorId, buyer_loan_discount_fee, buyer_loan_transaction_fee },
+          getBuyer: {
+            buyer_name,
+            buyerId,
+            investorId,
+            brokerId,
+            spvId,
+            buyer_loan_discount_fee,
+            buyer_loan_transaction_fee,
+            buyer_loan_broker_fee,
+          },
         },
       } = buyer;
       const buyername = await buyer_name;
       const invid = investorId;
+      const buyid = buyerId;
       setInvestid(invid);
+      setBrokerid(brokerId);
+      setSpvid(spvId);
       setBuyername(buyername);
+      setBuyid(buyid);
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+      setBuyer_loan_broker_fee(buyer_loan_broker_fee);
     }
     load();
   }, [sub, id]);
@@ -170,10 +190,24 @@ export default function NewAccount() {
       const sortkey = requestId;
       const supplierId = supid;
       const identityId = ident;
-      const ipu_e_signatureId = iid;
       const buyerId = id;
+      const brokerId = brokerid;
+      const spvId = spvid;
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
+      const broker_fee_rate = buyer_loan_broker_fee;
+      const payout_date = moment();
+      const period = moment(values["invoice_due_date"]).diff(
+        payout_date,
+        "days"
+      );
+      const transaction_fee_amount =
+        (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
+        360;
+      const discount_fee_amount =
+        (((values["invoice_amount"] * discount_fee_rate) / 100) * period) / 360;
+      const broker_fee_amount =
+        (((values["invoice_amount"] * broker_fee_rate) / 100) * period) / 360;
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const investorId = investid;
@@ -186,12 +220,14 @@ export default function NewAccount() {
       const invoice_due_date = values["invoice_due_date"];
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
+      const ipu_attachment = values["ipu_attachment"];
       const invoice_number = values["invoice_number"];
       const cargo_insurance_attachment = values["cargo_insurance_attachment"];
       const bill_of_lading_attachment = values["bill_of_lading_attachment"];
+      const request_status = "Under Review";
+      const ipu_e_signatureId = iid;
       const ipu_signature_name = values["ipu_signature_name"];
       const ipu_signature_email = values["ipu_signature_email"];
-      const request_status = "Under Review";
 
       await createRequest({
         userId,
@@ -199,10 +235,16 @@ export default function NewAccount() {
         requestId,
         supplierId,
         buyerId,
+        brokerId,
+        spvId,
         identityId,
         investorId,
         transaction_fee_rate,
         discount_fee_rate,
+        transaction_fee_amount,
+        discount_fee_amount,
+        broker_fee_rate,
+        broker_fee_amount,
         investor_email,
         buyer_name,
         supplier_name,
@@ -215,12 +257,14 @@ export default function NewAccount() {
         invoice_attachment,
         invoice_number,
         offer_notice_attachment,
+        ipu_attachment,
         cargo_insurance_attachment,
         bill_of_lading_attachment,
+        request_status,
+        payout_date,
         ipu_signature_name,
         ipu_signature_email,
         ipu_e_signatureId,
-        request_status,
       });
     } catch (e) {
       onError(e);

@@ -50,20 +50,17 @@ const Limits = ({ className, value, ...rest }) => {
   const [financials, setFinancials] = useState([]);
   const [financials2, setFinancials2] = useState([]);
   const [financials3, setFinancials3] = useState([]);
-  const [reportingYear2, setReportingYear2] = useState([]);
-  const [reportingYear3, setReportingYear3] = useState([]);
 
   useEffect(() => {
     async function get1() {
       try {
         const data = await value;
-        var previousyear = moment().subtract(1, "years").format("YYYY");
-        var previousfinancials = await data.filter(
-          (e) =>
-            moment(e.financials_reporting_period).format("YYYY") ===
-            previousyear
-        );
-        const a = await previousfinancials[0];
+        const s = data.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+        });
+        const a = await s[0];
         if (a !== undefined) {
           setFinancials(a);
         }
@@ -79,14 +76,12 @@ const Limits = ({ className, value, ...rest }) => {
     async function get2() {
       try {
         const data = await value;
-        var previousyear = moment().subtract(2, "years").format("YYYY");
-        setReportingYear2(previousyear);
-        var previousfinancials = await data.filter(
-          (e) =>
-            moment(e.financials_reporting_period).format("YYYY") ===
-            previousyear
-        );
-        const a = await previousfinancials[0];
+        const s = data.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+        });
+        const a = await s[1];
         if (a !== undefined) {
           setFinancials2(a);
         }
@@ -102,14 +97,12 @@ const Limits = ({ className, value, ...rest }) => {
     async function get3() {
       try {
         const data = await value;
-        var previousyear = moment().subtract(3, "years").format("YYYY");
-        setReportingYear3(previousyear);
-        var previousfinancials = await data.filter(
-          (e) =>
-            moment(e.financials_reporting_period).format("YYYY") ===
-            previousyear
-        );
-        const a = await previousfinancials[0];
+        const s = data.sort(function(a,b){
+          // Turn your strings into dates, and then subtract them
+          // to get a value that is either negative, positive, or zero.
+          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+        });
+        const a = await s[2];
         if (a !== undefined) {
           setFinancials3(a);
         }
@@ -150,16 +143,12 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(reportingYear2).format(
-                      "YYYY"
-                    )}
+                    {moment(financials2.financials_reporting_period).format("YYYY")}
                   </Box>
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(reportingYear3).format(
-                      "YYYY"
-                    )}
+                    {moment(financials3.financials_reporting_period).format("YYYY")}
                   </Box>
                 </TableCell>
               </TableRow>
@@ -927,35 +916,6 @@ const Limits = ({ className, value, ...rest }) => {
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Interest Expenses
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials.interest_expenses}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials2.interest_expenses}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials3.interest_expenses}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
                   Other Expenses
                 </TableCell>
                 <TableCell align="right">
@@ -985,17 +945,71 @@ const Limits = ({ className, value, ...rest }) => {
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">EBT</Box>
+                  <Box fontWeight="fontWeightBold">EBIT</Box>
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
                     <NumberFormat
-                      value={financials.ebt}
+                      value={financials.ebit}
                       displayType={"text"}
                       thousandSeparator={true}
                       prefix={"$"}
                     />
                   </Box>
+                </TableCell>
+                <TableCell align="right">
+                  <Box fontWeight="fontWeightBold">
+                    <NumberFormat
+                      value={financials2.ebit}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </Box>
+                </TableCell>
+                <TableCell align="right">
+                  <Box fontWeight="fontWeightBold">
+                    <NumberFormat
+                      value={financials3.ebit}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </Box>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  Interest Expenses
+                </TableCell>
+                <TableCell align="right">
+                  <NumberFormat
+                    value={financials.interest_expenses}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <NumberFormat
+                    value={financials2.interest_expenses}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                </TableCell>
+                <TableCell align="right">
+                  <NumberFormat
+                    value={financials3.interest_expenses}
+                    displayType={"text"}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                  />
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell component="th" scope="row">
+                  <Box fontWeight="fontWeightBold">EBT</Box>
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
@@ -1051,35 +1065,6 @@ const Limits = ({ className, value, ...rest }) => {
                 <TableCell align="right">
                   <NumberFormat
                     value={financials3.income_tax_expense}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  EBIT
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials.ebit}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials2.ebit}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    prefix={"$"}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    value={financials3.ebit}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
@@ -1164,7 +1149,7 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <NumberFormat
-                    value={financials.cash_flow}
+                    value={financials.cash_flow_from_operating_activities}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
@@ -1172,7 +1157,7 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <NumberFormat
-                    value={financials2.cash_flow}
+                    value={financials2.cash_flow_from_operating_activities}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
@@ -1180,7 +1165,7 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <NumberFormat
-                    value={financials3.cash_flow}
+                    value={financials3.cash_flow_from_operating_activities}
                     displayType={"text"}
                     thousandSeparator={true}
                     prefix={"$"}
