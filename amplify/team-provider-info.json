@@ -57,7 +57,7 @@
         },
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/newinvoicenotification-702f7a6473764371644e-build.zip"
+          "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
         },
         "zoho": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
@@ -69,6 +69,10 @@
         "ocdefi": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
           "s3Key": "amplify-builds/ocdefi-462f4a566e2f4276586b-build.zip"
+        },
+        "sofr": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/sofr-747a52327573586d3653-build.zip"
         }
       }
     }

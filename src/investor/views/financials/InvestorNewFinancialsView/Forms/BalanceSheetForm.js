@@ -58,14 +58,11 @@ export default function BalanceSheetForm(props) {
       sale_purchase_of_fixed_asset,
       goodwill,
       other_non_current_assets,
-      total_assets,
       accounts_payable,
       current_long_term_debt,
       other_current_liabilities,
-      current_liabilities,
       long_term_debt,
       other_long_term_liabilities,
-      total_liabilities,
       total_equity,
       total_liabilities_and_equity,
     },
@@ -247,14 +244,6 @@ export default function BalanceSheetForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={total_assets.name}
-                label={total_assets.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={accounts_payable.name}
                 label={accounts_payable.label}
                 fullWidth
@@ -279,14 +268,6 @@ export default function BalanceSheetForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={current_liabilities.name}
-                label={current_liabilities.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={long_term_debt.name}
                 label={long_term_debt.label}
                 fullWidth
@@ -297,14 +278,6 @@ export default function BalanceSheetForm(props) {
               <InputField
                 name={other_long_term_liabilities.name}
                 label={other_long_term_liabilities.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={total_liabilities.name}
-                label={total_liabilities.label}
                 fullWidth
                 variant="outlined"
               />

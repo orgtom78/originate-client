@@ -449,7 +449,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    navigate("/investor/dashboard");
+    navigate("/admin/dashboard");
   }
 
   function updateFinancials(input) {
@@ -639,7 +639,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setBalanceSuccess(true);
     setBalanceLoading(false);
-    navigate("/investor/dashboard");
+    navigate("/admin/dashboard");
   }
 
   useEffect(() => {
@@ -812,7 +812,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setIncomeSuccess(true);
     setIncomeLoading(false);
-    navigate("/investor/dashboard");
+    navigate("/admin/dashboard");
   }
 
   useEffect(() => {
@@ -891,10 +891,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         <TableRow>
                           <TableCell></TableCell>
                           <TableCell align="left">
-                            <Box fontWeight="fontWeightBold">
-                              {moment(financials_reporting_period).format(
-                                "YYYY"
-                              )}
+                            <Box fontWeight="fontWeightBold">{moment(financials_reporting_period).format("YYYY") || ""}
                             </Box>
                           </TableCell>
                         </TableRow>

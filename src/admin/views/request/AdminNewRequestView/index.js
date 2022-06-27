@@ -41,6 +41,7 @@ export default function NewAccount() {
   const [spvid, setSpvid] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
+  const [investEmail, setInvestEmail] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
@@ -104,6 +105,29 @@ export default function NewAccount() {
     load();
   }, [supId]);
 
+  React.useEffect(() => {
+    async function load() {
+      const investor = await getInvestoremail(investid);
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = investor;
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const res = n.data.listInvestors.items[0];
+      const email = res.investor_email;
+      setInvestEmail(email);
+    }
+    load();
+  }, [investid]);
+
+  function getInvestoremail(input) {
+    let filter = { userId: { eq: input } };
+    return API.graphql(
+      graphqlOperation(queries.listInvestors, { filter: filter })
+    );
+  }
+
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -118,8 +142,12 @@ export default function NewAccount() {
       const buyerId = id;
       const brokerId = brokerid;
       const spvId = spvid;
+      const investor_email = investEmail;
       const payout_date = moment();
-      const period = moment(values["invoice_due_date"]).diff(payout_date, "days");
+      const period = moment(values["invoice_due_date"]).diff(
+        payout_date,
+        "days"
+      );
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
@@ -156,6 +184,7 @@ export default function NewAccount() {
         brokerId,
         spvId,
         identityId,
+        investor_email,
         discount_fee_rate,
         transaction_fee_rate,
         discount_fee_amount,

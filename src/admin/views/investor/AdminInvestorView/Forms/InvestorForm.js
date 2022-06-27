@@ -20,7 +20,6 @@ import {
   Typography,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import AdapterDateFns from "@mui/lab/AdapterDateFns";
@@ -94,16 +93,12 @@ const InvestorForm = ({ className, value, ...rest }) => {
   const [investor_logo, setInvestor_logo] = useState("");
   const [investor_name, setInvestor_name] = useState("");
   const [investor_type, setInvestor_type] = useState("");
-  const [
-    investor_date_of_incorporation,
-    setInvestor_date_of_incorporation,
-  ] = useState("");
+  const [investor_date_of_incorporation, setInvestor_date_of_incorporation] =
+    useState("");
   const [investor_address_city, setInvestor_address_city] = useState("");
   const [investor_address_street, setInvestor_address_street] = useState("");
-  const [
-    investor_address_postalcode,
-    setInvestor_address_postalcode,
-  ] = useState("");
+  const [investor_address_postalcode, setInvestor_address_postalcode] =
+    useState("");
   const [investor_country, setInvestor_country] = useState("");
   const [investor_industry, setInvestor_industry] = useState("");
   const [
@@ -111,12 +106,12 @@ const InvestorForm = ({ className, value, ...rest }) => {
     setInvestor_registration_cert_attachment,
   ] = useState("");
   const [investor_website, setInvestor_website] = useState("");
-  const [investor_address_refinment, setInvestor_address_refinment] = useState(
-    ""
-  );
+  const [investor_address_refinment, setInvestor_address_refinment] =
+    useState("");
   const [investor_industry_code, setInvestor_industry_code] = useState("");
   const [investor_register_number, setInvestor_register_number] = useState("");
   const [investor_trading_name, setInvestor_trading_name] = useState("");
+  const [investor_email, setInvestor_email] = useState("");
 
   //Financials:
   const [financialsId, setFinancialsId] = useState("");
@@ -124,10 +119,8 @@ const InvestorForm = ({ className, value, ...rest }) => {
   //const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -161,6 +154,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
               id,
               userId,
               investorId,
+              investor_email,
               investor_logo,
               investor_name,
               investor_type,
@@ -182,6 +176,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
         setdynamoinvestorId(id);
         setUserId(userId);
         setInvestorId(investorId);
+        setInvestor_email(investor_email);
         setInvestor_logo(investor_logo);
         setInvestor_name(investor_name);
         setInvestor_date_of_incorporation(investor_date_of_incorporation);
@@ -279,6 +274,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
       await updateInvestor({
         id,
         userId,
+        investor_email,
         investor_logo,
         investor_name,
         investor_type,
@@ -550,6 +546,16 @@ const InvestorForm = ({ className, value, ...rest }) => {
                           setInvestor_industry_code(e.target.value)
                         }
                         value={investor_industry_code || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Investor EMail"
+                        name="investor_email"
+                        onChange={(e) => setInvestor_email(e.target.value)}
+                        value={investor_email || ""}
                         variant="outlined"
                       />
                     </Grid>

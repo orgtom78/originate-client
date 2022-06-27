@@ -134,7 +134,8 @@
           "resourceName": "originateclientdev",
           "attributes": [
             "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
           ]
         },
         {
@@ -163,6 +164,11 @@
       ]
     },
     "ocdefi": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "sofr": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
