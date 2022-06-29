@@ -1,6 +1,6 @@
 {
   "auth": {
-    "originateclient84cf992c": {
+    "originateclientprod796edffc": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -8,7 +8,7 @@
     }
   },
   "api": {
-    "originateclientdev": {
+    "originateclientprod": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -16,20 +16,20 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authoriginateclient84cf992c"
+              "userPoolId": "authoriginateclientprod796edffc"
             }
           },
           "additionalAuthenticationProviders": [
             {
+              "authenticationType": "AWS_IAM"
+            },
+            {
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
                 "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-05-04T04:15:21.514Z",
-                "description": "originatedev-appsync-key"
+                "apiKeyExpirationDate": "2023-06-29T07:01:37.456Z",
+                "description": "search-api-key-prod"
               }
-            },
-            {
-              "authenticationType": "AWS_IAM"
             }
           ]
         }
@@ -37,7 +37,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclient84cf992c",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
             "UserPoolId"
           ]
@@ -57,41 +57,12 @@
           ]
         }
       ]
-    },
-    "zoho": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "zoho",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
-    },
-    "ocdefi": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "ocdefi",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
     }
   },
   "storage": {
-    "s330286d4d": {
+    "originateprodstorage": {
       "service": "S3",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": []
+      "providerPlugin": "awscloudformation"
     }
   },
   "function": {
@@ -102,14 +73,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclient84cf992c",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientdev",
+          "resourceName": "originateclientprod",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
@@ -124,18 +95,17 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclient84cf992c",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientdev",
+          "resourceName": "originateclientprod",
           "attributes": [
             "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "GraphQLAPIEndpointOutput"
           ]
         },
         {
@@ -146,38 +116,6 @@
           ]
         }
       ]
-    },
-    "zoho": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "originateclientdev",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "ocdefi": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "sofr": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    }
-  },
-  "analytics": {
-    "originatetest": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
     }
   }
 }

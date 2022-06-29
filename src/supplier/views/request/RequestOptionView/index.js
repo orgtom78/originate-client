@@ -86,7 +86,7 @@ const Invoice = () => {
             <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
-                  <Link to={`/app/newesignrequest/${id}/`}>
+                  <Link to={``}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
                         <Avatar alt="collection" variant="square">

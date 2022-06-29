@@ -1,7 +1,7 @@
 {
   "permissions": {
     "auth": {
-      "originateclient84cf992c": [
+      "originateclientprod796edffc": [
         "create",
         "read",
         "update",
@@ -9,7 +9,7 @@
       ]
     },
     "api": {
-      "originateclientdev": [
+      "originateclientprod": [
         "create",
         "read",
         "update",
