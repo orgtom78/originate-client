@@ -11,7 +11,7 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   avatar: {
-    backgroundColor: colors.orange[600],
+    backgroundColor: colors.indigo[600],
     height: 56,
     width: 56,
   },

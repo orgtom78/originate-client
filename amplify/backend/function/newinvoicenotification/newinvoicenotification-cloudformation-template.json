@@ -31,6 +31,10 @@
     "functionplaidName": {
       "Type": "String",
       "Default": "functionplaidName"
+    },
+    "apioriginateclientdevGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apioriginateclientdevGraphQLAPIKeyOutput"
     }
   },
   "Conditions": {
@@ -123,6 +127,9 @@
             },
             "FUNCTION_PLAID_NAME": {
               "Ref": "functionplaidName"
+            },
+            "API_ORIGINATECLIENTDEV_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apioriginateclientdevGraphQLAPIKeyOutput"
             }
           }
         },

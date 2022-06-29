@@ -36,6 +36,11 @@ const model = {
       label: "Marketable Securities",
       requiredErrorMsg: "Marketable Securities is required",
     },
+    cash: {
+      name: "cash",
+      label: "Cash",
+      requiredErrorMsg: "Cash is required",
+    },
     accounts_receivable: {
       name: "accounts_receivable",
       label: "Accounts Receivable",
@@ -60,6 +65,11 @@ const model = {
       name: "other_non_current_assets",
       label: "Other Non Current Assets",
       requiredErrorMsg: "Other Non Current Assets is required",
+    },
+    current_long_term_debt:{
+      name: "current_long_term_debt",
+      label: "Current Portion of Long-Term Debt",
+      requiredErrorMsg: "Current Portion of Long-Term Debt is required",
     },
     accumulated_depreciation: {
       name: "accumulated_depreciation",
@@ -100,6 +110,11 @@ const model = {
       name: "other_current_liabilities",
       label: "Other Current Liabilities",
       requiredErrorMsg: "Other Current Liabilities is required",
+    },
+    current_liabilities: {
+      name: "current_liabilities",
+      label: "Current Liabilities",
+      requiredErrorMsg: "Current Liabilities is required",
     },
     other_long_term_liabilities: {
       name: "other_long_term_liabilities",
@@ -146,6 +161,11 @@ const model = {
       label: "Total Equity",
       requiredErrorMsg: "Total equity is required",
     },
+    total_liabilities_and_equity: {
+      name: "total_liabilities_and_equity",
+      label: "Total Liabilities and Equity",
+      requiredErrorMsg: "Total Liabilities and Equity is required",
+    },
     equity_book_value: {
       name: "equity_book_value",
       label: "Equity Book Value",
@@ -170,6 +190,11 @@ const model = {
       name: "operating_expenses",
       label: "Operating Expenses",
       requiredErrorMsg: "Operating Expenses is required",
+    },
+    other_expenses: {
+      name: "other_expenses",
+      label: "Other Expenses",
+      requiredErrorMsg: "Other Expenses is required",
     },
     marketing_expenses: {
       name: "marketing_expenses",
@@ -198,13 +223,18 @@ const model = {
     },
     sale_purchase_of_fixed_asset: {
       name: "sale_purchase_of_fixed_asset",
-      label: "Sale or Purchase of Fixed Assets",
-      requiredErrorMsg: "Email is required",
+      label: "Fixed Assets (PPE)",
+      requiredErrorMsg: "Fixed Assets (PPE) is required",
     },
     extraordinary_income: {
       name: "extraordinary_income",
-      label: "Extraordinary Income",
+      label: "Extraordinary Expense (+) / Income (-)",
       requiredErrorMsg: "Extraordinary Income is required",
+    },
+    income_tax_expense: {
+      name: "income_tax_expense",
+      label: "Income Tax Expense",
+      requiredErrorMsg: "Income Tax Expense is required",
     },
     tax_expenses: {
       name: "tax_expenses",
@@ -226,15 +256,20 @@ const model = {
       label: "Financials Reporting Period",
       requiredErrorMsg: "Financials Reporting Period is required",
     },
-    cash: {
-      name: "cash",
-      label: "Cash",
-      requiredErrorMsg: "Cash is required",
-    },
     working_capital: {
       name: "working_capital",
       label: "Working Capital",
       requiredErrorMsg: "Working Capital is required",
+    },
+    cash_flow_from_operating_activities: {
+      name: "cash_flow_from_operating_activities",
+      label: "Cash Flow from Operating Actvities",
+      requiredErrorMsg: "Cash Flow from Operating Actvities is required",
+    },
+    inventory_turnover: {
+      name: "inventory_turnover",
+      label: "Inventory Turnover",
+      requiredErrorMsg: "Inventory Turnover is required",
     },
   },
 };

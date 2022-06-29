@@ -17,7 +17,7 @@ const model = {
     },
     investor_website: {
       name: "investor_website",
-      label: "company Website",
+      label: "Company Website",
       requiredErrorMsg: "Company Website is required",
     },
     investor_type: {

@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { InputField, DatePickerField, SelectField } from "src/components/FormFields";
+import {
+  InputField,
+  DatePickerField,
+  SelectField,
+} from "src/components/FormFields";
 import SliderField from "src/components/FormFields/SliderField";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
@@ -77,21 +81,19 @@ export default function HistoryForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      buyer_insurance_name,
-      buyer_one_off_ipu_attachment,
-      buyer_next_year_projected_transaction_amount,
-      buyer_previous_year_transaction_amount,
-      buyer_reporting_year,
-      buyer_reporting_year_transaction_amount,
-      buyer_previous_year_number_invoices,
       buyer_supplier_year_business_relation_started,
+      buyer_previous_year_transaction_amount,
+      buyer_reporting_year_transaction_amount,
+      buyer_next_year_projected_transaction_amount,
+      buyer_previous_year_number_invoices,
+      buyer_insurance_name,
       buyer_existing_disputes,
       buyer_finance_department_contact_email,
+      buyer_use_of_goods_purchased,
       buyer_invoices_paid_on_time,
       buyer_invoices_past_due_30_days,
       buyer_invoices_past_due_60_days,
       buyer_invoices_past_due_90_days,
-      buyer_use_of_goods_purchased
     },
   } = props;
 
@@ -179,18 +181,6 @@ export default function HistoryForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={buyer_reporting_year.name}
-                label={buyer_reporting_year.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2021/12/31")}
-                maxDate={new Date("2021/12/31")}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerField
                 name={buyer_supplier_year_business_relation_started.name}
@@ -204,13 +194,12 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_next_year_projected_transaction_amount.name}
-                label={buyer_next_year_projected_transaction_amount.label}
+                name={buyer_previous_year_transaction_amount.name}
+                label={buyer_previous_year_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <InputField
                 name={buyer_reporting_year_transaction_amount.name}
@@ -221,8 +210,8 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_previous_year_transaction_amount.name}
-                label={buyer_previous_year_transaction_amount.label}
+                name={buyer_next_year_projected_transaction_amount.name}
+                label={buyer_next_year_projected_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
@@ -300,43 +289,6 @@ export default function HistoryForm(props) {
                 fullWidth
                 variant="outlined"
               />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              {buyeripu ? (
-                <>{isimageorpdf()}</>
-              ) : (
-                <>
-                  <NewUploadField
-                    name={buyer_one_off_ipu_attachment.name}
-                    id={buyer_one_off_ipu_attachment.name}
-                    accept="image/*,application/pdf"
-                    style={{ display: "none" }}
-                    ident={buyerId}
-                    userid={usergroupId}
-                    identityid={identity}
-                  />
-                  <label htmlFor={buyer_one_off_ipu_attachment.name}>
-                    <LoaderButton
-                      id={buyer_one_off_ipu_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
-                    >
-                      {" "}
-                      Irrevocable Payment Undertaking
-                    </LoaderButton>
-                  </label>
-                </>
-              )}
-              <Typography variant="subtitle2">
-                <a href="https://originatesampledocs.s3.us-east-2.amazonaws.com/Originate-Capital-IPU-clean.docx">
-                  Download Sample
-                </a>
-              </Typography>
             </Grid>
           </Grid>
         </CardContent>

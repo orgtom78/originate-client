@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -205,12 +205,24 @@ export default function BuyerFinancialsForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-              <InputField
-                name={sales.name}
-                label={sales.label}
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={financials_reporting_period.name}
+                label={financials_reporting_period.label}
+                format="yyyy"
+                views={["year"]}
+                minDate={new Date("2000/12/31")}
+                maxDate={new Date()}
                 fullWidth
                 variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                fullWidth
+                variant="outlined"
+                name={sales.name}
+                label={sales.label}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -262,18 +274,6 @@ export default function BuyerFinancialsForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={financials_reporting_period.name}
-                label={financials_reporting_period.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               {balanceattachment ? (
                 <>{balanceisimageorpdf()}</>
               ) : (
@@ -299,7 +299,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleBalanceClick}
                     >
                       {" "}
-                      Buyer Balance Sheet*
+                      Buyer Balance Sheet
                     </LoaderButton>
                   </label>
                 </>
@@ -331,7 +331,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleIncomeClick}
                     >
                       {" "}
-                      Buyer Income Statement*
+                      Buyer Income Statement
                     </LoaderButton>
                   </label>
                 </>

@@ -13,7 +13,7 @@ const {
     invoice_due_date,
     sold_goods_description,
     invoice_currency,
-    cargo_insurance_name,
+    invoice_number,
   },
 } = NewTransactionFormModel;
 
@@ -42,7 +42,7 @@ const yup = [
       .nullable()
       .required(`${invoice_due_date.requiredErrorMsg}`),
     [sold_goods_description.name]: Yup.string(),
-    [cargo_insurance_name.name]: Yup.string(),
+    [invoice_number.name]: Yup.string().required(`${invoice_number.requiredErrorMsg}`),
   }),
 ];
 

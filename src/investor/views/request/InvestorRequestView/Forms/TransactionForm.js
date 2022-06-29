@@ -7,7 +7,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Box,
+  Stack,
   Card,
   CardContent,
   Container,
@@ -18,13 +18,15 @@ import {
   Select,
   MenuItem,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
-import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
+import LoaderButtonRed from "src/components/LoaderButtonRed.js";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import BlockIcon from "@mui/icons-material/Block";
 import { green } from "@mui/material/colors";
 
 const useStyles = makeStyles(() => ({
@@ -95,8 +97,17 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_number, setInvoice_number] = useState("");
   const [request_status, setRequest_status] = useState("");
 
+  const [broker_fee_rate, setBroker_fee_rate] = useState("");
+  const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
+  const [discount_fee_rate, setDiscount_fee_rate] = useState("");
+  const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
+  const [discount_fee_amount, setDiscount_fee_amount] = useState("");
+  const [broker_fee_amount, setBroker_fee_amount] = useState("");
+
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
+  const [declineloading, setDeclineLoading] = useState(false);
+  const [declinesuccess, setDeclineSuccess] = useState(false);
 
   useEffect(() => {
     getRequest();
@@ -105,7 +116,12 @@ const RequestForm = ({ className, value, ...rest }) => {
         const request = value;
         const {
           id,
-          request_status,
+          broker_fee_rate,
+          transaction_fee_rate,
+          discount_fee_rate,
+          transaction_fee_amount,
+          discount_fee_amount,
+          broker_fee_amount,
           buyer_name,
           supplier_name,
           sold_goods_description,
@@ -114,6 +130,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_date,
           invoice_due_date,
           invoice_number,
+          request_status,
         } = request;
         setId(id);
         setRequest_status(request_status);
@@ -125,6 +142,12 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
         setInvoice_number(invoice_number);
+        setBroker_fee_rate(broker_fee_rate);
+        setTransaction_fee_rate(transaction_fee_rate);
+        setDiscount_fee_rate(discount_fee_rate);
+        setTransaction_fee_amount(transaction_fee_amount);
+        setDiscount_fee_amount(discount_fee_amount);
+        setBroker_fee_amount(broker_fee_amount);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -135,42 +158,79 @@ const RequestForm = ({ className, value, ...rest }) => {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      if (request_status === "Approved") {
-        var now = new Date();
-        const payout_date = now.toISOString();
-        await updateRequest({
-          id,
-          request_status,
-          buyer_name,
-          supplier_name,
-          sold_goods_description,
-          invoice_amount,
-          invoice_currency,
-          invoice_date,
-          invoice_due_date,
-          invoice_number,
-          payout_date,
-        });
-      } else {
-        await updateRequest({
-          id,
-          request_status,
-          buyer_name,
-          supplier_name,
-          sold_goods_description,
-          invoice_amount,
-          invoice_currency,
-          invoice_date,
-          invoice_due_date,
-          invoice_number,
-        });
-      }
+      const request_status = "Approved";
+      const payout_date = moment();
+      const period = moment(invoice_due_date).diff(payout_date, "days");
+      const transaction_fee_amount =
+        (((Number(invoice_amount) * Number(transaction_fee_rate)) / 100) *
+          period) /
+        360;
+      const discount_fee_amount =
+        (((Number(invoice_amount) * Number(discount_fee_rate)) / 100) *
+          period) /
+        360;
+      const broker_fee_amount =
+        (((Number(invoice_amount) * Number(broker_fee_rate)) / 100) * period) /
+        360;
+      await updateRequest({
+        id,
+        transaction_fee_rate,
+        discount_fee_rate,
+        broker_fee_rate,
+        transaction_fee_amount,
+        discount_fee_amount,
+        broker_fee_amount,
+        buyer_name,
+        supplier_name,
+        sold_goods_description,
+        invoice_amount,
+        invoice_currency,
+        invoice_date,
+        invoice_due_date,
+        invoice_number,
+        request_status,
+        payout_date,
+      });
     } catch (e) {
       onError(e);
     }
     setRequestSuccess(true);
     setRequestLoading(false);
-    navigate("/investor/transactions");
+    navigate("/investor/requests");
+  }
+
+  async function handleDeclineSubmit() {
+    setDeclineSuccess(false);
+    setDeclineLoading(true);
+    try {
+      const request_status = "Declined";
+      const transaction_fee_amount = 0;
+      const discount_fee_amount = 0;
+      const broker_fee_amount = 0;
+      await updateRequest({
+        id,
+        transaction_fee_rate,
+        discount_fee_rate,
+        broker_fee_rate,
+        transaction_fee_amount,
+        discount_fee_amount,
+        broker_fee_amount,
+        buyer_name,
+        supplier_name,
+        sold_goods_description,
+        invoice_amount,
+        invoice_currency,
+        invoice_date,
+        invoice_due_date,
+        invoice_number,
+        request_status,
+      });
+    } catch (e) {
+      onError(e);
+    }
+    setDeclineSuccess(true);
+    setDeclineLoading(false);
+    navigate("/investor/requests");
   }
 
   function updateRequest(input) {
@@ -230,7 +290,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                         fullWidth
                         name="request_status"
                         label="Transaction Status"
-                        onChange={(e) => setRequest_status(e.target.value)}
+                        inputProps={{ readOnly: true }}
                         required
                         value={request_status || ""}
                         variant="outlined"
@@ -322,17 +382,26 @@ const RequestForm = ({ className, value, ...rest }) => {
                   </Grid>
                 </CardContent>
                 <Divider />
-                <Box display="flex" justifyContent="flex-end" p={2}>
+                <Stack spacing={2} direction="row">
+                  <LoaderButtonRed
+                    startIcon={<BlockIcon />}
+                    disabled={declineloading}
+                    success={declinesuccess}
+                    loading={declineloading}
+                    onClick={handleDeclineSubmit}
+                  >
+                    Decline Invoice
+                  </LoaderButtonRed>
                   <LoaderButton
-                    startIcon={<UploadIcon />}
+                    startIcon={<CheckCircleOutlineIcon />}
                     disabled={requestloading}
                     success={requestsuccess}
                     loading={requestloading}
                     onClick={handleRequestSubmit}
                   >
-                    Update Status
+                    Approve Invoice
                   </LoaderButton>
-                </Box>
+                </Stack>
               </Card>
             </form>
           </AccordionDetails>

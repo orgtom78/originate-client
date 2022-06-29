@@ -3,7 +3,7 @@ import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -53,15 +53,14 @@ export default function FinancialsForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      ebit,
+      cash,
       balance_sheet_attachment,
       income_statement_attachment,
       net_profit,
       financials_reporting_period,
       sales,
       total_assets,
-      retained_earnings,
-      working_capital,
+      total_equity,
       bank_name,
       bank_account_number,
       iban,
@@ -282,7 +281,7 @@ export default function FinancialsForm(props) {
                 label={financials_reporting_period.label}
                 format="yyyy"
                 views={["year"]}
-                minDate={new Date("2000/12/31")}
+                minDate={new Date("2018/12/31")}
                 maxDate={new Date()}
                 fullWidth
                 variant="outlined"
@@ -290,8 +289,8 @@ export default function FinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={ebit.name}
-                label={ebit.label}
+                name={cash.name}
+                label={cash.label}
                 fullWidth
                 variant="outlined"
               />
@@ -322,16 +321,8 @@ export default function FinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={working_capital.name}
-                label={working_capital.label}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />

@@ -46,9 +46,13 @@ const model = {
       label: "Country*",
       requiredErrorMsg: "Country is required",
     },
-    supplier_industry: {
-      name: "supplier_industry",
-      label: "Industry",
+    supplier_register_number: {
+      name: "supplier_register_numbe",
+      label: "Company Registration Number",
+    },
+    supplier_website: {
+      name: "supplier_website",
+      label: "Company Website/URL",
     },
     supplier_registration_cert_attachment: {
       name: "supplier_registration_cert_attachment",
@@ -144,10 +148,10 @@ const model = {
       label: "Owner Country of Residence",
       requiredErrorMsg: "Country of residence is required",
     },
-    ebit: {
-      name: "ebit",
-      label: "Earnings before Interest & Tax*",
-      requiredErrorMsg: "EBIT is required",
+    cash: {
+      name: "cash",
+      label: "Cash at bank*",
+      requiredErrorMsg: "Cash is required",
     },
     balance_sheet_attachment: {
       name: "balance_sheet_attachment",
@@ -164,16 +168,11 @@ const model = {
       label: "Net Profit*",
       requiredErrorMsg: "Net Profit is required",
     },
-    financials_rating: {
-      name: "financials_rating",
-      label: "Financial Rating",
-      requiredErrorMsg: "Rating is required",
-    },
     financials_reporting_period: {
       name: "financials_reporting_period",
       label: "Reporting Period*",
       requiredErrorMsg:
-        "Only a year during the last 3 years is accepted as Reporting Period",
+        "Only a year during the last 3 years is accepted as the Reporting Period",
     },
     sales: {
       name: "sales",
@@ -185,15 +184,10 @@ const model = {
       label: "Total Assets*",
       requiredErrorMsg: "Total Assets is required",
     },
-    retained_earnings: {
-      name: "retained_earnings",
-      label: "Retained Earnings*",
-      requiredErrorMsg: "Retained Earnings is required",
-    },
-    working_capital: {
-      name: "working_capital",
-      label: "Working Capital*",
-      requiredErrorMsg: "Working Capital is required",
+    total_equity: {
+      name: "total_equity",
+      label: "Total Equity*",
+      requiredErrorMsg: "Total equity is required",
     },
     bank_name: {
       name: "bank_name",

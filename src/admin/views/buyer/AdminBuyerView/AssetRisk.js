@@ -132,7 +132,7 @@ const productUse = [
 
 const denominationValue = [
   {
-    value: "",
+    value: "'",
     label: "As stated",
   },
   {
@@ -2064,7 +2064,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Company profitability in the most recent reporting year'>
                 <TableCell component="th" scope="row">
                   Company Profitability - RY
                 </TableCell>
@@ -2102,7 +2102,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Company profitability in the year prior to the reporting year'>
                 <TableCell component="th" scope="row">
                   Company Profitability - PY
                 </TableCell>
@@ -2195,7 +2195,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Ending equity of the company divided by the net operating loss of the prior year'>
                 <TableCell component="th" scope="row">
                   Ending Equity / PY NOL
                 </TableCell>
@@ -2339,7 +2339,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Inventory turnover trend from the prior year to the reporting year'>
                 <TableCell component="th" scope="row">
                   Inventory Turnover Ratio / YOY Trend
                 </TableCell>
@@ -2563,7 +2563,7 @@ const Limits = ({ className, value, data, ...rest }) => {
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Length of Supplier/A/D Relationship
+                  Length of Supplier/Debtor Relationship
                 </TableCell>
                 <TableCell align="right">
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -2652,9 +2652,9 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Invoices paid by the debtor on the actual due date'>
                 <TableCell component="th" scope="row">
-                  Invoices Paid by ASD / Past 24 Mo
+                  Invoices Paid on ADD / Past 24 Mo
                 </TableCell>
                 <TableCell align="right">
                   <TextField
@@ -2690,7 +2690,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Invoices that are currently 30 days past due date'>
                 <TableCell component="th" scope="row">
                   Invoices Currently 30 Days PD{" "}
                 </TableCell>
@@ -2728,7 +2728,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Invoices that are currently 60 days past due date'>
                 <TableCell component="th" scope="row">
                   Invoices Currently 60 Days PD
                 </TableCell>
@@ -2883,9 +2883,9 @@ const Limits = ({ className, value, data, ...rest }) => {
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Total inventory divided by cost of goods sold in the reporting year'>
                 <TableCell component="th" scope="row">
-                  Inv. Total / AD COGS - RY
+                  Inv. Total / COGS - RY
                 </TableCell>
                 <TableCell align="right">
                   <TextField
@@ -2921,7 +2921,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   )}
                 </TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Sales volume between supplier and debtor in the reporting year'>
                 <TableCell component="th" scope="row">
                   Sup. Sales - RY
                 </TableCell>
@@ -2949,7 +2949,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                 <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
-              <TableRow>
+              <TableRow title='Total inventory divided by supplier to debtor sales amount in the reporting year'>
                 <TableCell component="th" scope="row">
                   Inv. Total / Sup. Sales - RY
                 </TableCell>

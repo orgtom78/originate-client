@@ -136,7 +136,7 @@ const BuyerList = () => {
 
   function getLink(status, id) {
     if (status === "Approved") {
-      return `/app/newrequest/${id}`;
+      return `/app/requestoptions/${id}`;
     } else {
       return <></>;
     }

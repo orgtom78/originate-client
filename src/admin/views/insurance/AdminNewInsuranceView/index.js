@@ -13,13 +13,14 @@ import {
   Tab,
   Tabs,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Formik, Form } from "formik";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
 import Page from "src/components/Page";
+import moment from "moment";
 
 import IDForm from "./Forms/IDForm";
 import RequestForm from "./Forms/RequestForm";
@@ -38,6 +39,11 @@ import CreditRequestvalidationSchema from "./FormModel/CreditRequestvalidationSc
 import CreditRequestFormModel from "./FormModel/CreditRequestFormModel";
 import CreditRequestformInitialValues from "./FormModel/CreditRequestformInitialValues";
 
+import OneClickRequestForm from "./Forms/OneClickRequestForm";
+import OneClickRequestvalidationSchema from "./FormModel/OneClickRequestvalidationSchema";
+import OneClickRequestFormModel from "./FormModel/OneClickRequestFormModel";
+import OneClickRequestformInitialValues from "./FormModel/OneClickRequestformInitialValues";
+
 import AdminInsuranceListView from "../AdminInsuranceListView";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,12 +58,14 @@ const useStyles = makeStyles((theme) => ({
 const { formId, formField } = IDFormModel;
 const { formId2, formField2 } = RequestFormModel;
 const { formId3, formField3 } = CreditRequestFormModel;
+const { formId4, formField4 } = OneClickRequestFormModel;
 
 export default function NewInsuranceRequest() {
   const classes = useStyles();
   const currentValidationSchema = IDvalidationSchema[0];
   const requestValidationSchema = RequestvalidationSchema[0];
   const creditValidationSchema = CreditRequestvalidationSchema[0];
+  const oneclickrequestValidationSchema = OneClickRequestvalidationSchema[0];
   const [token, setToken] = useState("");
   const [value, setValue] = useState(0);
   const [company, setCompany] = useState("");
@@ -119,6 +127,33 @@ export default function NewInsuranceRequest() {
         debtor_eulerid,
         credit_amount,
         credit_currency,
+      });
+      setSingleInsurance(insurancecover);
+    } catch (e) {
+      onError(e);
+    }
+  }
+
+  async function _submitForm4(values, actions) {
+    await _sleep(1000);
+    try {
+      const buyer_eulerid = values["buyer_eulerid"];
+      const supplier_eulerid = "8150136";
+      const invoice_amount = "100000";
+      const invoice_currency = "usd";
+      const invoice_number = uuid();
+      const invoice_issue_date = moment().format("YYYY-MM-DD");
+      const invoice_due_date = moment(invoice_issue_date)
+        .add(45, "days")
+        .format("YYYY-MM-DD");
+      const insurancecover = await getBuyerSupplierLimit({
+        buyer_eulerid,
+        supplier_eulerid,
+        invoice_amount,
+        invoice_currency,
+        invoice_due_date,
+        invoice_issue_date,
+        invoice_number,
       });
       setSingleInsurance(insurancecover);
     } catch (e) {
@@ -281,6 +316,10 @@ export default function NewInsuranceRequest() {
     _submitForm3(values, actions);
   }
 
+  function _handleSubmit4(values, actions) {
+    _submitForm4(values, actions);
+  }
+
   function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -377,6 +416,43 @@ export default function NewInsuranceRequest() {
             </Container>
           </TabPanel>
           <TabPanel value={value} index={1}>
+            <React.Fragment>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography>Single Invoice Cover - One Click</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Formik
+                    initialValues={OneClickRequestformInitialValues}
+                    validationSchema={oneclickrequestValidationSchema}
+                    onSubmit={_handleSubmit4}
+                  >
+                    {({ isSubmitting }) => (
+                      <Form id={formId4}>
+                        <OneClickRequestForm formField={formField4} />
+                        <br></br>
+                        <div className={classes.buttons}>
+                          <div className={classes.wrapper}>
+                            <Button
+                              disabled={isSubmitting}
+                              type="submit"
+                              variant="contained"
+                              color="primary"
+                              className={classes.button}
+                            >
+                              Submit
+                            </Button>
+                          </div>
+                        </div>
+                      </Form>
+                    )}
+                  </Formik>
+                </AccordionDetails>
+              </Accordion>
+            </React.Fragment>
             <React.Fragment>
               <Accordion>
                 <AccordionSummary

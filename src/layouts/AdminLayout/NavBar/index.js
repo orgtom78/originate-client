@@ -13,6 +13,8 @@ import {
   BookOpen as BookOpenIcon,
   Shield as ShieldIcon,
   Repeat as RepeatIcon,
+  Box as BoxIcon,
+  Shuffle as ShuffleIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 
@@ -25,12 +27,22 @@ const items = [
   {
     href: "/admin/groups",
     icon: UserIcon,
-    title: "Groups",
+    title: "Users",
+  },
+  {
+    href: "/admin/spvs",
+    icon: BoxIcon,
+    title: "SPVs",
   },
   {
     href: "/admin/investors",
     icon: BriefcaseIcon,
     title: "Investors",
+  },
+  {
+    href: "/admin/brokers",
+    icon: ShuffleIcon,
+    title: "Brokers",
   },
   {
     href: "/admin/suppliers",
@@ -50,7 +62,7 @@ const items = [
   {
     href: "/admin/requests",
     icon: CreditCardIcon,
-    title: "Requests",
+    title: "Invoices",
   },
   {
     href: "/admin/transactions",

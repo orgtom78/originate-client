@@ -1,5 +1,4 @@
-import "core-js/stable";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { Auth } from "aws-amplify";
 import { onError } from "./libs/errorLib";
 import { useRoutes } from "react-router-dom";
@@ -14,7 +13,11 @@ function App() {
   const [isAuthenticated, userHasAuthenticated] = useState();
   const [isAdmin, userisAdmin] = useState();
   const [isInvestor, userisInvestor] = useState();
-  const routing = useRoutes(routes(isAuthenticated, isAdmin, isInvestor));
+  const [isSpv, userisSpv] = useState();
+  const [isBroker, userisBroker] = useState();
+  const routing = useRoutes(
+    routes(isAuthenticated, isAdmin, isInvestor, isSpv, isBroker)
+  );
 
   useEffect(() => {
     onLoad();
@@ -36,9 +39,9 @@ function App() {
   useEffect(() => {
     async function settinggroup() {
       const z = await onLoad();
-      if (z === undefined || z === 0) {
-        return;
-      } else if (
+      if (
+        z === undefined ||
+        z === 0 ||
         z.signInUserSession.accessToken.payload["cognito:groups"] ===
           undefined ||
         z.signInUserSession.accessToken.payload["cognito:groups"] === 0
@@ -53,6 +56,15 @@ function App() {
         "Investor"
       ) {
         userisInvestor(true);
+      } else if (
+        z.signInUserSession.accessToken.payload["cognito:groups"][0] === "Spv"
+      ) {
+        userisSpv(true);
+      } else if (
+        z.signInUserSession.accessToken.payload["cognito:groups"][0] ===
+        "Broker"
+      ) {
+        userisBroker(true);
       }
     }
     settinggroup();
@@ -67,12 +79,14 @@ function App() {
         userisAdmin,
         isInvestor,
         userisInvestor,
+        isSpv,
+        userisSpv,
       }}
     >
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}>
           <GlobalStyles />
-          {routing}
+          <Suspense fallback={<div>Loading...</div>}>{routing}</Suspense>
         </ThemeProvider>
       </StyledEngineProvider>
     </AppContext.Provider>

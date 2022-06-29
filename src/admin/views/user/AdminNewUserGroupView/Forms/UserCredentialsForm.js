@@ -11,6 +11,14 @@ const type = [
     value: "Investor",
     label: "Investor",
   },
+  {
+    value: "Spv",
+    label: "Spv",
+  },
+  {
+    value: "Broker",
+    label: "Broker",
+  },
 ];
 
 export default function UserCredentialsForm(props) {

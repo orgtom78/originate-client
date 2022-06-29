@@ -63,7 +63,12 @@ const FinancialsListView = (value) => {
       );
       const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
       const items = n.data.listFinancialss.items;
-      setFinancials(items);
+      const s = items.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+      });
+      setFinancials(s);
     }
     getFinancials();
   }, [buyid, groupid]);

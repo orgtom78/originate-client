@@ -75,7 +75,7 @@ const SuccessView = () => {
                   p={2}
                 >
                   <Typography variant="h5">
-                    1. Register your buyer's company
+                    1. Register your Buyer's Company
                   </Typography>
                 </Box>
                 <Box

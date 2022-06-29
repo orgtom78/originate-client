@@ -26,7 +26,7 @@ const items = [
   {
     href: "/app/account",
     icon: UserIcon,
-    title: "Account",
+    title: "My Profile",
   },
   {
     href: "/app/newbuyer",
@@ -36,12 +36,12 @@ const items = [
   {
     href: "/app/buyers",
     icon: DollarSignIcon,
-    title: "Payout Request",
+    title: "New Invoice",
   },
   {
     href: "/app/requests",
     icon: CreditCardIcon,
-    title: "Requests",
+    title: "Invoice Status",
   },
   {
     href: "/app/settings",

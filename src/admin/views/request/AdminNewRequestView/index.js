@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { Button, Container, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
@@ -9,6 +9,7 @@ import { v4 as uuid } from "uuid";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
+import moment from "moment";
 
 import Page from "src/components/Page";
 
@@ -35,8 +36,16 @@ export default function NewAccount() {
   const currentValidationSchema = validationSchema[0];
   const [ident, setIdent] = useState("");
   const [userId, setUserId] = useState("");
+  const [investid, setInvestid] = useState("");
+  const [brokerid, setBrokerid] = useState("");
+  const [spvid, setSpvid] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
+  const [investEmail, setInvestEmail] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const { id } = useParams();
   const { buyId } = useParams();
   const { supId } = useParams();
@@ -47,31 +56,77 @@ export default function NewAccount() {
       const buyer = await getbuyername({ id });
       const {
         data: {
-          getBuyer: { buyer_name, identityId, userId },
+          getBuyer: {
+            buyer_name,
+            investorId,
+            brokerId,
+            spvId,
+            identityId,
+            userId,
+            buyer_loan_discount_fee,
+            buyer_loan_transaction_fee,
+            buyer_loan_broker_fee,
+          },
         },
       } = buyer;
       const buyername = await buyer_name;
       setIdent(identityId);
       setUserId(userId);
+      setInvestid(investorId);
+      setBrokerid(brokerId);
+      setSpvid(spvId);
       setBuyername(buyername);
+      setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+      setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+      setBuyer_loan_broker_fee(buyer_loan_broker_fee);
     }
     load();
   }, [id, buyId]);
 
   React.useEffect(() => {
     async function load() {
-      var supplierId = supId;
-      const supplier = await getsuppliername({ userId, supplierId });
+      let filter = { supplierId: { eq: supId } };
       const {
         data: {
-          getSupplier: { supplier_name },
+          listSuppliers: { items: itemsPage1, nextToken },
         },
-      } = supplier;
-      const suppliername = await supplier_name;
+      } = await API.graphql(
+        graphqlOperation(queries.listSuppliers, {
+          filter: filter,
+        })
+      );
+      const n = {
+        data: { listSuppliers: { items: itemsPage1, nextToken } },
+      };
+      const items = n.data.listSuppliers.items;
+      const suppliername = await items[0].supplier_name;
       setSuppliername(suppliername);
     }
     load();
-  }, [userId, supId]);
+  }, [supId]);
+
+  React.useEffect(() => {
+    async function load() {
+      const investor = await getInvestoremail(investid);
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = investor;
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const res = n.data.listInvestors.items[0];
+      const email = res.investor_email;
+      setInvestEmail(email);
+    }
+    load();
+  }, [investid]);
+
+  function getInvestoremail(input) {
+    let filter = { userId: { eq: input } };
+    return API.graphql(
+      graphqlOperation(queries.listInvestors, { filter: filter })
+    );
+  }
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -83,6 +138,26 @@ export default function NewAccount() {
       const sortkey = requestId;
       const supplierId = supId;
       const identityId = ident;
+      const investorId = investid;
+      const buyerId = id;
+      const brokerId = brokerid;
+      const spvId = spvid;
+      const investor_email = investEmail;
+      const payout_date = moment();
+      const period = moment(values["invoice_due_date"]).diff(
+        payout_date,
+        "days"
+      );
+      const transaction_fee_rate = buyer_loan_transaction_fee;
+      const discount_fee_rate = buyer_loan_discount_fee;
+      const broker_fee_rate = buyer_loan_broker_fee;
+      const transaction_fee_amount =
+        (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
+        360;
+      const discount_fee_amount =
+        (((values["invoice_amount"] * discount_fee_rate) / 100) * period) / 360;
+      const broker_fee_amount =
+        (((values["invoice_amount"] * broker_fee_rate) / 100) * period) / 360;
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const purchase_order_attachment = values["purchase_order_attachment"];
@@ -94,7 +169,7 @@ export default function NewAccount() {
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
       const ipu_attachment = values["ipu_attachment"];
-      const cargo_insurance_name = values["cargo_insurance_name"];
+      const invoice_number = values["invoice_number"];
       const cargo_insurance_attachment = values["cargo_insurance_attachment"];
       const bill_of_lading_attachment = values["bill_of_lading_attachment"];
       const request_status = "Under Review";
@@ -104,7 +179,18 @@ export default function NewAccount() {
         sortkey,
         requestId,
         supplierId,
+        buyerId,
+        investorId,
+        brokerId,
+        spvId,
         identityId,
+        investor_email,
+        discount_fee_rate,
+        transaction_fee_rate,
+        discount_fee_amount,
+        transaction_fee_amount,
+        broker_fee_rate,
+        broker_fee_amount,
         buyer_name,
         supplier_name,
         purchase_order_attachment,
@@ -116,16 +202,17 @@ export default function NewAccount() {
         invoice_attachment,
         offer_notice_attachment,
         ipu_attachment,
-        cargo_insurance_name,
+        invoice_number,
         cargo_insurance_attachment,
         bill_of_lading_attachment,
         request_status,
+        payout_date,
       });
     } catch (e) {
       onError(e);
     }
     navigate("/admin/requests");
-    window.location.reload();
+    // window.location.reload();
   }
 
   function createRequest(input) {
@@ -136,9 +223,6 @@ export default function NewAccount() {
 
   function getbuyername(input) {
     return API.graphql(graphqlOperation(queries.getBuyer, input));
-  }
-  function getsuppliername(input) {
-    return API.graphql(graphqlOperation(queries.getSupplier, input));
   }
 
   function _handleSubmit(values, actions) {

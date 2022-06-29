@@ -160,6 +160,7 @@ app.get("/api/accounts1", async function(req, res) {
           const accountsResponse1 = await client.accountsGet({
             access_token: token1,
           });
+          console.log(accountsResponse1);
           return res.json(accountsResponse1.data);
         } catch (error) {
           return res.json(error);

@@ -67,12 +67,7 @@ const yup = [
     ),
     [buyer_address_number.name]: Yup.string(),
     [buyer_address_postalcode.name]: Yup.string()
-      .required(`${buyer_address_postalcode.requiredErrorMsg}`)
-      .test(
-        "len",
-        `${buyer_address_postalcode.invalidErrorMsg}`,
-        (val) => val && val.length === 5
-      ),
+      .required(`${buyer_address_postalcode.requiredErrorMsg}`),
     [buyer_address_street.name]: Yup.string().required(
       `${buyer_address_street.requiredErrorMsg}`
     ),
