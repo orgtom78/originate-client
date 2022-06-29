@@ -228,7 +228,7 @@ const model = {
     },
     extraordinary_income: {
       name: "extraordinary_income",
-      label: "Extraordinary Income",
+      label: "Extraordinary Expense (+) / Income (-)",
       requiredErrorMsg: "Extraordinary Income is required",
     },
     income_tax_expense: {

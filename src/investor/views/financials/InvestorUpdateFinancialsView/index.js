@@ -95,7 +95,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const [income_statement_attachment, setIncome_statement_attachment] =
     useState("");
   const [current_assets, setCurrent_assets] = useState("");
-  const [cash_flow, setCash_flow] = useState("");
+  const [cash_flow_from_operating_activities, setCash_flow_from_operating_activities] = useState("");
   const [current_long_term_debt, setCurrent_long_term_debt] = useState("");
   const [current_liabilities, setCurrent_liabilities] = useState("");
   const [gross_margin, setGross_margin] = useState("");
@@ -200,7 +200,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
             balance_sheet_attachment,
             income_statement_attachment,
             current_assets,
-            cash_flow,
+            cash_flow_from_operating_activities,
             current_long_term_debt,
             current_liabilities,
             gross_margin,
@@ -263,7 +263,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
       setBalance_sheet_attachment(balance_sheet_attachment);
       setIncome_statement_attachment(income_statement_attachment);
       setCurrent_assets(current_assets);
-      setCash_flow(cash_flow);
+      setCash_flow_from_operating_activities(cash_flow_from_operating_activities);
       setCurrent_long_term_debt(current_long_term_debt);
       setCurrent_liabilities(current_liabilities);
       setGross_margin(gross_margin);
@@ -387,7 +387,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         balance_sheet_attachment,
         income_statement_attachment,
         current_assets,
-        cash_flow,
+        cash_flow_from_operating_activities,
         current_long_term_debt,
         current_liabilities,
         gross_margin,
@@ -449,7 +449,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    navigate("/investor/dashboard");
+    window.location.reload();
+    //navigate("/investor/dashboard");
   }
 
   function updateFinancials(input) {
@@ -639,7 +640,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setBalanceSuccess(true);
     setBalanceLoading(false);
-    navigate("/investor/dashboard");
+    window.location.reload();
+    //navigate("/investor/dashboard");
   }
 
   useEffect(() => {
@@ -812,7 +814,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setIncomeSuccess(true);
     setIncomeLoading(false);
-    navigate("/investor/dashboard");
+    window.location.reload();
+    //navigate("/investor/dashboard");
   }
 
   useEffect(() => {
@@ -1695,9 +1698,9 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                             <TextField
                               type="number"
                               fullWidth
-                              onChange={(e) => setCash_flow(e.target.value)}
+                              onChange={(e) => setCash_flow_from_operating_activities(e.target.value)}
                               required
-                              value={cash_flow || ""}
+                              value={cash_flow_from_operating_activities || ""}
                               variant="outlined"
                             />
                           </TableCell>
