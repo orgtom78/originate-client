@@ -118,9 +118,9 @@ const BuyerList = () => {
     }
   }
 
-  function getLink(status, id, buyid, supid) {
+  function getLink(status, id, buyid) {
     if (status === "Approved") {
-      return `/admin/newrequest/${id}/${buyid}/${supid}`;
+      return `/admin/newrequest/${id}/${buyid}/${supId}`;
     } else {
       return <></>;
     }
@@ -141,7 +141,6 @@ const BuyerList = () => {
                         buyerdata.buyer_status,
                         buyerdata.id,
                         buyerdata.buyerId,
-                        buyerdata.supplierId
                       )}
                     >
                       <CardContent>
