@@ -58,6 +58,24 @@
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
           "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
+<<<<<<< HEAD
+=======
+        },
+        "zoho": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/zoho-787257493976636b5a43-build.zip",
+          "zohoClientId": "1000.B2431PKHZX8NF86FB9VJV5T60P0U7J",
+          "zohoClientSecret": "5cbdd5028d4e84106129411e2449400e828e6697fd",
+          "zohoToken": "1000.efcbfbfac4b26d09deb9ea63d95f8295.d31aeb86cc808ea54f48d0763470819a"
+        },
+        "ocdefi": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/ocdefi-462f4a566e2f4276586b-build.zip"
+        },
+        "sofr": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/sofr-492f3172463161614e77-build.zip"
+>>>>>>> 7ed399feac981ec9324b244080c5352757c943d2
         }
       }
     }

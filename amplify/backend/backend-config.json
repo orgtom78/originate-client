@@ -116,6 +116,42 @@
           ]
         }
       ]
+<<<<<<< HEAD
+=======
+    },
+    "zoho": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "api",
+          "resourceName": "originateclientdev",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        }
+      ]
+    },
+    "ocdefi": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "sofr": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": []
+    }
+  },
+  "analytics": {
+    "originatetest": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+>>>>>>> 7ed399feac981ec9324b244080c5352757c943d2
     }
   }
 }

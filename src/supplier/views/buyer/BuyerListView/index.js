@@ -76,7 +76,7 @@ const BuyerList = () => {
     async function getBuyers() {
       const id = await loadUser();
       let filter = {
-        userId: { eq: id },
+        userId: { contains: id },
       };
       const {
         data: {
