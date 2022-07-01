@@ -359,7 +359,7 @@ const AdminTransactionListView = () => {
             </Card>
           </Box>
           <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={`/admin/newrequestlist/`}>
+            <Link to={`/admin/newrequestsupplierlist`}>
               <Button>New Invoice</Button>
             </Link>
           </Box>
