@@ -56,6 +56,7 @@ function SupplierUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [sub, setSub] = useState("");
+  const [id, setId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [
@@ -115,6 +116,7 @@ function SupplierUploads(value) {
       const {
         data: {
           getSupplier: {
+            id,
             identityId,
             userId,
             supplierId,
@@ -125,6 +127,7 @@ function SupplierUploads(value) {
           },
         },
       } = supplier;
+      setId(id);
       setSub(userId);
       setSupplierId(supplierId);
       setIdentityId(identityId);
@@ -144,11 +147,10 @@ function SupplierUploads(value) {
   }
 
   async function s3Up(file, filenames) {
-    const id = sub;
     const ident = supplierId;
     const name = filenames;
     var fileExtension = file.name.split(".").pop();
-    const filename = `${id}${ident}${name}.${fileExtension}`;
+    const filename = `${sub}${ident}${name}.${fileExtension}`;
 
     const stored = await Storage.put(filename, file, {
       level: "private",
@@ -316,7 +318,6 @@ function SupplierUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, 'supplier_registration_cert_attachment') : null;
       var supplier_registration_cert_attachment = u;
-      const id= value.value.value;
       await updateSupplier({
         id,
         supplier_registration_cert_attachment,
@@ -481,11 +482,11 @@ function SupplierUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, 'supplier_shareholder_list_attachment') : null;
       var supplier_shareholder_list_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       console.log(sub);
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_shareholder_list_attachment,
       });
@@ -649,10 +650,10 @@ function SupplierUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, 'supplier_director_list_attachment') : null;
       var supplier_director_list_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_director_list_attachment,
       });
@@ -826,10 +827,10 @@ function SupplierUploads(value) {
     try {
       const u = newfile ? await s3Up(newfile, 'supplier_articles_of_association_attachment') : null;
       var supplier_articles_of_association_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_articles_of_association_attachment,
       });
