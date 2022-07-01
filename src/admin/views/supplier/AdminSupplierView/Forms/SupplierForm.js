@@ -95,16 +95,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_type, setSupplier_type] = useState("");
-  const [
-    supplier_date_of_incorporation,
-    setSupplier_date_of_incorporation,
-  ] = useState("");
+  const [supplier_date_of_incorporation, setSupplier_date_of_incorporation] =
+    useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
-  const [
-    supplier_address_postalcode,
-    setSupplier_address_postalcode,
-  ] = useState("");
+  const [supplier_address_postalcode, setSupplier_address_postalcode] =
+    useState("");
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
   const [
@@ -112,9 +108,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
     setSupplier_registration_cert_attachment,
   ] = useState("");
   const [supplier_website, setSupplier_website] = useState("");
-  const [supplier_address_refinment, setSupplier_address_refinment] = useState(
-    ""
-  );
+  const [supplier_address_refinment, setSupplier_address_refinment] =
+    useState("");
   const [supplier_industry_code, setSupplier_industry_code] = useState("");
   const [supplier_register_number, setSupplier_register_number] = useState("");
   const [supplier_trading_name, setSupplier_trading_name] = useState("");
@@ -125,10 +120,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -518,18 +511,17 @@ const SupplierForm = ({ className, value, ...rest }) => {
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
-                          fullWidth
                           value={supplier_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
+                          format="DD/MM/YYYY"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setSupplier_date_of_incorporation(e.target.value)
+                          onChange={(date) =>
+                            setSupplier_date_of_incorporation(date)
                           }
                           required
                           KeyboardButtonProps={{
@@ -538,7 +530,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>
@@ -743,13 +737,14 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           margin="normal"
                           variant="outlined"
                           id="financials_reporting_period"
-                          label="Company Date of Incorporation"
+                          label="Financial Reporting Period"
                           name="financials_reporting_period"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
+                          views={["year"]}
+                          format="YYYY"
+                          minDate={new Date("2017/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setFinancials_reporting_period(e.target.value)
+                          onChange={(date) =>
+                            setFinancials_reporting_period(date)
                           }
                           required
                           KeyboardButtonProps={{
@@ -758,7 +753,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField fullWidth {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>
