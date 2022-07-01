@@ -1,5 +1,4 @@
 import * as Yup from "yup";
-import moment from "moment";
 import NewBuyerFormModel from "./NewBuyerFormModel";
 const {
   formField: {
@@ -98,37 +97,23 @@ const yup = [
   }),
 
   Yup.object().shape({
-    [ebit.name]: Yup.number().nullable(),
     [balance_sheet_attachment.name]: Yup.string(),
     [income_statement_attachment.name]: Yup.string(),
-    [net_profit.name]: Yup.number().nullable(),
-    [financials_reporting_period.name]: Yup.string()
-      .nullable()
-      .required(`${financials_reporting_period.requiredErrorMsg}`)
-      .test("incdate", financials_reporting_period.invalidErrorMsg, (val) => {
-        if (val) {
-          const startDate = new Date(2018, 11, 31);
-          const endDate = new Date();
-          if (moment(val, moment.ISO_8601).isValid()) {
-            return moment(val).isBetween(startDate, endDate);
-          }
-          return false;
-        }
-        return false;
-      }),
-    [financials_denomination.name]: Yup.string(),
-    [sales.name]: Yup.number().nullable(),
     [financials_status.name]: Yup.string(),
+    [financials_denomination.name]: Yup.string(),
+    [financials_reporting_period.name]: Yup.string(),
+    [sales.name]: Yup.number().nullable(),
     [net_profit.name]: Yup.number().nullable(),
-    [total_equity.name]: Yup.number().nullable(),
     [net_operating_loss.name]: Yup.number().nullable(),
+    [ebit.name]: Yup.number().nullable(),
+    [total_equity.name]: Yup.number().nullable(),
     [cash_flow_from_operating_activities.name]: Yup.number().nullable(),
+    [interest_expenses.name]: Yup.number().nullable(),
     [current_assets.name]: Yup.number().nullable(),
     [current_liabilities.name]: Yup.number().nullable(),
     [inventory_beginning.name]: Yup.number().nullable(),
     [inventory_end.name]: Yup.number().nullable(),
     [cost_of_goods_sold.name]: Yup.number().nullable(),
-    [interest_expenses.name]: Yup.number().nullable(),
     [inventory.name]: Yup.number().nullable(),
   }),
 

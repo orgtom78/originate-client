@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -63,11 +63,13 @@ const orangeTheme = createTheme({
 const BuyerList = () => {
   const classes = useStyles();
   const [buyerdata, setBuyerdata] = useState([]);
+  const { supId } = useParams();
 
   useEffect(() => {
     async function getBuyers() {
       let filter = {
-        buyer_status: { eq: "Approved"}
+        buyer_status: { eq: "Approved"},
+        supplierId: { contains: supId}
       };
       const {
         data: {
@@ -86,7 +88,7 @@ const BuyerList = () => {
       setBuyerdata(c);
     }
     test();
-  }, []);
+  }, [supId]);
 
   function checkstatus(buyerdata) {
     if (buyerdata === "submitted") {
