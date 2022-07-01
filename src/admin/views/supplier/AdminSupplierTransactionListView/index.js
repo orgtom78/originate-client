@@ -65,14 +65,6 @@ const SupplierList = () => {
     test();
   }, []);
 
-  function getLink(status, id, buyid, supid) {
-    if (status === "Approved") {
-      return `/admin/newrequest/${id}/${buyid}/${supid}`;
-    } else {
-      return <></>;
-    }
-  }
-
   return (
     <Page className={clsx(classes.root)} title="Approved Suppliers">
       <Container maxWidth={false}>
