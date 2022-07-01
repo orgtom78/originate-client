@@ -631,11 +631,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       name="financials_reporting_period"
                       format="yyyy"
                       views={["year"]}
-                      minDate={new Date("1500/12/31")}
+                      minDate={new Date("2017/12/31")}
                       maxDate={new Date()}
-                      onChange={(e) =>
-                        setFinancials_reporting_period(e.target.value)
-                      }
+                      onChange={(date) => setFinancials_reporting_period(date)}
                       required
                       KeyboardButtonProps={{
                         "aria-label": "change date",
