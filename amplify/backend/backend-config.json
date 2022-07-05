@@ -144,9 +144,27 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda",
-      "dependsOn": []
+      "dependsOn": [
+        {
+          "category": "auth",
+          "resourceName": "originateclient84cf992c",
+          "attributes": [
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "originateclientdev",
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ]
+        }
+      ]
     }
   },
+<<<<<<< HEAD
   "analytics": {
     "originatetest": {
       "service": "Pinpoint",
@@ -154,4 +172,7 @@
 >>>>>>> 7ed399feac981ec9324b244080c5352757c943d2
     }
   }
+=======
+  "analytics": {}
+>>>>>>> 3f9b95a83954fbab4953d01dc26138e42d85a0e1
 }
