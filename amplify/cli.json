@@ -8,7 +8,7 @@
       "enableiterativegsiupdates": false,
       "secondarykeyasgsi": false,
       "skipoverridemutationinputtypes": false,
-      "transformerversion": 1,
+      "transformerversion": 2,
       "suppressschemamigrationprompt": true,
       "securityenhancementnotification": true,
       "showfieldauthnotification": false,
