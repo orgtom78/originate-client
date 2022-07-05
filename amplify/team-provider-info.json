@@ -53,7 +53,7 @@
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "ac990b93abfb9d201235ad31854371",
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaid-32344372384e742b3039-build.zip"
+          "s3Key": "amplify-builds/plaid-3237594867574a724c6c-build.zip"
         },
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
