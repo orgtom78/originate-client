@@ -45,21 +45,19 @@
     },
     "categories": {
       "auth": {
-        "true": {},
-        "originateclientprod796edffc": {}
+        "originateclient84cf992c": {},
+        "true": {}
       },
       "function": {
         "plaid": {
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "ac990b93abfb9d201235ad31854371",
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaid-32344372384e742b3039-build.zip"
+          "s3Key": "amplify-builds/plaid-3237594867574a724c6c-build.zip"
         },
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
           "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
-<<<<<<< HEAD
-=======
         },
         "zoho": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
@@ -74,12 +72,7 @@
         },
         "sofr": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-<<<<<<< HEAD
-          "s3Key": "amplify-builds/sofr-492f3172463161614e77-build.zip"
->>>>>>> 7ed399feac981ec9324b244080c5352757c943d2
-=======
           "s3Key": "amplify-builds/sofr-5245515852514639566c-build.zip"
->>>>>>> 3f9b95a83954fbab4953d01dc26138e42d85a0e1
         }
       }
     }
