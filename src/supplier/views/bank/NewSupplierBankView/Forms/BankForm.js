@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { InputField, UploadField } from "src/components/FormFields";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
+import { InputField } from "src/components/FormFields";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 import currencies from "src/components/FormLists/currencies.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const curr = currencies;
 const cr = countries;
@@ -81,11 +78,28 @@ export default function BankForm(props) {
   const account_statement_update =
     updatefields.values.account_statement_attachment;
 
+  const [identityId, setIdentityId] = useState("");
+  const [userId, setUserId] = useState("");
+  const [supplierId, setSupplierId] = useState("");
   const [accountimg, setAccountimg] = useState("");
   const [accountpdf, setAccountpdf] = useState("");
 
   const [accountloading, setAccountLoading] = useState(false);
   const [accountsuccess, setAccountSuccess] = useState(false);
+
+  const context = useUser();
+
+  useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { identityId, supplierId, sub } = data;
+      setIdentityId(identityId);
+      setSupplierId(supplierId);
+      setUserId(sub);
+    }
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (account_statement_update) {
@@ -94,16 +108,22 @@ export default function BankForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(account_statement_update);
+          const u = await Storage.get(account_statement_update, {
+            level: "private",
+            identityId: identityId,
+          });
           setAccountimg(u);
         } else {
-          const h = await Storage.vault.get(account_statement_update);
+          const h = await Storage.get(account_statement_update, {
+            level: "private",
+            identityId: identityId,
+          });
           setAccountpdf(h);
         }
       }
       geturl();
     }
-  }, [account_statement_update]);
+  }, [account_statement_update, identityId]);
 
   async function handleAccountClick() {
     setAccountSuccess(false);
@@ -252,11 +272,14 @@ export default function BankForm(props) {
                 <>{accountisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
+                  <NewUploadField
                     name={account_statement_attachment.name}
                     id={account_statement_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
+                    ident={supplierId}
+                    userid={userId}
+                    identityid={identityId}
                   />
                   <label htmlFor={account_statement_attachment.name}>
                     <LoaderButton

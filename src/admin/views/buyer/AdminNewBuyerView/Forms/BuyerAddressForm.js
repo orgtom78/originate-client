@@ -1,22 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import { InputField, SelectField } from "src/components/FormFields";
+import { InputField, SelectField, DatePickerField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import currencies from "src/components/FormLists/currencies.js";
 import countries from "src/components/FormLists/countries.js";
 
@@ -25,8 +20,16 @@ const curr = currencies;
 
 const terms = [
   {
+    value: "15",
+    label: "15 days",
+  },
+  {
     value: "30",
     label: "30 days",
+  },
+  {
+    value: "45",
+    label: "45 days",
   },
   {
     value: "60",
@@ -43,18 +46,6 @@ const terms = [
   {
     value: "180",
     label: "180 days",
-  },
-  {
-    value: "210",
-    label: "210 days",
-  },
-  {
-    value: "240",
-    label: "240 days",
-  },
-  {
-    value: "270",
-    label: "270 days",
   },
 ];
 
@@ -98,10 +89,7 @@ export default function BuyerAddressForm(props) {
 
   const {
     formField: {
-      userId,
       investorId,
-      identityId,
-      supplierId,
       buyer_address_city,
       buyer_address_number,
       buyer_address_postalcode,
@@ -113,7 +101,8 @@ export default function BuyerAddressForm(props) {
       buyer_loan_request_amount,
       buyer_payment_terms,
       buyer_sample_trading_docs_attachment,
-      buyer_sold_goods_description,
+      buyer_date_of_incorporation,
+      buyer_contact_email
     },
   } = props;
   const { id } = useParams();
@@ -122,7 +111,7 @@ export default function BuyerAddressForm(props) {
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert =
-    updatefields.values.supplier_registration_cert_attachment;
+    updatefields.values.buyer_sample_trading_docs_attachment;
 
   const [updateregcertimg, setUpdateregcertimg] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");
@@ -223,30 +212,6 @@ export default function BuyerAddressForm(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={userId.name}
-                label={userId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={identityId.name}
-                label={identityId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={supplierId.name}
-                label={supplierId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={investorId.name}
                 label={investorId.label}
                 fullWidth
@@ -283,6 +248,15 @@ export default function BuyerAddressForm(props) {
               <InputField
                 name={buyer_name.name}
                 label={buyer_name.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={buyer_date_of_incorporation.name}
+                label={buyer_date_of_incorporation.label}
+                maxDate={new Date()}
                 fullWidth
                 variant="outlined"
               />
@@ -338,8 +312,8 @@ export default function BuyerAddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_sold_goods_description.name}
-                label={buyer_sold_goods_description.label}
+                name={buyer_contact_email.name}
+                label={buyer_contact_email.label}
                 fullWidth
                 variant="outlined"
               />

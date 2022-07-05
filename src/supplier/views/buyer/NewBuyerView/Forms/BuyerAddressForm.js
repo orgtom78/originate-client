@@ -3,29 +3,33 @@ import PropTypes from "prop-types";
 import { InputField, SelectField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid, Tooltip } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import currencies from "src/components/FormLists/currencies.js";
-import countries from "src/components/FormLists/countries.js";
+import countries from "src/components/FormLists/countries-obligors.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
 const curr = currencies;
 
 const terms = [
   {
+    value: "15",
+    label: "15 days",
+  },
+  {
     value: "30",
     label: "30 days",
+  },
+  {
+    value: "45",
+    label: "45 days",
   },
   {
     value: "60",
@@ -42,18 +46,6 @@ const terms = [
   {
     value: "180",
     label: "180 days",
-  },
-  {
-    value: "210",
-    label: "210 days",
-  },
-  {
-    value: "240",
-    label: "240 days",
-  },
-  {
-    value: "270",
-    label: "270 days",
   },
 ];
 
@@ -124,35 +116,44 @@ export default function BuyerAddressForm(props) {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const context = useUser();
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
   useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const id = await user.attributes.sub;
-      setUserId(id);
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
-    if (updateregcert !== '') {
+    if (updateregcert !== "") {
       async function geturl() {
         var uploadext = updateregcert.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(updateregcert);
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setImg(u);
         } else {
-          const h = await Storage.vault.get(updateregcert);
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, identity]);
 
   async function handleClick() {
     setSuccess(false);
@@ -165,7 +166,7 @@ export default function BuyerAddressForm(props) {
   }
 
   function isimageorpdf() {
-  if (img !== ''){
+    if (img !== "") {
       return (
         <>
           <img className={classes.img} alt="complex" src={img} />
@@ -184,66 +185,12 @@ export default function BuyerAddressForm(props) {
     }
   }
 
-  function NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        prefix="$"
-        type="text"
-      />
-    );
-  }
-
-  NumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
-
   return (
     <React.Fragment>
       <Card>
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={buyer_loan_request_amount.name}
-                label={buyer_loan_request_amount.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectField
-                name={buyer_payment_terms.name}
-                label={buyer_payment_terms.label}
-                data={terms}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectListField
-                name={buyer_currency.name}
-                label={buyer_currency.label}
-                data={curr}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={buyer_name.name}
@@ -318,6 +265,32 @@ export default function BuyerAddressForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_loan_request_amount.name}
+                label={buyer_loan_request_amount.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_payment_terms.name}
+                label={buyer_payment_terms.label}
+                data={terms}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectListField
+                name={buyer_currency.name}
+                label={buyer_currency.label}
+                data={curr}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               {updateregcert ? (
                 <>{isimageorpdf()}</>
               ) : (
@@ -328,22 +301,25 @@ export default function BuyerAddressForm(props) {
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
                     ident={buyerId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={buyer_sample_trading_docs_attachment.name}>
-                    <LoaderButton
-                      id={buyer_sample_trading_docs_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
-                    >
-                      {" "}
-                      Sample Tading Documents*
-                    </LoaderButton>
+                    <Tooltip title="A complete set of trading documents (Invoice, PO, BL, Payment Proof) no older than 6 months">
+                      <LoaderButton
+                        id={buyer_sample_trading_docs_attachment.name}
+                        fullWidth
+                        component="span"
+                        startIcon={<UploadIcon />}
+                        disabled={loading}
+                        success={success}
+                        loading={loading}
+                        onClick={handleClick}
+                      >
+                        {" "}
+                        Sample Tading Documents*
+                      </LoaderButton>
+                    </Tooltip>
                   </label>
                 </>
               )}

@@ -1,4 +1,4 @@
-export default {
+const moddel = {
   formId: "NewDocument",
   formField: {
     document_type: {
@@ -13,3 +13,5 @@ export default {
     },
   },
 };
+
+export default moddel;

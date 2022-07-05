@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { Button, Container, makeStyles, Typography } from "@material-ui/core";
+import { Button, Container, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { Auth } from "aws-amplify";
@@ -31,20 +32,18 @@ const { formId, formField } = NewSupplierFormModel;
 export default function NewSupplier() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { groupId } = useParams();
-  const { sub } = useParams();
+  const { id } = useParams();
   const currentValidationSchema = validationSchema[0];
   const [group, setGroup] = useState([]);
+  const [groupId, setGroupId] = useState("");
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
   useEffect(() => {
-    var userId = sub;
-    var sortkey = groupId;
-    loadUsergroup({ userId, sortkey });
-  }, [sub, groupId]);
+    loadUsergroup({ id });
+  }, [id]);
 
   async function loadUsergroup(input) {
     const group = await API.graphql(
@@ -52,6 +51,7 @@ export default function NewSupplier() {
     );
     const items = group.data.getUsergroup;
     setGroup(items);
+    setGroupId(items.groupId)
   }
 
   async function _submitForm(values, actions) {
@@ -73,7 +73,6 @@ export default function NewSupplier() {
 
   async function createUser(input) {
     const user_name = input.email;
-    console.log(user_name);
     try {
       let user = await Auth.signUp({
         username: input.email,
@@ -109,7 +108,7 @@ export default function NewSupplier() {
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
-    navigate("/admin/users");
+    navigate("/admin/groups");
   }
 
   return (

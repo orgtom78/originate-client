@@ -3,15 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  TextField,
-  makeStyles,
-} from "@material-ui/core";
+import { Box, Card, CardContent, CardHeader, Divider, TextField } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import LoaderButton from "src/components/LoaderButton.js";
 
 const useStyles = makeStyles({

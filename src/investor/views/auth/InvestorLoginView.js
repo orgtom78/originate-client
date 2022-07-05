@@ -3,14 +3,8 @@ import { Auth } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { Formik } from "formik";
-import {
-  Box,
-  Button,
-  Container,
-  TextField,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 
 const useStyles = makeStyles((theme) => ({
@@ -74,10 +68,10 @@ export default function InvestorLoginView() {
                 <Box mt={3} mb={1}>
                   <Typography
                     align="center"
-                    color="textSecondary"
-                    variant="body1"
+                    color="textPrimary"
+                    variant="h2"
                   >
-                    Login with your investor credentials
+                    Sign in with your investor credentials
                   </Typography>
                 </Box>
                 <TextField

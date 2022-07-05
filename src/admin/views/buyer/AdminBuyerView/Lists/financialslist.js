@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Box,
-  Card,
-  Container,
   Checkbox,
   Table,
   TableBody,
@@ -13,14 +11,13 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import AdminUpdateFinancialsView from "src/admin/views/financials/AdminUpdateFinancialsView";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -43,12 +40,9 @@ const useStyles = makeStyles((theme) => ({
 
 const FinancialsListView = (value) => {
   const classes = useStyles();
-  const { id } = useParams();
-  const { buyId } = useParams();
+  const groupid = value.user;
+  const buyid = value.buyer;
   const [financials, setFinancials] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [financialsId, setFinancialsId] = useState("");
-  const [isclicked, setIsclicked] = useState("");
 
   const [selectedFinancialsIds, setSelectedFinancialsIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -57,31 +51,27 @@ const FinancialsListView = (value) => {
   useEffect(() => {
     async function getFinancials() {
       let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "financials-", contains: buyId },
+        userId: { eq: groupid },
+        buyerId: { eq: buyid },
       };
       const {
         data: {
-          listsFinancials: { items: itemsPage1, nextToken },
+          listFinancialss: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
+        graphqlOperation(queries.listFinancialss, { filter: filter })
       );
-      const n = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsFinancials.items;
-      setFinancials(items);
+      const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
+      const items = n.data.listFinancialss.items;
+      const s = items.sort(function(a,b){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+      });
+      setFinancials(s);
     }
     getFinancials();
-  }, [id, buyId]);
-
-  const handler = useCallback(() => {
-    if (!financials || !financials.length) {
-      return;
-    } else {
-      const d = financials;
-      return d;
-    }
-  }, [financials]);
+  }, [buyid, groupid]);
 
   const handleSelectAll = (event) => {
     let newSelectedFinancialsIds;
@@ -132,143 +122,116 @@ const FinancialsListView = (value) => {
     setPage(newPage);
   };
 
-  function getidandident(sortkey, userId) {
-    setUserId(userId);
-    setFinancialsId(sortkey);
-    setIsclicked(true);
-  }
-
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <React.Fragment>
-          <Container maxWidth={false}>
-            <Card>
-              <PerfectScrollbar>
-                <Box maxWidth="100%" maxHeight="100%">
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell padding="checkbox">
-                          <Checkbox
-                            checked={
-                              selectedFinancialsIds.length === financials.length
-                            }
-                            color="primary"
-                            indeterminate={
-                              selectedFinancialsIds.length > 0 &&
-                              selectedFinancialsIds.length < financials.length
-                            }
-                            onChange={handleSelectAll}
-                          />
-                        </TableCell>
-                        <TableCell>Year</TableCell>
-                        <TableCell>Revenue</TableCell>
-                        <TableCell>Profit</TableCell>
-                        <TableCell>Accounts Receivable</TableCell>
-                        <TableCell>Accounts Payable</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {financials.slice(0, limit).map((financials) => (
-                        <TableRow
-                          hover
-                          key={financials.financialsId}
-                          selected={
-                            selectedFinancialsIds.indexOf(
-                              financials.financialsId
-                            ) !== -1
-                          }
+      <PerfectScrollbar>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    checked={selectedFinancialsIds.length === financials.length}
+                    color="primary"
+                    indeterminate={
+                      selectedFinancialsIds.length > 0 &&
+                      selectedFinancialsIds.length < financials.length
+                    }
+                    onChange={handleSelectAll}
+                  />
+                </TableCell>
+                <TableCell>Year</TableCell>
+                <TableCell>Revenue</TableCell>
+                <TableCell>Profit</TableCell>
+                <TableCell>Accounts Receivable</TableCell>
+                <TableCell>Accounts Payable</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {financials.slice(0, limit).map((financials) => (
+                <TableRow
+                  hover
+                  key={financials.financialsId}
+                  selected={
+                    selectedFinancialsIds.indexOf(financials.financialsId) !==
+                    -1
+                  }
+                >
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={
+                        selectedFinancialsIds.indexOf(
+                          financials.financialsId
+                        ) !== -1
+                      }
+                      onChange={(event) =>
+                        handleSelectOne(event, financials.financialsId)
+                      }
+                      value="true"
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <Box alignItems="center" display="flex">
+                      <Link to={`/admin/financials/${financials.id}`}>
+                        <Avatar
+                          className={classes.avatar}
+                          src={`${financials.buyer_logo}`}
                         >
-                          <TableCell padding="checkbox">
-                            <Checkbox
-                              checked={
-                                selectedFinancialsIds.indexOf(
-                                  financials.financialsId
-                                ) !== -1
-                              }
-                              onChange={(event) =>
-                                handleSelectOne(event, financials.financialsId)
-                              }
-                              value="true"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <Box alignItems="center" display="flex">
-                              <Avatar
-                                className={classes.avatar}
-                                src={financials.avatarUrl}
-                                onClick={() =>
-                                  getidandident(
-                                    financials.sortkey,
-                                    financials.userId
-                                  )
-                                }
-                              >
-                                {getInitials(financials.financials_name)}
-                              </Avatar>
-                              <Typography color="textPrimary" variant="body1">
-                                {moment(
-                                  financials.financials_reporting_period
-                                ).format("YYYY")}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              value={`${financials.sales}`}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              value={`${financials.net_profit}`}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              value={`${financials.accounts_receivable}`}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              value={`${financials.accounts_payable}`}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Box>
-              </PerfectScrollbar>
-              <TablePagination
-                component="div"
-                count={financials.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
-              />
-            </Card>
-          </Container>
-        </React.Fragment>
-      ) : (
-        <>
-          <AdminUpdateFinancialsView value={{ userId, financialsId }} />
-        </>
-      )}
+                          {getInitials(financials.buyer_name)}
+                        </Avatar>
+                      </Link>
+                      <Typography color="textPrimary" variant="body1">
+                        {moment(financials.financials_reporting_period).format(
+                          "YYYY"
+                        )}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <NumberFormat
+                      value={`${financials.sales}`}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <NumberFormat
+                      value={`${financials.net_profit}`}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <NumberFormat
+                      value={`${financials.accounts_receivable}`}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <NumberFormat
+                      value={`${financials.accounts_payable}`}
+                      displayType={"text"}
+                      thousandSeparator={true}
+                      prefix={"$"}
+                    />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+      </PerfectScrollbar>
+      <TablePagination
+        component="div"
+        count={financials.length}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleLimitChange}
+        page={page}
+        rowsPerPage={limit}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
     </React.Fragment>
   );
 };

@@ -9,12 +9,12 @@ import {
   Grid,
   Typography,
   colors,
-  makeStyles,
-} from "@material-ui/core";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import TrendingUpIcon from "@material-ui/icons/TrendingUp";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -40,16 +40,18 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   useEffect(() => {
     const getRequests = async () => {
-      let filter = { sortkey: { contains: "request-" } };
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
+      let filter = { investorId: { eq: id } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
       setRequest(items);
     };
     getRequests();
@@ -77,7 +79,7 @@ const TotalTransactions = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               TOTAL TRANSACTIONS

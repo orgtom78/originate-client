@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useField } from "formik";
-import { FormControl, FormHelperText } from "@material-ui/core";
+import { FormControl, FormHelperText } from "@mui/material";
 import { Storage } from "aws-amplify";
 
 export default function AdminUploadField(props) {
@@ -19,8 +19,8 @@ export default function AdminUploadField(props) {
   }
 
   useEffect(() => {
-    if (value) {
-      const { link } = value;
+    if (value){
+      const { link }  = value;
       setUploadedFile(link);
     }
   }, [value]);
@@ -51,7 +51,7 @@ export default function AdminUploadField(props) {
         type="file"
         {...field}
         {...props}
-        value={uploadedFile}
+        value={uploadedFile || ""}
         onChange={_onChange}
       />
       {_renderHelperText()}

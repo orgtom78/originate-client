@@ -12,8 +12,8 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -22,7 +22,11 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
+import { useParams } from "react-router-dom";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 const idtype = [
   {
@@ -97,8 +101,9 @@ const useStyles = makeStyles((theme) => ({
 const UpdateUboForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
+  const [userId, setUserId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [uboId, setUboId] = useState("");
   const [ubo_status, setUbo_status] = useState("");
@@ -111,6 +116,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
   const [ubo_nationality, setUbo_nationality] = useState("");
   const [ubo_poa_attachment, setUbo_poa_attachment] = useState("");
   const [ubo_country_of_residence, setUbo_country_of_residence] = useState("");
+  const [ubo_date_of_birth, setUbo_date_of_birth] = useState("");
 
   const [uboloading, setUboLoading] = useState(false);
   const [ubosuccess, setUboSuccess] = useState(false);
@@ -133,19 +139,16 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
   const ubopoaname = "Ubo Proof of Address";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.uboId;
-    var userId = sub;
-    var sortkey = key;
-    getUbo({ userId, sortkey });
-  }, [value.uboId, value.userId]);
+    getUbo({ id });
+  }, [id]);
 
   async function getUbo(input) {
     try {
-      const ubo = await API.graphql(graphqlOperation(queries.getUbo, input));
+      const ubo = await API.graphql(graphqlOperation(queries.getUBO, input));
       const {
         data: {
           getUBO: {
+            userId,
             identityId,
             uboId,
             ubo_status,
@@ -158,9 +161,11 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
             ubo_nationality,
             ubo_poa_attachment,
             ubo_country_of_residence,
+            ubo_date_of_birth,
           },
         },
       } = ubo;
+      setUserId(userId);
       setIdentityId(identityId);
       setUboId(uboId);
       setUbo_status(ubo_status);
@@ -173,6 +178,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       setUbo_nationality(ubo_nationality);
       setUbo_poa_attachment(ubo_poa_attachment);
       setUbo_country_of_residence(ubo_country_of_residence);
+      setUbo_date_of_birth(ubo_date_of_birth);
     } catch (err) {
       console.log("error fetching data..", err);
     }
@@ -182,9 +188,9 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     setUboSuccess(false);
     setUboLoading(true);
     try {
-      const userId = sub;
       const sortkey = uboId;
       await updateUbo({
+        id,
         userId,
         sortkey,
         ubo_status,
@@ -197,6 +203,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
         ubo_nationality,
         ubo_poa_attachment,
         ubo_country_of_residence,
+        ubo_date_of_birth,
       });
     } catch (e) {
       onError(e);
@@ -207,7 +214,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
   }
 
   function updateUbo(input) {
-    return API.graphql(graphqlOperation(mutations.updateUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.updateUBO, { input: input }));
   }
 
   useEffect(() => {
@@ -235,7 +242,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getuboidimgurl();
     }
-  }, [ubo_id_attachment, sub, identityId]);
+  }, [ubo_id_attachment, identityId]);
 
   useEffect(() => {
     if (ubo_id_attachment) {
@@ -253,7 +260,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getuboidpdfurl();
     }
-  }, [ubo_id_attachment, sub, identityId]);
+  }, [ubo_id_attachment, identityId]);
 
   function uboidisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -373,11 +380,8 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile) : null;
       var ubo_id_attachment = u;
-      const sortkey = uboId;
-      const userId = sub;
       await updateUbo({
-        sortkey,
-        userId,
+        id,
         ubo_id_attachment,
       });
     } catch (e) {
@@ -413,7 +417,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getubopoaimgurl();
     }
-  }, [ubo_poa_attachment, sub, identityId]);
+  }, [ubo_poa_attachment, identityId]);
 
   useEffect(() => {
     if (ubo_poa_attachment) {
@@ -431,7 +435,7 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
       }
       getubopoapdfurl();
     }
-  }, [ubo_poa_attachment, sub, identityId]);
+  }, [ubo_poa_attachment, identityId]);
 
   function ubopoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -540,11 +544,8 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile) : null;
       var ubo_poa_attachment = u;
-      const sortkey = uboId;
-      const userId = sub;
       await updateUbo({
-        sortkey,
-        userId,
+        id,
         ubo_poa_attachment,
       });
     } catch (e) {
@@ -567,22 +568,22 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                      <Select
-                        fullWidth
-                        name="ubo_status"
-                        label="UBO Status"
-                        onChange={(e) => setUbo_status(e.target.value)}
-                        required
-                        value={ubo_status || ""}
-                        variant="outlined"
-                      >
-                        {status.map((item, index) => (
-                          <MenuItem key={index} value={item.label}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                <Grid item xs={12} sm={12}>
+                  <Select
+                    fullWidth
+                    name="ubo_status"
+                    label="UBO Status"
+                    onChange={(e) => setUbo_status(e.target.value)}
+                    required
+                    value={ubo_status || ""}
+                    variant="outlined"
+                  >
+                    {status.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -644,6 +645,29 @@ const UpdateUboForm = ({ className, value, ...rest }) => {
                     value={ubo_id_number || ""}
                     variant="outlined"
                   />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={ubo_date_of_birth || ""}
+                      margin="normal"
+                      variant="outlined"
+                      id="ubo_date_of_birth"
+                      label="UBO Date of Birth"
+                      name="ubo_date_of_birth"
+                      onChange={(e) => setUbo_date_of_birth(e)}
+                      required
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
             </CardContent>

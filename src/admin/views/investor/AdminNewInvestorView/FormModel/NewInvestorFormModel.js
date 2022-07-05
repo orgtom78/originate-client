@@ -1,18 +1,6 @@
-export default {
+const model = {
   formId: "NewInvestor",
   formField: {
-    userId: {
-      name: "userId",
-      label: "User ID",
-      requiredErrorMsg:
-        "Please get the userId from your admin and dont make one up!",
-    },
-    identityId: {
-      name: "identityId",
-      label: "Identity ID",
-      requiredErrorMsg:
-        "Please get the identityId from your admin and dont make one up!",
-    },
     investor_logo: {
       name: "investor_logo",
       label: "Company Logo",
@@ -29,7 +17,7 @@ export default {
     },
     investor_website: {
       name: "investor_website",
-      label: "company Website",
+      label: "Company Website",
       requiredErrorMsg: "Company Website is required",
     },
     investor_type: {
@@ -283,3 +271,5 @@ export default {
     },
   },
 };
+
+export default model;

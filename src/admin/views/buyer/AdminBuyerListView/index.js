@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -16,8 +16,8 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -47,32 +47,23 @@ const AdminBuyerListView = () => {
 
   useEffect(() => {
     async function getBuyers() {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers)
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBuyers.items;
+      console.log(items)
       var x = items.filter((e) => e.buyer_status !== null);
+      console.log(x)
       setBuyer(x);
     }
     getBuyers();
   }, []);
 
-  const handler = useCallback(() => {
-    if (!buyer || !buyer.length) {
-      console.log("test");
-    } else {
-      const d = buyer;
-      return d;
-    }
-  }, [buyer]);
 
   const handleSelectAll = (event) => {
     let newSelectedBuyerIds;
@@ -170,7 +161,7 @@ const AdminBuyerListView = () => {
                           <TableCell>
                             <Box alignItems="center" display="flex">
                               <Link
-                                to={`/admin/buyer/${buyer.userId}/${buyer.buyerId}/${buyer.identityId}`}
+                                to={`/admin/buyer/${buyer.id}`}
                               >
                                 <Avatar
                                   className={classes.avatar}
@@ -207,8 +198,8 @@ const AdminBuyerListView = () => {
               <TablePagination
                 component="div"
                 count={buyer.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
                 rowsPerPageOptions={[5, 10, 25]}
@@ -217,7 +208,7 @@ const AdminBuyerListView = () => {
           </Box>
           <Divider />
           <Box display="flex" justifyContent="flex-end" p={2}>
-            <Link to={`/admin/newbuyer`}>
+            <Link to={`/admin/newsupplierbuyer`}>
               <Button>Add Buyer</Button>
             </Link>
           </Box>

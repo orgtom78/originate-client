@@ -3,18 +3,13 @@ import { useParams } from "react-router-dom";
 import { InputField, SelectField } from "src/components/FormFields";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import AdminUploadField from "src/components/FormFields/AdminUploadField";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;
@@ -69,7 +64,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-export default function ShareholderForm(props, value) {
+export default function ShareholderForm(props) {
   const classes = useStyles();
   const {
     formField: {
@@ -86,8 +81,8 @@ export default function ShareholderForm(props, value) {
   } = props;
 
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+  const ident = props.ident;
+  const buyId = props.buyer;
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
 
@@ -167,13 +162,13 @@ export default function ShareholderForm(props, value) {
         if (d === true) {
           const u = await Storage.get(director_updatepoa, {
             level: "private",
-            identityId: await ident,
+            identityId: ident,
           });
           setDpoaimg(u);
         } else {
           const h = await Storage.get(director_updatepoa, {
             level: "private",
-            identityId: await ident,
+            identityId: ident,
           });
           setDpoapdf(h);
         }

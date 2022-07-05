@@ -18,20 +18,19 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 import DirectorListView from "src/supplier/views/account/SupplierView/Lists/directorlist.js";
 import UboListView from "src/supplier/views/account/SupplierView/Lists/ubolist.js";
@@ -87,6 +86,7 @@ const type = [
 const SupplierForm = ({ className, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [dynamosupplierid, setdynamosupplierId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -111,13 +111,12 @@ const SupplierForm = ({ className, ...rest }) => {
   const [supplierloading, setSupplierLoading] = useState(false);
   const [suppliersuccess, setSupplierSuccess] = useState(false);
 
-  console.log(supplier_date_of_incorporation);
-
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
       const data = await context;
       const {
+        id,
         sub,
         supplierId,
         supplier_logo,
@@ -131,6 +130,7 @@ const SupplierForm = ({ className, ...rest }) => {
         supplier_country,
         supplier_industry,
       } = data;
+      setdynamosupplierId(id);
       setSub(sub);
       setSupplierId(supplierId);
       setSupplier_logo(supplier_logo);
@@ -152,10 +152,11 @@ const SupplierForm = ({ className, ...rest }) => {
     setSupplierLoading(true);
     try {
       const userId = sub;
-      const sortkey = supplierId;
+      const id = dynamosupplierid;
       await updateSupplier({
+        id,
         userId,
-        sortkey,
+        supplierId,
         supplier_logo,
         supplier_name,
         supplier_type,
@@ -305,17 +306,15 @@ const SupplierForm = ({ className, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           value={supplier_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -333,9 +332,10 @@ const SupplierForm = ({ className, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => <TextField fullWidth {...params} />}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
@@ -392,7 +392,6 @@ const SupplierForm = ({ className, ...rest }) => {
             </Card>
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
@@ -413,7 +412,6 @@ const SupplierForm = ({ className, ...rest }) => {
             </Card>
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
@@ -424,7 +422,6 @@ const SupplierForm = ({ className, ...rest }) => {
             <UpdateBankView />
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>

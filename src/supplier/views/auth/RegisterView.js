@@ -12,8 +12,8 @@ import {
   Link,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 import { onError } from "src/libs/errorLib";
 

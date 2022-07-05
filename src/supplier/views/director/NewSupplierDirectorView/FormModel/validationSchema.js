@@ -11,10 +11,11 @@ const {
     director_nationality,
     director_poa_attachment,
     director_country_of_residence,
+    director_date_of_birth
   },
 } = NewSupplierDirectorFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [director_name.name]: Yup.string().required(
       `${director_name.requiredErrorMsg}`
@@ -31,5 +32,8 @@ export default [
     [director_nationality.name]: Yup.string(),
     [director_poa_attachment.name]: Yup.string(),
     [director_country_of_residence.name]: Yup.string(),
+    [director_date_of_birth.name]: Yup.string().required(`${director_date_of_birth.requiredErrorMsg}`),
   }),
 ];
+
+export default yup;

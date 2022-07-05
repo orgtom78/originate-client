@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
@@ -12,8 +12,8 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -23,7 +23,7 @@ import { UploadCloud as UploadIcon } from "react-feather";
 import { useUser } from "src/components/context/usercontext.js";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;
@@ -86,10 +86,11 @@ const useStyles = makeStyles((theme) => ({
 const UpdateUboForm = ({ className, ...rest }) => {
   const classes = useStyles();
   const { id } = useParams();
-  const navigate = useNavigate();
   const context = useUser();
   const sub = context.sub;
+  const identity = context.identity;
 
+  const [dynamouboid, setdynamoId] = useState("");
   const [uboId, setUboId] = useState("");
   const [ubo_name, setUbo_name] = useState("");
   const [ubo_email, setUbo_email] = useState("");
@@ -122,18 +123,16 @@ const UpdateUboForm = ({ className, ...rest }) => {
   const ubopoaname = "Owner Proof of Address";
 
   useEffect(() => {
-    const sub = context.sub;
-    var userId = sub;
-    var sortkey = id;
-    getUbo({ userId, sortkey });
-  }, [context, id]);
+    getUbo({ id });
+  }, [id]);
 
   async function getUbo(input) {
     try {
-      const ubo = await API.graphql(graphqlOperation(queries.getUbo, input));
+      const ubo = await API.graphql(graphqlOperation(queries.getUBO, input));
       const {
         data: {
           getUBO: {
+            id,
             uboId,
             ubo_name,
             ubo_email,
@@ -147,6 +146,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
           },
         },
       } = ubo;
+      setdynamoId(id);
       setUboId(uboId);
       setUbo_name(ubo_name);
       setUbo_email(ubo_email);
@@ -167,10 +167,10 @@ const UpdateUboForm = ({ className, ...rest }) => {
     setUboLoading(true);
     try {
       const userId = sub;
-      const sortkey = uboId;
+      const id = dynamouboid;
       await updateUbo({
+        id,
         userId,
-        sortkey,
         ubo_name,
         ubo_email,
         ubo_phone_number,
@@ -186,11 +186,11 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
     setUboSuccess(true);
     setUboLoading(false);
-    navigate("/app/account");
+    window.location.reload();
   }
 
   function updateUbo(input) {
-    return API.graphql(graphqlOperation(mutations.updateUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.updateUBO, { input: input }));
   }
 
   useEffect(() => {
@@ -209,13 +209,16 @@ const UpdateUboForm = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(ubo_id_attachment);
+          var y = await Storage.get(ubo_id_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setUboidImg(y);
         }
       }
       getuboidimgurl();
     }
-  }, [ubo_id_attachment]);
+  }, [ubo_id_attachment, identity]);
 
   useEffect(() => {
     if (ubo_id_attachment) {
@@ -224,13 +227,16 @@ const UpdateUboForm = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(ubo_id_attachment);
+          var y = await Storage.get(ubo_id_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setUboidpdf(y);
         }
       }
       getuboidpdfurl();
     }
-  }, [ubo_id_attachment]);
+  }, [ubo_id_attachment, identity]);
 
   function uboidisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -331,7 +337,9 @@ const UpdateUboForm = ({ className, ...rest }) => {
     var fileExtension = file.name.split(".").pop();
     const filename = `${sub}${uboId}${name}.${fileExtension}`;
 
-    const stored = await Storage.vault.put(filename, file, {
+    const stored = await Storage.put(filename, file, {
+      level: "private",
+      identityId: identity,
       contentType: file.type,
     });
     return stored.key;
@@ -349,10 +357,10 @@ const UpdateUboForm = ({ className, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, "ubo_id_attachment") : null;
       var ubo_id_attachment = u;
-      const sortkey = uboId;
+      const id = dynamouboid;
       const userId = sub;
       await updateUbo({
-        sortkey,
+        id,
         userId,
         ubo_id_attachment,
       });
@@ -361,7 +369,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
     setUboidSuccess(true);
     setUboidLoading(false);
-    navigate("/app/account");
+    window.location.reload();
   }
 
   useEffect(() => {
@@ -380,13 +388,16 @@ const UpdateUboForm = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(ubo_poa_attachment);
+          var y = await Storage.get(ubo_poa_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setUbopoaImg(y);
         }
       }
       getubopoaimgurl();
     }
-  }, [ubo_poa_attachment]);
+  }, [ubo_poa_attachment, identity]);
 
   useEffect(() => {
     if (ubo_poa_attachment) {
@@ -395,13 +406,16 @@ const UpdateUboForm = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(ubo_poa_attachment);
+          var y = await Storage.get(ubo_poa_attachment, {
+            level: "private",
+            identityId: identity,
+          });
           setUbopoapdf(y);
         }
       }
       getubopoapdfurl();
     }
-  }, [ubo_poa_attachment]);
+  }, [ubo_poa_attachment, identity]);
 
   function ubopoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -510,10 +524,10 @@ const UpdateUboForm = ({ className, ...rest }) => {
     try {
       const u = newfile ? await s3Up(newfile, "ubo_poa_attachment") : null;
       var ubo_poa_attachment = u;
-      const sortkey = uboId;
+      const id = dynamouboid;
       const userId = sub;
       await updateUbo({
-        sortkey,
+        id,
         userId,
         ubo_poa_attachment,
       });
@@ -522,7 +536,7 @@ const UpdateUboForm = ({ className, ...rest }) => {
     }
     setUbopoaSuccess(true);
     setUbopoaLoading(false);
-    navigate("/app/account");
+    window.location.reload();
   }
 
   return (

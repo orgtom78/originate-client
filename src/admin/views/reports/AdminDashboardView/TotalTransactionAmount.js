@@ -1,18 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  makeStyles,
-  colors,
-} from "@material-ui/core";
-import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Avatar, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
@@ -26,26 +17,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const TotalTransactionAmount = ({ className, ...rest }) => {
+const TotalTransactionAmount = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
 
   useEffect(() => {
-    const getRequests = async () => {
-      let filter = { sortkey: { contains: "request-" } };
-      const {
-        data: {
-          listsRequest: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
-      );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
-      setRequest(items);
-    };
-    getRequests();
-  }, []);
+    async function get() {
+      try {
+        const data = await value;
+        setRequest(data);
+        return;
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    get();
+  }, [value]);
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
@@ -62,7 +49,8 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
       var fin = x.map((e) => e.invoice_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -71,10 +59,10 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              TOTAL TRANSACTION AMOUNT
+              TOTAL TRANSACTIONS
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -83,7 +71,6 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
                 value={addamounts()}
                 displayType={"text"}
                 thousandSeparator={true}
-                prefix={"$"}
               />
             </Typography>
           </Grid>

@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "auth": {
+      "originateclientprod796edffc": [
+        "create",
+        "read",
+        "update",
+        "delete"
+      ]
+    },
+    "api": {
+      "originateclientprod": [
+        "create",
+        "read",
+        "update"
+      ]
+    },
+    "storage": {
+      "Request:@model(appsync)": [
+        "create",
+        "read",
+        "update"
+      ]
+    },
+    "function": {
+      "plaid": [
+        "create",
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

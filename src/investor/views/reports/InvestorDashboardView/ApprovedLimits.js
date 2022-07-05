@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  colors,
-  makeStyles,
-} from "@material-ui/core";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import MoneyIcon from "@material-ui/icons/Money";
+import { Avatar, Box, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import MoneyIcon from "@mui/icons-material/Money";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,7 +57,8 @@ const Limits = ({ className, value, ...rest }) => {
       var fin = x.map((e) => e.buyer_loan_approved_amount);
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
-      return sum;
+      const round = Math.round(sum);
+      return round;
     } else {
       return;
     }
@@ -74,7 +67,7 @@ const Limits = ({ className, value, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               APPROVED LIMITS
@@ -87,7 +80,6 @@ const Limits = ({ className, value, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
-                decimalScale='2'
               />
             </Typography>
           </Grid>

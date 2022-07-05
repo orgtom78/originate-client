@@ -1,16 +1,8 @@
 import React, { useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Drawer,
-  Hidden,
-  List,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Divider, Drawer, Hidden, List, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BarChart as BarChartIcon,
   User as UserIcon,
@@ -18,6 +10,11 @@ import {
   DollarSign as DollarSignIcon,
   Briefcase as BriefcaseIcon,
   Truck as TruckIcon,
+  BookOpen as BookOpenIcon,
+  Shield as ShieldIcon,
+  Repeat as RepeatIcon,
+  Box as BoxIcon,
+  Shuffle as ShuffleIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 
@@ -28,14 +25,24 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "/admin/users",
+    href: "/admin/groups",
     icon: UserIcon,
     title: "Users",
+  },
+  {
+    href: "/admin/spvs",
+    icon: BoxIcon,
+    title: "SPVs",
   },
   {
     href: "/admin/investors",
     icon: BriefcaseIcon,
     title: "Investors",
+  },
+  {
+    href: "/admin/brokers",
+    icon: ShuffleIcon,
+    title: "Brokers",
   },
   {
     href: "/admin/suppliers",
@@ -48,9 +55,24 @@ const items = [
     title: "Limit requests",
   },
   {
-    href: "/admin/transactions",
+    href: "/admin/newinsurance",
+    icon: ShieldIcon,
+    title: "Insurance",
+  },
+  {
+    href: "/admin/requests",
     icon: CreditCardIcon,
+    title: "Invoices",
+  },
+  {
+    href: "/admin/transactions",
+    icon: RepeatIcon,
     title: "Transactions",
+  },
+  {
+    href: "/admin/bookkeeping",
+    icon: BookOpenIcon,
+    title: "Bookkeeping",
   },
 ];
 
@@ -118,31 +140,29 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     </Box>
   );
 
-  return (
-    <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden lgUp>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.mobileDrawer }}
+        onClose={onMobileClose}
+        open={openMobile}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+    <Hidden lgDown>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.desktopDrawer }}
+        open
+        variant="persistent"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+  </>;
 };
 
 NavBar.propTypes = {

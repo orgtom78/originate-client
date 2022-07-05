@@ -1,5 +1,5 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -14,14 +14,13 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import PerfectScrollbar from "react-perfect-scrollbar";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import AdminUpdateDocumentView from "src/admin/views/document/AdminUpdateDocumentView";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,13 +42,10 @@ const useStyles = makeStyles((theme) => ({
 
 const DocumentListView = (value) => {
   const classes = useStyles();
-  const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+  const groupid = value.user;
+  const buyid = value.buyer;
+  const ident = value.ident;
   const [document, setDocument] = useState([]);
-  const [userId, setUserId] = useState("");
-  const [documentId, setDocumentId] = useState("");
-  const [isclicked, setIsclicked] = useState("");
 
   const [selectedDocumentIds, setSelectedDocumentIds] = useState([]);
   const [limit, setLimit] = useState(10);
@@ -58,31 +54,22 @@ const DocumentListView = (value) => {
   useEffect(() => {
     async function getDocument() {
       let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "document-buyer", contains: buyId },
+        userId: { eq: groupid },
+        buyerId: { eq: buyid },
       };
       const {
         data: {
-          listsDocument: { items: itemsPage1, nextToken },
+          listDocuments: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsDocument, { filter: filter })
+        graphqlOperation(queries.listDocuments, { filter: filter })
       );
-      const n = { data: { listsDocument: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsDocument.items;
+      const n = { data: { listDocuments: { items: itemsPage1, nextToken } } };
+      const items = n.data.listDocuments.items;
       setDocument(items);
     }
     getDocument();
-  }, [id, buyId]);
-
-  const handler = useCallback(() => {
-    if (!document || !document.length) {
-      return;
-    } else {
-      const d = document;
-      return d;
-    }
-  }, [document]);
+  }, [groupid, buyid]);
 
   const handleSelectAll = (event) => {
     let newSelectedDocumentIds;
@@ -131,12 +118,6 @@ const DocumentListView = (value) => {
     setPage(newPage);
   };
 
-  function getidandident(sortkey, userId) {
-    setUserId(userId);
-    setDocumentId(sortkey);
-    setIsclicked(true);
-  }
-
   const geturl = async (input) => {
     if (input === "") {
       return;
@@ -151,8 +132,6 @@ const DocumentListView = (value) => {
 
   return (
     <React.Fragment>
-      {!isclicked ? (
-        <React.Fragment>
           <Container maxWidth={false}>
             <Card>
               <PerfectScrollbar>
@@ -203,18 +182,14 @@ const DocumentListView = (value) => {
                           </TableCell>
                           <TableCell>
                             <Box alignItems="center" display="flex">
-                              <Avatar
-                                className={classes.avatar}
-                                src={document.avatarUrl}
-                                onClick={() =>
-                                  getidandident(
-                                    document.sortkey,
-                                    document.userId
-                                  )
-                                }
-                              >
-                                {getInitials(document.document_type)}
-                              </Avatar>
+                            <Link to={`/admin/document/${document.id}`}>
+                        <Avatar
+                          className={classes.avatar}
+                          src={`${document.document_logo}`}
+                        >
+                          {getInitials(document.document_name)}
+                        </Avatar>
+                      </Link>
                               <Typography color="textPrimary" variant="body1">
                                 {document.document_type}
                               </Typography>
@@ -246,8 +221,8 @@ const DocumentListView = (value) => {
               <TablePagination
                 component="div"
                 count={document.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleLimitChange}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
                 page={page}
                 rowsPerPage={limit}
                 rowsPerPageOptions={[5, 10, 25]}
@@ -255,16 +230,6 @@ const DocumentListView = (value) => {
             </Card>
           </Container>
         </React.Fragment>
-      ) : (
-        <>
-          <Container maxWidth={false}>
-            <Card>
-              <AdminUpdateDocumentView value={{ userId, documentId }} />
-            </Card>
-          </Container>
-        </>
-      )}
-    </React.Fragment>
   );
 };
 

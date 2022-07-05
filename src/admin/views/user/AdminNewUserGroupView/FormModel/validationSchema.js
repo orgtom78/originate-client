@@ -4,7 +4,7 @@ const {
   formField: { email, password, confirmpassword, group_name, group_type },
 } = NewUserGroupFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [group_type.name]: Yup.string().required(`${group_type.requiredErrorMsg}`),
     [group_name.name]: Yup.string().required(`${group_name.requiredErrorMsg}`),
@@ -21,3 +21,5 @@ export default [
     ),
   }),
 ];
+
+export default yup;

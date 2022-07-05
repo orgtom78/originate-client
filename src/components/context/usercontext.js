@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
   const [username, setUsername] = useState("");
 
   //supplier data:
+  const [id, setId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -68,20 +69,25 @@ export const UserProvider = ({ children }) => {
     }
 
     async function loadSupplier() {
-      const id = await loadUser();
-      const ident = await loadIdentity();
-      setSub(id);
-      setIdentity(ident);
-      let filter = { userId: { eq: id }, sortkey: { contains: "supplier-" } };
+      const groupid = await loadUser();
+      setSub(groupid);
+      let filter = { userId: { eq: groupid } };
       const {
         data: {
-          listsSupplier: { items: itemsPage1, nextToken },
+          listSuppliers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsSupplier, { filter: filter })
+        graphqlOperation(queries.listSuppliers, { filter: filter })
       );
-      const n = { data: { listsSupplier: { items: itemsPage1, nextToken } } };
-      const supplier = n.data.listsSupplier.items[0];
+      const n = { data: { listSuppliers: { items: itemsPage1, nextToken } } };
+      const supplier = n.data.listSuppliers.items[0];
+      if (supplier){ 
+        setIdentity(supplier.identityId)
+      }
+        else { 
+          const ident = await loadIdentity();
+          setIdentity(ident);
+        }
       return supplier;
     }
 
@@ -91,6 +97,7 @@ export const UserProvider = ({ children }) => {
         return;
       } else {
         const {
+          id,
           supplierId,
           supplier_logo,
           supplier_name,
@@ -108,6 +115,7 @@ export const UserProvider = ({ children }) => {
           supplier_director_list_attachment,
           supplier_shareholder_list_attachment,
         } = supplierdata;
+        setId(id);
         setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
         setSupplier_name(supplier_name);
@@ -143,6 +151,7 @@ export const UserProvider = ({ children }) => {
   // components or Providers above this component, then this will be a performance booster.
   const values = React.useMemo(
     () => ({
+      id,
       sub,
       identity,
       username,
@@ -164,6 +173,7 @@ export const UserProvider = ({ children }) => {
       supplier_shareholder_list_attachment,
     }),
     [
+      id,
       sub,
       identity,
       username,

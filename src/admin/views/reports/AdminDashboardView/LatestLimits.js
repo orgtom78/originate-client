@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import moment from "moment";
@@ -10,7 +10,7 @@ import {
   Card,
   CardHeader,
   Chip,
-  createMuiTheme,
+  createTheme,
   Divider,
   Table,
   TableBody,
@@ -19,21 +19,23 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  makeStyles,
-  MuiThemeProvider,
-} from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+  ThemeProvider,
+  StyledEngineProvider,
+  adaptV4Theme,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme(adaptV4Theme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createMuiTheme({
+}));
+const orangeTheme = createTheme(adaptV4Theme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
+}));
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -48,63 +50,52 @@ const LatestLimits = ({ className, ...rest }) => {
 
   useEffect(() => {
     const getRequests = async () => {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+      } = await API.graphql(graphqlOperation(queries.listBuyers));
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
+      var x = items.filter(
+        (e) => e.buyer_status === "Investor Offer Pending" || "Approved"
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
-      setLimitdata(items);
+      setLimitdata(x);
     };
     getRequests();
   }, []);
 
-  const limits = useCallback(() => {
-    if (!limitdata || !limitdata.length) {
-      return;
-    } else {
-      const d = limitdata;
-      return d;
-    }
-  }, [limitdata]);
-
   function checkstatus(status) {
-    if (status === "submitted") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
+    if (status === "Under Review") {
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={orangeTheme}>
             <Chip label={status} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
-    } else if (status === "Under Review") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
+    } else if (status === "Investor Offer Pending") {
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={orangeTheme}>
             <Chip label={status} color="secondary" />
-          </MuiThemeProvider>
-        </>
-      );
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
     } else {
-      return (
-        <>
-          <MuiThemeProvider theme={greenTheme}>
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={greenTheme}>
             <Chip label={status} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
     }
   }
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Latest Limits" />
+      <CardHeader title="Latest Limit Requests" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
@@ -127,9 +118,7 @@ const LatestLimits = ({ className, ...rest }) => {
               {limitdata.map((limit) => (
                 <TableRow hover key={limit.buyerId}>
                   <TableCell>
-                    <Link
-                      to={`/admin/buyer/${limit.userId}/${limit.buyerId}/${limit.identityId}`}
-                    >
+                    <Link to={`/admin/buyer/${limit.id}`}>
                       {limit.buyer_name}
                     </Link>
                   </TableCell>

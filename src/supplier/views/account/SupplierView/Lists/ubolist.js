@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -7,7 +7,6 @@ import {
   Card,
   Chip,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -15,10 +14,11 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-  MuiThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core";
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -26,7 +26,7 @@ import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,10 +46,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -59,7 +59,6 @@ const UboListView = () => {
   const sub = context.sub;
   const [ubo, setUbo] = useState([]);
 
-  const [selectedUboIds, setSelectedUboIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
@@ -68,62 +67,20 @@ const UboListView = () => {
       const id = await sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "ubo-supplier" },
       };
       const {
         data: {
-          listsUBO: { items: itemsPage1, nextToken },
+          listUBOs: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsUbo, { filter: filter })
+        graphqlOperation(queries.listUBOs, { filter: filter })
       );
-      const n = { data: { listsUBO: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsUBO.items;
+      const n = { data: { listUBOs: { items: itemsPage1, nextToken } } };
+      const items = n.data.listUBOs.items;
       setUbo(items);
     }
     getUbos();
   }, [sub]);
-
-  const handler = useCallback(() => {
-    if (!ubo || !ubo.length) {
-      return;
-    } else {
-      const d = ubo;
-      return d;
-    }
-  }, [ubo]);
-
-  const handleSelectAll = (event) => {
-    let newSelectedUboIds;
-
-    if (event.target.checked) {
-      newSelectedUboIds = ubo.map((ubo) => ubo.uboId);
-    } else {
-      newSelectedUboIds = [];
-    }
-
-    setSelectedUboIds(newSelectedUboIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUboIds.indexOf(id);
-    let newSelectedUboIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(1));
-    } else if (selectedIndex === selectedUboIds.length - 1) {
-      newSelectedUboIds = newSelectedUboIds.concat(selectedUboIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedUboIds = newSelectedUboIds.concat(
-        selectedUboIds.slice(0, selectedIndex),
-        selectedUboIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedUboIds(newSelectedUboIds);
-  };
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -137,25 +94,31 @@ const UboListView = () => {
     if (ubo === "submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={ubo} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={ubo} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (ubo === "Under Review") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={ubo} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={ubo} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={ubo} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={ubo} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }
@@ -180,14 +143,10 @@ const UboListView = () => {
                   </TableHead>
                   <TableBody>
                     {ubo.slice(0, limit).map((ubo) => (
-                      <TableRow
-                        hover
-                        key={ubo.uboId}
-                        selected={selectedUboIds.indexOf(ubo.uboId) !== -1}
-                      >
+                      <TableRow hover key={ubo.uboId}>
                         <TableCell>
                           <Box alignItems="center" display="flex">
-                            <Link to={`/app/updateubo/${ubo.uboId}`}>
+                            <Link to={`/app/updateubo/${ubo.id}`}>
                               <Avatar
                                 className={classes.avatar}
                                 src={ubo.avatarUrl}
@@ -201,9 +160,7 @@ const UboListView = () => {
                           </Box>
                         </TableCell>
                         <TableCell>{ubo.ubo_email}</TableCell>
-                        <TableCell>
-                          {`${ubo.ubo_nationality}`}
-                        </TableCell>
+                        <TableCell>{`${ubo.ubo_nationality}`}</TableCell>
                         <TableCell>{checkstatus(ubo.ubo_status)}</TableCell>
                         <TableCell>
                           {moment(ubo.createdAt).format("DD/MM/YYYY")}
@@ -217,8 +174,8 @@ const UboListView = () => {
             <TablePagination
               component="div"
               count={ubo.length}
-              onChangePage={handlePageChange}
-              onChangeRowsPerPage={handleLimitChange}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleLimitChange}
               page={page}
               rowsPerPage={limit}
               rowsPerPageOptions={[5, 10, 25]}

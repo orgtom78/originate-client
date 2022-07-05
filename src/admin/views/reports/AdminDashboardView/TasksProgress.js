@@ -1,20 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  LinearProgress,
-  Typography,
-  makeStyles,
-  colors,
-} from "@material-ui/core";
-import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Avatar, Box, Card, CardContent, Grid, LinearProgress, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import InsertChartIcon from "@mui/icons-material/InsertChartOutlined";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
@@ -22,34 +11,28 @@ const useStyles = makeStyles(() => ({
     height: "100%",
   },
   avatar: {
-    backgroundColor: colors.orange[600],
+    backgroundColor: colors.indigo[600],
     height: 56,
     width: 56,
   },
 }));
 
-const TasksProgress = ({ className, ...rest }) => {
+const TasksProgress = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
 
   useEffect(() => {
-    const getRequests = async () => {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
-      const {
-        data: {
-          listsBuyer: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
-      );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
-      setRequest(items);
-    };
-    getRequests();
-  }, []);
+    async function get() {
+      try {
+        const data = await value;
+        setRequest(data);
+        return;
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    get();
+  }, [value]);
 
   const handle = useCallback(() => {
     if (!request || !request.length) {
@@ -73,13 +56,16 @@ const TasksProgress = ({ className, ...rest }) => {
     if (handle) {
       const p = calculateprogress();
       const app = p["Approved"];
-      const rev = p["Under Review"];
-      const sum = app + rev;
+      const rev = p["Investor Offer Pending"];
+      const sum = app + rev || 1;
       const perc = (app / sum) * 100;
-      if (isNaN(perc)) {
+      const n = Number(perc);
+      if (Number.isNaN(n)) {
+        return "0";
+      } else if (n !== "NaN" && n > 100) {
         return "100";
-      } else if (perc !== "NaN") {
-        return perc;
+      } else if (n !== "NaN" && n <= 100) {
+        return n;
       }
     } else {
       return;
@@ -89,7 +75,7 @@ const TasksProgress = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               APPROVAL PROGRESS
@@ -100,10 +86,9 @@ const TasksProgress = ({ className, ...rest }) => {
                 variant="h3"
                 value={calcperecentage()}
                 displayType={"text"}
-                thousandSeparator={true}
-                suffix={"%"}
                 decimalScale="2"
               />
+              %
             </Typography>
           </Grid>
           <Grid item>

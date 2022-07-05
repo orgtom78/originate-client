@@ -1,20 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { InputField, DatePickerField } from "src/components/FormFields";
-import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-  Typography,
-} from "@material-ui/core";
+  InputField,
+  DatePickerField,
+  SelectField,
+} from "src/components/FormFields";
+import SliderField from "src/components/FormFields/SliderField";
+import NewUploadField from "src/components/FormFields/NewUploadField.js";
+import { Card, CardContent, Divider, Grid, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
+import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -51,17 +50,50 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+const boolean = [
+  {
+    value: "yes",
+    label: "Yes",
+  },
+  {
+    value: "no",
+    label: "No",
+  },
+];
+
+const productUse = [
+  {
+    value: "direct-resale",
+    label: "Direct Resale",
+  },
+  {
+    value: "incorporation-into-product",
+    label: "Incorporation into Product",
+  },
+  {
+    value: "other",
+    label: "Other",
+  },
+];
+
 export default function HistoryForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
-      buyer_insurance_name,
-      buyer_one_off_ipu_attachment,
-      buyer_next_year_projected_transaction_amount,
+      buyer_supplier_year_business_relation_started,
       buyer_previous_year_transaction_amount,
-      buyer_reporting_year,
       buyer_reporting_year_transaction_amount,
+      buyer_next_year_projected_transaction_amount,
       buyer_previous_year_number_invoices,
+      buyer_insurance_name,
+      buyer_existing_disputes,
+      buyer_finance_department_contact_email,
+      buyer_use_of_goods_purchased,
+      buyer_invoices_paid_on_time,
+      buyer_invoices_past_due_30_days,
+      buyer_invoices_past_due_60_days,
+      buyer_invoices_past_due_90_days,
     },
   } = props;
 
@@ -76,16 +108,18 @@ export default function HistoryForm(props) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
   useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const id = await user.attributes.sub;
-      setUserId(id);
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (buyeripu) {
@@ -94,16 +128,22 @@ export default function HistoryForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(buyeripu);
+          const u = await Storage.get(buyeripu, {
+            level: "private",
+            identityId: identity,
+          });
           setImg(u);
         } else {
-          const h = await Storage.vault.get(buyeripu);
+          const h = await Storage.get(buyeripu, {
+            level: "private",
+            identityId: identity,
+          });
           setUpdateregcertpdf(h);
         }
       }
       geturl();
     }
-  }, [buyeripu]);
+  }, [buyeripu, identity]);
 
   async function handleClick() {
     setSuccess(false);
@@ -143,11 +183,10 @@ export default function HistoryForm(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <DatePickerField
-                name={buyer_reporting_year.name}
-                label={buyer_reporting_year.label}
+                name={buyer_supplier_year_business_relation_started.name}
+                label={buyer_supplier_year_business_relation_started.label}
                 format="yyyy"
                 views={["year"]}
-                minDate={new Date("2000/12/31")}
                 maxDate={new Date()}
                 fullWidth
                 variant="outlined"
@@ -155,13 +194,12 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_next_year_projected_transaction_amount.name}
-                label={buyer_next_year_projected_transaction_amount.label}
+                name={buyer_previous_year_transaction_amount.name}
+                label={buyer_previous_year_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
-
             <Grid item xs={12} sm={6}>
               <InputField
                 name={buyer_reporting_year_transaction_amount.name}
@@ -172,8 +210,8 @@ export default function HistoryForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={buyer_previous_year_transaction_amount.name}
-                label={buyer_previous_year_transaction_amount.label}
+                name={buyer_next_year_projected_transaction_amount.name}
+                label={buyer_next_year_projected_transaction_amount.label}
                 fullWidth
                 variant="outlined"
               />
@@ -195,40 +233,62 @@ export default function HistoryForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              {buyeripu ? (
-                <>{isimageorpdf()}</>
-              ) : (
-                <>
-                  <NewUploadField
-                    name={buyer_one_off_ipu_attachment.name}
-                    id={buyer_one_off_ipu_attachment.name}
-                    accept="image/*,application/pdf"
-                    style={{ display: "none" }}
-                    ident={buyerId}
-                    userid={userId}
-                  />
-                  <label htmlFor={buyer_one_off_ipu_attachment.name}>
-                    <LoaderButton
-                      id={buyer_one_off_ipu_attachment.name}
-                      fullWidth
-                      component="span"
-                      startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
-                    >
-                      {" "}
-                      Irrevocable Payment Undertaking
-                    </LoaderButton>
-                  </label>
-                </>
-              )}
-              <Typography variant="subtitle2">
-                <a href="https://originatesampledocs.s3.us-east-2.amazonaws.com/Originate-Capital-IPU-clean.docx">
-                  Download Sample
-                </a>
-              </Typography>
+              <SelectField
+                name={buyer_existing_disputes.name}
+                label={buyer_existing_disputes.label}
+                data={boolean}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_finance_department_contact_email.name}
+                label={buyer_finance_department_contact_email.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_use_of_goods_purchased.name}
+                label={buyer_use_of_goods_purchased.label}
+                data={productUse}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_paid_on_time.name}
+                label={buyer_invoices_paid_on_time.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_30_days.name}
+                label={buyer_invoices_past_due_30_days.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_60_days.name}
+                label={buyer_invoices_past_due_60_days.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <SliderField
+                name={buyer_invoices_past_due_90_days.name}
+                label={buyer_invoices_past_due_90_days.label}
+                fullWidth
+                variant="outlined"
+              />
             </Grid>
           </Grid>
         </CardContent>

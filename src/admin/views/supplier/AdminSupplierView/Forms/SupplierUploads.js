@@ -9,14 +9,14 @@ import {
   Container,
   Grid,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Storage } from "aws-amplify";
 import * as queries from "src/graphql/queries.js";
 
@@ -56,6 +56,7 @@ function SupplierUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
   const [sub, setSub] = useState("");
+  const [id, setId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [
@@ -103,12 +104,9 @@ function SupplierUploads(value) {
   const aoaname = "Supplier Articles of Association";
 
   useEffect(() => {
-    const sub = value.value.value.value.userId;
-    const key = value.value.value.value.supplierId;
-    var userId = sub;
-    var sortkey = key;
-    getSupplier({ userId, sortkey });
-  }, [value.value.value.value.userId, value.value.value.value.supplierId]);
+    const id = value.value.value;
+    getSupplier({ id });
+  }, [value.value.value]);
 
   async function getSupplier(input) {
     try {
@@ -118,6 +116,7 @@ function SupplierUploads(value) {
       const {
         data: {
           getSupplier: {
+            id,
             identityId,
             userId,
             supplierId,
@@ -128,6 +127,7 @@ function SupplierUploads(value) {
           },
         },
       } = supplier;
+      setId(id);
       setSub(userId);
       setSupplierId(supplierId);
       setIdentityId(identityId);
@@ -146,8 +146,11 @@ function SupplierUploads(value) {
     }
   }
 
-  async function s3Up(file) {
-    const filename = `${Date.now()}-${file.name}`.replace(/ /g, "_");
+  async function s3Up(file, filenames) {
+    const ident = supplierId;
+    const name = filenames;
+    var fileExtension = file.name.split(".").pop();
+    const filename = `${sub}${ident}${name}.${fileExtension}`;
 
     const stored = await Storage.put(filename, file, {
       level: "private",
@@ -313,13 +316,10 @@ function SupplierUploads(value) {
     setRegcertSuccess(false);
     setRegcertLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'supplier_registration_cert_attachment') : null;
       var supplier_registration_cert_attachment = u;
-      const sortkey = supplierId;
-      const userId = sub;
       await updateSupplier({
-        sortkey,
-        userId,
+        id,
         supplier_registration_cert_attachment,
       });
     } catch (e) {
@@ -480,13 +480,13 @@ function SupplierUploads(value) {
     setShareholderlSuccess(false);
     setShareholderlLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'supplier_shareholder_list_attachment') : null;
       var supplier_shareholder_list_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       console.log(sub);
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_shareholder_list_attachment,
       });
@@ -648,12 +648,12 @@ function SupplierUploads(value) {
     setDirectorlSuccess(false);
     setDirectorlLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'supplier_director_list_attachment') : null;
       var supplier_director_list_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_director_list_attachment,
       });
@@ -825,12 +825,12 @@ function SupplierUploads(value) {
     setAoaSuccess(false);
     setAoaLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'supplier_articles_of_association_attachment') : null;
       var supplier_articles_of_association_attachment = u;
-      const sortkey = supplierId;
       const userId = sub;
       await updateSupplier({
-        sortkey,
+        id,
+        supplierId,
         userId,
         supplier_articles_of_association_attachment,
       });

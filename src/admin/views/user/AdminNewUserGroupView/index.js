@@ -1,5 +1,6 @@
 import React from "react";
-import { Button, Container, makeStyles, Typography } from "@material-ui/core";
+import { Button, Container, Typography } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { Auth } from "aws-amplify";
@@ -33,9 +34,10 @@ export default function NewUserGroup() {
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
   const AWS = require("aws-sdk");
-  AWS.config.update({
-    region: 'us-east-2',
-  });
+  AWS.config = new AWS.Config();
+  AWS.config.accessKeyId = awsconfig.accessKeyId;
+  AWS.config.secretAccessKey = awsconfig.secretAccessKey;
+  AWS.config.region = "us-east-2";
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -67,10 +69,8 @@ export default function NewUserGroup() {
     } catch (e) {
       onError(e);
     }
+    navigate("/admin/groups");
   }
-
-  console.log(awsconfig)
-  console.log(awsconfig.aws_user_pools_id)
 
   async function getident(input) {
     let cognito = new AWS.CognitoIdentityServiceProvider();
@@ -78,14 +78,30 @@ export default function NewUserGroup() {
       Username: input.email,
       UserPoolId: awsconfig.aws_user_pools_id,
     };
-    let params = {
+    let investor = {
       GroupName: "Investor",
+      Username: input.email,
+      UserPoolId: awsconfig.aws_user_pools_id,
+    };
+    let spv = {
+      GroupName: "Spv",
+      Username: input.email,
+      UserPoolId: awsconfig.aws_user_pools_id,
+    };
+    let broker = {
+      GroupName: "Broker",
       Username: input.email,
       UserPoolId: awsconfig.aws_user_pools_id,
     };
     let confirm = await cognito.adminConfirmSignUp(request).promise();
     if (input.group_type === "Investor") {
-      let group = await cognito.adminAddUserToGroup(params).promise();
+      let group = await cognito.adminAddUserToGroup(investor).promise();
+      return group;
+    } else if (input.group_type === "Spv") {
+      let group = await cognito.adminAddUserToGroup(spv).promise();
+      return group;
+    } else if (input.group_type === "Broker") {
+      let group = await cognito.adminAddUserToGroup(broker).promise();
       return group;
     }
     console.log(confirm);
@@ -106,10 +122,13 @@ export default function NewUserGroup() {
       const group_name = input.group_name;
       const group_type = input.group_type;
       const userId = sub;
+      let identity = await Auth.currentUserCredentials();
+      const identityId = identity.identityId;
 
       await createUserGroup({
         userId,
         sortkey,
+        identityId,
         user_name,
         sub,
         groupId,
@@ -129,7 +148,6 @@ export default function NewUserGroup() {
 
   function _handleSubmit(values, actions) {
     _submitForm(values, actions);
-    navigate("/admin/users");
   }
 
   return (

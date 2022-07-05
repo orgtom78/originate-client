@@ -2,7 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import clsx from "clsx";
-import { Box, Button, makeStyles } from "@material-ui/core";
+import { Box, Button } from "@mui/material";
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -20,7 +22,7 @@ const Toolbar = ({ className, ...rest }) => {
   return (
     <div className={clsx(classes.root, className)} {...rest}>
       <Box display="flex" justifyContent="flex-end">
-        <Link to={`/admin/newbuyer/`}>
+        <Link to={`/admin/newsupplierbuyer`}>
           <Button color="primary" variant="contained">
             Add Buyer
           </Button>

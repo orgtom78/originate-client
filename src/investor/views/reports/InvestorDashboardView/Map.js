@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { ComposableMap, Geographies, Geography } from "react-simple-maps";
-import { Box, Card, CardContent, CardHeader, Divider } from "@material-ui/core";
+import { Box, Card, CardContent, CardHeader, Divider } from "@mui/material";
 import { scaleLinear } from "d3-scale";
 import { API, graphqlOperation, Auth } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
@@ -41,18 +41,13 @@ const App = () => {
 
   useEffect(() => {
     const getRequests = async () => {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
-      );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      } = await API.graphql(graphqlOperation(queries.listBuyers));
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setRequest(items);
     };
     getRequests();

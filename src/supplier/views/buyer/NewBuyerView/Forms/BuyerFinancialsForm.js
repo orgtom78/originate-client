@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
-import { Storage, Auth } from "aws-amplify";
+import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Upload as UploadIcon } from "react-feather";
+import { useUser } from "src/components/context/usercontext.js";
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -50,6 +46,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function BuyerFinancialsForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
@@ -57,12 +54,12 @@ export default function BuyerFinancialsForm(props) {
       balance_sheet_attachment,
       income_statement_attachment,
       net_profit,
-      financials_rating,
       financials_reporting_period,
-      retained_earnings,
-      working_capital,
       sales,
-      total_assets,
+      current_assets,
+      current_liabilities,
+      cost_of_goods_sold,
+      total_equity,
     },
   } = props;
 
@@ -82,17 +79,18 @@ export default function BuyerFinancialsForm(props) {
   const [incomeloading, setIncomeloading] = useState(false);
   const [incomesuccess, setIncomesuccess] = useState(false);
 
-  const [userId, setUserId] = useState("");
+  const [usergroupId, setUsergroupId] = useState("");
+  const [identity, setIdentity] = useState("");
 
   useEffect(() => {
-    async function getsub() {
-      let user = await Auth.currentAuthenticatedUser();
-      const { attributes = {} } = user;
-      const b = await attributes["custom:groupid"];
-      setUserId(b);
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity } = data;
+      setUsergroupId(sub);
+      setIdentity(identity);
     }
-    getsub();
-  }, []);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     if (balanceattachment) {
@@ -101,16 +99,22 @@ export default function BuyerFinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(balanceattachment);
+          const u = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalanceimg(u);
         } else {
-          const h = await Storage.vault.get(balanceattachment);
+          const h = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setBalancepdf(h);
         }
       }
       geturl();
     }
-  }, [balanceattachment]);
+  }, [balanceattachment, identity]);
 
   async function handleBalanceClick() {
     setBalancesuccess(false);
@@ -148,16 +152,22 @@ export default function BuyerFinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(incomeattachment);
+          const u = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomeimg(u);
         } else {
-          const h = await Storage.vault.get(incomeattachment);
+          const h = await Storage.get(incomeattachment, {
+            level: "private",
+            identityId: identity,
+          });
           setIncomepdf(h);
         }
       }
       geturl();
     }
-  }, [incomeattachment]);
+  }, [incomeattachment, identity]);
 
   async function handleIncomeClick() {
     setIncomesuccess(false);
@@ -196,6 +206,26 @@ export default function BuyerFinancialsForm(props) {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
+              <DatePickerField
+                name={financials_reporting_period.name}
+                label={financials_reporting_period.label}
+                format="yyyy"
+                views={["year"]}
+                minDate={new Date("2000/12/31")}
+                maxDate={new Date()}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                fullWidth
+                variant="outlined"
+                name={sales.name}
+                label={sales.label}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <InputField
                 name={ebit.name}
                 label={ebit.label}
@@ -213,52 +243,32 @@ export default function BuyerFinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={financials_rating.name}
-                label={financials_rating.label}
+                name={cost_of_goods_sold.name}
+                label={cost_of_goods_sold.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={sales.name}
-                label={sales.label}
+                name={current_assets.name}
+                label={current_assets.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
+                name={current_liabilities.name}
+                label={current_liabilities.label}
                 fullWidth
                 variant="outlined"
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={working_capital.name}
-                label={working_capital.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={total_assets.name}
-                label={total_assets.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={financials_reporting_period.name}
-                label={financials_reporting_period.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />
@@ -274,7 +284,8 @@ export default function BuyerFinancialsForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     ident={financialsId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={balance_sheet_attachment.name}>
                     <LoaderButton
@@ -288,7 +299,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleBalanceClick}
                     >
                       {" "}
-                      Buyer Balance Sheet*
+                      Buyer Balance Sheet
                     </LoaderButton>
                   </label>
                 </>
@@ -305,7 +316,8 @@ export default function BuyerFinancialsForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     ident={financialsId}
-                    userid={userId}
+                    userid={usergroupId}
+                    identityid={identity}
                   />
                   <label htmlFor={income_statement_attachment.name}>
                     <LoaderButton
@@ -319,7 +331,7 @@ export default function BuyerFinancialsForm(props) {
                       onClick={handleIncomeClick}
                     >
                       {" "}
-                      Buyer Income Statement*
+                      Buyer Income Statement
                     </LoaderButton>
                   </label>
                 </>

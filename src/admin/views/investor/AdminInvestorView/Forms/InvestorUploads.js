@@ -9,14 +9,14 @@ import {
   Container,
   Grid,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Storage } from "aws-amplify";
 import * as queries from "src/graphql/queries.js";
 
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
 function InvestorUploads(value) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [sub, setSub] = useState("");
+  //const [sub, setSub] = useState("");
   const [investorId, setInvestorId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [
@@ -103,12 +103,9 @@ function InvestorUploads(value) {
   const aoaname = "Investor Articles of Association";
 
   useEffect(() => {
-    const sub = value.value.value.value.userId;
-    const key = value.value.value.value.investorId;
-    var userId = sub;
-    var sortkey = key;
-    getInvestor({ userId, sortkey });
-  }, [value.value.value.value.userId, value.value.value.value.investorId]);
+    const id = value.value.value;
+    getInvestor({ id });
+  }, [value.value.value]);
 
   async function getInvestor(input) {
     try {
@@ -119,7 +116,7 @@ function InvestorUploads(value) {
         data: {
           getInvestor: {
             identityId,
-            userId,
+            //userId,
             investorId,
             investor_registration_cert_attachment,
             investor_shareholder_list_attachment,
@@ -128,7 +125,7 @@ function InvestorUploads(value) {
           },
         },
       } = investor;
-      setSub(userId);
+      //setSub(userId);
       setInvestorId(investorId);
       setIdentityId(identityId);
       setInvestor_registration_cert_attachment(
@@ -146,8 +143,10 @@ function InvestorUploads(value) {
     }
   }
 
-  async function s3Up(file) {
-    const filename = `${Date.now()}-${file.name}`.replace(/ /g, "_");
+  async function s3Up(file, filenames) {
+    const name = filenames;
+    var fileExtension = file.name.split(".").pop();
+    const filename = `${investorId}${identityId}${name}.${fileExtension}`;
 
     const stored = await Storage.put(filename, file, {
       level: "private",
@@ -313,13 +312,11 @@ function InvestorUploads(value) {
     setRegcertSuccess(false);
     setRegcertLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'investor_registration_cert_attachment') : null;
       var investor_registration_cert_attachment = u;
-      const sortkey = investorId;
-      const userId = sub;
+      const id= value.value.value;
       await updateInvestor({
-        sortkey,
-        userId,
+        id,
         investor_registration_cert_attachment,
       });
     } catch (e) {
@@ -327,7 +324,7 @@ function InvestorUploads(value) {
     }
     setRegcertSuccess(true);
     setRegcertLoading(false);
-    navigate("/admin/");
+    navigate(`/admin/investor/${value.value.value}`);
   }
 
   useEffect(() => {
@@ -480,14 +477,11 @@ function InvestorUploads(value) {
     setShareholderlSuccess(false);
     setShareholderlLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'investor_shareholder_list_attachment') : null;
       var investor_shareholder_list_attachment = u;
-      const sortkey = investorId;
-      const userId = sub;
-      console.log(sub);
+      const id= value.value.value;
       await updateInvestor({
-        sortkey,
-        userId,
+        id,
         investor_shareholder_list_attachment,
       });
     } catch (e) {
@@ -495,7 +489,7 @@ function InvestorUploads(value) {
     }
     setShareholderlSuccess(true);
     setShareholderlLoading(false);
-    navigate("/admin/");
+    navigate(`/admin/investor/${value.value.value}`);
   }
 
   useEffect(() => {
@@ -648,13 +642,11 @@ function InvestorUploads(value) {
     setDirectorlSuccess(false);
     setDirectorlLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'investor_director_list_attachment') : null;
       var investor_director_list_attachment = u;
-      const sortkey = investorId;
-      const userId = sub;
+      const id= value.value.value;
       await updateInvestor({
-        sortkey,
-        userId,
+        id,
         investor_director_list_attachment,
       });
     } catch (e) {
@@ -662,7 +654,7 @@ function InvestorUploads(value) {
     }
     setDirectorlSuccess(true);
     setDirectorlLoading(false);
-    navigate("/admin/");
+    navigate(`/admin/investor/${value.value.value}`);
   }
 
   useEffect(() => {
@@ -825,13 +817,11 @@ function InvestorUploads(value) {
     setAoaSuccess(false);
     setAoaLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile) : null;
+      const u = newfile ? await s3Up(newfile, 'investor_articles_of_association_attachment') : null;
       var investor_articles_of_association_attachment = u;
-      const sortkey = investorId;
-      const userId = sub;
+      const id= value.value.value;
       await updateInvestor({
-        sortkey,
-        userId,
+        id,
         investor_articles_of_association_attachment,
       });
     } catch (e) {
@@ -839,7 +829,7 @@ function InvestorUploads(value) {
     }
     setAoaSuccess(true);
     setAoaLoading(false);
-    navigate("/admin/");
+    navigate(`/admin/investor/${value.value.value}`);
   }
 
   return (

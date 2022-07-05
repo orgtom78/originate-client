@@ -10,10 +10,11 @@ const {
     director_nationality,
     director_poa_attachment,
     director_country_of_residence,
+    director_date_of_birth
   },
 } = NewSupplierDirectorFormModel;
 
-export default {
+const values = {
   [director_name.name]: "",
   [director_email.name]: "",
   [director_phone_number.name]: "",
@@ -23,4 +24,7 @@ export default {
   [director_nationality.name]: undefined,
   [director_poa_attachment.name]: "",
   [director_country_of_residence.name]: undefined,
+  [director_date_of_birth.name]: undefined,
 };
+
+export default values;

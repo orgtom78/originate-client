@@ -1,4 +1,4 @@
-export default {
+const model = {
   formId: "NewSupplier",
   formField: {
     userId: {
@@ -6,12 +6,6 @@ export default {
       label: "User ID",
       requiredErrorMsg:
         "Please get the userId from your admin and dont make one up!",
-    },
-    identityId: {
-      name: "identityId",
-      label: "Identity ID",
-      requiredErrorMsg:
-        "Please get the identityId from your admin and dont make one up!",
     },
     supplier_logo: {
       name: "supplier_logo",
@@ -24,7 +18,7 @@ export default {
     },
     supplier_trading_name: {
       name: "supplier_trading_name",
-      label: "Company Trading Name*",
+      label: "Company Trading Name",
       requiredErrorMsg: "Company Trading name is required",
     },
     supplier_website: {
@@ -60,8 +54,8 @@ export default {
     },
     supplier_address_refinment: {
       name: "supplier_address_refinment",
-      label: "Refinment*",
-      requiredErrorMsg: "Refinment is required",
+      label: "Additional Address Information",
+      requiredErrorMsg: "Address is required",
     },
     supplier_country: {
       name: "supplier_country",
@@ -71,6 +65,7 @@ export default {
     supplier_industry: {
       name: "supplier_industry",
       label: "Industry",
+      requiredErrorMsg: "Industry is required",
     },
     supplier_industry_code: {
       name: "supplier_industry_code",
@@ -288,3 +283,5 @@ export default {
     },
   },
 };
+
+export default model;

@@ -4,7 +4,7 @@ const {
   formField: { document_type, document_attachment },
 } = NewDocumentFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [document_type.name]: Yup.string().required(
       `${document_type.requiredErrorMsg}`
@@ -14,3 +14,5 @@ export default [
     ),
   }),
 ];
+
+export default yup;

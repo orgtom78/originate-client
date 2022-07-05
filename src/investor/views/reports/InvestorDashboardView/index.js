@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Container, Grid, makeStyles } from "@material-ui/core";
+import { Container, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation } from "aws-amplify";
+import { Auth, API, graphqlOperation } from "aws-amplify";
 
 import Page from "src/components/Page";
 import ApprovedLimits from "./ApprovedLimits";
@@ -9,8 +10,6 @@ import LatestLimits from "./LatestLimits";
 import TasksProgress from "./TasksProgress";
 import TotalTransactions from "./TotalTransactions";
 import TotalTransactionAmount from "./TotalTransactionAmount";
-import CountryExposure from "./CountryExposure";
-import Map from "./Map.js";
 import PastDue from "./PastDue";
 import Utilization from "./Utilization";
 import ExposureObligor from "./ExposureObligor";
@@ -29,21 +28,23 @@ const InvestorDashboard = () => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState([]);
   const [transaction, setTransaction] = useState([]);
+  const [investid, setInvestid] = useState("");
 
   useEffect(() => {
     async function getBuyers() {
-      let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
-      };
+      let user = await Auth.currentAuthenticatedUser();
+      let id = user.attributes["custom:groupid"];
+      setInvestid(id);
+      let filter = { investorId: { eq: id } };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setBuyer(items);
       return items;
     }
@@ -52,21 +53,21 @@ const InvestorDashboard = () => {
 
   useEffect(() => {
     async function getRequests() {
-      let filter = { sortkey: { contains: "request-" } };
+      let filter = { investorId: { eq: investid } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
       setTransaction(items);
       return items;
     }
     getRequests();
-  }, []);
+  }, [investid]);
 
   return (
     <Page className={classes.root} title="Dashboard">

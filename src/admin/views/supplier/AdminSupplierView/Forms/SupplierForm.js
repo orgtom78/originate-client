@@ -18,20 +18,19 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/supplier/AdminSupplierView/Lists/directorlist.js";
 import UboListView from "src/admin/views/supplier/AdminSupplierView/Lists/ubolist.js";
 import AdminUpdateBankView from "src/admin/views/bank/AdminUpdateBankView/index.js";
@@ -90,20 +89,18 @@ const type = [
 const SupplierForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const [userId, setUserId] = useState("");
+  const [dynamosupplierid, setdynamosupplierId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_type, setSupplier_type] = useState("");
-  const [
-    supplier_date_of_incorporation,
-    setSupplier_date_of_incorporation,
-  ] = useState("");
+  const [supplier_date_of_incorporation, setSupplier_date_of_incorporation] =
+    useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
-  const [
-    supplier_address_postalcode,
-    setSupplier_address_postalcode,
-  ] = useState("");
+  const [supplier_address_postalcode, setSupplier_address_postalcode] =
+    useState("");
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
   const [
@@ -111,9 +108,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
     setSupplier_registration_cert_attachment,
   ] = useState("");
   const [supplier_website, setSupplier_website] = useState("");
-  const [supplier_address_refinment, setSupplier_address_refinment] = useState(
-    ""
-  );
+  const [supplier_address_refinment, setSupplier_address_refinment] =
+    useState("");
   const [supplier_industry_code, setSupplier_industry_code] = useState("");
   const [supplier_register_number, setSupplier_register_number] = useState("");
   const [supplier_trading_name, setSupplier_trading_name] = useState("");
@@ -124,10 +120,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -148,10 +142,8 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [financialssuccess, setFinancialsSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.value.value.userId;
-    const sortkey = value.value.value.supplierId;
-    setSupplierId(sortkey);
-    getSupplier({ userId, sortkey });
+    const id = value.value;
+    getSupplier({ id });
     async function getSupplier(input) {
       try {
         const supplier = await API.graphql(
@@ -160,6 +152,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getSupplier: {
+              id,
+              userId,
+              supplierId,
               supplier_logo,
               supplier_name,
               supplier_type,
@@ -178,6 +173,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
             },
           },
         } = supplier;
+        setdynamosupplierId(id);
+        setUserId(userId);
+        setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
         setSupplier_name(supplier_name);
         setSupplier_date_of_incorporation(supplier_date_of_incorporation);
@@ -199,33 +197,31 @@ const SupplierForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.supplierId]);
+  }, [value]);
 
   useEffect(() => {
-    const id = value.value.value.userId;
-    getFinancials(id);
+    getFinancials(userId);
     async function getFinancials(input) {
       try {
         let filter = {
           userId: { eq: input },
-          sortkey: { contains: "financials-supplier" },
         };
         const {
           data: {
-            listsFinancials: {
+            listFinancialss: {
               items: [itemsPage1],
               nextToken,
             },
           },
         } = await API.graphql(
-          graphqlOperation(queries.listsFinancials, { filter: filter })
+          graphqlOperation(queries.listFinancialss, { filter: filter })
         );
         const n = await {
-          data: { listsFinancials: { items: [itemsPage1], nextToken } },
+          data: { listFinancialss: { items: [itemsPage1], nextToken } },
         };
-        const financials = await n.data.listsFinancials.items[0];
+        const financials = await n.data.listFinancialss.items[0];
         const {
-          financialsId,
+          id,
           accounts_payable,
           accounts_receivable,
           cash,
@@ -245,7 +241,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
           total_assets,
           total_liabilities,
         } = financials;
-        setFinancialsId(financialsId);
+        setFinancialsId(id);
         setEbit(ebit);
         setFinancials_attachment(financials_attachment);
         setNet_profit(net_profit);
@@ -268,17 +264,16 @@ const SupplierForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId]);
+  }, [userId]);
 
   async function handleSupplierSubmit() {
     setSupplierSuccess(false);
     setSupplierLoading(true);
     try {
-      const userId = value.value.value.userId;
-      const sortkey = value.value.value.supplierId;
+      const id = dynamosupplierid;
       await updateSupplier({
+        id,
         userId,
-        sortkey,
         supplier_logo,
         supplier_name,
         supplier_type,
@@ -307,13 +302,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
     setFinancialsSuccess(false);
     setFinancialsLoading(true);
     try {
-      var s = await financialsId;
-      const sortkey = s;
-      console.log(sortkey);
-      const userId = value.value.value.userId;
+      var id = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
         accounts_payable,
         accounts_receivable,
         cash,
@@ -510,27 +502,26 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           value={supplier_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
+                          format="DD/MM/YYYY"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setSupplier_date_of_incorporation(e.target.value)
+                          onChange={(date) =>
+                            setSupplier_date_of_incorporation(date)
                           }
                           required
                           KeyboardButtonProps={{
@@ -539,9 +530,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
@@ -615,13 +609,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <DirectorListView value={value} />
+                <DirectorListView value={supplierId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewsupplierdirector/${value.value.value.userId}`}
-                >
+                <Link to={`/admin/adminnewsupplierdirector/${supplierId}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -638,13 +630,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <UboListView value={value} />
+                <UboListView value={supplierId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewsupplierubo/${value.value.value.userId}`}
-                >
+                <Link to={`/admin/adminnewsupplierubo/${supplierId}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>
@@ -734,27 +724,27 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"
                           id="financials_reporting_period"
-                          label="Company Date of Incorporation"
+                          label="Financial Reporting Period"
                           name="financials_reporting_period"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
+                          views={["year"]}
+                          format="YYYY"
+                          minDate={new Date("2017/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setFinancials_reporting_period(e.target.value)
+                          onChange={(date) =>
+                            setFinancials_reporting_period(date)
                           }
                           required
                           KeyboardButtonProps={{
@@ -763,9 +753,12 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -897,13 +890,13 @@ const SupplierForm = ({ className, value, ...rest }) => {
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
-              Company Main Bank 
+              Company Main Bank
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Card>
               <CardContent>
-                <AdminUpdateBankView value={value} />
+                <AdminUpdateBankView value={supplierId} user={userId} />
               </CardContent>
             </Card>
           </AccordionDetails>

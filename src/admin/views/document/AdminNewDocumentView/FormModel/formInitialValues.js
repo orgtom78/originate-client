@@ -3,7 +3,9 @@ const {
   formField: { document_type, document_attachment },
 } = NewDocumentFormModel;
 
-export default {
+const values = {
   [document_type.name]: "",
   [document_attachment.name]: "",
 };
+
+export default values;

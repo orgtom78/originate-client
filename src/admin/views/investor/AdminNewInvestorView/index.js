@@ -1,15 +1,7 @@
 import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Container,
-  makeStyles,
-  Step,
-  Stepper,
-  StepLabel,
-  Typography,
-} from "@material-ui/core";
-import { useNavigate } from "react-router-dom";
+import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
 import { v4 as uuid } from "uuid";
@@ -38,14 +30,21 @@ const useStyles = makeStyles((theme) => ({
 const steps = ["Company details", "Shareholder details", "Financial details"];
 const { formId, formField } = NewInvestorFormModel;
 
+const investorId = "investor-" + uuid();
+const directorId = "director-investor" + uuid();
+const uboId = "ubo-investor" + uuid();
+const financialsId = "financials-investor" + uuid();
+
 function getStepContent(step) {
   switch (step) {
     case 0:
-      return <AddressForm formField={formField} />;
+      return <AddressForm formField={formField} value={investorId} />;
     case 1:
-      return <ShareholderForm formField={formField} />;
+      return (
+        <ShareholderForm formField={formField} dir={directorId} ubo={uboId} />
+      );
     case 2:
-      return <FinancialsForm formField={formField} />;
+      return <FinancialsForm formField={formField} fin={financialsId} />;
     default:
       throw new Error("Unknown step");
   }
@@ -56,6 +55,9 @@ export default function NewInvestor() {
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
+  const { groupid } = useParams();
+  const { ident } = useParams();
+  const { id } = useParams();
 
   const isLastStep = activeStep === steps.length - 1;
 
@@ -66,10 +68,8 @@ export default function NewInvestor() {
   async function _submitForm(values, actions) {
     await _sleep(1000);
     try {
-      const a = uuid();
-      const investorId = "investor-" + a;
-      const userId = values["userId"];
-      const identityId = values["identityId"];
+      const userId = groupid;
+      const identityId = ident;
       const investor_logo = values["investor_logo"];
       const investor_name = values["investor_name"];
       const investor_type = values["investor_type"];
@@ -93,9 +93,7 @@ export default function NewInvestor() {
       const investor_register_number = values["investor_register_number"];
       const investor_trading_name = values["investor_trading_name"];
       const investor_website = values["investor_website"];
-
-      const b = uuid();
-      const directorId = "director-investor" + b;
+      
       const director_name = values["director_name"];
       const director_email = values["director_email"];
       const director_phone_number = values["director_phone_number"];
@@ -106,10 +104,8 @@ export default function NewInvestor() {
       const director_poa_attachment = values["director_poa_attachment"];
       const director_country_of_residence =
         values["director_country_of_residence"];
-      const director_status = "under review";
+      const director_status = "Under Review";
 
-      const c = uuid();
-      const uboId = "ubo-investor" + c;
       const ubo_name = values["ubo_name"];
       const ubo_email = values["ubo_email"];
       const ubo_phone_number = values["ubo_phone_number"];
@@ -119,10 +115,8 @@ export default function NewInvestor() {
       const ubo_nationality = values["ubo_nationality"];
       const ubo_poa_attachment = values["ubo_poa_attachment"];
       const ubo_country_of_residence = values["ubo_country_of_residence"];
-      const ubo_status = "under review";
+      const ubo_status = "Under Review";
 
-      const d = uuid();
-      const financialsId = "financials-investor" + d;
       const financials_attachment = values["financial_accounts_attachment"];
       const financials_reporting_period = values["financials_reporting_period"];
       const net_profit = values["net_profit"];
@@ -131,7 +125,7 @@ export default function NewInvestor() {
       const total_assets = values["total_assets"];
       const total_liabilities = values["total_liabilities"];
       const ebit = values["ebit"];
-      const financials_status = "under review";
+      const financials_status = "Under Review";
       const accounts_payable = values["accounts_payable"];
       const accounts_receivable = values["accounts_receivable"];
       const cash = values["cash"];
@@ -224,6 +218,11 @@ export default function NewInvestor() {
         financials_status,
       });
 
+      await updateUsergroup({
+        id,
+        investorId
+      });
+
       navigate("/admin/investors");
     } catch (e) {
       onError(e);
@@ -245,12 +244,18 @@ export default function NewInvestor() {
   }
 
   function createUbo(input) {
-    return API.graphql(graphqlOperation(mutations.createUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.createUBO, { input: input }));
   }
 
   function createFinancials(input) {
     return API.graphql(
       graphqlOperation(mutations.createFinancials, { input: input })
+    );
+  }
+
+  function updateUsergroup(input) {
+    return API.graphql(
+      graphqlOperation(mutations.updateUsergroup, { input: input })
     );
   }
 

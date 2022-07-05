@@ -1,18 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  colors,
-  makeStyles,
-} from "@material-ui/core";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import PeopleIcon from "@material-ui/icons/PeopleOutlined";
+import { Avatar, Box, Card, CardContent, Grid, Typography, colors } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import PeopleIcon from "@mui/icons-material/PeopleOutlined";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
@@ -52,16 +44,16 @@ const TotalTransactions = ({ className, ...rest }) => {
   useEffect(() => {
     const getRequests = async () => {
       const id = sub;
-      let filter = { userId: { eq: id }, sortkey: { contains: "request-" } };
+      let filter = { userId: { eq: id } };
       const {
         data: {
-          listsRequest: { items: itemsPage1, nextToken },
+          listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsRequest, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter })
       );
-      const n = { data: { listsRequest: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsRequest.items;
+      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listRequests.items;
       setRequest(items);
     };
     getRequests();
@@ -89,7 +81,7 @@ const TotalTransactions = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               TOTAL TRANSACTIONS

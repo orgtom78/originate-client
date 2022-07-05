@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Avatar,
@@ -11,21 +11,22 @@ import {
   Chip,
   Divider,
   Grid,
-  makeStyles,
   Typography,
-  MuiThemeProvider,
-  createMuiTheme,
-} from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
+  ThemeProvider,
+  StyledEngineProvider,
+  createTheme,
+} from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
+import { Pagination } from '@mui/material';
 import Page from "src/components/Page";
 import Toolbar from "./Toolbar";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import AccessTimeIcon from "@material-ui/icons/AccessTime";
-import DollarIcon from "@material-ui/icons/LocalAtm";
-import DollarAvailableIcon from "@material-ui/icons/AttachMoney";
-import PaymentIcon from "@material-ui/icons/Payment";
-import { green, orange } from "@material-ui/core/colors";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import DollarIcon from "@mui/icons-material/LocalAtm";
+import DollarAvailableIcon from "@mui/icons-material/AttachMoney";
+import PaymentIcon from "@mui/icons-material/Payment";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
@@ -52,31 +53,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
 const BuyerList = () => {
   const classes = useStyles();
   const [buyerdata, setBuyerdata] = useState([]);
+  const { supId } = useParams();
 
   useEffect(() => {
     async function getBuyers() {
       let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
+        buyer_status: { eq: "Approved"},
+        supplierId: { contains: supId}
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBuyers.items;
       return items;
     }
 
@@ -85,39 +88,39 @@ const BuyerList = () => {
       setBuyerdata(c);
     }
     test();
-  }, []);
+  }, [supId]);
 
   function checkstatus(buyerdata) {
     if (buyerdata === "submitted") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={orangeTheme}>
             <Chip label={buyerdata} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
     } else if (buyerdata === "Under Review") {
-      return (
-        <>
-          <MuiThemeProvider theme={orangeTheme}>
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={orangeTheme}>
             <Chip label={buyerdata} color="secondary" />
-          </MuiThemeProvider>
-        </>
-      );
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
     } else {
-      return (
-        <>
-          <MuiThemeProvider theme={greenTheme}>
+      return <>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={greenTheme}>
             <Chip label={buyerdata} color="primary" />
-          </MuiThemeProvider>
-        </>
-      );
+          </ThemeProvider>
+        </StyledEngineProvider>
+      </>;
     }
   }
 
-  function getLink(status, id, buyid, supid) {
+  function getLink(status, id, buyid) {
     if (status === "Approved") {
-      return `/admin/newtransaction/${id}/${buyid}/${supid}`;
+      return `/admin/newrequest/${id}/${buyid}/${supId}`;
     } else {
       return <></>;
     }
@@ -136,9 +139,8 @@ const BuyerList = () => {
                     <Link
                       to={getLink(
                         buyerdata.buyer_status,
-                        buyerdata.userId,
+                        buyerdata.id,
                         buyerdata.buyerId,
-                        buyerdata.supplierId
                       )}
                     >
                       <CardContent>
@@ -168,7 +170,7 @@ const BuyerList = () => {
                       <Box flexGrow={1} />
                       <Divider />
                       <Box p={2}>
-                        <Grid container justify="space-between" spacing={2}>
+                        <Grid container justifyContent="space-between" spacing={2}>
                           <Grid className={classes.statsItem} item>
                             <AccessTimeIcon
                               className={classes.statsIcon}
@@ -202,7 +204,7 @@ const BuyerList = () => {
                       <Box flexGrow={1} />
                       <Divider />
                       <Box p={2}>
-                        <Grid container justify="space-between" spacing={2}>
+                        <Grid container justifyContent="space-between" spacing={2}>
                           <Grid className={classes.statsItem} item>
                             <DollarAvailableIcon
                               className={classes.statsIcon}

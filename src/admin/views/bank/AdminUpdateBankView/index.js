@@ -12,8 +12,8 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -22,7 +22,6 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
 import countries from "src/components/FormLists/countries.js";
 
 const cr = countries;
@@ -51,33 +50,19 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     position: "relative",
   },
-  buttonSuccess: {
-    backgroundColor: green[500],
-    "&:hover": {
-      backgroundColor: green[700],
-    },
-  },
-  buttonProgress: {
-    color: green[500],
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    marginTop: -12,
-    marginLeft: -12,
-  },
 }));
 
-const UpdateBankForm = ({ className, value, ...rest }) => {
+const UpdateBankForm = ({ className, value, user, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.value.value.userId;
+  const sub = value;
+  const userId = user;
 
+  const [id, setId] = useState("");
   const [bankId, setBankId] = useState("");
   const [identityId, setIdentityId] = useState("");
-  const [
-    account_statement_attachment,
-    setAccount_statement_attachment,
-  ] = useState("");
+  const [account_statement_attachment, setAccount_statement_attachment] =
+    useState("");
   const [bank_account_name, setBank_account_name] = useState("");
   const [bank_account_number, setBank_account_number] = useState("");
   const [bank_account_sortcode, setBank_account_sortcode] = useState("");
@@ -105,26 +90,26 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
   const accountname = "Bank Statement";
 
   useEffect(() => {
-    var userId = sub;
-    getBank(userId);
+    var supplierId = sub;
+    getBank(supplierId);
   }, [sub]);
 
   async function getBank(input) {
     let filter = {
-      userId: { eq: input },
-      sortkey: { contains: "bank-supplier" },
+      supplierId: { eq: input },
     };
     try {
       const {
         data: {
-          listsBank: { items: itemsPage1, nextToken },
+          listBanks: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBank, { filter: filter })
+        graphqlOperation(queries.listBanks, { filter: filter })
       );
-      const n = { data: { listsBank: { items: itemsPage1, nextToken } } };
-      const bank = n.data.listsBank.items[0];
+      const n = { data: { listBanks: { items: itemsPage1, nextToken } } };
+      const bank = n.data.listBanks.items[0];
       const {
+        id,
         bankId,
         identityId,
         bank_name,
@@ -141,6 +126,7 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
         iban,
         account_statement_attachment,
       } = bank;
+      setId(id);
       setBankId(bankId);
       setIdentityId(identityId);
       setBank_name(bank_name);
@@ -165,35 +151,57 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
     setBankSuccess(false);
     setBankLoading(true);
     try {
-      const userId = sub;
-      const sortkey = bankId;
-      await updateBank({
-        userId,
-        sortkey,
-        bank_name,
-        bank_account_name,
-        bank_account_number,
-        bank_account_sortcode,
-        bank_address_city,
-        bank_address_street,
-        bank_address_number,
-        bank_address_postalcode,
-        bank_country,
-        bank_routing_number,
-        bic_swift_code,
-        iban,
-      });
+      if (id === "") {
+        const supplierId = sub;
+        await createBank({
+          userId,
+          supplierId,
+          bank_name,
+          bank_account_name,
+          bank_account_number,
+          bank_account_sortcode,
+          bank_address_city,
+          bank_address_street,
+          bank_address_number,
+          bank_address_postalcode,
+          bank_country,
+          bank_routing_number,
+          bic_swift_code,
+          iban,
+        });
+      } else {
+        await updateBank({
+          id,
+          bank_name,
+          bank_account_name,
+          bank_account_number,
+          bank_account_sortcode,
+          bank_address_city,
+          bank_address_street,
+          bank_address_number,
+          bank_address_postalcode,
+          bank_country,
+          bank_routing_number,
+          bic_swift_code,
+          iban,
+        });
+      }
     } catch (e) {
       onError(e);
     }
     setBankSuccess(true);
     setBankLoading(false);
-    navigate("/admin/suppliers");
   }
 
   function updateBank(input) {
     return API.graphql(
       graphqlOperation(mutations.updateBank, { input: input })
+    );
+  }
+
+  function createBank(input) {
+    return API.graphql(
+      graphqlOperation(mutations.createBank, { input: input })
     );
   }
 
@@ -256,7 +264,8 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
   }, [account_statement_attachment, identityId]);
 
   function accountisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(accountimg)) {
       return (
         <>
@@ -367,18 +376,19 @@ const UpdateBankForm = ({ className, value, ...rest }) => {
     const newbankidfile = file.current;
     onbankidChange(newbankidfile);
   }
-  
+
   async function onbankidChange(newfile) {
     setAccountSuccess(false);
     setAccountLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'account_statement_attachment') : null;
+      const u = newfile
+        ? await s3Up(newfile, "account_statement_attachment")
+        : null;
       console.log(u);
       var account_statement_attachment = u;
-      const sortkey = bankId;
       const userId = sub;
       await updateBank({
-        sortkey,
+        id,
         userId,
         account_statement_attachment,
       });

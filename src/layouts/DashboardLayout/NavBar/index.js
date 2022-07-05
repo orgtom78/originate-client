@@ -1,19 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
-import { Auth } from "@aws-amplify/auth";
+import { Auth } from "aws-amplify";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Card,
-  Divider,
-  Drawer,
-  Hidden,
-  List,
-  Paper,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Divider, Drawer, Hidden, List, Paper, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
@@ -25,7 +15,7 @@ import {
 import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
-import grey from "@material-ui/core/colors/grey";
+import { grey } from '@mui/material/colors';
 
 const items = [
   {
@@ -36,7 +26,7 @@ const items = [
   {
     href: "/app/account",
     icon: UserIcon,
-    title: "Account",
+    title: "My Profile",
   },
   {
     href: "/app/newbuyer",
@@ -46,12 +36,12 @@ const items = [
   {
     href: "/app/buyers",
     icon: DollarSignIcon,
-    title: "Payout Request",
+    title: "New Invoice",
   },
   {
-    href: "/app/transactions",
+    href: "/app/requests",
     icon: CreditCardIcon,
-    title: "Transactions",
+    title: "Invoice Status",
   },
   {
     href: "/app/settings",
@@ -99,7 +89,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const [avatar, setAvatar] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_country, setSupplier_country] = useState("");
-  const [supplier_industry, setSupplier_industry] = useState("");
+  //const [supplier_industry, setSupplier_industry] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const context = useUser();
 
@@ -110,12 +100,12 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       const {
         supplier_name,
         supplier_country,
-        supplier_industry,
+        //supplier_industry,
         supplier_logo,
       } = data;
       setSupplier_name(supplier_name);
       setSupplier_country(supplier_country);
-      setSupplier_industry(supplier_industry);
+      //setSupplier_industry(supplier_industry);
       setSupplier_logo(supplier_logo);
       const z = await Storage.vault.get(supplier_logo);
       setAvatar(z);
@@ -167,31 +157,29 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     </Box>
   );
 
-  return (
-    <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden lgUp>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.mobileDrawer }}
+        onClose={onMobileClose}
+        open={openMobile}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+    <Hidden lgDown>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.desktopDrawer }}
+        open
+        variant="persistent"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+  </>;
 };
 
 NavBar.propTypes = {

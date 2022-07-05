@@ -1,12 +1,11 @@
-import React, { useState, useCallback, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Avatar,
   Box,
   Button,
   Card,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -14,14 +13,13 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import * as queries from "src/graphql/queries.js";
-import { API, graphqlOperation, Storage } from "aws-amplify";
 import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import NumberFormat from "react-number-format";
+import { Storage } from "aws-amplify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -44,95 +42,30 @@ const useStyles = makeStyles((theme) => ({
 
 const FinancialsListView = (value) => {
   const classes = useStyles();
-  const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
   const [financials, setFinancials] = useState([]);
-
-  const [selectedFinancialsIds, setSelectedFinancialsIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    async function getFinancials() {
-      let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "financials-", contains: buyId },
-      };
-      const {
-        data: {
-          listsFinancials: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
-      );
-      const n = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsFinancials.items;
-      setFinancials(items);
-    }
-    getFinancials();
-  }, [id, buyId]);
+    const items = value.value;
+    const s = items.sort(function(a,b){
+      // Turn your strings into dates, and then subtract them
+      // to get a value that is either negative, positive, or zero.
+      return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+    });
+    setFinancials(s);
+  }, [value]);
 
-  const handler = useCallback(() => {
-    if (!financials || !financials.length) {
-      return;
-    } else {
-      const d = financials;
-      return d;
-    }
-  }, [financials]);
-
-  const geturl = async (input) => {
+  const geturl = async (input, id) => {
     if (input === "") {
       return;
     } else {
       const t = await Storage.get(input, {
         level: "private",
-        identityId: ident,
+        identityId: id,
       });
       window.open(t, "_blank");
     }
-  };
-
-  const handleSelectAll = (event) => {
-    let newSelectedFinancialsIds;
-
-    if (event.target.checked) {
-      newSelectedFinancialsIds = financials.map(
-        (financials) => financials.financialsId
-      );
-    } else {
-      newSelectedFinancialsIds = [];
-    }
-
-    setSelectedFinancialsIds(newSelectedFinancialsIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedFinancialsIds.indexOf(id);
-    let newSelectedFinancialsIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedFinancialsIds = newSelectedFinancialsIds.concat(
-        selectedFinancialsIds,
-        id
-      );
-    } else if (selectedIndex === 0) {
-      newSelectedFinancialsIds = newSelectedFinancialsIds.concat(
-        selectedFinancialsIds.slice(1)
-      );
-    } else if (selectedIndex === selectedFinancialsIds.length - 1) {
-      newSelectedFinancialsIds = newSelectedFinancialsIds.concat(
-        selectedFinancialsIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedFinancialsIds = newSelectedFinancialsIds.concat(
-        selectedFinancialsIds.slice(0, selectedIndex),
-        selectedFinancialsIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedFinancialsIds(newSelectedFinancialsIds);
   };
 
   const handleLimitChange = (event) => {
@@ -152,19 +85,6 @@ const FinancialsListView = (value) => {
               <Table>
                 <TableHead>
                   <TableRow>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={
-                          selectedFinancialsIds.length === financials.length
-                        }
-                        color="primary"
-                        indeterminate={
-                          selectedFinancialsIds.length > 0 &&
-                          selectedFinancialsIds.length < financials.length
-                        }
-                        onChange={handleSelectAll}
-                      />
-                    </TableCell>
                     <TableCell>Year</TableCell>
                     <TableCell>Revenue</TableCell>
                     <TableCell>Profit</TableCell>
@@ -174,41 +94,24 @@ const FinancialsListView = (value) => {
                 </TableHead>
                 <TableBody>
                   {financials.slice(0, limit).map((financials) => (
-                    <TableRow
-                      hover
-                      key={financials.financialsId}
-                      selected={
-                        selectedFinancialsIds.indexOf(
-                          financials.financialsId
-                        ) !== -1
-                      }
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={
-                            selectedFinancialsIds.indexOf(
-                              financials.financialsId
-                            ) !== -1
-                          }
-                          onChange={(event) =>
-                            handleSelectOne(event, financials.financialsId)
-                          }
-                          value="true"
-                        />
-                      </TableCell>
+                    <TableRow hover key={financials.financialsId}>
                       <TableCell>
                         <Box alignItems="center" display="flex">
-                          <Avatar
-                            className={classes.avatar}
-                            src={financials.avatarUrl}
-                          >
-                            {getInitials(financials.financials_name)}
-                          </Avatar>
-                          <Typography color="textPrimary" variant="body1">
-                            {moment(
-                              financials.financials_reporting_period
-                            ).format("YYYY")}
-                          </Typography>
+                          <Link to={`/investor/financials/${financials.id}`}>
+                            <Avatar
+                              className={classes.avatar}
+                              src={`${financials.buyer_logo}`}
+                            >
+                              {getInitials(financials.buyer_name)}
+                            </Avatar>
+                          </Link>
+                          <Link to={`/investor/financials/${financials.id}`}>
+                            <Typography color="textPrimary" variant="body1">
+                              {moment(
+                                financials.financials_reporting_period
+                              ).format("YYYY")}
+                            </Typography>
+                          </Link>
                         </Box>
                       </TableCell>
                       <TableCell>
@@ -233,7 +136,10 @@ const FinancialsListView = (value) => {
                           color="primary"
                           target="_blank"
                           onClick={() =>
-                            geturl(financials.balance_sheet_attachment)
+                            geturl(
+                              financials.balance_sheet_attachment,
+                              financials.identityId
+                            )
                           }
                         >
                           Download
@@ -245,7 +151,10 @@ const FinancialsListView = (value) => {
                           color="primary"
                           target="_blank"
                           onClick={() =>
-                            geturl(financials.income_statement_attachment)
+                            geturl(
+                              financials.income_statement_attachment,
+                              financials.identityId
+                            )
                           }
                         >
                           Download
@@ -260,8 +169,8 @@ const FinancialsListView = (value) => {
           <TablePagination
             component="div"
             count={financials.length}
-            onChangePage={handlePageChange}
-            onChangeRowsPerPage={handleLimitChange}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleLimitChange}
             page={page}
             rowsPerPage={limit}
             rowsPerPageOptions={[5, 10, 25]}

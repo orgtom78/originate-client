@@ -16,21 +16,21 @@ import {
   TextField,
   Typography,
   Select,
-  makeStyles,
   MenuItem,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/buyer/AdminBuyerView/Lists/directorlist.js";
 import UboListView from "src/admin/views/buyer/AdminBuyerView/Lists/ubolist.js";
 import FinancialsListView from "src/admin/views/buyer/AdminBuyerView/Lists/financialslist.js";
@@ -114,29 +114,58 @@ const status = [
   },
 ];
 
+const rate = [
+  {
+    value: "SOFR(Daily)",
+    label: "SOFR Daily",
+  },
+  {
+    value: "SOFR(1M)",
+    label: "SOFR 1M",
+  },
+  {
+    value: "SOFR(3M)",
+    label: "SOFR 3M",
+  },
+];
+
+const emptyi = [
+  {
+    userId: "",
+    investor_name: "",
+  },
+];
+
 const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
 
+  const [investor, setInvestor] = useState([]);
+  const [buyerId, setBuyerId] = useState("");
   const [investorId, setInvestorId] = useState("");
+  const [userId, setUserId] = useState("");
+  const [identityId, setIdentityId] = useState("");
+  const [broker, setBroker] = useState([]);
+  const [brokerId, setBrokerId] = useState("");
+  const [spv, setSpv] = useState([]);
+  const [spvId, setSpvId] = useState("");
+
   const [buyer_status, setBuyer_status] = useState("");
-  const [buyer_loan_request_amount, setBuyer_loan_request_amount] = useState(
-    ""
-  );
-  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
-    ""
-  );
+  const [buyer_loan_request_amount, setBuyer_loan_request_amount] =
+    useState("");
+  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
+    useState("");
+  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
-  const [
-    buyer_date_of_incorporation,
-    setBuyer_date_of_incorporation,
-  ] = useState("");
+  const [buyer_date_of_incorporation, setBuyer_date_of_incorporation] =
+    useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
@@ -156,9 +185,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyersuccess, setBuyerSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = buyId;
-    getBuyer({ userId, sortkey });
+    getBuyer({ id });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -167,11 +194,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getBuyer: {
+              buyerId,
+              userId,
+              identityId,
               investorId,
+              brokerId,
+              spvId,
               buyer_status,
               buyer_loan_request_amount,
               buyer_loan_approved_amount,
+              buyer_loan_rate,
               buyer_loan_discount_fee,
+              buyer_loan_transaction_fee,
+              buyer_loan_broker_fee,
               buyer_logo,
               buyer_name,
               buyer_type,
@@ -190,11 +225,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
             },
           },
         } = buyer;
+        setBuyerId(buyerId);
         setInvestorId(investorId);
+        setBrokerId(brokerId);
+        setSpvId(spvId);
+        setUserId(userId);
+        setIdentityId(identityId);
         setBuyer_status(buyer_status);
         setBuyer_loan_request_amount(buyer_loan_request_amount);
         setBuyer_loan_approved_amount(buyer_loan_approved_amount);
+        setBuyer_loan_rate(buyer_loan_rate);
         setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+        setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+        setBuyer_loan_broker_fee(buyer_loan_broker_fee);
         setBuyer_logo(buyer_logo);
         setBuyer_name(buyer_name);
         setBuyer_date_of_incorporation(buyer_date_of_incorporation);
@@ -216,22 +259,24 @@ const BuyerForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [id, buyId]);
+  }, [id]);
 
   async function handleBuyerSubmit() {
     setBuyerSuccess(false);
     setBuyerLoading(true);
     try {
-      const userId = id;
-      const sortkey = buyId;
       await updateBuyer({
-        userId,
-        sortkey,
+        id,
         investorId,
+        brokerId,
+        spvId,
         buyer_status,
         buyer_loan_request_amount,
         buyer_loan_approved_amount,
+        buyer_loan_rate,
         buyer_loan_discount_fee,
+        buyer_loan_transaction_fee,
+        buyer_loan_broker_fee,
         buyer_logo,
         buyer_name,
         buyer_type,
@@ -253,8 +298,54 @@ const BuyerForm = ({ className, value, ...rest }) => {
     }
     setBuyerSuccess(true);
     setBuyerLoading(false);
-    navigate("/admin/buyers");
+    navigate(`/admin/buyer/${id}`);
   }
+
+  useEffect(() => {
+    async function getInvestors() {
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listInvestors));
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listInvestors.items;
+      const ids = items.map((item) => item.userId);
+      setInvestorId(ids[0]);
+      setInvestor(items);
+    }
+    getInvestors();
+  }, []);
+
+  useEffect(() => {
+    async function getBrokers() {
+      const {
+        data: {
+          listBrokers: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listBrokers));
+      const n = { data: { listBrokers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBrokers.items;
+      const ids = items.map((item) => item.userId);
+      setBroker(items);
+    }
+    getBrokers();
+  }, []);
+
+  useEffect(() => {
+    async function getSpvs() {
+      const {
+        data: {
+          listSpvs: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listSpvs));
+      const n = { data: { listSpvs: { items: itemsPage1, nextToken } } };
+      const items = n.data.listSpvs.items;
+      const ids = items.map((item) => item.userId);
+      setSpv(items);
+    }
+    getSpvs();
+  }, []);
 
   function updateBuyer(input) {
     return API.graphql(
@@ -292,7 +383,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   return (
     <Container maxWidth={false}>
       <React.Fragment>
-        <Accordion defaultExpanded={true}>
+        <Accordion defaultExpanded={false}>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>Company Details</Typography>
           </AccordionSummary>
@@ -323,16 +414,68 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         ))}
                       </Select>
                     </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
+                    <Grid item xs={12} sm={12}>
+                      <Select
                         fullWidth
-                        label="Investor ID"
                         name="investorId"
+                        label="Investor"
                         onChange={(e) => setInvestorId(e.target.value)}
                         required
                         value={investorId || ""}
                         variant="outlined"
-                      />
+                      >
+                        {investor ? (
+                          investor.map((item, index) => (
+                            <MenuItem key={index} value={item.userId}>
+                              {item.investor_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="spvId"
+                        label="SPV"
+                        onChange={(e) => setSpvId(e.target.value)}
+                        required
+                        value={spvId || ""}
+                        variant="outlined"
+                      >
+                        {spv ? (
+                          spv.map((item, index) => (
+                            <MenuItem key={index} value={item.userId}>
+                              {item.spv_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <Select
+                        fullWidth
+                        name="brokerId"
+                        label="Broker"
+                        onChange={(e) => setBrokerId(e.target.value)}
+                        required
+                        value={brokerId || ""}
+                        variant="outlined"
+                      >
+                        {broker ? (
+                          broker.map((item, index) => (
+                            <MenuItem key={index} value={item.brokerId}>
+                              {item.broker_name}
+                            </MenuItem>
+                          ))
+                        ) : (
+                          <></>
+                        )}
+                      </Select>
                     </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
@@ -394,15 +537,58 @@ const BuyerForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
+                      <Select
+                        fullWidth
+                        label="Base Rate"
+                        name="buyer_loan_rate"
+                        onChange={(e) => setBuyer_loan_rate(e.target.value)}
+                        required
+                        value={buyer_loan_rate || ""}
+                        variant="outlined"
+                      >
+                        {rate.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Loan discount (pa)"
+                        label="Discount (pa)"
                         name="buyer_loan_discount_fee"
                         onChange={(e) =>
                           setBuyer_loan_discount_fee(e.target.value)
                         }
                         required
                         value={buyer_loan_discount_fee || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Transaction Fee (pa)"
+                        name="buyer_loan_transaction_fee"
+                        onChange={(e) =>
+                          setBuyer_loan_transaction_fee(e.target.value)
+                        }
+                        required
+                        value={buyer_loan_transaction_fee || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Broker Fee (pa)"
+                        name="buyer_loan_broker_fee"
+                        onChange={(e) =>
+                          setBuyer_loan_broker_fee(e.target.value)
+                        }
+                        required
+                        value={buyer_loan_broker_fee || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -473,17 +659,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
                           value={buyer_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -503,9 +687,12 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
 
                     <Grid item md={6} xs={12}>
                       <Select
@@ -577,13 +764,15 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <FinancialsListView value={value} />
+                <FinancialsListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewfinancials/${id}/${buyId}/${ident}`}>
+                <Link
+                  to={`/admin/adminnewfinancials/${userId}/${buyerId}/${identityId}`}
+                >
                   <Button>Add Financials</Button>
                 </Link>
               </Box>
@@ -597,15 +786,13 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <DirectorListView value={value} />
+                <DirectorListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewbuyerdirector/${id}/${buyId}/${ident}`}
-                >
+                <Link to={`/admin/adminnewbuyerdirector/${id}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -620,13 +807,13 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Card>
+            <Card maxWidth={false}>
               <CardContent>
-                <UboListView value={value} />
+                <UboListView user={userId} buyer={buyerId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link to={`/admin/adminnewbuyerubo/${id}/${buyId}/${ident}`}>
+                <Link to={`/admin/adminnewbuyerubo/${id}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>

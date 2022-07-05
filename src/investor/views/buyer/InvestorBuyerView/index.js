@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Button,
+  Box,
+  Card,
+  CardContent,
   Container,
+  Divider,
   Grid,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 
@@ -23,6 +28,7 @@ import BuyerUploadView from "src/investor/views/buyer/InvestorBuyerView/Forms/Bu
 import DirectorView from "src/investor/views/buyer/InvestorBuyerView/Lists/directorlist.js";
 import OwnerView from "src/investor/views/buyer/InvestorBuyerView/Lists/ubolist.js";
 import History from "src/investor/views/buyer/InvestorBuyerView/History.js";
+import AssetRisk from "src/investor/views/buyer/InvestorBuyerView/AssetRisk.js";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,11 +39,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Buyer = (value) => {
+const Buyer = () => {
   const classes = useStyles();
   const { id } = useParams();
-  const { buyId } = useParams();
-  const { ident } = useParams();
+
   const [item, setItem] = useState("");
   const [fin, setFin] = useState([]);
 
@@ -49,10 +54,8 @@ const Buyer = (value) => {
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
-  const [
-    buyer_date_of_incorporation,
-    setBuyer_date_of_incorporation,
-  ] = useState("");
+  const [buyer_date_of_incorporation, setBuyer_date_of_incorporation] =
+    useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
@@ -69,10 +72,6 @@ const Buyer = (value) => {
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
 
   useEffect(() => {
-    const userId = id;
-    const sortkey = buyId;
-    setBuyerId(sortkey);
-    getBuyer({ userId, sortkey });
     async function getBuyer(input) {
       try {
         const buyer = await API.graphql(
@@ -131,113 +130,138 @@ const Buyer = (value) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [id, buyId]);
+    getBuyer({ id });
+  }, [id]);
 
   useEffect(() => {
     async function getFinancials() {
+      const id = await buyerId;
       let filter = {
-        userId: { eq: id },
-        sortkey: { beginsWith: "financials-", contains: buyId },
+        buyerId: { eq: id },
       };
       const {
         data: {
-          listsFinancials: { items: itemsPage1, nextToken },
+          listFinancialss: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
+        graphqlOperation(queries.listFinancialss, { filter: filter })
       );
-      const n = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsFinancials.items;
-      setFin(items);
+      const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listFinancialss.items;
+      if (items.length > 0) {
+        setFin(items);
+      } else {
+        setFin([]);
+      }
       return items;
     }
     getFinancials();
-  }, [buyId, id]);
+  }, [buyerId]);
 
   return (
     <React.Fragment>
       <Page className={classes.root} title="Buyer">
         <Container maxWidth={false}>
           <Grid container spacing={3}>
-          <Grid item lg={6} sm={6} xl={6} xs={12}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
               <AccountDebtor value={item} />
             </Grid>
             <Grid item lg={6} sm={6} xl={6} xs={12}>
               <ApprovalStatus value={item} />
             </Grid>
-            <Grid item lg={4} sm={4} xl={4} xs={12}>
-              <KeyFinancials value={fin} />
-            </Grid>
-            <Grid item lg={4} sm={4} xl={4} xs={12}>
-              <FinancialRatios value={fin} />
-            </Grid>
-            <Grid item lg={4} sm={4} xl={4} xs={12}>
-              <History value={item} />
+          </Grid>
+          <br></br>
+          <br></br>
+          <Grid container spacing={1}>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <AssetRisk value={fin} data={item} />
             </Grid>
             <Grid item lg={12} sm={12} xl={12} xs={12}>
-              <FinancialOverview value={fin} />
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Company Financial Overview
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <FinancialOverview value={fin} />
+                </AccordionDetails>
+              </Accordion>
             </Grid>
-            <Grid container>
-              <Grid item lg={12} sm={12} xl={12} xs={12}>
-                <Accordion>
-                  <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={classes.heading}>
-                      Company Financials
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <FinancialsListView value={fin} />
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-              <Grid item lg={12} sm={12} xl={12} xs={12}>
-                <Accordion>
-                  <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={classes.heading}>
-                      Company KYC/AML Documents
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <BuyerUploadView value={item} />
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-              <Grid item lg={12} sm={12} xl={12} xs={12}>
-                <Accordion>
-                  <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={classes.heading}>
-                      Company Directors
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <DirectorView />
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
-              <Grid item lg={12} sm={12} xl={12} xs={12}>
-                <Accordion>
-                  <AccordionSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography className={classes.heading}>
-                      Company Owners
-                    </Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <OwnerView />
-                  </AccordionDetails>
-                </Accordion>
-              </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Company Financial Statements
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Card maxWidth={false}>
+                    <CardContent>
+                      <FinancialsListView value={fin} />
+                    </CardContent>
+                    <Divider />
+                    <Box display="flex" justifyContent="flex-end" p={2}>
+                      <Link
+                        to={`/investor/investornewfinancials/${userId}/${buyerId}/${identityId}`}
+                      >
+                        <Button>Add Financials</Button>
+                      </Link>
+                    </Box>
+                  </Card>
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Company KYC/AML Documents
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <BuyerUploadView value={item} />
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Company Directors
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <DirectorView />
+                </AccordionDetails>
+              </Accordion>
+            </Grid>
+            <Grid item lg={12} sm={12} xl={12} xs={12}>
+              <Accordion>
+                <AccordionSummary
+                  aria-controls="panel1a-content"
+                  id="panel1a-header"
+                >
+                  <Typography className={classes.heading}>
+                    Company Owners
+                  </Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                  <OwnerView />
+                </AccordionDetails>
+              </Accordion>
             </Grid>
           </Grid>
         </Container>

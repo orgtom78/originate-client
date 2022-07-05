@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import clsx from "clsx";
 import {
   Box,
@@ -18,8 +18,8 @@ import {
   TableBody,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { onError } from "src/libs/errorLib.js";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -29,7 +29,7 @@ import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -83,37 +83,34 @@ const useStyles = makeStyles((theme) => ({
 const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
   const [userId, setUserId] = useState("");
+  const [buyerId, setBuyerId] = useState("");
   const [identityId, setIdentityId] = useState("");
 
   const [financialsId, setFinancialsId] = useState("");
   const [financials_attachment, setFinancials_attachment] = useState("");
   const [balance_sheet_attachment, setBalance_sheet_attachment] = useState("");
-  const [
-    income_statement_attachment,
-    setIncome_statement_attachment,
-  ] = useState("");
+  const [income_statement_attachment, setIncome_statement_attachment] =
+    useState("");
   const [current_assets, setCurrent_assets] = useState("");
-  const [cash_flow, setCash_flow] = useState("");
+  const [cash_flow_from_operating_activities, setCash_flow_from_operating_activities] = useState("");
   const [current_long_term_debt, setCurrent_long_term_debt] = useState("");
   const [current_liabilities, setCurrent_liabilities] = useState("");
   const [gross_margin, setGross_margin] = useState("");
   const [operating_income, setOperating_income] = useState("");
   const [other_expenses, setOther_expenses] = useState("");
   const [ebt, setEbt] = useState("");
-  const [ebitda, setEbitda] = useState("");
-  const [current_ratio, setCurrent_ratio] = useState("");
-  const [debt_equity_ratio, setDebt_equity_ratio] = useState("");
-  const [debt_ebitda_ratio, setDebt_ebitda_ratio] = useState("");
+  //const [ebitda, setEbitda] = useState("");
+  //const [current_ratio, setCurrent_ratio] = useState("");
+  //const [debt_equity_ratio, setDebt_equity_ratio] = useState("");
+  //const [debt_ebitda_ratio, setDebt_ebitda_ratio] = useState("");
   const [inventory_turnover, setInventory_turnover] = useState("");
   const [interest_coverage, setInterest_coverage] = useState("");
   const [income_tax_expense, setIncome_tax_expense] = useState("");
-  const [
-    total_liabilities_and_equity,
-    setTotal_liabilities_and_equity,
-  ] = useState("");
+  const [total_liabilities_and_equity, setTotal_liabilities_and_equity] =
+    useState("");
   const [marketable_securities, setMarketable_securities] = useState("");
   const [accounts_receivable, setAccounts_receivable] = useState("");
   const [inventory, setInventory] = useState("");
@@ -124,13 +121,10 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const [accured_expenses, setAccured_expenses] = useState("");
   const [unearned_revenue, setUnearned_revenue] = useState("");
   const [long_term_debt, setLong_term_debt] = useState("");
-  const [other_current_liabilities, setOther_current_liabilities] = useState(
-    ""
-  );
-  const [
-    other_long_term_liabilities,
-    setOther_long_term_liabilities,
-  ] = useState("");
+  const [other_current_liabilities, setOther_current_liabilities] =
+    useState("");
+  const [other_long_term_liabilities, setOther_long_term_liabilities] =
+    useState("");
   const [income_tax_payable, setIncome_tax_payable] = useState("");
   const [dividends_payable, setDividends_payable] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -149,19 +143,15 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const [ebit, setEbit] = useState("");
   const [interest_expenses, setInterest_expenses] = useState("");
   const [depreciation_expenses, setDepreciation_expenses] = useState("");
-  const [
-    sale_purchase_of_fixed_asset,
-    setSale_purchase_of_fixed_asset,
-  ] = useState("");
+  const [sale_purchase_of_fixed_asset, setSale_purchase_of_fixed_asset] =
+    useState("");
   const [extraordinary_income, setExtraordinary_income] = useState("");
   const [tax_expenses, setTax_expenses] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
   const [working_capital, setWorking_capital] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [accounts_payable, setAccounts_payable] = useState("");
   const [cash, setCash] = useState("");
@@ -191,12 +181,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   const incomename = "Income Statement";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.financialsId;
-    var userId = sub;
-    var sortkey = key;
-    getFinancials({ userId, sortkey });
-  }, [value.financialsId, value.userId]);
+    getFinancials({ id });
+  }, [id]);
 
   async function getFinancials(input) {
     try {
@@ -207,23 +193,20 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         data: {
           getFinancials: {
             userId,
+            buyerId,
             identityId,
             financialsId,
             financials_attachment,
             balance_sheet_attachment,
             income_statement_attachment,
             current_assets,
-            cash_flow,
+            cash_flow_from_operating_activities,
             current_long_term_debt,
             current_liabilities,
             gross_margin,
             operating_income,
             other_expenses,
             ebt,
-            ebitda,
-            current_ratio,
-            debt_equity_ratio,
-            debt_ebitda_ratio,
             inventory_turnover,
             interest_coverage,
             income_tax_expense,
@@ -273,23 +256,24 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         },
       } = financials;
       setUserId(userId);
+      setBuyerId(buyerId);
       setIdentityId(identityId);
       setFinancialsId(financialsId);
       setFinancials_attachment(financials_attachment);
       setBalance_sheet_attachment(balance_sheet_attachment);
       setIncome_statement_attachment(income_statement_attachment);
       setCurrent_assets(current_assets);
-      setCash_flow(cash_flow);
+      setCash_flow_from_operating_activities(cash_flow_from_operating_activities);
       setCurrent_long_term_debt(current_long_term_debt);
       setCurrent_liabilities(current_liabilities);
       setGross_margin(gross_margin);
       setOperating_income(operating_income);
       setOther_expenses(other_expenses);
       setEbt(ebt);
-      setEbitda(ebitda);
-      setCurrent_ratio(current_ratio);
-      setDebt_equity_ratio(debt_equity_ratio);
-      setDebt_ebitda_ratio(debt_ebitda_ratio);
+      //setEbitda(ebitda);
+      //setCurrent_ratio(current_ratio);
+      //setDebt_equity_ratio(debt_equity_ratio);
+      //setDebt_ebitda_ratio(debt_ebitda_ratio);
       setInventory_turnover(inventory_turnover);
       setInterest_coverage(interest_coverage);
       setIncome_tax_expense(income_tax_expense);
@@ -372,12 +356,13 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
       Number(depreciation_expenses) -
       Number(operating_expenses);
     const operating_income = Number(oi);
-    const ebt =
+    const ebit = 
       Number(operating_income) -
-      Number(interest_expenses) -
       Number(other_expenses);
-    const ebit = Number(ebt) - Number(income_tax_expense);
-    const net_profit = Number(ebit) - Number(extraordinary_income);
+    const ebt =
+      Number(ebit) -
+      Number(interest_expenses);
+    const net_profit = Number(ebt) - Number(income_tax_expense) - Number(extraordinary_income);
 
     const ebitda =
       Number(depreciation_expenses) +
@@ -391,18 +376,18 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     const debt_ebitda_ratio =
       (Number(long_term_debt) + Number(current_long_term_debt)) /
       Number(ebitda);
+    const interest_coverage = Number(ebit) / Number(interest_expenses);
 
     try {
-      const userId = sub;
-      const sortkey = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
+        buyerId,
         financials_attachment,
         balance_sheet_attachment,
         income_statement_attachment,
         current_assets,
-        cash_flow,
+        cash_flow_from_operating_activities,
         current_long_term_debt,
         current_liabilities,
         gross_margin,
@@ -464,7 +449,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setFinancialsSuccess(true);
     setFinancialsLoading(false);
-    navigate("/admin/buyers");
+    window.location.reload();
+    //navigate("/admin/dashboard");
   }
 
   function updateFinancials(input) {
@@ -530,7 +516,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   }, [balance_sheet_attachment, identityId]);
 
   function balanceisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(balanceimg)) {
       return (
         <>
@@ -644,11 +631,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         ? await s3Up(newfile, "balance_sheet_attachment")
         : null;
       var balance_sheet_attachment = u;
-      const sortkey = financialsId;
-      const userId = await value.userId;
       await updateFinancials({
-        sortkey,
-        userId,
+        id,
         balance_sheet_attachment,
       });
     } catch (e) {
@@ -656,7 +640,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setBalanceSuccess(true);
     setBalanceLoading(false);
-    navigate("/admin/buyers");
+    window.location.reload();
+    //navigate("/admin/dashboard");
   }
 
   useEffect(() => {
@@ -705,7 +690,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
   }, [income_statement_attachment, identityId]);
 
   function incomeisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(incomeimg)) {
       return (
         <>
@@ -819,11 +805,8 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         ? await s3Up(newfile, "income_statement_attachment")
         : null;
       var income_statement_attachment = u;
-      const sortkey = financialsId;
-      const userId = value.userId;
       await updateFinancials({
-        sortkey,
-        userId,
+        id,
         income_statement_attachment,
       });
     } catch (e) {
@@ -831,35 +814,38 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
     }
     setIncomeSuccess(true);
     setIncomeLoading(false);
-    navigate("/admin/buyers");
+    window.location.reload();
+    //navigate("/admin/dashboard");
   }
 
   useEffect(() => {
     if (balance_sheet_attachment) {
       async function getjson() {
         const y = await Storage.get(
-          `${userId}${financialsId}balance_sheet_attachment.json`,
+          `${userId}${financialsId}${buyerId}balance_sheet_attachment.json`,
           {
             level: "private",
             identityId: identityId,
             download: true,
+            contentType: "application/json",
           }
         );
+        console.log(y);
         const s = await new Response(y.Body).json();
         if (s) {
-          const t = s[0].Blocks.map((item) => item.Text);
+          const t = s.Blocks.map((item) => item.Text);
           setSheet(t);
         }
       }
       getjson();
     }
-  }, [userId, financialsId, balance_sheet_attachment, identityId]);
+  }, [userId, financialsId, balance_sheet_attachment, buyerId, identityId]);
 
   useEffect(() => {
     if (income_statement_attachment) {
       async function getjson() {
         const y = await Storage.get(
-          `${userId}${financialsId}income_statement_attachment.json`,
+          `${userId}${financialsId}${buyerId}income_statement_attachment.json`,
           {
             level: "private",
             identityId: identityId,
@@ -868,13 +854,15 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
         );
         const s = await new Response(y.Body).json();
         if (s) {
-          const t = s[0].Blocks.map((item) => item.Text);
+          const t = s.Blocks.map((item) => item.Text);
           setIncome(t);
+        } else {
+          return;
         }
       }
       getjson();
     }
-  }, [userId, financialsId, income_statement_attachment, identityId]);
+  }, [userId, financialsId, income_statement_attachment, buyerId, identityId]);
 
   return (
     <Page title="Update Financials">
@@ -888,20 +876,11 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-                <Grid item md={6} xs={12}>
+                <Grid item md={12} xs={12}>
                   <>
                     <Typography>Balance Sheet:</Typography>
                     {balanceisimageorpdf(balancelabel, balancename)}
                   </>
-                </Grid>
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                  style={{ width: "100%", maxWidth: 500, overflow: "auto" }}
-                >
-                  <Typography>Balance Sheet Text:</Typography>
-                  <Typography>{sheet}</Typography>
                 </Grid>
                 <Divider></Divider>
                 <Grid item md={12} xs={12}>
@@ -915,10 +894,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         <TableRow>
                           <TableCell></TableCell>
                           <TableCell align="left">
-                            <Box fontWeight="fontWeightBold">
-                              {moment(financials_reporting_period).format(
-                                "YYYY"
-                              )}
+                            <Box fontWeight="fontWeightBold">{moment(financials_reporting_period).format("YYYY") || ""}
                             </Box>
                           </TableCell>
                         </TableRow>
@@ -1452,21 +1428,11 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                     </LoaderButton>
                   </Box>
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={12} xs={12}>
                   <>
                     <Typography>Income Statement:</Typography>
                     {incomeisimageorpdf(incomelabel, incomename)}
                   </>
-                </Grid>
-
-                <Grid
-                  item
-                  md={6}
-                  xs={12}
-                  style={{ width: "100%", maxWidth: 500, overflow: "auto" }}
-                >
-                  <Typography>Income Statement Text:</Typography>
-                  <Typography>{income}</Typography>
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <TableContainer component={Paper}>
@@ -1598,23 +1564,6 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Interest Expenses
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <TextField
-                              type="number"
-                              fullWidth
-                              onChange={(e) =>
-                                setInterest_expenses(e.target.value)
-                              }
-                              required
-                              value={interest_expenses || ""}
-                              variant="outlined"
-                            />
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
                             Other Expenses
                           </TableCell>
                           <TableCell component="th" scope="row">
@@ -1626,6 +1575,42 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                               }
                               required
                               value={other_expenses || ""}
+                              variant="outlined"
+                            />
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">EBIT</Box>
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <Box fontWeight="fontWeightBold">
+                              <TextField
+                                type="number"
+                                fullWidth
+                                required
+                                value={ebit || ""}
+                                variant="outlined"
+                                InputProps={{
+                                  readOnly: true,
+                                }}
+                              />
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell component="th" scope="row">
+                            Interest Expenses
+                          </TableCell>
+                          <TableCell component="th" scope="row">
+                            <TextField
+                              type="number"
+                              fullWidth
+                              onChange={(e) =>
+                                setInterest_expenses(e.target.value)
+                              }
+                              required
+                              value={interest_expenses || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1668,26 +1653,7 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            <Box fontWeight="fontWeightBold">EBIT</Box>
-                          </TableCell>
-                          <TableCell component="th" scope="row">
-                            <Box fontWeight="fontWeightBold">
-                              <TextField
-                                type="number"
-                                fullWidth
-                                required
-                                value={ebit || ""}
-                                variant="outlined"
-                                InputProps={{
-                                  readOnly: true,
-                                }}
-                              />
-                            </Box>
-                          </TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell component="th" scope="row">
-                            Extraordinary Income / Expense
+                            Extraordinary Expense (+) / Income (-)  
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
@@ -1729,9 +1695,9 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                             <TextField
                               type="number"
                               fullWidth
-                              onChange={(e) => setCash_flow(e.target.value)}
+                              onChange={(e) => setCash_flow_from_operating_activities(e.target.value)}
                               required
-                              value={cash_flow || ""}
+                              value={cash_flow_from_operating_activities || ""}
                               variant="outlined"
                             />
                           </TableCell>
@@ -1742,30 +1708,30 @@ const UpdateFinancialsForm = ({ className, value, ...rest }) => {
                             and last year)
                           </TableCell>
                           <TableCell component="th" scope="row">
-                          <TextField
+                            <TextField
                               type="text"
                               fullWidth
                               onChange={(e) =>
                                 setInventory_turnover(e.target.value)
                               }
-                              value={inventory_turnover | ""}
+                              value={inventory_turnover || ""}
                               variant="outlined"
                             />
                           </TableCell>
                         </TableRow>
                         <TableRow>
                           <TableCell component="th" scope="row">
-                            Interest Coverage (IE + EBT / IE)
+                            Interest Coverage (EBIT / IE)
                           </TableCell>
                           <TableCell component="th" scope="row">
                             <TextField
-                              type="text"
+                              type="number"
                               fullWidth
-                              onChange={(e) =>
-                                setInterest_coverage(e.target.value)
-                              }
-                              value={interest_coverage | ""}
+                              value={interest_coverage || ""}
                               variant="outlined"
+                              InputProps={{
+                                readOnly: true,
+                              }}
                             />
                           </TableCell>
                         </TableRow>

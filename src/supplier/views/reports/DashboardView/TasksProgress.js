@@ -9,13 +9,14 @@ import {
   Grid,
   LinearProgress,
   Typography,
-  makeStyles,
   colors,
-} from "@material-ui/core";
-import InsertChartIcon from "@material-ui/icons/InsertChartOutlined";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import InsertChartIcon from "@mui/icons-material/InsertChartOutlined";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -47,17 +48,16 @@ const TasksProgress = ({ className, ...rest }) => {
       const id = sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "buyer-", notContains: "financials-" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setRequest(items);
     };
     getRequests();
@@ -88,7 +88,7 @@ const TasksProgress = ({ className, ...rest }) => {
       const rev = p["Under Review"];
       const sum = app + rev;
       const perc = (app / sum) * 100;
-      if (isNaN(perc)) {
+      if (Number.isNaN(perc)) {
         return "100";
       } else if (perc !== "NaN") {
         return perc;
@@ -101,13 +101,20 @@ const TasksProgress = ({ className, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid container justify="space-between" spacing={3}>
+        <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
               APPROVAL PROGRESS
             </Typography>
             <Typography color="textPrimary" variant="h3">
-              {calcperecentage()}%
+              <NumberFormat
+                color="textPrimary"
+                variant="h3"
+                value={calcperecentage()}
+                displayType={"text"}
+                decimalScale="2"
+              />
+              %
             </Typography>
           </Grid>
           <Grid item>

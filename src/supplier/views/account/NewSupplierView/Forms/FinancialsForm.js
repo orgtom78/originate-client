@@ -2,19 +2,15 @@ import React, { useEffect, useState } from "react";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import NewUploadField from "src/components/FormFields/NewUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { Upload as UploadIcon } from "react-feather";
 import countries from "src/components/FormLists/countries.js";
+import { useUser } from "src/components/context/usercontext.js";
 
 const cr = countries;
 const useStyles = makeStyles(() => ({
@@ -53,18 +49,18 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function FinancialsForm(props) {
+  const context = useUser();
   const classes = useStyles();
   const {
     formField: {
-      ebit,
+      cash,
       balance_sheet_attachment,
       income_statement_attachment,
       net_profit,
       financials_reporting_period,
       sales,
       total_assets,
-      retained_earnings,
-      working_capital,
+      total_equity,
       bank_name,
       bank_account_number,
       iban,
@@ -82,6 +78,7 @@ export default function FinancialsForm(props) {
   const balanceattachment = updatefields.values.balance_sheet_attachment;
   const incomeattachment = updatefields.values.income_statement_attachment;
 
+  const [identityId, setIdentityId] = useState("");
   const [balanceimg, setBalanceimg] = useState("");
   const [balancepdf, setBalancepdf] = useState("");
   const [incomeimg, setIncomeimg] = useState("");
@@ -93,22 +90,38 @@ export default function FinancialsForm(props) {
   const [incomesuccess, setIncomesuccess] = useState(false);
 
   useEffect(() => {
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { identity } = data;
+      setIdentityId(identity);
+    }
+    onLoad();
+  }, [context]);
+
+  useEffect(() => {
     if (balanceattachment) {
       async function getbalanceurl() {
         var uploadext = balanceattachment.split(".").pop();
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(balanceattachment);
+          const u = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalanceimg(u);
         } else {
-          const h = await Storage.vault.get(balanceattachment);
+          const h = await Storage.get(balanceattachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalancepdf(h);
         }
       }
       getbalanceurl();
     }
-  }, [balanceattachment]);
+  }, [balanceattachment, identityId]);
 
   async function handlebalanceClick() {
     setBalancesuccess(false);
@@ -147,16 +160,22 @@ export default function FinancialsForm(props) {
         var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
         const d = imageExtensions.includes(uploadext);
         if (d === true) {
-          const u = await Storage.vault.get(incomeattachment);
+          const u = await Storage.vault.get(incomeattachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomeimg(u);
         } else {
-          const h = await Storage.vault.get(incomeattachment);
+          const h = await Storage.vault.get(incomeattachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomepdf(h);
         }
       }
       getincomeurl();
     }
-  }, [incomeattachment]);
+  }, [incomeattachment, identityId]);
 
   async function handleincomeClick() {
     setIncomesuccess(false);
@@ -262,7 +281,7 @@ export default function FinancialsForm(props) {
                 label={financials_reporting_period.label}
                 format="yyyy"
                 views={["year"]}
-                minDate={new Date("2000/12/31")}
+                minDate={new Date("2018/12/31")}
                 maxDate={new Date()}
                 fullWidth
                 variant="outlined"
@@ -270,8 +289,8 @@ export default function FinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={ebit.name}
-                label={ebit.label}
+                name={cash.name}
+                label={cash.label}
                 fullWidth
                 variant="outlined"
               />
@@ -302,16 +321,8 @@ export default function FinancialsForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={working_capital.name}
-                label={working_capital.label}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />

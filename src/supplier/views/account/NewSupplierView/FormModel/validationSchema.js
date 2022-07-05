@@ -12,7 +12,8 @@ const {
     supplier_address_number,
     supplier_address_postalcode,
     supplier_country,
-    supplier_industry,
+    supplier_register_number,
+    supplier_website,
     supplier_registration_cert_attachment,
     director_name,
     director_email,
@@ -32,14 +33,13 @@ const {
     ubo_nationality,
     ubo_poa_attachment,
     ubo_country_of_residence,
-    ebit,
+    cash,
     income_statement_attachment,
     balance_sheet_attachment,
     net_profit,
     financials_reporting_period,
     sales,
-    retained_earnings,
-    working_capital,
+    total_equity,
     total_assets,
     bank_account_number,
     bank_account_sortcode,
@@ -51,7 +51,7 @@ const {
   },
 } = NewSupplierFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [supplier_logo.name]: Yup.string(),
     [supplier_name.name]: Yup.string().required(
@@ -67,7 +67,7 @@ export default [
         supplier_date_of_incorporation.invalidErrorMsg,
         (val) => {
           if (val) {
-            const startDate = new Date(1900, 12, 31);
+            const startDate = new Date(1900, 11, 31);
             const endDate = new Date();
             if (moment(val, moment.ISO_8601).isValid()) {
               return moment(val).isBetween(startDate, endDate);
@@ -87,17 +87,15 @@ export default [
       `${supplier_address_number.requiredErrorMsg}`
     ),
     [supplier_address_postalcode.name]: Yup.string()
-      .required(`${supplier_address_postalcode.requiredErrorMsg}`)
-      .test(
-        "len",
-        `${supplier_address_postalcode.invalidErrorMsg}`,
-        (val) => val && val.length <= 12
-      ),
+      .required(`${supplier_address_postalcode.requiredErrorMsg}`),
     [supplier_country.name]: Yup.string().required(
       `${supplier_country.requiredErrorMsg}`
     ),
-    [supplier_industry.name]: Yup.string().required(
-      `${supplier_industry.requiredErrorMsg}`
+    [supplier_register_number.name]: Yup.string().required(
+      `${supplier_register_number.requiredErrorMsg}`
+    ),
+    [supplier_website.name]: Yup.string().required(
+      `${supplier_website.requiredErrorMsg}`
     ),
     [supplier_registration_cert_attachment.name]: Yup.string().required(
       `${supplier_registration_cert_attachment.requiredErrorMsg}`
@@ -110,25 +108,25 @@ export default [
     ),
     [director_email.name]: Yup.string().email(),
     [director_phone_number.name]: Yup.string(),
-    [director_id_attachment.name]: Yup.string().required(`${director_id_attachment.requiredErrorMsg}`),
+    [director_id_attachment.name]: Yup.string(),
     [director_id_number.name]: Yup.string(),
     [director_id_type.name]: Yup.string(),
     [director_nationality.name]: Yup.string(),
-    [director_poa_attachment.name]: Yup.string().required(`${director_poa_attachment.requiredErrorMsg}`),
+    [director_poa_attachment.name]: Yup.string(),
     [director_country_of_residence.name]: Yup.string(),
     [ubo_name.name]: Yup.string().required(`${ubo_name.requiredErrorMsg}`),
     [ubo_email.name]: Yup.string().email(),
     [ubo_phone_number.name]: Yup.string(),
-    [ubo_id_attachment.name]: Yup.string().required(`${ubo_id_attachment.requiredErrorMsg}`),
+    [ubo_id_attachment.name]: Yup.string(),
     [ubo_id_number.name]: Yup.string(),
     [ubo_id_type.name]: Yup.string(),
     [ubo_nationality.name]: Yup.string(),
-    [ubo_poa_attachment.name]: Yup.string().required(`${ubo_poa_attachment.requiredErrorMsg}`),
+    [ubo_poa_attachment.name]: Yup.string(),
     [ubo_country_of_residence.name]: Yup.string(),
   }),
 
   Yup.object().shape({
-    [ebit.name]: Yup.number().required(`${ebit.requiredErrorMsg}`),
+    [cash.name]: Yup.number().required(`${cash.requiredErrorMsg}`),
     [balance_sheet_attachment.name]: Yup.string().required(
       `${balance_sheet_attachment.requiredErrorMsg}`
     ),
@@ -137,27 +135,13 @@ export default [
     ),
     [net_profit.name]: Yup.number().required(`${net_profit.requiredErrorMsg}`),
     [financials_reporting_period.name]: Yup.string()
-      .required(`${financials_reporting_period.requiredErrorMsg}`)
-      .test("incdate", financials_reporting_period.invalidErrorMsg, (val) => {
-        if (val) {
-          const startDate = new Date(2017, 12, 31);
-          const endDate = new Date();
-          if (moment(val, moment.ISO_8601).isValid()) {
-            return moment(val).isBetween(startDate, endDate);
-          }
-          return false;
-        }
-        return false;
-      }),
+      .required(`${financials_reporting_period.requiredErrorMsg}`),
     [sales.name]: Yup.number().required(`${sales.requiredErrorMsg}`),
     [total_assets.name]: Yup.number().required(
       `${total_assets.requiredErrorMsg}`
     ),
-    [retained_earnings.name]: Yup.number().required(
-      `${retained_earnings.requiredErrorMsg}`
-    ),
-    [working_capital.name]: Yup.number().required(
-      `${working_capital.requiredErrorMsg}`
+    [total_equity.name]: Yup.number().required(
+      `${total_equity.requiredErrorMsg}`
     ),
     [bank_account_number.name]: Yup.string(),
     [bank_account_sortcode.name]: Yup.string(),
@@ -168,3 +152,5 @@ export default [
     [iban.name]: Yup.string(),
   }),
 ];
+
+export default yup;

@@ -1,22 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import {
-  Avatar,
-  Box,
-  Divider,
-  Drawer,
-  Hidden,
-  List,
-  Typography,
-  makeStyles,
-} from "@material-ui/core";
+import { Avatar, Box, Divider, Drawer, Hidden, List, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import {
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
   User as UserIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon,
+  Home as HomeIcon,
 } from "react-feather";
 import NavItem from "./NavItem";
 import { Storage } from "aws-amplify";
@@ -30,7 +23,7 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "/investor/requests",
+    href: "/investor/limits",
     icon: DollarSignIcon,
     title: "New Limits",
   },
@@ -40,9 +33,14 @@ const items = [
     title: "Obligors",
   },
   {
-    href: "/investor/transactions",
+    href: "/investor/requests",
     icon: CreditCardIcon,
-    title: "Transactions",
+    title: "Requests",
+  },
+  {
+    href: "/investor/bank",
+    icon: HomeIcon,
+    title: "Bank",
   },
   {
     href: "/investor/settings",
@@ -70,20 +68,23 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
+  const [open, setOpen] = React.useState(true);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   const [avatar, setAvatar] = useState("");
   const [investor_name, setInvestor_name] = useState("");
   const [investor_country, setInvestor_country] = useState("");
-  const [investor_industry, setInvestor_industry] = useState("");
-  const [investor_logo, setInvestor_logo] = useState("");
-
+  //const [investor_industry, setInvestor_industry] = useState("");
+  //const [investor_logo, setInvestor_logo] = useState("");
 
   useEffect(() => {
     // attempt to fetch the info of the user that was already logged in
@@ -91,32 +92,32 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       let user = await Auth.currentAuthenticatedUser();
       const { attributes = {} } = user;
       const b = attributes["custom:groupid"];
-      let filter = { userId: { eq: b }, sortkey: { contains: "investor-" } };
+      let filter = { userId: { eq: b } };
       const {
         data: {
-          listsInvestor: { items: itemsPage1, nextToken },
+          listInvestors: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsInvestor, { filter: filter })
+        graphqlOperation(queries.listInvestors, { filter: filter })
       );
-      const n = { data: { listsInvestor: { items: itemsPage1, nextToken } } };
-      const investor = n.data.listsInvestor.items[0];
-      if (investor){
-      const {
-        investor_name,
-        investor_country,
-        investor_industry,
-        investor_logo,
-      } = investor; 
-      setInvestor_name(investor_name);
-      setInvestor_country(investor_country);
-      setInvestor_industry(investor_industry);
-      setInvestor_logo(investor_logo);
-      const z = await Storage.vault.get(investor_logo);
-      setAvatar(z);
-    } else {
-      return
-    }
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const investor = n.data.listInvestors.items[0];
+      if (investor) {
+        const {
+          investor_name,
+          investor_country,
+          //investor_industry,
+          investor_logo,
+        } = investor;
+        setInvestor_name(investor_name);
+        setInvestor_country(investor_country);
+        //setInvestor_industry(investor_industry);
+        //setInvestor_logo(investor_logo);
+        const z = await Storage.vault.get(investor_logo);
+        setAvatar(z);
+      } else {
+        return;
+      }
     }
     onLoad();
   }, []);
@@ -128,7 +129,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           className={classes.avatar}
           component={RouterLink}
           src={avatar}
-          to="/app/account"
+          to="/investor"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
           {investor_name}
@@ -153,31 +154,29 @@ const NavBar = ({ onMobileClose, openMobile }) => {
     </Box>
   );
 
-  return (
-    <>
-      <Hidden lgUp>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.mobileDrawer }}
-          onClose={onMobileClose}
-          open={openMobile}
-          variant="temporary"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-      <Hidden mdDown>
-        <Drawer
-          anchor="left"
-          classes={{ paper: classes.desktopDrawer }}
-          open
-          variant="persistent"
-        >
-          {content}
-        </Drawer>
-      </Hidden>
-    </>
-  );
+  return <>
+    <Hidden lgUp>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.mobileDrawer }}
+        onClose={onMobileClose}
+        open={openMobile}
+        variant="temporary"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+    <Hidden lgDown>
+      <Drawer
+        anchor="left"
+        classes={{ paper: classes.desktopDrawer }}
+        open
+        variant="persistent"
+      >
+        {content}
+      </Drawer>
+    </Hidden>
+  </>;
 };
 
 NavBar.propTypes = {

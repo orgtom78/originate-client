@@ -12,8 +12,8 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -22,7 +22,11 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
+import { useParams } from "react-router-dom";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 
 const idtype = [
   {
@@ -97,9 +101,10 @@ const useStyles = makeStyles((theme) => ({
 const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const sub = value.userId;
+  const { id } = useParams();
 
   const [identityId, setIdentityId] = useState("");
+  const [userId, setUserId] = useState("");
   const [directorId, setDirectorId] = useState("");
   const [director_status, setDirector_status] = useState("");
   const [director_name, setDirector_name] = useState("");
@@ -110,6 +115,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const [director_id_type, setDirector_id_type] = useState("");
   const [director_nationality, setDirector_nationality] = useState("");
   const [director_poa_attachment, setDirector_poa_attachment] = useState("");
+  const [director_date_of_birth, setDirector_date_of_birth] = useState("");
   const [
     director_country_of_residence,
     setDirector_country_of_residence,
@@ -136,12 +142,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const directorpoaname = "Director Proof of Address";
 
   useEffect(() => {
-    const sub = value.userId;
-    const key = value.directorId;
-    var userId = sub;
-    var sortkey = key;
-    getDirector({ userId, sortkey });
-  }, [value.directorId, value.userId]);
+    getDirector({ id });
+  }, [id]);
 
   async function getDirector(input) {
     try {
@@ -151,6 +153,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       const {
         data: {
           getDirector: {
+            userId,
             identityId,
             directorId,
             director_status,
@@ -163,9 +166,11 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
             director_nationality,
             director_poa_attachment,
             director_country_of_residence,
+            director_date_of_birth,
           },
         },
       } = director;
+      setUserId(userId);
       setIdentityId(identityId);
       setDirectorId(directorId);
       setDirector_status(director_status);
@@ -178,6 +183,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       setDirector_nationality(director_nationality);
       setDirector_poa_attachment(director_poa_attachment);
       setDirector_country_of_residence(director_country_of_residence);
+      setDirector_date_of_birth(director_date_of_birth);
     } catch (err) {
       console.log("error fetching data..", err);
     }
@@ -187,9 +193,9 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectorSuccess(false);
     setDirectorLoading(true);
     try {
-      const userId = sub;
       const sortkey = directorId;
       await updateDirector({
+        id,
         userId,
         sortkey,
         director_status,
@@ -202,6 +208,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
         director_nationality,
         director_poa_attachment,
         director_country_of_residence,
+        director_date_of_birth,
       });
     } catch (e) {
       onError(e);
@@ -242,7 +249,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectoridimgurl();
     }
-  }, [director_id_attachment, sub, identityId]);
+  }, [director_id_attachment, identityId]);
 
   useEffect(() => {
     if (director_id_attachment) {
@@ -260,7 +267,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectoridpdfurl();
     }
-  }, [director_id_attachment, sub, identityId]);
+  }, [director_id_attachment, identityId]);
 
   function directoridisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -364,7 +371,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   }
 
   async function s3Up(file, name) {
-    const userid = sub;
+    const userid = userId;
     const sectorid = directorId;
     var fileExtension = file.name.split(".").pop();
     const filename = `${userid}${sectorid}${name}.${fileExtension}`;
@@ -380,13 +387,10 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectoridSuccess(false);
     setDirectoridLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'director_id_attachment') : null;
+      const u = newfile ? await s3Up(newfile, "director_id_attachment") : null;
       var director_id_attachment = u;
-      const sortkey = directorId;
-      const userId = sub;
       await updateDirector({
-        sortkey,
-        userId,
+        id,
         director_id_attachment,
       });
     } catch (e) {
@@ -422,7 +426,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectorpoaimgurl();
     }
-  }, [director_poa_attachment, sub, identityId]);
+  }, [director_poa_attachment, identityId]);
 
   useEffect(() => {
     if (director_poa_attachment) {
@@ -440,7 +444,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
       }
       getdirectorpoapdfurl();
     }
-  }, [director_poa_attachment, sub, identityId]);
+  }, [director_poa_attachment, identityId]);
 
   function directorpoaisimageorpdf(label, name) {
     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
@@ -547,13 +551,10 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
     setDirectorpoaSuccess(false);
     setDirectorpoaLoading(true);
     try {
-      const u = newfile ? await s3Up(newfile, 'director_poa_attachment') : null;
+      const u = newfile ? await s3Up(newfile, "director_poa_attachment") : null;
       var director_poa_attachment = u;
-      const sortkey = directorId;
-      const userId = sub;
       await updateDirector({
-        sortkey,
-        userId,
+        id,
         director_poa_attachment,
       });
     } catch (e) {
@@ -576,22 +577,22 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-              <Grid item xs={12} sm={12}>
-                      <Select
-                        fullWidth
-                        name="director_status"
-                        label="Director Status"
-                        onChange={(e) => setDirector_status(e.target.value)}
-                        required
-                        value={director_status || ""}
-                        variant="outlined"
-                      >
-                        {status.map((item, index) => (
-                          <MenuItem key={index} value={item.label}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                <Grid item xs={12} sm={12}>
+                  <Select
+                    fullWidth
+                    name="director_status"
+                    label="Director Status"
+                    onChange={(e) => setDirector_status(e.target.value)}
+                    required
+                    value={director_status || ""}
+                    variant="outlined"
+                  >
+                    {status.map((item, index) => (
+                      <MenuItem key={index} value={item.label}>
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -653,6 +654,29 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
                     value={director_id_number || ""}
                     variant="outlined"
                   />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={director_date_of_birth || ""}
+                      margin="normal"
+                      variant="outlined"
+                      id="director_date_of_birth"
+                      label="Director Date of Birth"
+                      name="director_date_of_birth"
+                      onChange={(e) => setDirector_date_of_birth(e)}
+                      required
+                      KeyboardButtonProps={{
+                        "aria-label": "change date",
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
+                    />
+                  </LocalizationProvider>
                 </Grid>
               </Grid>
             </CardContent>

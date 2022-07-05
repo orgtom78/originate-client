@@ -18,22 +18,20 @@ import {
   Select,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
-import NumberFormat from "react-number-format";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DatePicker from "@mui/lab/DatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/investor/AdminInvestorView/Lists/directorlist.js";
 import UboListView from "src/admin/views/investor/AdminInvestorView/Lists/ubolist.js";
+import AdminUpdateInvestorBankView from "src/admin/views/bank/AdminUpdateInvestorBankView/index.js";
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
@@ -89,20 +87,18 @@ const type = [
 const InvestorForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
+  const [userId, setUserId] = useState("");
+  const [dynamoinvestorid, setdynamoinvestorId] = useState("");
   const [investorId, setInvestorId] = useState("");
   const [investor_logo, setInvestor_logo] = useState("");
   const [investor_name, setInvestor_name] = useState("");
   const [investor_type, setInvestor_type] = useState("");
-  const [
-    investor_date_of_incorporation,
-    setInvestor_date_of_incorporation,
-  ] = useState("");
+  const [investor_date_of_incorporation, setInvestor_date_of_incorporation] =
+    useState("");
   const [investor_address_city, setInvestor_address_city] = useState("");
   const [investor_address_street, setInvestor_address_street] = useState("");
-  const [
-    investor_address_postalcode,
-    setInvestor_address_postalcode,
-  ] = useState("");
+  const [investor_address_postalcode, setInvestor_address_postalcode] =
+    useState("");
   const [investor_country, setInvestor_country] = useState("");
   const [investor_industry, setInvestor_industry] = useState("");
   const [
@@ -110,23 +106,21 @@ const InvestorForm = ({ className, value, ...rest }) => {
     setInvestor_registration_cert_attachment,
   ] = useState("");
   const [investor_website, setInvestor_website] = useState("");
-  const [investor_address_refinment, setInvestor_address_refinment] = useState(
-    ""
-  );
+  const [investor_address_refinment, setInvestor_address_refinment] =
+    useState("");
   const [investor_industry_code, setInvestor_industry_code] = useState("");
   const [investor_register_number, setInvestor_register_number] = useState("");
   const [investor_trading_name, setInvestor_trading_name] = useState("");
+  const [investor_email, setInvestor_email] = useState("");
 
   //Financials:
   const [financialsId, setFinancialsId] = useState("");
   const [ebit, setEbit] = useState("");
-  const [financials_attachment, setFinancials_attachment] = useState("");
+  //const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -147,10 +141,8 @@ const InvestorForm = ({ className, value, ...rest }) => {
   const [financialssuccess, setFinancialsSuccess] = useState(false);
 
   useEffect(() => {
-    const userId = value.value.value.userId;
-    const sortkey = value.value.value.investorId;
-    setInvestorId(sortkey);
-    getInvestor({ userId, sortkey });
+    const id = value.value;
+    getInvestor({ id });
     async function getInvestor(input) {
       try {
         const investor = await API.graphql(
@@ -159,6 +151,10 @@ const InvestorForm = ({ className, value, ...rest }) => {
         const {
           data: {
             getInvestor: {
+              id,
+              userId,
+              investorId,
+              investor_email,
               investor_logo,
               investor_name,
               investor_type,
@@ -177,6 +173,10 @@ const InvestorForm = ({ className, value, ...rest }) => {
             },
           },
         } = investor;
+        setdynamoinvestorId(id);
+        setUserId(userId);
+        setInvestorId(investorId);
+        setInvestor_email(investor_email);
         setInvestor_logo(investor_logo);
         setInvestor_name(investor_name);
         setInvestor_date_of_incorporation(investor_date_of_incorporation);
@@ -198,33 +198,32 @@ const InvestorForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId, value.value.value.investorId]);
+  }, [value]);
 
   useEffect(() => {
-    const id = value.value.value.userId;
-    getFinancials(id);
-    async function getFinancials(input) {
+    getFinancials(userId, investorId);
+    async function getFinancials(uid, iid) {
       try {
         let filter = {
-          userId: { eq: input },
-          sortkey: { contains: "financials-investor" },
+          userId: { eq: uid },
+          investorId: { eq: iid },
         };
         const {
           data: {
-            listsFinancials: {
+            listFinancialss: {
               items: [itemsPage1],
               nextToken,
             },
           },
         } = await API.graphql(
-          graphqlOperation(queries.listsFinancials, { filter: filter })
+          graphqlOperation(queries.listFinancialss, { filter: filter })
         );
-        const n = await {
-          data: { listsFinancials: { items: [itemsPage1], nextToken } },
+        const n = {
+          data: { listFinancialss: { items: [itemsPage1], nextToken } },
         };
-        const financials = await n.data.listsFinancials.items[0];
+        const financials = await n.data.listFinancialss.items[0];
         const {
-          financialsId,
+          id,
           accounts_payable,
           accounts_receivable,
           cash,
@@ -236,7 +235,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
           short_term_debt,
           working_capital,
           ebit,
-          financials_attachment,
           net_profit,
           financials_rating,
           financials_reporting_period,
@@ -244,9 +242,8 @@ const InvestorForm = ({ className, value, ...rest }) => {
           total_assets,
           total_liabilities,
         } = financials;
-        setFinancialsId(financialsId);
+        setFinancialsId(id);
         setEbit(ebit);
-        setFinancials_attachment(financials_attachment);
         setNet_profit(net_profit);
         setFinancials_rating(financials_rating);
         setFinancials_reporting_period(financials_reporting_period);
@@ -267,17 +264,17 @@ const InvestorForm = ({ className, value, ...rest }) => {
         console.log("error fetching data..", err);
       }
     }
-  }, [value.value.value.userId]);
+  }, [userId, investorId]);
 
   async function handleInvestorSubmit() {
     setInvestorSuccess(false);
     setInvestorLoading(true);
     try {
-      const userId = value.value.value.userId;
-      const sortkey = value.value.value.investorId;
+      const id = dynamoinvestorid;
       await updateInvestor({
+        id,
         userId,
-        sortkey,
+        investor_email,
         investor_logo,
         investor_name,
         investor_type,
@@ -306,13 +303,10 @@ const InvestorForm = ({ className, value, ...rest }) => {
     setFinancialsSuccess(false);
     setFinancialsLoading(true);
     try {
-      var s = await financialsId;
-      const sortkey = s;
-      console.log(sortkey);
-      const userId = value.value.value.userId;
+      var id = financialsId;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
         accounts_payable,
         accounts_receivable,
         cash,
@@ -349,33 +343,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
       graphqlOperation(mutations.updateFinancials, { input: input })
     );
   }
-
-  function NumberFormatCustom(props) {
-    const { inputRef, onChange, ...other } = props;
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={(values) => {
-          onChange({
-            target: {
-              name: props.name,
-              value: values.value,
-            },
-          });
-        }}
-        thousandSeparator
-        isNumericString
-        prefix="$"
-      />
-    );
-  }
-
-  NumberFormatCustom.propTypes = {
-    inputRef: PropTypes.func.isRequired,
-    name: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
-  };
 
   return (
     <Container maxWidth="lg">
@@ -509,39 +476,34 @@ const InvestorForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
                           value={investor_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
-                          onChange={(e) =>
-                            setInvestor_date_of_incorporation(e.target.value)
+                          onChange={(newvalue) =>
+                            setInvestor_date_of_incorporation(newvalue)
                           }
+                          onAccept={(e) => setInvestor_date_of_incorporation(e)}
                           required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
@@ -565,7 +527,6 @@ const InvestorForm = ({ className, value, ...rest }) => {
                         label="Investor Industry"
                         name="investor_industry"
                         onChange={(e) => setInvestor_industry(e.target.value)}
-                        required
                         value={investor_industry || ""}
                         variant="outlined"
                       >
@@ -585,6 +546,16 @@ const InvestorForm = ({ className, value, ...rest }) => {
                           setInvestor_industry_code(e.target.value)
                         }
                         value={investor_industry_code || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Investor EMail"
+                        name="investor_email"
+                        onChange={(e) => setInvestor_email(e.target.value)}
+                        value={investor_email || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -616,12 +587,12 @@ const InvestorForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <DirectorListView value={value} />
+                <DirectorListView value={investorId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Link
-                  to={`/admin/adminnewinvestordirector/${value.value.value.userId}`}
+                  to={`/admin/adminnewinvestordirector/${dynamoinvestorid}`}
                 >
                   <Button>Add Director</Button>
                 </Link>
@@ -639,13 +610,11 @@ const InvestorForm = ({ className, value, ...rest }) => {
           <AccordionDetails>
             <Card>
               <CardContent>
-                <UboListView value={value} />
+                <UboListView value={investorId} />
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewinvestorubo/${value.value.value.userId}`}
-                >
+                <Link to={`/admin/adminnewinvestorubo/${dynamoinvestorid}`}>
                   <Button>Add Owner</Button>
                 </Link>
               </Box>
@@ -659,6 +628,7 @@ const InvestorForm = ({ className, value, ...rest }) => {
               Company Financials
             </Typography>
           </AccordionSummary>
+
           <AccordionDetails>
             <form
               autoComplete="off"
@@ -735,28 +705,23 @@ const InvestorForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                      <Grid
-                        container
-                        justify="space-around"
-                        item
-                        md={6}
-                        xs={12}
-                      >
-                        <KeyboardDatePicker
-                          fullWidth
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      md={6}
+                      xs={12}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"
                           id="financials_reporting_period"
                           label="Company Date of Incorporation"
                           name="financials_reporting_period"
-                          format="dd/MM/yyyy"
-                          minDate={new Date("1500/12/31")}
-                          maxDate={new Date()}
-                          onChange={(e) =>
-                            setFinancials_reporting_period(e.target.value)
-                          }
+                          views={["year"]}
+                          onChange={(e) => setFinancials_reporting_period(e)}
                           required
                           KeyboardButtonProps={{
                             "aria-label": "change date",
@@ -764,9 +729,12 @@ const InvestorForm = ({ className, value, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
-                      </Grid>
-                    </MuiPickersUtilsProvider>
+                      </LocalizationProvider>
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -893,6 +861,20 @@ const InvestorForm = ({ className, value, ...rest }) => {
                 </Box>
               </Card>
             </form>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography className={classes.heading}>
+              Company Main Bank
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Card>
+              <CardContent>
+                <AdminUpdateInvestorBankView value={investorId} user={userId} />
+              </CardContent>
+            </Card>
           </AccordionDetails>
         </Accordion>
       </React.Fragment>

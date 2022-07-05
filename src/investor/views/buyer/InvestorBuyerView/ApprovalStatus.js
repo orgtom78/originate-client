@@ -5,6 +5,7 @@ import {
   Card,
   CardContent,
   Grid,
+  Stack,
   Table,
   TableRow,
   TableCell,
@@ -13,15 +14,16 @@ import {
   TableBody,
   Typography,
   colors,
-  makeStyles,
-} from "@material-ui/core";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
-import BlockIcon from "@material-ui/icons/Block";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import BlockIcon from "@mui/icons-material/Block";
 import * as mutations from "src/graphql/mutations.js";
 import { Auth, API, graphqlOperation } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
 import LoaderButtonRed from "src/components/LoaderButtonRed.js";
 import { onError } from "src/libs/errorLib.js";
+import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,12 +47,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Limits = ({ className, value, ...rest }) => {
+const Limits = (input) => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState("");
-  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] = useState(
-    ""
-  );
+  const [id, setId] = useState("");
+  const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
+    useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
 
   const [approveloading, setApproveloading] = useState(false);
@@ -61,31 +63,28 @@ const Limits = ({ className, value, ...rest }) => {
   useEffect(() => {
     async function get() {
       try {
-        const data = await value.data.getBuyer;
+        const data = await input.value.data.getBuyer;
         setBuyer(data);
         setBuyer_loan_approved_amount(data.buyer_loan_approved_amount);
         setBuyer_loan_rate(data.buyer_loan_rate);
+        setId(data.id);
         return;
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
     get();
-  }, [value]);
+  }, [input]);
 
   async function onapprovedclick() {
     setApprovesuccess(false);
     setApproveloading(true);
     try {
-      const sortkey = buyer.buyerId;
-      const userId = buyer.userId;
       const buyer_status = "Approved";
       let user = await Auth.currentAuthenticatedUser();
-      const id = user.attributes["custom:groupid"];
-      const investorId = id;
+      const investorId = user.attributes["custom:groupid"];
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         investorId,
         buyer_status,
         buyer_loan_approved_amount,
@@ -103,13 +102,10 @@ const Limits = ({ className, value, ...rest }) => {
     setDeclinesuccess(false);
     setDeclineloading(true);
     try {
-      const sortkey = buyer.buyerId;
-      const userId = buyer.userId;
       const buyer_status = "Declined";
       var buyer_loan_approved_amount = "0";
       await updateBuyer({
-        sortkey,
-        userId,
+        id,
         buyer_status,
         buyer_loan_approved_amount,
       });
@@ -128,7 +124,7 @@ const Limits = ({ className, value, ...rest }) => {
   }
 
   return (
-    <Card className={clsx(classes.root, className)} {...rest}>
+    <Card className={clsx(classes.root)}>
       <CardContent>
         <Grid item xs={12}>
           <Typography color="textSecondary" gutterBottom variant="h6">
@@ -157,38 +153,41 @@ const Limits = ({ className, value, ...rest }) => {
                   Approved Limit
                 </TableCell>
                 <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    name="buyer_loan_approved_amount"
-                    onChange={(e) =>
-                      setBuyer_loan_approved_amount(e.target.value)
-                    }
-                    required
+                  <NumberFormat
+                    label="Approved Limit"
+                    hintText="buyer_loan_approved_amount"
                     value={buyer_loan_approved_amount || ""}
-                    type="number"
-                    inputProps={{ min: 0, style: { textAlign: "right" } }}
+                    thousandSeparator={true}
+                    prefix={"$"}
+                    customInput={TextField}
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setBuyer_loan_approved_amount(value);
+                    }}
                   />
                 </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Discount % (pa)
+                  Discount (pa)
                 </TableCell>
                 <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    name="buyer_loan_rate"
-                    onChange={(e) => setBuyer_loan_rate(e.target.value)}
-                    required
+                  <NumberFormat
+                    label="Loan Rate"
                     value={buyer_loan_rate || ""}
-                    type="number"
-                    inputProps={{ min: 0, style: { textAlign: "right" } }}
+                    thousandSeparator={true}
+                    suffix={"%"}
+                    customInput={TextField}
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setBuyer_loan_rate(value);
+                    }}
                   />
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
-          <Grid>
+          <Stack spacing={2} direction="row">
             <LoaderButtonRed
               startIcon={<BlockIcon />}
               onClick={() => ondeclinedclick()}
@@ -201,8 +200,6 @@ const Limits = ({ className, value, ...rest }) => {
             >
               Decline
             </LoaderButtonRed>
-          </Grid>
-          <Grid>
             <LoaderButton
               startIcon={<CheckCircleOutlineIcon />}
               onClick={() => onapprovedclick()}
@@ -215,7 +212,7 @@ const Limits = ({ className, value, ...rest }) => {
             >
               Approve
             </LoaderButton>
-          </Grid>
+          </Stack>
         </Grid>
       </CardContent>
     </Card>

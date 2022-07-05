@@ -1,18 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { SelectField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 
 const type = [
   {
@@ -26,6 +21,10 @@ const type = [
   {
     value: "RPA",
     label: "RPA",
+  },
+  {
+    value: "RAA",
+    label: "RAA",
   },
   {
     value: "IPU",
@@ -101,20 +100,20 @@ export default function DocumentForm(props, value) {
         if (d === true) {
           const u = await Storage.get(document_update, {
             level: "private",
-            identityId: await props.value,
+            identityId: ident,
           });
           setDocimg(u);
         } else {
           const h = await Storage.get(document_update, {
             level: "private",
-            identityId: await props.value,
+            identityId: ident,
           });
           setDocpdf(h);
         }
       }
       geturl();
     }
-  }, [document_update, props.value]);
+  }, [document_update, ident]);
 
   async function handledocClick() {
     setDocsuccess(false);

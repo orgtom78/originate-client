@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import moment from "moment";
@@ -10,7 +10,7 @@ import {
   Card,
   CardHeader,
   Chip,
-  createMuiTheme,
+  createTheme,
   Divider,
   Table,
   TableBody,
@@ -19,20 +19,21 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  makeStyles,
-  MuiThemeProvider,
-} from "@material-ui/core";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+  ThemeProvider,
+  StyledEngineProvider,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
+import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
-import { green, orange } from "@material-ui/core/colors";
+import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";
 
-const greenTheme = createMuiTheme({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
 });
-const orangeTheme = createMuiTheme({
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
 });
 
@@ -62,38 +63,30 @@ const LatestLimits = ({ className, ...rest }) => {
       const id = sub;
       let filter = {
         userId: { eq: id },
-        sortkey: { contains: "buyer-", notContains: "financials-" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = await n.data.listBuyers.items;
       setLimitdata(items);
     };
     getRequests();
   }, [sub]);
 
-  const limits = useCallback(() => {
-    if (!limitdata || !limitdata.length) {
-      console.log("test");
-    } else {
-      const d = limitdata;
-      return d;
-    }
-  }, [limitdata]);
-
   function checkstatus(status) {
     if (status === "submitted") {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={status} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else if (
@@ -102,17 +95,21 @@ const LatestLimits = ({ className, ...rest }) => {
     ) {
       return (
         <>
-          <MuiThemeProvider theme={orangeTheme}>
-            <Chip label={status} color="secondary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={orangeTheme}>
+              <Chip label={status} color="secondary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     } else {
       return (
         <>
-          <MuiThemeProvider theme={greenTheme}>
-            <Chip label={status} color="primary" />
-          </MuiThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={greenTheme}>
+              <Chip label={status} color="primary" />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </>
       );
     }

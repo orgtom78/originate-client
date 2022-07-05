@@ -10,10 +10,11 @@ const {
     ubo_nationality,
     ubo_poa_attachment,
     ubo_country_of_residence,
+    ubo_date_of_birth,
   },
 } = NewSupplierUboFormModel;
 
-export default {
+const values = {
   [ubo_name.name]: "",
   [ubo_email.name]: "",
   [ubo_phone_number.name]: "",
@@ -23,4 +24,7 @@ export default {
   [ubo_nationality.name]: undefined,
   [ubo_poa_attachment.name]: "",
   [ubo_country_of_residence.name]: undefined,
+  [ubo_date_of_birth.name]: undefined,
 };
+
+export default values;

@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Container,
-  makeStyles,
-  Step,
-  Stepper,
-  StepLabel,
-  Typography,
-} from "@material-ui/core";
+import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { Auth, API, graphqlOperation } from "aws-amplify";
@@ -288,7 +280,7 @@ export default function NewInvestor() {
   }
 
   function createUbo(input) {
-    return API.graphql(graphqlOperation(mutations.createUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.createUBO, { input: input }));
   }
 
   function createFinancials(input) {

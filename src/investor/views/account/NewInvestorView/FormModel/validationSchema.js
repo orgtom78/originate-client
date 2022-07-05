@@ -51,7 +51,7 @@ const {
   },
 } = NewInvestorFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [investor_logo.name]: Yup.string(),
     [investor_name.name]: Yup.string().required(
@@ -67,7 +67,7 @@ export default [
         investor_date_of_incorporation.invalidErrorMsg,
         (val) => {
           if (val) {
-            const startDate = new Date(1900, 12, 31);
+            const startDate = new Date(1900, 11, 31);
             const endDate = new Date();
             if (moment(val, moment.ISO_8601).isValid()) {
               return moment(val).isBetween(startDate, endDate);
@@ -138,7 +138,7 @@ export default [
       .required(`${financials_reporting_period.requiredErrorMsg}`)
       .test("incdate", financials_reporting_period.invalidErrorMsg, (val) => {
         if (val) {
-          const startDate = new Date(2018, 12, 31);
+          const startDate = new Date(2018, 11, 31);
           const endDate = new Date();
           if (moment(val, moment.ISO_8601).isValid()) {
             return moment(val).isBetween(startDate, endDate);
@@ -166,3 +166,4 @@ export default [
     [iban.name]: Yup.string(),
   }),
 ];
+export default yup;

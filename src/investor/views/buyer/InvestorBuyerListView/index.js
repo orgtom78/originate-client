@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
@@ -6,7 +6,6 @@ import {
   Box,
   Card,
   Container,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -14,8 +13,8 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 const InvestorBuyerListView = () => {
   const classes = useStyles();
   const [buyer, setBuyer] = useState([]);
-  const [selectedBuyerIds, setSelectedBuyerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
   const [investid, setInvestid] = useState("");
@@ -48,17 +46,17 @@ const InvestorBuyerListView = () => {
   useEffect(() => {
     async function getBuyers() {
       let filter = {
-        sortkey: { contains: "buyer-", notContains: "financials-" },
+        buyer_status: { eq: "Investor Offer Pending" },
       };
       const {
         data: {
-          listsBuyer: { items: itemsPage1, nextToken },
+          listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsBuyer, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter })
       );
-      const n = { data: { listsBuyer: { items: itemsPage1, nextToken } } };
-      const items = n.data.listsBuyer.items;
+      const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
+      const items = n.data.listBuyers.items;
       let user = await Auth.currentAuthenticatedUser();
       let id = user.attributes["custom:groupid"];
       setInvestid(id);
@@ -66,52 +64,7 @@ const InvestorBuyerListView = () => {
       setBuyer(x);
     }
     getBuyers();
-  }, []);
-
-  const handler = useCallback(() => {
-    if (!buyer || !buyer.length) {
-      return;
-    } else {
-      const d = buyer;
-      return d;
-    }
-  }, [buyer]);
-
-  const handleSelectAll = (event) => {
-    let newSelectedBuyerIds;
-
-    if (event.target.checked) {
-      newSelectedBuyerIds = buyer.map((buyer) => buyer.buyerId);
-    } else {
-      newSelectedBuyerIds = [];
-    }
-
-    setSelectedBuyerIds(newSelectedBuyerIds);
-  };
-
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedBuyerIds.indexOf(id);
-    let newSelectedBuyerIds = [];
-
-    if (selectedIndex === -1) {
-      newSelectedBuyerIds = newSelectedBuyerIds.concat(selectedBuyerIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedBuyerIds = newSelectedBuyerIds.concat(
-        selectedBuyerIds.slice(1)
-      );
-    } else if (selectedIndex === selectedBuyerIds.length - 1) {
-      newSelectedBuyerIds = newSelectedBuyerIds.concat(
-        selectedBuyerIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedBuyerIds = newSelectedBuyerIds.concat(
-        selectedBuyerIds.slice(0, selectedIndex),
-        selectedBuyerIds.slice(selectedIndex + 1)
-      );
-    }
-
-    setSelectedBuyerIds(newSelectedBuyerIds);
-  };
+  }, [investid]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);
@@ -143,18 +96,10 @@ const InvestorBuyerListView = () => {
                         </TableHead>
                         <TableBody>
                           {buyer.slice(0, limit).map((buyer) => (
-                            <TableRow
-                              hover
-                              key={buyer.buyerId}
-                              selected={
-                                selectedBuyerIds.indexOf(buyer.buyerId) !== -1
-                              }
-                            >
+                            <TableRow hover key={buyer.buyerId}>
                               <TableCell>
                                 <Box alignItems="center" display="flex">
-                                  <Link
-                                    to={`/investor/buyer/${buyer.userId}/${buyer.buyerId}/${buyer.identityId}`}
-                                  >
+                                  <Link to={`/investor/buyer/${buyer.id}`}>
                                     <Avatar
                                       className={classes.avatar}
                                       src={`${buyer.buyer_logo}`}
@@ -193,8 +138,8 @@ const InvestorBuyerListView = () => {
                   <TablePagination
                     component="div"
                     count={buyer.length}
-                    onChangePage={handlePageChange}
-                    onChangeRowsPerPage={handleLimitChange}
+                    onPageChange={handlePageChange}
+                    onRowsPerPageChange={handleLimitChange}
                     page={page}
                     rowsPerPage={limit}
                     rowsPerPageOptions={[5, 10, 25]}

@@ -11,10 +11,11 @@ const {
     ubo_nationality,
     ubo_poa_attachment,
     ubo_country_of_residence,
+    ubo_date_of_birth
   },
 } = NewSupplierUboFormModel;
 
-export default [
+const yup = [
   Yup.object().shape({
     [ubo_name.name]: Yup.string().required(`${ubo_name.requiredErrorMsg}`),
     [ubo_email.name]: Yup.string()
@@ -29,5 +30,10 @@ export default [
     [ubo_nationality.name]: Yup.string(),
     [ubo_poa_attachment.name]: Yup.string(),
     [ubo_country_of_residence.name]: Yup.string(),
+    [ubo_date_of_birth.name]: Yup.string().required(
+      `${ubo_date_of_birth.requiredErrorMsg}`
+    ),
   }),
 ];
+
+export default yup;

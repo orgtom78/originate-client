@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  Container,
-  makeStyles,
-  Step,
-  Stepper,
-  StepLabel,
-  Typography,
-} from "@material-ui/core";
+import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { useNavigate } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { Auth, API, graphqlOperation } from "aws-amplify";
@@ -18,7 +10,6 @@ import * as mutations from "src/graphql/mutations.js";
 
 import Page from "src/components/Page";
 
-import SupplierView from "src/supplier/views/account/SupplierView";
 import SupplierSuccessView from "src/supplier/views/account/SupplierSuccessView";
 import AddressForm from "./Forms/AddressForm";
 import ShareholderForm from "./Forms/ShareholderForm";
@@ -115,7 +106,7 @@ export default function NewSupplier() {
       const identityId = identity.identityId;
       const groupId = userId;
       const group_type = "Supplier";
-      const sortkey = supplierId;
+      const group_name = values["supplier_name"];
       const supplier_logo = values["supplier_logo"];
       const supplier_name = values["supplier_name"];
       const supplier_type = values["supplier_type"];
@@ -124,7 +115,8 @@ export default function NewSupplier() {
       const supplier_address_number = values["supplier_address_number"];
       const supplier_address_postalcode = values["supplier_address_postalcode"];
       const supplier_country = values["supplier_country"];
-      const supplier_industry = values["supplier_industry"];
+      const supplier_register_number = values["supplier_register_number"];
+      const supplier_website = values["supplier_website"];
       const supplier_date_of_incorporation =
         values["supplier_date_of_incorporation"];
       const supplier_registration_cert_attachment =
@@ -176,17 +168,21 @@ export default function NewSupplier() {
       const iban = values["iban"];
       const bank_status = "Under Review";
 
+      await Auth.updateUserAttributes(user, {
+        "custom:groupid": userId,
+      });
+
       await createUsergroup({
         sub,
         identityId,
         groupId,
         group_type,
+        group_name,
         user_name,
       });
 
       await createSupplier({
         userId,
-        sortkey,
         identityId,
         supplierId,
         supplier_logo,
@@ -198,7 +194,8 @@ export default function NewSupplier() {
         supplier_address_number,
         supplier_address_postalcode,
         supplier_country,
-        supplier_industry,
+        supplier_register_number,
+        supplier_website,
         supplier_registration_cert_attachment,
       });
 
@@ -268,18 +265,14 @@ export default function NewSupplier() {
         iban,
         bank_status,
       });
-
-      await Auth.updateUserAttributes(user, {
-        "custom:groupid": userId,
-      });
     } catch (e) {
       onError(e);
     }
     actions.setSubmitting(false);
     setActiveStep(activeStep + 1);
     setTimeout(function() {
-      navigate("/app/suppliers");
-      window.location.reload();
+     navigate("/app/suppliers");
+     window.location.reload();
     }, 3000);
   }
 
@@ -296,7 +289,7 @@ export default function NewSupplier() {
   }
 
   function createUbo(input) {
-    return API.graphql(graphqlOperation(mutations.createUbo, { input: input }));
+    return API.graphql(graphqlOperation(mutations.createUBO, { input: input }));
   }
 
   function createFinancials(input) {

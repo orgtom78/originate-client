@@ -12,21 +12,19 @@ import {
   Grid,
   TextField,
   Typography,
-  makeStyles,
-} from "@material-ui/core";
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+import LocalizationProvider from "@mui/lab/LocalizationProvider";
+import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import { useUser } from "src/components/context/usercontext.js";
 import { Storage } from "aws-amplify";
 
@@ -69,18 +67,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [supplierId, setSupplierId] = useState("");
+  const [identityId, setIdentityId] = useState("");
+  const [dynamofinid, setdynamofinId] = useState("");
   const [financialsId, setFinancialsId] = useState("");
   const [balance_sheet_attachment, setBalance_sheet_attachment] = useState("");
-  const [
-    income_statement_attachment,
-    setIncome_statement_attachment,
-  ] = useState("");
+  const [income_statement_attachment, setIncome_statement_attachment] =
+    useState("");
   const [ebit, setEbit] = useState("");
   const [net_profit, setNet_profit] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [retained_earnings, setRetained_earnings] = useState("");
@@ -124,19 +120,21 @@ const SupplierFinancials = ({ className, ...rest }) => {
     const id = input;
     let filter = {
       userId: { eq: id },
-      sortkey: { contains: "financials-supplier" },
+      supplierId: { attributeExists: true },
     };
     try {
       const {
         data: {
-          listsFinancials: { items: itemsPage1, nextToken },
+          listFinancialss: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listsFinancials, { filter: filter })
+        graphqlOperation(queries.listFinancialss, { filter: filter })
       );
-      const o = { data: { listsFinancials: { items: itemsPage1, nextToken } } };
-      const finance = await o.data.listsFinancials.items[0];
+      const o = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
+      const finance = await o.data.listFinancialss.items[0];
       const {
+        id,
+        identityId,
         financialsId,
         ebit,
         balance_sheet_attachment,
@@ -148,6 +146,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
         retained_earnings,
         working_capital,
       } = finance;
+      setdynamofinId(id);
+      setIdentityId(identityId);
       setFinancialsId(financialsId);
       setEbit(ebit);
       setBalance_sheet_attachment(balance_sheet_attachment);
@@ -167,8 +167,10 @@ const SupplierFinancials = ({ className, ...rest }) => {
     var fileExtension = file.name.split(".").pop();
     const filename = `${sub}${supplierId}${name}.${fileExtension}`;
 
-    const stored = await Storage.vault.put(filename, file, {
+    const stored = await Storage.put(filename, file, {
       contentType: file.type,
+      level: "private",
+      identityId: identityId,
     });
     return stored.key;
   }
@@ -178,10 +180,11 @@ const SupplierFinancials = ({ className, ...rest }) => {
     setFinancialsLoading(true);
     try {
       const userId = sub;
-      const sortkey = financialsId;
+      const id = dynamofinid;
       await updateFinancials({
+        id,
         userId,
-        sortkey,
+        financialsId,
         ebit,
         balance_sheet_attachment,
         income_statement_attachment,
@@ -222,13 +225,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(balance_sheet_attachment);
+          var y = await Storage.get(balance_sheet_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalanceimg(y);
         }
       }
       getbalanceimgurl();
     }
-  }, [balance_sheet_attachment]);
+  }, [balance_sheet_attachment, identityId]);
 
   useEffect(() => {
     if (balance_sheet_attachment) {
@@ -237,16 +243,20 @@ const SupplierFinancials = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(balance_sheet_attachment);
+          var y = await Storage.vault.get(balance_sheet_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setBalancepdf(y);
         }
       }
       getbankidpdfurl();
     }
-  }, [balance_sheet_attachment]);
+  }, [balance_sheet_attachment, identityId]);
 
   function balanceisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(balanceimg)) {
       return (
         <>
@@ -366,10 +376,11 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ? await s3Up(newfile, "balance_sheet_attachment")
         : null;
       var balance_sheet_attachment = u;
-      const sortkey = financialsId;
+      const id = dynamofinid;
       const userId = sub;
       await updateFinancials({
-        sortkey,
+        id,
+        financialsId,
         userId,
         balance_sheet_attachment,
       });
@@ -397,13 +408,16 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(income_statement_attachment);
+          var y = await Storage.vault.get(income_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomeimg(y);
         }
       }
       getincomeimgurl();
     }
-  }, [income_statement_attachment]);
+  }, [income_statement_attachment, identityId]);
 
   useEffect(() => {
     if (income_statement_attachment) {
@@ -412,16 +426,20 @@ const SupplierFinancials = ({ className, ...rest }) => {
         var imageExtensions = ["pdf", "PDF"];
         var x = imageExtensions.includes(uploadext);
         if (x === true) {
-          var y = await Storage.vault.get(income_statement_attachment);
+          var y = await Storage.vault.get(income_statement_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
           setIncomepdf(y);
         }
       }
       getbankidpdfurl();
     }
-  }, [income_statement_attachment]);
+  }, [income_statement_attachment, identityId]);
 
   function incomeisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(incomeimg)) {
       return (
         <>
@@ -541,10 +559,11 @@ const SupplierFinancials = ({ className, ...rest }) => {
         ? await s3Up(newfile, "income_statement_attachment")
         : null;
       var income_statement_attachment = u;
-      const sortkey = financialsId;
+      const id = dynamofinid;
       const userId = sub;
       await updateFinancials({
-        sortkey,
+        id,
+        financialsId,
         userId,
         income_statement_attachment,
       });
@@ -595,10 +614,15 @@ const SupplierFinancials = ({ className, ...rest }) => {
           <Card>
             <CardContent>
               <Grid container spacing={3}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                  <Grid container justify="space-around" item md={12} xs={12}>
-                    <KeyboardDatePicker
-                      fullWidth
+                <Grid
+                  container
+                  justifyContent="space-around"
+                  item
+                  md={12}
+                  xs={12}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DesktopDatePicker
                       value={financials_reporting_period || ""}
                       margin="normal"
                       variant="outlined"
@@ -607,11 +631,9 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       name="financials_reporting_period"
                       format="yyyy"
                       views={["year"]}
-                      minDate={new Date("1500/12/31")}
+                      minDate={new Date("2017/12/31")}
                       maxDate={new Date()}
-                      onChange={(e) =>
-                        setFinancials_reporting_period(e.target.value)
-                      }
+                      onChange={(date) => setFinancials_reporting_period(date)}
                       required
                       KeyboardButtonProps={{
                         "aria-label": "change date",
@@ -619,84 +641,123 @@ const SupplierFinancials = ({ className, ...rest }) => {
                       InputLabelProps={{
                         shrink: true,
                       }}
+                      renderInput={(params) => (
+                        <TextField fullWidth {...params} />
+                      )}
                     />
-                  </Grid>
-                </MuiPickersUtilsProvider>
+                  </LocalizationProvider>
+                </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Earnings Before Interest and Tax"
                     name="ebit"
-                    onChange={(e) => setEbit(e.target.value)}
                     required
                     value={ebit || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setEbit(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Net Profit"
                     name="net_profit"
-                    onChange={(e) => setNet_profit(e.target.value)}
                     required
                     value={net_profit || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setNet_profit(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Sales/Revenue"
                     name="sales"
-                    onChange={(e) => setSales(e.target.value)}
                     required
                     value={sales || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setSales(value);
                     }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Retained Earnings"
                     name="retained_earnings"
-                    onChange={(e) => setRetained_earnings(e.target.value)}
                     required
                     value={retained_earnings || ""}
-                    variant="outlined"
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setRetained_earnings(value);
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Working Capital"
                     name="working_capital"
-                    onChange={(e) => setWorking_capital(e.target.value)}
                     required
                     value={working_capital || ""}
-                    variant="outlined"
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setWorking_capital(value);
+                    }}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
-                  <TextField
+                  <NumberFormat
                     fullWidth
+                    variant="outlined"
                     label="Total Assets"
                     name="total_assets"
-                    onChange={(e) => setTotal_assets(e.target.value)}
                     required
                     value={total_assets || ""}
-                    variant="outlined"
-                    InputProps={{
-                      inputComponent: NumberFormatCustom,
+                    thousandSeparator={true}
+                    decimalScale="2"
+                    prefix={"$"}
+                    customInput={TextField}
+                    type="text"
+                    onValueChange={(values) => {
+                      const { formattedValue, value } = values;
+                      setTotal_assets(value);
                     }}
                   />
                 </Grid>

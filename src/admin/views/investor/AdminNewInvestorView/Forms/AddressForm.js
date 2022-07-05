@@ -7,18 +7,13 @@ import {
 } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import {
-  Card,
-  CardContent,
-  Divider,
-  Grid,
-  makeStyles,
-} from "@material-ui/core";
+import { Card, CardContent, Divider, Grid } from "@mui/material";
+import makeStyles from '@mui/styles/makeStyles';
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
-import { green } from "@material-ui/core/colors";
+import { green } from "@mui/material/colors";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
 
@@ -83,8 +78,6 @@ export default function AddressForm(props) {
   const classes = useStyles();
   const {
     formField: {
-      userId,
-      identityId,
       investor_logo,
       investor_name,
       investor_type,
@@ -103,7 +96,7 @@ export default function AddressForm(props) {
     },
   } = props;
 
-  const { id } = useParams();
+  const { groupid } = useParams();
   const investId = props.value;
   const { ident } = useParams();
   const { values: formValues } = useFormikContext();
@@ -112,8 +105,10 @@ export default function AddressForm(props) {
     updatefields.values.investor_registration_cert_attachment;
   const updatelogo = updatefields.values.investor_logo;
 
-  const [scert, setScert] = useState("");
   const [slogo, setSlogo] = useState("");
+
+  const [updateregcertimg, setUpdateregcertimg] = useState("");
+  const [updateregcertpdf, setUpdateregcertpdf] = useState("");
 
   const [certloading, setCertLoading] = useState(false);
   const [certsuccess, setCertSuccess] = useState(false);
@@ -122,28 +117,45 @@ export default function AddressForm(props) {
 
   useEffect(() => {
     if (updateregcert) {
-      async function getcerturl() {
-        const u = await Storage.vault.get(updateregcert);
-        setScert(u);
+      async function geturl() {
+        var uploadext = updateregcert.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
+          setUpdateregcertimg(u);
+        } else {
+          const h = await Storage.get(updateregcert, {
+            level: "private",
+            identityId: ident,
+          });
+          setUpdateregcertpdf(h);
+        }
       }
-      getcerturl();
+      geturl();
     }
-  }, [updateregcert]);
+  }, [updateregcert, ident]);
 
   useEffect(() => {
     if (updatelogo) {
-      async function getlogourl() {
-        const u = await Storage.vault.get(updatelogo);
+      async function geturl() {
+        const u = await Storage.get(updatelogo, {
+          level: "private",
+          identityId: ident,
+        });
         setSlogo(u);
       }
-      getlogourl();
+      geturl();
     }
-  }, [updatelogo]);
+  }, [updatelogo, ident]);
 
   async function handleCertClick() {
     setCertSuccess(false);
     setCertLoading(true);
-    const b = await scert;
+    const b = await updateregcert;
     if (b) {
       setCertSuccess(true);
       setCertLoading(false);
@@ -163,28 +175,32 @@ export default function AddressForm(props) {
     }
   }
 
+  function updateregcertisimageorpdf() {
+    if (updateregcertimg) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={updateregcertimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={updateregcertpdf}
+          />
+        </>
+      );
+    }
+  }
+
   return (
     <React.Fragment>
       <Card>
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={userId.name}
-                label={userId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={identityId.name}
-                label={identityId.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={investor_name.name}
@@ -297,18 +313,16 @@ export default function AddressForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               {updateregcert ? (
-                <>
-                  <img className={classes.img} alt="complex" src={scert} />
-                </>
+                <>{updateregcertisimageorpdf()}</>
               ) : (
                 <>
                   <AdminUploadField
                     name={investor_registration_cert_attachment.name}
                     id={investor_registration_cert_attachment.name}
-                    accept="image/*"
+                    accept="image/*, application/pdf"
                     style={{ display: "none" }}
                     identityId={ident}
-                    userid={id}
+                    userid={groupid}
                     sectorid={investId}
                   />
                   <label htmlFor={investor_registration_cert_attachment.name}>
@@ -323,12 +337,14 @@ export default function AddressForm(props) {
                       onClick={handleCertClick}
                     >
                       {" "}
-                      Business Registration Certificate*
+                      Registration Certificate*
                     </LoaderButton>
                   </label>
                 </>
               )}
             </Grid>
+
+
             <Grid item xs={12} sm={6}>
               {updatelogo ? (
                 <>
@@ -342,7 +358,7 @@ export default function AddressForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityId={ident}
-                    userid={id}
+                    userid={groupid}
                     sectorid={investId}
                   />
                   <label htmlFor={investor_logo.name}>

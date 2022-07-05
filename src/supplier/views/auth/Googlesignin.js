@@ -1,6 +1,6 @@
 import React from "react";
 import { Auth } from "aws-amplify";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import GoogleIcon from "src/icons/Google";
 // To federated sign in from Google
 export default class SignInWithGoogle extends React.Component {
