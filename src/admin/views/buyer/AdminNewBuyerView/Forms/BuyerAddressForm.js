@@ -111,7 +111,7 @@ export default function BuyerAddressForm(props) {
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
   const updateregcert =
-    updatefields.values.supplier_registration_cert_attachment;
+    updatefields.values.buyer_sample_trading_docs_attachment;
 
   const [updateregcertimg, setUpdateregcertimg] = useState("");
   const [updateregcertpdf, setUpdateregcertpdf] = useState("");

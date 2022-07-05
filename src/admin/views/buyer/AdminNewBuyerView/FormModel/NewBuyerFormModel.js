@@ -83,12 +83,12 @@ const model = {
     },
     buyer_next_year_projected_transaction_amount: {
       name: "buyer_next_year_projected_transaction_amount",
-      label: "Next Year (2022) Anticipated Invoice Amount",
+      label: "Whole Year (2022) Anticipated Invoice Amount ($)*",
       requiredErrorMsg: "Anticipated Invoice Amount is required",
-    },
+    }, 
     buyer_previous_year_transaction_amount: {
       name: "buyer_previous_year_transaction_amount",
-      label: "Previous Year (2020) Invoice Amount",
+      label: "Whole Year (2020) Invoice Amount ($)*",
       requiredErrorMsg: "Previous Invoice Amount is required",
     },
     buyer_reporting_year: {
@@ -98,12 +98,12 @@ const model = {
     },
     buyer_reporting_year_transaction_amount: {
       name: "buyer_reporting_year_transaction_amount",
-      label: "Reporting Year (2021) Invoice Amount*",
+      label: "Whole Year (2021) Invoice Amount ($)*",
       requiredErrorMsg: "Invoice Amount for 2021 is required",
     },
     buyer_previous_year_number_invoices: {
       name: "buyer_previous_year_number_invoices",
-      label: "Previous Year (2020) Number of Invoices issued*",
+      label: "Whole Year (2020) Number of Invoices issued*",
       requiredErrorMsg:
         "The Number of Invoices issued in the previous year (2020) is required",
     },

@@ -37,14 +37,12 @@ const {
     buyer_finance_department_contact_email,
     buyer_field_visit_conducted,
     buyer_supplier_year_business_relation_started,
-    buyer_reporting_year,
     financials_reporting_period,
     buyer_previous_year_transaction_amount,
     buyer_reporting_year_transaction_amount,
     buyer_previous_year_number_invoices,
     buyer_next_year_projected_transaction_amount,
     buyer_invoices_paid_on_time,
-    buyer_invoices_past_due,
     buyer_invoices_past_due_30_days,
     buyer_invoices_past_due_60_days,
     buyer_invoices_past_due_90_days,
@@ -90,9 +88,8 @@ const yup = [
     ),
     [buyer_contact_email.name]: Yup.string()
     .email("Must be a valid email")
-    .max(255)
     .required(
-      `${buyer_date_of_incorporation.requiredErrorMsg}`
+      `${buyer_contact_email.requiredErrorMsg}`
     ),
   }),
 
@@ -126,9 +123,6 @@ const yup = [
     [buyer_previous_year_transaction_amount.name]: Yup.number().required(
       `${buyer_previous_year_transaction_amount.requiredErrorMsg}`
     ),
-    [buyer_reporting_year.name]: Yup.string().required(
-      `${buyer_reporting_year.requiredErrorMsg}`
-    ),
     [buyer_reporting_year_transaction_amount.name]: Yup.number().required(
       `${buyer_reporting_year_transaction_amount.requiredErrorMsg}`
     ),
@@ -145,7 +139,6 @@ const yup = [
     [buyer_supplier_year_business_relation_started.name]:
       Yup.string().nullable(),
     [buyer_invoices_paid_on_time.name]: Yup.number().nullable(),
-    [buyer_invoices_past_due.name]: Yup.number().nullable(),
     [buyer_invoices_past_due_30_days.name]: Yup.number().nullable(),
     [buyer_invoices_past_due_60_days.name]: Yup.number().nullable(),
     [buyer_invoices_past_due_90_days.name]: Yup.number().nullable(),

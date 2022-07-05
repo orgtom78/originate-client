@@ -99,7 +99,6 @@ export default function HistoryForm(props) {
       buyer_one_off_ipu_attachment,
       buyer_next_year_projected_transaction_amount,
       buyer_previous_year_transaction_amount,
-      buyer_reporting_year,
       buyer_reporting_year_transaction_amount,
       buyer_previous_year_number_invoices,
       buyer_existing_disputes,
@@ -111,7 +110,6 @@ export default function HistoryForm(props) {
       buyer_field_visit_conducted,
       buyer_supplier_year_business_relation_started,
       buyer_invoices_paid_on_time,
-      buyer_invoices_past_due,
       buyer_invoices_past_due_30_days,
       buyer_invoices_past_due_60_days,
       buyer_invoices_past_due_90_days,
@@ -190,18 +188,6 @@ export default function HistoryForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
-              <DatePickerField
-                name={buyer_reporting_year.name}
-                label={buyer_reporting_year.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2021/12/31")}
-                maxDate={new Date("2021/12/31")}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
             <Grid item xs={12} sm={6}>
               <DatePickerField
                 name={buyer_supplier_year_business_relation_started.name}

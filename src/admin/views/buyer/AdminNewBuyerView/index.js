@@ -112,7 +112,6 @@ export default function NewAccount() {
       const inventory = values["inventory"];
       const cost_of_goods_sold = values["cost_of_goods_sold"];
 
-      const buyer_reporting_year = values["buyer_reporting_year"];
       const buyer_supplier_year_business_relation_started =
         values["buyer_supplier_year_business_relation_started"];
       const buyer_next_year_projected_transaction_amount =
@@ -136,7 +135,6 @@ export default function NewAccount() {
         values["buyer_finance_department_contact_email"];
       const buyer_field_visit_conducted = values["buyer_field_visit_conducted"];
       const buyer_invoices_paid_on_time = values["buyer_invoices_paid_on_time"];
-      const buyer_invoices_past_due = values["buyer_invoices_past_due"];
       const buyer_invoices_past_due_30_days =
         values["buyer_invoices_past_due_30_days"];
       const buyer_invoices_past_due_60_days =
@@ -147,6 +145,7 @@ export default function NewAccount() {
         values["buyer_use_of_goods_purchased"];
       const buyer_one_off_ipu_attachment =
         values["buyer_one_off_ipu_attachment"];
+      const buyer_reporting_year = "2021";
       const buyer_status = "Under Review";
 
       await createBuyer({
@@ -183,7 +182,6 @@ export default function NewAccount() {
         buyer_field_visit_conducted,
         buyer_supplier_year_business_relation_started,
         buyer_invoices_paid_on_time,
-        buyer_invoices_past_due,
         buyer_invoices_past_due_30_days,
         buyer_invoices_past_due_60_days,
         buyer_invoices_past_due_90_days,

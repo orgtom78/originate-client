@@ -93,7 +93,7 @@ app.get("/api/exchange_public_token1", async function(req, res) {
         "set accessToken1 = :accessToken1, updatedAt = :updatedAt",
       ExpressionAttributeValues: {
         ":accessToken1": accessToken1,
-        ":updatedAt": new Date(),
+        ":updatedAt": new Date().toISOString(),
       },
     };
     dynamodb.update(putItemParams, (err, data) => {
@@ -126,7 +126,7 @@ app.get("/api/exchange_public_token2", async function(req, res) {
         "set accessToken2 = :accessToken2, updatedAt = :updatedAt",
       ExpressionAttributeValues: {
         ":accessToken2": accessToken2,
-        ":updatedAt": new Date(),
+        ":updatedAt": new Date().toISOString(),
       },
     };
     dynamodb.update(putItemParams, (err, data) => {
