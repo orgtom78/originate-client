@@ -26,6 +26,10 @@
         "newinvoicenotification": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
           "s3Key": "amplify-builds/newinvoicenotification-76486759424a2b484f31-build.zip"
+        },
+        "sofr": {
+          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
+          "s3Key": "amplify-builds/sofr-697153386c54776e444b-build.zip"
         }
       }
     }
