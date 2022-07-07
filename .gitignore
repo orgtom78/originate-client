@@ -17,7 +17,9 @@ yarn-error.log*
 .config.js
 /config.js
 src/config.js
+src/models
 .dccache
+.package-lock.json
 
 #Visual Studio stuff
 lib/*.lib
