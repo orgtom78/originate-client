@@ -61,12 +61,7 @@ const FinancialsListView = (value) => {
       );
       const n = { data: { listFinancialss: { items: itemsPage1, nextToken } } };
       const items = n.data.listFinancialss.items;
-<<<<<<< HEAD
-      console.log(itemsPage1)
-      const s = items.sort(function(a,b){
-=======
       const s = items.sort(function (a, b) {
->>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
         // Turn your strings into dates, and then subtract them
         // to get a value that is either negative, positive, or zero.
         return (
