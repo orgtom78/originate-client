@@ -52,6 +52,10 @@
     }
   },
   "debug": {
+<<<<<<< HEAD
     "shareProjectConfig": true
+=======
+    "shareProjectConfig": false
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
   }
 }

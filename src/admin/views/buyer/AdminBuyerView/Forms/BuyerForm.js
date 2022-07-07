@@ -180,6 +180,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_industry_code, setBuyer_industry_code] = useState("");
   const [buyer_register_number, setBuyer_register_number] = useState("");
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
+  const [_version, setVersion] = useState("");
 
   const [buyerloading, setBuyerLoading] = useState(false);
   const [buyersuccess, setBuyerSuccess] = useState(false);
@@ -222,6 +223,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_industry_code,
               buyer_register_number,
               buyer_trading_name,
+              _version,
             },
           },
         } = buyer;
@@ -255,6 +257,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_industry_code(buyer_industry_code);
         setBuyer_register_number(buyer_register_number);
         setBuyer_trading_name(buyer_trading_name);
+        setVersion(_version);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -292,6 +295,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_industry_code,
         buyer_register_number,
         buyer_trading_name,
+        _version,
       });
     } catch (e) {
       onError(e);
@@ -326,7 +330,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
       } = await API.graphql(graphqlOperation(queries.listBrokers));
       const n = { data: { listBrokers: { items: itemsPage1, nextToken } } };
       const items = n.data.listBrokers.items;
-      const ids = items.map((item) => item.userId);
       setBroker(items);
     }
     getBrokers();
@@ -341,7 +344,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
       } = await API.graphql(graphqlOperation(queries.listSpvs));
       const n = { data: { listSpvs: { items: itemsPage1, nextToken } } };
       const items = n.data.listSpvs.items;
-      const ids = items.map((item) => item.userId);
       setSpv(items);
     }
     getSpvs();
@@ -556,7 +558,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Discount (pa)"
+                        type='number'
+                        label="Discount / Spread over Base Rate"
                         name="buyer_loan_discount_fee"
                         onChange={(e) =>
                           setBuyer_loan_discount_fee(e.target.value)
@@ -569,7 +572,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Transaction Fee (pa)"
+                        type='number'
+                        label="Transaction Fee in % of Spread"
                         name="buyer_loan_transaction_fee"
                         onChange={(e) =>
                           setBuyer_loan_transaction_fee(e.target.value)
@@ -582,7 +586,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        label="Broker Fee (pa)"
+                        type='number'
+                        label="Broker Fee in % of Transaction Fee"
                         name="buyer_loan_broker_fee"
                         onChange={(e) =>
                           setBuyer_loan_broker_fee(e.target.value)

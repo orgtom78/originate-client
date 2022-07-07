@@ -46,8 +46,9 @@ export default function NewAccount() {
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
+  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
+  const [dynamic_discount, setDynamic_discount] = useState("");
   const { id } = useParams();
-  const { buyId } = useParams();
   const { supId } = useParams();
   const requestId = "request-" + uuid();
 
@@ -62,16 +63,15 @@ export default function NewAccount() {
             brokerId,
             spvId,
             identityId,
-            userId,
             buyer_loan_discount_fee,
             buyer_loan_transaction_fee,
             buyer_loan_broker_fee,
+            buyer_loan_rate,
           },
         },
       } = buyer;
       const buyername = await buyer_name;
       setIdent(identityId);
-      setUserId(userId);
       setInvestid(investorId);
       setBrokerid(brokerId);
       setSpvid(spvId);
@@ -79,9 +79,10 @@ export default function NewAccount() {
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
+      setBuyer_loan_rate(buyer_loan_rate);
     }
     load();
-  }, [id, buyId]);
+  }, [id]);
 
   React.useEffect(() => {
     async function load() {
@@ -100,7 +101,9 @@ export default function NewAccount() {
       };
       const items = n.data.listSuppliers.items;
       const suppliername = await items[0].supplier_name;
+      const uId = await items[0].userId;
       setSuppliername(suppliername);
+      setUserId(uId);
     }
     load();
   }, [supId]);
@@ -115,7 +118,7 @@ export default function NewAccount() {
       } = investor;
       const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
       const res = n.data.listInvestors.items[0];
-      const email = res.investor_email;
+      const email = await res.investor_email;
       setInvestEmail(email);
     }
     load();
@@ -126,6 +129,88 @@ export default function NewAccount() {
     return API.graphql(
       graphqlOperation(queries.listInvestors, { filter: filter })
     );
+  }
+
+  React.useEffect(() => {
+    async function checkdayssofr() {
+      const today = new Date();
+      const querystartdate = moment(today)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      const queryenddate = moment(today).format("MM/DD/YYYY");
+      const {
+        data: {
+          listSOFRs: { items },
+        },
+      } = await listSOFR(querystartdate, queryenddate);
+      console.log(items);
+      const weekday = today.getDay();
+      if (
+        weekday === 1 ||
+        weekday === 2 ||
+        weekday === 3 ||
+        weekday === 4 ||
+        weekday === 5
+      ) {
+        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      } else if (weekday === 6) {
+        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      } else if (weekday === 0) {
+        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      }
+    }
+    async function sofrresult() {
+      const res = await checkdayssofr();
+      if (res === null || res === undefined || res.length <= 0) {
+        return 0;
+      } else {
+        const sofrterm = buyer_loan_rate;
+        if (sofrterm === "SOFR(1M)") {
+          const dyndisc =
+            Number(res[0].SOFRM1) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(3M)") {
+          const dyndisc =
+            Number(res[0].SOFRM3) + Number(buyer_loan_discount_fee);
+          console.log(dyndisc);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(Daily)") {
+          const dyndisc = Number(res[0].SOFR) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        }
+      }
+    }
+    sofrresult();
+  }, [buyer_loan_rate, buyer_loan_discount_fee]);
+
+  async function listSOFR(start, end) {
+    let filter = { id: { between: [start, end] } };
+    const result = await API.graphql(
+      graphqlOperation(queries.listSOFRs, { filter: filter })
+    );
+    if (result === null || result === undefined || result.length <= 0) {
+      return 0;
+    } else {
+      return result;
+    }
   }
 
   function _sleep(ms) {
@@ -148,16 +233,19 @@ export default function NewAccount() {
         payout_date,
         "days"
       );
+      const base_rate = buyer_loan_rate;
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
       const transaction_fee_amount =
-        (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
-        360;
+        values["invoice_amount"] *
+        (buyer_loan_discount_fee / 100) *
+        (transaction_fee_rate / 100) *
+        (period / 360);
       const discount_fee_amount =
-        (((values["invoice_amount"] * discount_fee_rate) / 100) * period) / 360;
+        (((values["invoice_amount"] * dynamic_discount) / 100) * period) / 360;
       const broker_fee_amount =
-        (((values["invoice_amount"] * broker_fee_rate) / 100) * period) / 360;
+        transaction_fee_amount * (broker_fee_rate / 100);
       const buyer_name = buyername;
       const supplier_name = suppliername;
       const purchase_order_attachment = values["purchase_order_attachment"];
@@ -185,6 +273,7 @@ export default function NewAccount() {
         spvId,
         identityId,
         investor_email,
+        base_rate,
         discount_fee_rate,
         transaction_fee_rate,
         discount_fee_amount,

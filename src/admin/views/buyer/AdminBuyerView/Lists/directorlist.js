@@ -51,7 +51,6 @@ const orangeTheme = createTheme({
 
 const DirectorListView = (value) => {
   const classes = useStyles();
-  const groupid = value.user;
   const buyid = value.buyer;
   const [director, setDirector] = useState([]);
 
@@ -62,7 +61,6 @@ const DirectorListView = (value) => {
   useEffect(() => {
     async function getDirectors() {
       let filter = {
-        userId: { eq: groupid },
         buyerId: { eq: buyid },
       };
       const {
@@ -77,7 +75,7 @@ const DirectorListView = (value) => {
       setDirector(items);
     }
     getDirectors();
-  }, [groupid, buyid]);
+  }, [buyid]);
 
   const handleSelectAll = (event) => {
     let newSelectedDirectorIds;
@@ -163,74 +161,74 @@ const DirectorListView = (value) => {
   return (
     <React.Fragment>
       <PerfectScrollbar>
-          <Table>
-            <TableHead>
-              <TableRow>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell padding="checkbox">
+                <Checkbox
+                  checked={selectedDirectorIds.length === director.length}
+                  color="primary"
+                  indeterminate={
+                    selectedDirectorIds.length > 0 &&
+                    selectedDirectorIds.length < director.length
+                  }
+                  onChange={handleSelectAll}
+                />
+              </TableCell>
+              <TableCell>Name</TableCell>
+              <TableCell>Email</TableCell>
+              <TableCell>Country</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Latest update</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {director.slice(0, limit).map((director) => (
+              <TableRow
+                hover
+                key={director.directorId}
+                selected={
+                  selectedDirectorIds.indexOf(director.directorId) !== -1
+                }
+              >
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedDirectorIds.length === director.length}
-                    color="primary"
-                    indeterminate={
-                      selectedDirectorIds.length > 0 &&
-                      selectedDirectorIds.length < director.length
+                    checked={
+                      selectedDirectorIds.indexOf(director.directorId) !== -1
                     }
-                    onChange={handleSelectAll}
+                    onChange={(event) =>
+                      handleSelectOne(event, director.directorId)
+                    }
+                    value="true"
                   />
                 </TableCell>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Country</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Latest update</TableCell>
+                <TableCell>
+                  <Box alignItems="center" display="flex">
+                    <Link to={`/admin/director/${director.id}`}>
+                      <Avatar
+                        className={classes.avatar}
+                        src={`${director.director_logo}`}
+                      >
+                        {getInitials(director.director_name)}
+                      </Avatar>
+                    </Link>
+                    <Typography color="textPrimary" variant="body1">
+                      {director.director_name}
+                    </Typography>
+                  </Box>
+                </TableCell>
+                <TableCell>{director.director_email}</TableCell>
+                <TableCell>
+                  {`${director.director_country_of_residence}`}
+                </TableCell>
+                <TableCell>{checkstatus(director.director_status)}</TableCell>
+                <TableCell>
+                  {moment(director.createdAt).format("DD/MM/YYYY")}
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {director.slice(0, limit).map((director) => (
-                <TableRow
-                  hover
-                  key={director.directorId}
-                  selected={
-                    selectedDirectorIds.indexOf(director.directorId) !== -1
-                  }
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={
-                        selectedDirectorIds.indexOf(director.directorId) !== -1
-                      }
-                      onChange={(event) =>
-                        handleSelectOne(event, director.directorId)
-                      }
-                      value="true"
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <Box alignItems="center" display="flex">
-                      <Link to={`/admin/director/${director.id}`}>
-                        <Avatar
-                          className={classes.avatar}
-                          src={`${director.director_logo}`}
-                        >
-                          {getInitials(director.director_name)}
-                        </Avatar>
-                      </Link>
-                      <Typography color="textPrimary" variant="body1">
-                        {director.director_name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{director.director_email}</TableCell>
-                  <TableCell>
-                    {`${director.director_country_of_residence}`}
-                  </TableCell>
-                  <TableCell>{checkstatus(director.director_status)}</TableCell>
-                  <TableCell>
-                    {moment(director.createdAt).format("DD/MM/YYYY")}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+            ))}
+          </TableBody>
+        </Table>
       </PerfectScrollbar>
       <TablePagination
         component="div"
