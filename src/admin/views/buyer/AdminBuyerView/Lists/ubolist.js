@@ -51,7 +51,6 @@ const orangeTheme = createTheme({
 
 const UboListView = (value) => {
   const classes = useStyles();
-  const id = value.user;
   const buyid = value.buyer;
   const [ubo, setUbo] = useState([]);
 
@@ -61,7 +60,7 @@ const UboListView = (value) => {
 
   useEffect(() => {
     async function getUbos() {
-      let filter = { userId: { eq: id }, buyerId: { eq: buyid } };
+      let filter = { buyerId: { eq: buyid } };
       const {
         data: {
           listUBOs: { items: itemsPage1, nextToken },
@@ -74,7 +73,7 @@ const UboListView = (value) => {
       setUbo(items);
     }
     getUbos();
-  }, [id, buyid]);
+  }, [buyid]);
 
   const handleSelectAll = (event) => {
     let newSelectedUboIds;

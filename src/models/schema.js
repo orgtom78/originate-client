@@ -3452,6 +3452,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "base_rate": {
+                    "name": "base_rate",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "purchase_order_amount": {
                     "name": "purchase_order_amount",
                     "isArray": false,
@@ -3738,6 +3745,13 @@ export const schema = {
                     "isArray": false,
                     "type": "ID",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "SOFR": {
+                    "name": "SOFR",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "SOFRM1": {
@@ -5404,5 +5418,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "0af191dd27ced3300fc4af1c7df3fcf4"
+    "version": "660f77556c8da5c42aabf8b300897154"
 };

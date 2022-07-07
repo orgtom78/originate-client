@@ -33,26 +33,7 @@ const Buyer = (value) => {
         const {
           data: {
             getBuyer: {
-              userId,
               buyerId,
-              investorId,
-              identityId,
-              buyer_status,
-              buyer_logo,
-              buyer_name,
-              buyer_type,
-              buyer_date_of_incorporation,
-              buyer_address_city,
-              buyer_address_street,
-              buyer_address_postalcode,
-              buyer_country,
-              buyer_industry,
-              buyer_registration_cert_attachment,
-              buyer_website,
-              buyer_address_refinment,
-              buyer_industry_code,
-              buyer_register_number,
-              buyer_trading_name,
             },
           },
         } = buyer;

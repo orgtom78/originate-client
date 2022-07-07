@@ -31,8 +31,24 @@ import { green } from "@mui/material/colors";
 import * as queries from "src/graphql/queries.js";
 import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
+import moment from "moment";
 
 const curr = currencies;
+
+const rate = [
+  {
+    value: "SOFR(Daily)",
+    label: "SOFR Daily",
+  },
+  {
+    value: "SOFR(1M)",
+    label: "SOFR 1M",
+  },
+  {
+    value: "SOFR(3M)",
+    label: "SOFR 3M",
+  },
+];
 
 const useStyles = makeStyles(() => ({
   image: {
@@ -95,10 +111,16 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_due_date, setInvoice_due_date] = useState("");
   const [sold_goods_description, setSold_goods_description] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
-  const [cargo_insurance_name, setCargo_insurance_name] = useState("");
   const [request_status, setRequest_status] = useState("");
+  const [base_rate, setBase_rate] = useState("");
   const [discount_fee_rate, setDiscount_fee_rate] = useState("");
+  const [discount_fee_amount, setDiscount_fee_amount] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
+  const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
+  const [payout_date, setPayout_date] = useState("");
+  const [broker_fee_rate, setBroker_fee_rate] = useState("");
+  const [dynamic_discount, setDynamic_discount] = useState("");
+  const [_version, setVersion] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
@@ -123,9 +145,14 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_currency,
               invoice_date,
               invoice_due_date,
-              cargo_insurance_name,
+              payout_date,
+              base_rate,
               transaction_fee_rate,
-              discount_fee_rate
+              transaction_fee_amount,
+              discount_fee_rate,
+              discount_fee_amount,
+              broker_fee_rate,
+              _version,
             },
           },
         } = request;
@@ -138,19 +165,122 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_currency(invoice_currency);
         setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
-        setCargo_insurance_name(cargo_insurance_name);
+        setPayout_date(payout_date);
+        setBase_rate(base_rate);
         setDiscount_fee_rate(discount_fee_rate);
+        setDiscount_fee_amount(discount_fee_amount);
         setTransaction_fee_rate(transaction_fee_rate);
+        setTransaction_fee_amount(transaction_fee_amount);
+        setBroker_fee_rate(broker_fee_rate);
+        setVersion(_version);
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
   }, [value]);
 
+  React.useEffect(() => {
+    async function checkdayssofr() {
+      const relevantday = moment(payout_date);
+      const querystartdate = moment(relevantday)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      const queryenddate = moment(relevantday).format("MM/DD/YYYY");
+      const {
+        data: {
+          listSOFRs: { items },
+        },
+      } = await listSOFR(querystartdate, queryenddate);
+      console.log(items);
+      const weekday = relevantday.getDay();
+      if (
+        weekday === 1 ||
+        weekday === 2 ||
+        weekday === 3 ||
+        weekday === 4 ||
+        weekday === 5
+      ) {
+        const date = moment(relevantday)
+          .subtract(2, "days")
+          .format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      } else if (weekday === 6) {
+        const date = moment(relevantday)
+          .subtract(3, "days")
+          .format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      } else if (weekday === 0) {
+        const date = moment(relevantday)
+          .subtract(4, "days")
+          .format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          return match;
+        }
+      }
+    }
+    async function sofrresult() {
+      const res = await checkdayssofr();
+      if (res === null || res === undefined || res.length <= 0) {
+        return 0;
+      } else {
+        const sofrterm = base_rate;
+        if (sofrterm === "SOFR(1M)") {
+          const dyndisc = Number(res[0].SOFRM1) + Number(discount_fee_rate);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(3M)") {
+          const dyndisc = Number(res[0].SOFRM3) + Number(discount_fee_rate);
+          console.log(dyndisc);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(Daily)") {
+          const dyndisc = Number(res[0].SOFR) + Number(discount_fee_rate);
+          setDynamic_discount(dyndisc);
+        }
+      }
+    }
+    sofrresult();
+  }, [base_rate, discount_fee_rate, payout_date]);
+
+  async function listSOFR(start, end) {
+    let filter = { id: { between: [start, end] } };
+    const result = await API.graphql(
+      graphqlOperation(queries.listSOFRs, { filter: filter })
+    );
+    if (result === null || result === undefined || result.length <= 0) {
+      return 0;
+    } else {
+      return result;
+    }
+  }
+
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
+      const dd = moment(invoice_due_date);
+      const pd = moment(payout_date);
+      const period = moment(dd.diff(pd, "days"));
+      const transaction_fee_amount =
+        invoice_amount *
+        (discount_fee_rate / 100) *
+        (transaction_fee_rate / 100) *
+        (period / 360);
+      const discount_fee_amount =
+        invoice_amount * (dynamic_discount / 100) * (period / 360);
+      const broker_fee_amount =
+        transaction_fee_amount * (broker_fee_rate / 100);
       const id = value.value;
       await updateRequest({
         id,
@@ -163,9 +293,14 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_currency,
         invoice_date,
         invoice_due_date,
-        cargo_insurance_name,
+        payout_date,
+        base_rate,
         discount_fee_rate,
-        transaction_fee_rate
+        discount_fee_amount,
+        transaction_fee_rate,
+        transaction_fee_amount,
+        broker_fee_amount,
+        _version,
       });
     } catch (e) {
       onError(e);
@@ -244,16 +379,49 @@ const RequestForm = ({ className, value, ...rest }) => {
                         ))}
                       </Select>
                     </Grid>
-                    <Grid item xs={12} sm={12}>
-                      <TextField
-                        name="investorId"
-                        label="Investor ID"
+                    <Grid item xs={12} sm={6}>
+                      <Select
                         fullWidth
-                        variant="outlined"
-                        onChange={(e) => setInvestorId(e.target.value)}
+                        label="Base Rate"
+                        name="base_rate"
+                        onChange={(e) => setBase_rate(e.target.value)}
                         required
-                        value={investorId || ""}
-                      />
+                        value={base_rate || ""}
+                        variant="outlined"
+                      >
+                        {rate.map((item, index) => (
+                          <MenuItem key={index} value={item.value}>
+                            {item.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
+                          value={payout_date || ""}
+                          margin="normal"
+                          variant="outlined"
+                          id="payout_date"
+                          name="payout_date"
+                          label="Payout Date"
+                          format="dd/MM/yyyy"
+                          maxDate={new Date()}
+                          onChange={(date) => {
+                            setPayout_date(date);
+                          }}
+                          required
+                          KeyboardButtonProps={{
+                            "aria-label": "change date",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
+                        />
+                      </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -264,28 +432,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         onChange={(e) => setInvoice_amount(e.target.value)}
                         required
                         value={invoice_amount || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_rate"
-                        label="Transaction Fee (pa)"
-                        fullWidth
-                        variant="outlined"
-                        onChange={(e) => setTransaction_fee_rate(e.target.value)}
-                        required
-                        value={transaction_fee_rate || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="discount_fee_rate"
-                        label="Discount Fee (pa"
-                        fullWidth
-                        variant="outlined"
-                        onChange={(e) => setDiscount_fee_rate(e.target.value)}
-                        required
-                        value={discount_fee_rate || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -304,6 +450,54 @@ const RequestForm = ({ className, value, ...rest }) => {
                           </MenuItem>
                         ))}
                       </Select>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="transaction_fee_rate"
+                        label="Transaction Fee in % of Spread"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) =>
+                          setTransaction_fee_rate(e.target.value)
+                        }
+                        required
+                        value={transaction_fee_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="transaction_fee_amount"
+                        label="Transaction Fee Amount"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) =>
+                          setTransaction_fee_amount(e.target.value)
+                        }
+                        value={transaction_fee_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="discount_fee_rate"
+                        label="Discount Fee / Spread"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setDiscount_fee_rate(e.target.value)}
+                        value={discount_fee_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="discount_fee_amount"
+                        label="Discount Amount"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setDiscount_fee_amount(e.target.value)}
+                        required
+                        value={discount_fee_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
                     </Grid>
                     <Grid
                       container
@@ -388,15 +582,13 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        name="cargo_insurance_name"
-                        label="Cargo Insurance Name"
+                        name="investorId"
+                        label="Investor ID"
                         fullWidth
                         variant="outlined"
-                        onChange={(e) =>
-                          setCargo_insurance_name(e.target.value)
-                        }
+                        onChange={(e) => setInvestorId(e.target.value)}
                         required
-                        value={cargo_insurance_name || ""}
+                        value={investorId || ""}
                       />
                     </Grid>
                   </Grid>

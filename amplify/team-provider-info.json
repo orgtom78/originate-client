@@ -72,7 +72,7 @@
         },
         "sofr": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/sofr-5245515852514639566c-build.zip"
+          "s3Key": "amplify-builds/sofr-566b7a3458424359746e-build.zip"
         }
       }
     }
