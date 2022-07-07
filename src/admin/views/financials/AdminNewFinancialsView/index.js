@@ -218,7 +218,7 @@ export default function NewFinancials() {
           </Stepper>
           <React.Fragment>
             {activeStep === steps.length ? (
-              navigate("/investor/obligors")
+              navigate("/admin/buyers")
             ) : (
               <Formik
                 initialValues={formInitialValues}
