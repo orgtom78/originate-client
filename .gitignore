@@ -20,6 +20,7 @@ src/config.js
 src/models
 .dccache
 .package-lock.json
+.dccache
 
 #Visual Studio stuff
 lib/*.lib
