@@ -25,17 +25,17 @@ const items = [
   {
     href: "/investor/limits",
     icon: DollarSignIcon,
-    title: "New Limits",
+    title: "Limit Requests",
   },
   {
     href: "/investor/obligors",
     icon: UserIcon,
-    title: "Obligors",
+    title: "Current Obligors",
   },
   {
     href: "/investor/requests",
     icon: CreditCardIcon,
-    title: "Requests",
+    title: "Invoices",
   },
   {
     href: "/investor/bank",

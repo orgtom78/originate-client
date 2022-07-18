@@ -48,9 +48,12 @@ export default function NewAccount() {
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
+  const [payout_date, setPayout_date] = useState("");
+  const [match, setMatch] = useState("");
   const { id } = useParams();
   const { supId } = useParams();
   const requestId = "request-" + uuid();
+  const [sofr, setSofr] = useState([]);
 
   React.useEffect(() => {
     async function load() {
@@ -133,31 +136,21 @@ export default function NewAccount() {
 
   React.useEffect(() => {
     async function checkdayssofr() {
-      const today = new Date();
-      const querystartdate = moment(today)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
+      const today = moment().startOf("day");
+      setPayout_date(today);
       const {
         data: {
           listSOFRs: { items },
         },
-      } = await listSOFR(querystartdate, queryenddate);
-      console.log(items);
-      const weekday = today.getDay();
-      if (
-        weekday === 1 ||
-        weekday === 2 ||
-        weekday === 3 ||
-        weekday === 4 ||
-        weekday === 5
-      ) {
+      } = sofr;
+      const weekday = moment(today).day();
+      if (weekday === 3 || weekday === 4 || weekday === 5) {
         const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
         const match = items.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
-          return match;
+          setMatch(match);
         }
       } else if (weekday === 6) {
         const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
@@ -165,7 +158,7 @@ export default function NewAccount() {
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
-          return match;
+          setMatch(match);
         }
       } else if (weekday === 0) {
         const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
@@ -173,45 +166,68 @@ export default function NewAccount() {
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
-          return match;
+          setMatch(match);
+        }
+      } else if (weekday === 1) {
+        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
+        }
+      } else if (weekday === 2) {
+        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
+        const match = items.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
         }
       }
-    }
-    async function sofrresult() {
-      const res = await checkdayssofr();
-      if (res === null || res === undefined || res.length <= 0) {
+      if (match === null || match === undefined || match.length <= 0) {
         return 0;
       } else {
         const sofrterm = buyer_loan_rate;
         if (sofrterm === "SOFR(1M)") {
           const dyndisc =
-            Number(res[0].SOFRM1) + Number(buyer_loan_discount_fee);
+            Number(match[0].SOFRM1) + Number(buyer_loan_discount_fee);
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(3M)") {
           const dyndisc =
-            Number(res[0].SOFRM3) + Number(buyer_loan_discount_fee);
+            Number(match[0].SOFRM3) + Number(buyer_loan_discount_fee);
           console.log(dyndisc);
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc = Number(res[0].SOFR) + Number(buyer_loan_discount_fee);
+          const dyndisc =
+            Number(match[0].SOFR) + Number(buyer_loan_discount_fee);
           setDynamic_discount(dyndisc);
         }
       }
     }
-    sofrresult();
-  }, [buyer_loan_rate, buyer_loan_discount_fee]);
+    checkdayssofr();
+  }, [buyer_loan_rate, buyer_loan_discount_fee, payout_date, match, sofr]);
 
-  async function listSOFR(start, end) {
-    let filter = { id: { between: [start, end] } };
-    const result = await API.graphql(
-      graphqlOperation(queries.listSOFRs, { filter: filter })
-    );
-    if (result === null || result === undefined || result.length <= 0) {
-      return 0;
-    } else {
-      return result;
+  React.useEffect(() => {
+    async function listSOFR(start, end) {
+      const today = moment().startOf("day");
+      console.log(today);
+      const querystartdate = moment(today)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      const queryenddate = moment(today).format("MM/DD/YYYY");
+      let filter = { id: { between: [querystartdate, queryenddate] } };
+      const result = await API.graphql(
+        graphqlOperation(queries.listSOFRs, { filter: filter })
+      );
+      if (result === null || result === undefined || result.length <= 0) {
+        return 0;
+      } else {
+        setSofr(result);
+      }
     }
-  }
+    listSOFR();
+  }, []);
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -228,7 +244,6 @@ export default function NewAccount() {
       const brokerId = brokerid;
       const spvId = spvid;
       const investor_email = investEmail;
-      const payout_date = moment();
       const period = moment(values["invoice_due_date"]).diff(
         payout_date,
         "days"

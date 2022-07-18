@@ -118,6 +118,10 @@ const SpvBuyerView = lazy(() => import('src/spv/views/buyer/SpvBuyerView'));
 const SpvBuyerListView = lazy(() => import('src/spv/views/buyer/SpvBuyerListView'));
 const SpvObligorListView = lazy(() => import('src/spv/views/buyer/SpvObligorListView'));
 const SpvRequestListView = lazy(() => import('src/spv/views/request/SpvRequestListView'));
+
+const SpvNewBookkeepingListView = lazy(() => import('src/spv/views/bookkeeping/SpvNewBookkeepingListView'));
+const SpvBookkeepingView = lazy(() => import('src/spv/views/bookkeeping/SpvBookkeepingView'));
+
 const SpvRequestView = lazy(() => import('src/spv/views/request/SpvRequestView'));
 const SpvBankView = lazy(() => import('src/spv/views/bank/SpvBankView'));
 const SpvRemittanceConnectView = lazy(() => import('src/spv/views/bank/SpvRemittanceConnectView'));
@@ -301,6 +305,10 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'obligors', element: !isSpv ? <SpvLoginView />  : <SpvObligorListView/> },
       { path: 'requests', element: !isSpv ? <SpvLoginView />  : <SpvRequestListView  /> },
       { path: 'request/:id', element: !isSpv ? <SpvLoginView /> : <SpvRequestView />},
+
+      { path: 'bookkeeping', element: !isSpv ? <SpvLoginView /> : <SpvNewBookkeepingListView />  },
+      { path: 'bookkeeping/:id', element: !isSpv ? <SpvLoginView /> : <SpvBookkeepingView />  },
+
       { path: 'bank', element: !isSpv ? <SpvLoginView /> : <SpvBankView />},
       { path: 'bank/remittance', element: !isSpv ? <SpvLoginView /> : <SpvRemittanceConnectView />},
       { path: 'bank/remittance/:id', element: !isSpv ? <SpvLoginView /> : <SpvRemittanceTransactionsView />},
