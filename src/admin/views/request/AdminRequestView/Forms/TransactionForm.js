@@ -125,7 +125,6 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [_version, setVersion] = useState("");
   const [match, setMatch] = useState("");
   const [sofr, setSofr] = useState([]);
-  const [sofr_rate, setSofr_rate] = useState("");
   const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
   const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
 
@@ -190,101 +189,100 @@ const RequestForm = ({ className, value, ...rest }) => {
     getRequest();
   }, [id]);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    async function listSOFR() {
+      const today = moment().startOf("day");
+      const querystartdate = moment(today)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      const queryenddate = moment(today).format("MM/DD/YYYY");
+      let filter = { id: { between: [querystartdate, queryenddate] } };
+      const {
+        data: {
+          listSOFRs: { items },
+        },
+      } = await API.graphql(
+        graphqlOperation(queries.listSOFRs, { filter: filter })
+      );
+      if (items === null || items === undefined || items.length <= 0) {
+        return 0;
+      } else {
+        setSofr(items);
+      }
+    }
+    listSOFR();
+  }, []);
+
+  React.useEffect(() => {
     async function checkdayssofr() {
-      try {
-        const relevantday = moment(payout_date).startOf("day");
-        const start = moment(relevantday)
-          .subtract(10, "days")
-          .format("MM/DD/YYYY");
-        const end = moment(relevantday).format("MM/DD/YYYY");
-        let filter = { id: { between: [start, end] } };
-        const {
-          data: {
-            listSOFRs: { items },
-          },
-        } = await API.graphql(
-          graphqlOperation(queries.listSOFRs, { filter: filter })
-        );
-        const weekday = moment(relevantday).day();
-        if (weekday === 3 || weekday === 4 || weekday === 5) {
-          const date = moment(relevantday)
-            .subtract(2, "days")
-            .format("MM/DD/YYYY");
-          const match = items.filter((item) => item.id === date);
-          if (match === null || match === undefined || match.length <= 0) {
-            return 0;
-          } else {
-            setMatch(match);
-          }
-        } else if (weekday === 6) {
-          const date = moment(relevantday)
-            .subtract(3, "days")
-            .format("MM/DD/YYYY");
-          const match = items.filter((item) => item.id === date);
-          if (match === null || match === undefined || match.length <= 0) {
-            return 0;
-          } else {
-            setMatch(match);
-          }
-        } else if (weekday === 0) {
-          const date = moment(relevantday)
-            .subtract(4, "days")
-            .format("MM/DD/YYYY");
-          const match = items.filter((item) => item.id === date);
-          if (match === null || match === undefined || match.length <= 0) {
-            return 0;
-          } else {
-            setMatch(match);
-          }
-        } else if (weekday === 1) {
-          const date = moment(relevantday)
-            .subtract(5, "days")
-            .format("MM/DD/YYYY");
-          const match = items.filter((item) => item.id === date);
-          if (match === null || match === undefined || match.length <= 0) {
-            return 0;
-          } else {
-            setMatch(match);
-          }
-        } else if (weekday === 2) {
-          const date = moment(relevantday)
-            .subtract(6, "days")
-            .format("MM/DD/YYYY");
-          const match = items.filter((item) => item.id === date);
-          if (match === null || match === undefined || match.length <= 0) {
-            return 0;
-          } else {
-            setMatch(match);
-          }
+      const today = moment().startOf("day");
+      setPayout_date(today);
+      const weekday = moment(today).day();
+
+      if (weekday === 3 || weekday === 4 || weekday === 5) {
+        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
+        const match = sofr.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
         }
-      } catch (err) {
-        console.log("error fetching data..", err);
+      } else if (weekday === 6) {
+        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
+        const match = sofr.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
+        }
+      } else if (weekday === 0) {
+        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
+        const match = sofr.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
+        }
+      } else if (weekday === 1) {
+        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
+        const match = sofr.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
+        }
+      } else if (weekday === 2) {
+        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
+        const match = sofr.filter((item) => item.id === date);
+        if (match === null || match === undefined || match.length <= 0) {
+          return 0;
+        } else {
+          setMatch(match);
+        }
       }
     }
     checkdayssofr();
-  }, [base_rate, payout_date, sofr, discount_fee_rate]);
+  }, [sofr]);
 
-  useEffect(() => {
-    if (match !== null || match !== undefined || match.length > 0) {
-      const sofrterm = base_rate;
-      if (sofrterm === "SOFR(1M)") {
-        const dyndisc = Number(match[0].SOFRM1) + Number(discount_fee_rate);
-        setDynamic_discount(dyndisc);
-        const sofr_rate = Number(match[0].SOFRM1);
-        setSofr_rate(sofr_rate);
-      } else if (sofrterm === "SOFR(3M)") {
-        const dyndisc = Number(match[0].SOFRM3) + Number(discount_fee_rate);
-        setDynamic_discount(dyndisc);
-        const sofr_rate = Number(match[0].SOFRM3);
-        setSofr_rate(sofr_rate);
-      } else if (sofrterm === "SOFR(Daily)") {
-        const dyndisc = Number(match[0].SOFR) + Number(discount_fee_rate);
-        setDynamic_discount(dyndisc);
-        const sofr_rate = Number(match[0].SOFR);
-        setSofr_rate(sofr_rate);
+  React.useEffect(() => {
+    async function checkifmatch() {
+      if (match === null || match === undefined || match.length <= 0) {
+        return 0;
+      } else {
+        const sofrterm = base_rate;
+        if (sofrterm === "SOFR(1M)") {
+          const dyndisc = Number(match[0].SOFRM1) + Number(discount_fee_rate);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(3M)") {
+          const dyndisc = Number(match[0].SOFRM3) + Number(discount_fee_rate);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(Daily)") {
+          const dyndisc = Number(match[0].SOFR) + Number(discount_fee_rate);
+          setDynamic_discount(dyndisc);
+        }
       }
     }
+    checkifmatch();
   }, [match, discount_fee_rate, base_rate]);
 
   useEffect(() => {

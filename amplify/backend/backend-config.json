@@ -1,6 +1,6 @@
 {
   "auth": {
-    "originateclientprod796edffc": {
+    "originateclient84cf992c": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -8,7 +8,7 @@
     }
   },
   "api": {
-    "originateclientprod": {
+    "originateclientdev": {
       "service": "AppSync",
       "providerPlugin": "awscloudformation",
       "output": {
@@ -16,20 +16,20 @@
           "defaultAuthentication": {
             "authenticationType": "AMAZON_COGNITO_USER_POOLS",
             "userPoolConfig": {
-              "userPoolId": "authoriginateclientprod796edffc"
+              "userPoolId": "authoriginateclient84cf992c"
             }
           },
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "AWS_IAM"
-            },
-            {
               "authenticationType": "API_KEY",
               "apiKeyConfig": {
                 "apiKeyExpirationDays": 365,
-                "apiKeyExpirationDate": "2023-06-29T07:01:37.456Z",
-                "description": "search-api-key-prod"
+                "apiKeyExpirationDate": "2023-05-04T04:15:21.514Z",
+                "description": "originatedev-appsync-key"
               }
+            },
+            {
+              "authenticationType": "AWS_IAM"
             }
           ]
         }
@@ -37,7 +37,7 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclientprod796edffc",
+          "resourceName": "originateclient84cf992c",
           "attributes": [
             "UserPoolId"
           ]
@@ -57,12 +57,41 @@
           ]
         }
       ]
+    },
+    "zoho": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "zoho",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "ocdefi": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "ocdefi",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
     }
   },
   "storage": {
-    "originateprodstorage": {
+    "s330286d4d": {
       "service": "S3",
-      "providerPlugin": "awscloudformation"
+      "providerPlugin": "awscloudformation",
+      "dependsOn": []
     }
   },
   "function": {
@@ -73,14 +102,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclientprod796edffc",
+          "resourceName": "originateclient84cf992c",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientprod",
+          "resourceName": "originateclientdev",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput"
@@ -95,17 +124,18 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclientprod796edffc",
+          "resourceName": "originateclient84cf992c",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientprod",
+          "resourceName": "originateclientdev",
           "attributes": [
             "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
           ]
         },
         {
@@ -145,14 +175,14 @@
       "dependsOn": [
         {
           "category": "auth",
-          "resourceName": "originateclientprod796edffc",
+          "resourceName": "originateclient84cf992c",
           "attributes": [
             "UserPoolId"
           ]
         },
         {
           "category": "api",
-          "resourceName": "originateclientprod",
+          "resourceName": "originateclientdev",
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
@@ -162,10 +192,5 @@
       ]
     }
   },
-  "analytics": {
-    "originatetest": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
-    }
-  }
+  "analytics": {}
 }

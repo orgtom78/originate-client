@@ -1,6 +1,7 @@
 /* Amplify Params - DO NOT EDIT
 	API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT
 	API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT
+	API_ORIGINATECLIENTDEV_GRAPHQLAPIKEYOUTPUT
 	API_ORIGINATECLIENTDEV_REQUESTTABLE_ARN
 	API_ORIGINATECLIENTDEV_REQUESTTABLE_NAME
 	AUTH_ORIGINATECLIENT84CF992C_USERPOOLID
@@ -30,10 +31,10 @@ exports.handler = async (event) => {
   console.log(dynamodb);
 
   const newInvoiceData = {
-    supName: dynamodb.NewImage.supplier_name.S,
-    name: dynamodb.NewImage.buyer_name.S,
-    id: dynamodb.NewImage.id.S,
-    email: dynamodb.NewImage.investor_email.S,
+    supName: dynamodb.OldImage.supplier_name.S,
+    name: dynamodb.OldImage.buyer_name.S,
+    id: dynamodb.OldImage.id.S,
+    email: dynamodb.OldImage.investor_email.S,
   };
   if (eventType === "INSERT") {
     return sendEmailToMe(newInvoiceData)
@@ -217,6 +218,7 @@ exports.handler = async (event) => {
         ReplyToAddresses: [FROM_EMAIL_ADDRESS],
         Destination: {
           ToAddresses: [newInvoiceData.email],
+          BccAddresses: ['admin@originatecapital.co']
         },
         Message: {
           Body: {

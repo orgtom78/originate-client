@@ -135,18 +135,38 @@ export default function NewAccount() {
   }
 
   React.useEffect(() => {
-    async function checkdayssofr() {
+    async function listSOFR() {
       const today = moment().startOf("day");
-      setPayout_date(today);
+      const querystartdate = moment(today)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      const queryenddate = moment(today).format("MM/DD/YYYY");
+      let filter = { id: { between: [querystartdate, queryenddate] } };
       const {
         data: {
           listSOFRs: { items },
         },
-      } = sofr;
+      } = await API.graphql(
+        graphqlOperation(queries.listSOFRs, { filter: filter })
+      );
+      if (items === null || items === undefined || items.length <= 0) {
+        return 0;
+      } else {
+        setSofr(items);
+      }
+    }
+    listSOFR();
+  }, []);
+
+  React.useEffect(() => {
+    async function checkdayssofr() {
+      const today = moment().startOf("day");
+      setPayout_date(today);
       const weekday = moment(today).day();
+
       if (weekday === 3 || weekday === 4 || weekday === 5) {
         const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
+        const match = sofr.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
@@ -154,7 +174,7 @@ export default function NewAccount() {
         }
       } else if (weekday === 6) {
         const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
+        const match = sofr.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
@@ -162,7 +182,7 @@ export default function NewAccount() {
         }
       } else if (weekday === 0) {
         const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
+        const match = sofr.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
@@ -170,7 +190,7 @@ export default function NewAccount() {
         }
       } else if (weekday === 1) {
         const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
+        const match = sofr.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
@@ -178,13 +198,19 @@ export default function NewAccount() {
         }
       } else if (weekday === 2) {
         const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
+        const match = sofr.filter((item) => item.id === date);
         if (match === null || match === undefined || match.length <= 0) {
           return 0;
         } else {
           setMatch(match);
         }
       }
+    }
+    checkdayssofr();
+  }, [sofr]);
+
+  React.useEffect(() => {
+    async function checkifmatch() {
       if (match === null || match === undefined || match.length <= 0) {
         return 0;
       } else {
@@ -196,7 +222,6 @@ export default function NewAccount() {
         } else if (sofrterm === "SOFR(3M)") {
           const dyndisc =
             Number(match[0].SOFRM3) + Number(buyer_loan_discount_fee);
-          console.log(dyndisc);
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(Daily)") {
           const dyndisc =
@@ -205,29 +230,8 @@ export default function NewAccount() {
         }
       }
     }
-    checkdayssofr();
-  }, [buyer_loan_rate, buyer_loan_discount_fee, payout_date, match, sofr]);
-
-  React.useEffect(() => {
-    async function listSOFR(start, end) {
-      const today = moment().startOf("day");
-      console.log(today);
-      const querystartdate = moment(today)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
-      let filter = { id: { between: [querystartdate, queryenddate] } };
-      const result = await API.graphql(
-        graphqlOperation(queries.listSOFRs, { filter: filter })
-      );
-      if (result === null || result === undefined || result.length <= 0) {
-        return 0;
-      } else {
-        setSofr(result);
-      }
-    }
-    listSOFR();
-  }, []);
+    checkifmatch();
+  }, [match, buyer_loan_discount_fee, buyer_loan_rate]);
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

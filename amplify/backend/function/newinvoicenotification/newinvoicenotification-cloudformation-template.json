@@ -16,21 +16,25 @@
     "s3Key": {
       "Type": "String"
     },
-    "authoriginateclientprod796edffcUserPoolId": {
+    "authoriginateclient84cf992cUserPoolId": {
       "Type": "String",
-      "Default": "authoriginateclientprod796edffcUserPoolId"
+      "Default": "authoriginateclient84cf992cUserPoolId"
     },
-    "apioriginateclientprodGraphQLAPIIdOutput": {
+    "apioriginateclientdevGraphQLAPIIdOutput": {
       "Type": "String",
-      "Default": "apioriginateclientprodGraphQLAPIIdOutput"
+      "Default": "apioriginateclientdevGraphQLAPIIdOutput"
     },
-    "apioriginateclientprodGraphQLAPIEndpointOutput": {
+    "apioriginateclientdevGraphQLAPIEndpointOutput": {
       "Type": "String",
-      "Default": "apioriginateclientprodGraphQLAPIEndpointOutput"
+      "Default": "apioriginateclientdevGraphQLAPIEndpointOutput"
     },
     "functionplaidName": {
       "Type": "String",
       "Default": "functionplaidName"
+    },
+    "apioriginateclientdevGraphQLAPIKeyOutput": {
+      "Type": "String",
+      "Default": "apioriginateclientdevGraphQLAPIKeyOutput"
     }
   },
   "Conditions": {
@@ -86,21 +90,21 @@
             "REGION": {
               "Ref": "AWS::Region"
             },
-            "AUTH_ORIGINATECLIENTPROD796EDFFC_USERPOOLID": {
-              "Ref": "authoriginateclientprod796edffcUserPoolId"
+            "AUTH_ORIGINATECLIENT84CF992C_USERPOOLID": {
+              "Ref": "authoriginateclient84cf992cUserPoolId"
             },
-            "API_ORIGINATECLIENTPROD_GRAPHQLAPIIDOUTPUT": {
-              "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
+            "API_ORIGINATECLIENTDEV_GRAPHQLAPIIDOUTPUT": {
+              "Ref": "apioriginateclientdevGraphQLAPIIdOutput"
             },
-            "API_ORIGINATECLIENTPROD_GRAPHQLAPIENDPOINTOUTPUT": {
-              "Ref": "apioriginateclientprodGraphQLAPIEndpointOutput"
+            "API_ORIGINATECLIENTDEV_GRAPHQLAPIENDPOINTOUTPUT": {
+              "Ref": "apioriginateclientdevGraphQLAPIEndpointOutput"
             },
-            "API_ORIGINATECLIENTPROD_REQUESTTABLE_NAME": {
+            "API_ORIGINATECLIENTDEV_REQUESTTABLE_NAME": {
               "Fn::ImportValue": {
-                "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
+                "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
               }
             },
-            "API_ORIGINATECLIENTPROD_REQUESTTABLE_ARN": {
+            "API_ORIGINATECLIENTDEV_REQUESTTABLE_ARN": {
               "Fn::Join": [
                 "",
                 [
@@ -115,7 +119,7 @@
                   ":table/",
                   {
                     "Fn::ImportValue": {
-                      "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
+                      "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
                     }
                   }
                 ]
@@ -123,6 +127,9 @@
             },
             "FUNCTION_PLAID_NAME": {
               "Ref": "functionplaidName"
+            },
+            "API_ORIGINATECLIENTDEV_GRAPHQLAPIKEYOUTPUT": {
+              "Ref": "apioriginateclientdevGraphQLAPIKeyOutput"
             }
           }
         },
@@ -143,12 +150,12 @@
         "RoleName": {
           "Fn::If": [
             "ShouldNotCreateEnvResources",
-            "originateclientprodLambdaRolee74c5a4b",
+            "originateclientLambdaRolea9109b87",
             {
               "Fn::Join": [
                 "",
                 [
-                  "originateclientprodLambdaRolee74c5a4b",
+                  "originateclientLambdaRolea9109b87",
                   "-",
                   {
                     "Ref": "env"
@@ -237,51 +244,6 @@
             {
               "Effect": "Allow",
               "Action": [
-                "cognito-idp:ConfirmSignUp",
-                "cognito-idp:AdminCreateUser",
-                "cognito-idp:CreateUserImportJob",
-                "cognito-idp:AdminSetUserSettings",
-                "cognito-idp:AdminLinkProviderForUser",
-                "cognito-idp:CreateIdentityProvider",
-                "cognito-idp:AdminConfirmSignUp",
-                "cognito-idp:AdminDisableUser",
-                "cognito-idp:AdminRemoveUserFromGroup",
-                "cognito-idp:SetUserMFAPreference",
-                "cognito-idp:SetUICustomization",
-                "cognito-idp:SignUp",
-                "cognito-idp:VerifyUserAttribute",
-                "cognito-idp:SetRiskConfiguration",
-                "cognito-idp:StartUserImportJob",
-                "cognito-idp:AdminSetUserPassword",
-                "cognito-idp:AssociateSoftwareToken",
-                "cognito-idp:CreateResourceServer",
-                "cognito-idp:RespondToAuthChallenge",
-                "cognito-idp:CreateUserPoolClient",
-                "cognito-idp:AdminUserGlobalSignOut",
-                "cognito-idp:GlobalSignOut",
-                "cognito-idp:AddCustomAttributes",
-                "cognito-idp:CreateGroup",
-                "cognito-idp:CreateUserPool",
-                "cognito-idp:AdminForgetDevice",
-                "cognito-idp:AdminAddUserToGroup",
-                "cognito-idp:AdminRespondToAuthChallenge",
-                "cognito-idp:ForgetDevice",
-                "cognito-idp:CreateUserPoolDomain",
-                "cognito-idp:AdminEnableUser",
-                "cognito-idp:AdminUpdateDeviceStatus",
-                "cognito-idp:StopUserImportJob",
-                "cognito-idp:InitiateAuth",
-                "cognito-idp:AdminInitiateAuth",
-                "cognito-idp:AdminSetUserMFAPreference",
-                "cognito-idp:ConfirmForgotPassword",
-                "cognito-idp:SetUserSettings",
-                "cognito-idp:VerifySoftwareToken",
-                "cognito-idp:AdminDisableProviderForUser",
-                "cognito-idp:SetUserPoolMfaConfig",
-                "cognito-idp:ChangePassword",
-                "cognito-idp:ConfirmDevice",
-                "cognito-idp:AdminResetUserPassword",
-                "cognito-idp:ResendConfirmationCode",
                 "cognito-identity:Describe*",
                 "cognito-identity:Get*",
                 "cognito-identity:List*",
@@ -295,29 +257,7 @@
                 "cognito-sync:List*",
                 "iam:ListOpenIdConnectProviders",
                 "iam:ListRoles",
-                "sns:ListPlatformApplications",
-                "cognito-idp:ForgotPassword",
-                "cognito-idp:UpdateAuthEventFeedback",
-                "cognito-idp:UpdateResourceServer",
-                "cognito-idp:UpdateUserPoolClient",
-                "cognito-idp:AdminUpdateUserAttributes",
-                "cognito-idp:UpdateUserAttributes",
-                "cognito-idp:UpdateUserPoolDomain",
-                "cognito-idp:UpdateIdentityProvider",
-                "cognito-idp:UpdateGroup",
-                "cognito-idp:AdminUpdateAuthEventFeedback",
-                "cognito-idp:UpdateDeviceStatus",
-                "cognito-idp:UpdateUserPool",
-                "cognito-idp:DeleteUserPoolDomain",
-                "cognito-idp:DeleteResourceServer",
-                "cognito-idp:DeleteGroup",
-                "cognito-idp:AdminDeleteUserAttributes",
-                "cognito-idp:DeleteUserPoolClient",
-                "cognito-idp:DeleteUserAttributes",
-                "cognito-idp:DeleteUserPool",
-                "cognito-idp:AdminDeleteUser",
-                "cognito-idp:DeleteIdentityProvider",
-                "cognito-idp:DeleteUser"
+                "sns:ListPlatformApplications"
               ],
               "Resource": [
                 {
@@ -334,7 +274,7 @@
                       },
                       ":userpool/",
                       {
-                        "Ref": "authoriginateclientprod796edffcUserPoolId"
+                        "Ref": "authoriginateclient84cf992cUserPoolId"
                       }
                     ]
                   ]
@@ -344,12 +284,8 @@
             {
               "Effect": "Allow",
               "Action": [
-                "appsync:Create*",
-                "appsync:StartSchemaCreation",
-                "appsync:GraphQL",
                 "appsync:Get*",
-                "appsync:List*",
-                "appsync:Update*"
+                "appsync:List*"
               ],
               "Resource": [
                 {
@@ -366,27 +302,7 @@
                       },
                       ":apis/",
                       {
-                        "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
-                      },
-                      "/*"
-                    ]
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:appsync:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":",
-                      {
-                        "Ref": "AWS::AccountId"
-                      },
-                      ":apis/",
-                      {
-                        "Ref": "apioriginateclientprodGraphQLAPIIdOutput"
+                        "Ref": "apioriginateclientdevGraphQLAPIIdOutput"
                       }
                     ]
                   ]
@@ -396,17 +312,12 @@
             {
               "Effect": "Allow",
               "Action": [
-                "dynamodb:Put*",
-                "dynamodb:Create*",
-                "dynamodb:BatchWriteItem",
                 "dynamodb:Get*",
                 "dynamodb:BatchGetItem",
                 "dynamodb:List*",
                 "dynamodb:Describe*",
                 "dynamodb:Scan",
-                "dynamodb:Query",
-                "dynamodb:Update*",
-                "dynamodb:RestoreTable*"
+                "dynamodb:Query"
               ],
               "Resource": [
                 {
@@ -424,7 +335,7 @@
                       ":table/",
                       {
                         "Fn::ImportValue": {
-                          "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
+                          "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
                         }
                       }
                     ]
@@ -445,7 +356,7 @@
                       ":table/",
                       {
                         "Fn::ImportValue": {
-                          "Fn::Sub": "${apioriginateclientprodGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
+                          "Fn::Sub": "${apioriginateclientdevGraphQLAPIIdOutput}:GetAtt:RequestTable:Name"
                         }
                       },
                       "/index/*"
@@ -457,9 +368,6 @@
             {
               "Effect": "Allow",
               "Action": [
-                "lambda:Create*",
-                "lambda:Put*",
-                "lambda:Add*",
                 "lambda:Get*",
                 "lambda:List*",
                 "lambda:Invoke*"
@@ -513,7 +421,7 @@
                 "dynamodb:GetShardIterator",
                 "dynamodb:ListStreams"
               ],
-              "Resource": "arn:aws:dynamodb:us-east-2:068888566157:table/Request-fqtl5gb3rravtfuhnfslasj35u-prod/stream/2022-02-22T11:13:16.134"
+              "Resource": "arn:aws:dynamodb:us-east-2:361659031315:table/Request-inyjwyok2ralnd7utuj4ctspbi-test/stream/2021-10-28T13:38:18.713"
             }
           ]
         }
@@ -528,7 +436,7 @@
       "Properties": {
         "BatchSize": 100,
         "Enabled": true,
-        "EventSourceArn": "arn:aws:dynamodb:us-east-2:068888566157:table/Request-fqtl5gb3rravtfuhnfslasj35u-prod/stream/2022-02-22T11:13:16.134",
+        "EventSourceArn": "arn:aws:dynamodb:us-east-2:361659031315:table/Request-inyjwyok2ralnd7utuj4ctspbi-test/stream/2021-10-28T13:38:18.713",
         "FunctionName": {
           "Fn::GetAtt": [
             "LambdaFunction",

@@ -1,4 +1,51 @@
 {
+  "test": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-originateclient-test-115620-authRole",
+      "UnauthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-originateclient-test-115620-deployment",
+      "UnauthRoleName": "amplify-originateclient-test-115620-unauthRole",
+      "StackName": "amplify-originateclient-test-115620",
+      "StackId": "arn:aws:cloudformation:us-east-2:361659031315:stack/amplify-originateclient-test-115620/788910a0-5ad3-11eb-b40c-065ebb0fed20",
+      "AmplifyAppId": "d1qmf5m44ui2lg",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-originateclient-test-115620-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
+    },
+    "categories": {
+      "auth": {
+        "originateclient84cf992c": {},
+        "true": {}
+      },
+      "function": {
+        "plaid": {
+          "clientId": "6115d7d22dd19f00105aa78f",
+          "plaidSecret": "ac990b93abfb9d201235ad31854371",
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/plaid-3237594867574a724c6c-build.zip"
+        },
+        "newinvoicenotification": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
+        },
+        "zoho": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/zoho-787257493976636b5a43-build.zip",
+          "zohoClientId": "1000.B2431PKHZX8NF86FB9VJV5T60P0U7J",
+          "zohoClientSecret": "5cbdd5028d4e84106129411e2449400e828e6697fd",
+          "zohoToken": "1000.efcbfbfac4b26d09deb9ea63d95f8295.d31aeb86cc808ea54f48d0763470819a"
+        },
+        "ocdefi": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/ocdefi-462f4a566e2f4276586b-build.zip"
+        },
+        "sofr": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/sofr-7567714366612b2f5777-build.zip"
+        }
+      }
+    }
+  },
   "prod": {
     "awscloudformation": {
       "AuthRoleName": "amplify-originateclientprod-prod-120522-authRole",
@@ -30,53 +77,6 @@
         "sofr": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
           "s3Key": "amplify-builds/sofr-697153386c54776e444b-build.zip"
-        }
-      }
-    }
-  },
-  "test": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-originateclient-test-115620-authRole",
-      "UnauthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::361659031315:role/amplify-originateclient-test-115620-authRole",
-      "Region": "us-east-2",
-      "DeploymentBucketName": "amplify-originateclient-test-115620-deployment",
-      "UnauthRoleName": "amplify-originateclient-test-115620-unauthRole",
-      "StackName": "amplify-originateclient-test-115620",
-      "StackId": "arn:aws:cloudformation:us-east-2:361659031315:stack/amplify-originateclient-test-115620/788910a0-5ad3-11eb-b40c-065ebb0fed20",
-      "AmplifyAppId": "d1qmf5m44ui2lg",
-      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-originateclient-test-115620-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
-    },
-    "categories": {
-      "auth": {
-        "originateclient84cf992c": {},
-        "true": {}
-      },
-      "function": {
-        "plaid": {
-          "clientId": "6115d7d22dd19f00105aa78f",
-          "plaidSecret": "ac990b93abfb9d201235ad31854371",
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaid-32344372384e742b3039-build.zip"
-        },
-        "newinvoicenotification": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
-        },
-        "zoho": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/zoho-787257493976636b5a43-build.zip",
-          "zohoClientId": "1000.B2431PKHZX8NF86FB9VJV5T60P0U7J",
-          "zohoClientSecret": "5cbdd5028d4e84106129411e2449400e828e6697fd",
-          "zohoToken": "1000.efcbfbfac4b26d09deb9ea63d95f8295.d31aeb86cc808ea54f48d0763470819a"
-        },
-        "ocdefi": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/ocdefi-462f4a566e2f4276586b-build.zip"
-        },
-        "sofr": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/sofr-7567714366612b2f5777-build.zip"
         }
       }
     }
