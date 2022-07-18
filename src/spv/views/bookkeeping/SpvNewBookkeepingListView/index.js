@@ -70,7 +70,7 @@ const AdminTransactionListView = () => {
   useEffect(() => {
     async function getRequests() {
       let filter = {
-        bookkeeping_status_admin: { eq: "Open" },
+        bookkeeping_status_spv: { eq: "" || "Open" },
       };
       const {
         data: {
@@ -86,7 +86,7 @@ const AdminTransactionListView = () => {
 
     async function test() {
       const c = await getRequests();
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -110,13 +110,13 @@ const AdminTransactionListView = () => {
 
     async function test() {
       const a = await getBook();
-      var b = a.filter((e) => e.bookkeeping_status_admin === "Under Review");
-      const c = b.sort(function(a, b) {
+      var b = a.filter((e) => e.bookkeeping_status_spv === "Under Review");
+      const c = b.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setReviewbook(c);
-      var d = a.filter((e) => e.bookkeeping_status_admin === "Approved");
-      const e = d.sort(function(a, b) {
+      var d = a.filter((e) => e.bookkeeping_status_spv === "Approved");
+      const e = d.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setApprovebook(e);
@@ -436,7 +436,7 @@ const AdminTransactionListView = () => {
                                     <TableCell>
                                       <Box alignItems="center" display="flex">
                                         <Link
-                                          to={`/admin/bookkeeping/${request.requestId}/`}
+                                          to={`/spv/bookkeeping/${request.requestId}/`}
                                         >
                                           <Avatar
                                             className={classes.avatar}
@@ -551,7 +551,7 @@ const AdminTransactionListView = () => {
                                     <TableCell>
                                       <Box alignItems="center" display="flex">
                                         <Link
-                                          to={`/admin/bookkeeping/${book.requestId}/`}
+                                          to={`/spv/bookkeeping/${book.requestId}/`}
                                         >
                                           <Avatar
                                             className={classes.avatar}
@@ -658,7 +658,7 @@ const AdminTransactionListView = () => {
                                     <TableCell>
                                       <Box alignItems="center" display="flex">
                                         <Link
-                                          to={`/admin/bookkeeping/${book.requestId}/`}
+                                          to={`/spv/bookkeeping/${book.requestId}/`}
                                         >
                                           <Avatar
                                             className={classes.avatar}

@@ -118,20 +118,26 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
   const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
   const [payout_date, setPayout_date] = useState("");
+  const [payback_date, setPayback_date] = useState("");
   const [broker_fee_rate, setBroker_fee_rate] = useState("");
+  const [broker_fee_amount, setBroker_fee_amount] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
   const [_version, setVersion] = useState("");
+  const [match, setMatch] = useState("");
+  const [sofr, setSofr] = useState([]);
+  const [sofr_rate, setSofr_rate] = useState("");
+  const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
+  const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
+  const id = value.value;
 
   useEffect(() => {
-    const id = value.value;
-    getRequest({ id });
-    async function getRequest(input) {
+    async function getRequest() {
       try {
         const request = await API.graphql(
-          graphqlOperation(queries.getRequest, input)
+          graphqlOperation(queries.getRequest, { id })
         );
         const {
           data: {
@@ -145,13 +151,15 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_currency,
               invoice_date,
               invoice_due_date,
-              payout_date,
               base_rate,
               transaction_fee_rate,
               transaction_fee_amount,
               discount_fee_rate,
               discount_fee_amount,
               broker_fee_rate,
+              broker_fee_amount,
+              payout_date,
+              payback_date,
               _version,
             },
           },
@@ -165,122 +173,162 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_currency(invoice_currency);
         setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
-        setPayout_date(payout_date);
         setBase_rate(base_rate);
         setDiscount_fee_rate(discount_fee_rate);
         setDiscount_fee_amount(discount_fee_amount);
         setTransaction_fee_rate(transaction_fee_rate);
         setTransaction_fee_amount(transaction_fee_amount);
         setBroker_fee_rate(broker_fee_rate);
+        setBroker_fee_amount(broker_fee_amount);
+        setPayout_date(payout_date);
+        setPayback_date(payback_date);
         setVersion(_version);
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
-  }, [value]);
+    getRequest();
+  }, [id]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function checkdayssofr() {
-      const relevantday = moment(payout_date);
-      const querystartdate = moment(relevantday)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(relevantday).format("MM/DD/YYYY");
-      const {
-        data: {
-          listSOFRs: { items },
-        },
-      } = await listSOFR(querystartdate, queryenddate);
-      console.log(items);
-      const weekday = relevantday.getDay();
-      if (
-        weekday === 1 ||
-        weekday === 2 ||
-        weekday === 3 ||
-        weekday === 4 ||
-        weekday === 5
-      ) {
-        const date = moment(relevantday)
-          .subtract(2, "days")
+      try {
+        const relevantday = moment(payout_date).startOf("day");
+        const start = moment(relevantday)
+          .subtract(10, "days")
           .format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          return match;
+        const end = moment(relevantday).format("MM/DD/YYYY");
+        let filter = { id: { between: [start, end] } };
+        const {
+          data: {
+            listSOFRs: { items },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listSOFRs, { filter: filter })
+        );
+        const weekday = moment(relevantday).day();
+        if (weekday === 3 || weekday === 4 || weekday === 5) {
+          const date = moment(relevantday)
+            .subtract(2, "days")
+            .format("MM/DD/YYYY");
+          const match = items.filter((item) => item.id === date);
+          if (match === null || match === undefined || match.length <= 0) {
+            return 0;
+          } else {
+            setMatch(match);
+          }
+        } else if (weekday === 6) {
+          const date = moment(relevantday)
+            .subtract(3, "days")
+            .format("MM/DD/YYYY");
+          const match = items.filter((item) => item.id === date);
+          if (match === null || match === undefined || match.length <= 0) {
+            return 0;
+          } else {
+            setMatch(match);
+          }
+        } else if (weekday === 0) {
+          const date = moment(relevantday)
+            .subtract(4, "days")
+            .format("MM/DD/YYYY");
+          const match = items.filter((item) => item.id === date);
+          if (match === null || match === undefined || match.length <= 0) {
+            return 0;
+          } else {
+            setMatch(match);
+          }
+        } else if (weekday === 1) {
+          const date = moment(relevantday)
+            .subtract(5, "days")
+            .format("MM/DD/YYYY");
+          const match = items.filter((item) => item.id === date);
+          if (match === null || match === undefined || match.length <= 0) {
+            return 0;
+          } else {
+            setMatch(match);
+          }
+        } else if (weekday === 2) {
+          const date = moment(relevantday)
+            .subtract(6, "days")
+            .format("MM/DD/YYYY");
+          const match = items.filter((item) => item.id === date);
+          if (match === null || match === undefined || match.length <= 0) {
+            return 0;
+          } else {
+            setMatch(match);
+          }
         }
-      } else if (weekday === 6) {
-        const date = moment(relevantday)
-          .subtract(3, "days")
-          .format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          return match;
-        }
-      } else if (weekday === 0) {
-        const date = moment(relevantday)
-          .subtract(4, "days")
-          .format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          return match;
-        }
+      } catch (err) {
+        console.log("error fetching data..", err);
       }
     }
-    async function sofrresult() {
-      const res = await checkdayssofr();
-      if (res === null || res === undefined || res.length <= 0) {
-        return 0;
-      } else {
-        const sofrterm = base_rate;
-        if (sofrterm === "SOFR(1M)") {
-          const dyndisc = Number(res[0].SOFRM1) + Number(discount_fee_rate);
-          setDynamic_discount(dyndisc);
-        } else if (sofrterm === "SOFR(3M)") {
-          const dyndisc = Number(res[0].SOFRM3) + Number(discount_fee_rate);
-          console.log(dyndisc);
-          setDynamic_discount(dyndisc);
-        } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc = Number(res[0].SOFR) + Number(discount_fee_rate);
-          setDynamic_discount(dyndisc);
-        }
-      }
-    }
-    sofrresult();
-  }, [base_rate, discount_fee_rate, payout_date]);
+    checkdayssofr();
+  }, [base_rate, payout_date, sofr, discount_fee_rate]);
 
-  async function listSOFR(start, end) {
-    let filter = { id: { between: [start, end] } };
-    const result = await API.graphql(
-      graphqlOperation(queries.listSOFRs, { filter: filter })
-    );
-    if (result === null || result === undefined || result.length <= 0) {
-      return 0;
-    } else {
-      return result;
+  useEffect(() => {
+    if (match !== null || match !== undefined || match.length > 0) {
+      const sofrterm = base_rate;
+      if (sofrterm === "SOFR(1M)") {
+        const dyndisc = Number(match[0].SOFRM1) + Number(discount_fee_rate);
+        setDynamic_discount(dyndisc);
+        const sofr_rate = Number(match[0].SOFRM1);
+        setSofr_rate(sofr_rate);
+      } else if (sofrterm === "SOFR(3M)") {
+        const dyndisc = Number(match[0].SOFRM3) + Number(discount_fee_rate);
+        setDynamic_discount(dyndisc);
+        const sofr_rate = Number(match[0].SOFRM3);
+        setSofr_rate(sofr_rate);
+      } else if (sofrterm === "SOFR(Daily)") {
+        const dyndisc = Number(match[0].SOFR) + Number(discount_fee_rate);
+        setDynamic_discount(dyndisc);
+        const sofr_rate = Number(match[0].SOFR);
+        setSofr_rate(sofr_rate);
+      }
     }
-  }
+  }, [match, discount_fee_rate, base_rate]);
+
+  useEffect(() => {
+    function checkstatus() {
+      if (request_status === "Approved") {
+        setBookkeeping_status_admin("Open");
+        setBookkeeping_status_spv("Open");
+      } else {
+        setBookkeeping_status_admin("");
+        setBookkeeping_status_spv("");
+      }
+    }
+    checkstatus();
+  }, [request_status]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      const dd = moment(invoice_due_date);
-      const pd = moment(payout_date);
-      const period = moment(dd.diff(pd, "days"));
+      const invoicedue = moment(invoice_due_date).startOf("day");
+      const payoutd = moment(payout_date).startOf("day");
+      const period = moment(invoicedue).diff(payoutd, "days");
+      const spread =
+        (((Number(invoice_amount) * Number(discount_fee_rate)) / 100) *
+          Number(period)) /
+        360;
+      if (
+        broker_fee_rate === "" ||
+        broker_fee_rate === null ||
+        broker_fee_rate === undefined ||
+        broker_fee_rate.length <= 0
+      ) {
+        setBroker_fee_amount(0);
+      } else {
+        const broker_fee_amount =
+          (((Number(spread) * Number(transaction_fee_rate)) / 100) *
+            Number(broker_fee_rate)) /
+          100;
+        setBroker_fee_amount(broker_fee_amount);
+      }
       const transaction_fee_amount =
-        invoice_amount *
-        (discount_fee_rate / 100) *
-        (transaction_fee_rate / 100) *
-        (period / 360);
+        Number(spread) * (Number(transaction_fee_rate) / 100);
       const discount_fee_amount =
         invoice_amount * (dynamic_discount / 100) * (period / 360);
-      const broker_fee_amount =
-        transaction_fee_amount * (broker_fee_rate / 100);
       const id = value.value;
       await updateRequest({
         id,
@@ -293,13 +341,16 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_currency,
         invoice_date,
         invoice_due_date,
-        payout_date,
         base_rate,
         discount_fee_rate,
         discount_fee_amount,
         transaction_fee_rate,
         transaction_fee_amount,
         broker_fee_amount,
+        bookkeeping_status_admin,
+        bookkeeping_status_spv,
+        payout_date,
+        payback_date,
         _version,
       });
     } catch (e) {
@@ -379,7 +430,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                         ))}
                       </Select>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={12}>
                       <Select
                         fullWidth
                         label="Base Rate"
@@ -405,10 +456,36 @@ const RequestForm = ({ className, value, ...rest }) => {
                           id="payout_date"
                           name="payout_date"
                           label="Payout Date"
-                          format="dd/MM/yyyy"
+                          format="MM/DD/YYYY"
                           maxDate={new Date()}
                           onChange={(date) => {
                             setPayout_date(date);
+                          }}
+                          required
+                          KeyboardButtonProps={{
+                            "aria-label": "change date",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
+                          value={payback_date || ""}
+                          margin="normal"
+                          variant="outlined"
+                          id="payback_date"
+                          name="payback_date"
+                          label="Payback Date"
+                          format="MM/DD/YYYY"
+                          onChange={(date) => {
+                            setPayback_date(date);
                           }}
                           required
                           KeyboardButtonProps={{
@@ -479,6 +556,28 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
+                        name="broker_fee_rate"
+                        label="Broker Fee in % of Transaction Fee"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setBroker_fee_rate(e.target.value)}
+                        required
+                        value={broker_fee_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="broker_fee_amount"
+                        label="Broker Fee Amount"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setBroker_fee_amount(e.target.value)}
+                        value={broker_fee_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
                         name="discount_fee_rate"
                         label="Discount Fee / Spread"
                         fullWidth
@@ -514,7 +613,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                           id="invoice_date"
                           name="invoice_date"
                           label="Invoice Date"
-                          format="dd/MM/yyyy"
+                          format="MM/DD/YYYY"
                           minDate={subDays(new Date(), 30)}
                           maxDate={new Date()}
                           onChange={(date) => {
@@ -548,7 +647,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                           id="invoice_due_date"
                           name="invoice_due_date"
                           label="Invoice Due Date"
-                          format="dd/MM/yyyy"
+                          format="MM/DD/YYYY"
                           minDate={new Date()}
                           maxDate={addDays(new Date(), 270)}
                           onChange={(date) => {

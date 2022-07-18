@@ -7,6 +7,7 @@ import { Auth, API, graphqlOperation } from "aws-amplify";
 import Page from "src/components/Page";
 import ApprovedLimits from "./ApprovedLimits";
 import LatestLimits from "./LatestLimits";
+import NextDue from "./NextDue";
 import TasksProgress from "./TasksProgress";
 import TotalTransactions from "./TotalTransactions";
 import TotalTransactionAmount from "./TotalTransactionAmount";
@@ -100,6 +101,9 @@ const InvestorDashboard = () => {
           <Grid item lg={12} md={12} xl={12} xs={12}></Grid>
           <Grid item lg={12} md={12} xl={12} xs={12}>
             <LatestLimits />
+          </Grid>
+          <Grid item lg={12} md={12} xl={12} xs={12}>
+            <NextDue/>
           </Grid>
         </Grid>
       </Container>

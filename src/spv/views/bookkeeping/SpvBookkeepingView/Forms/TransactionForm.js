@@ -100,7 +100,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
   const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
-  const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
+  const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
   const [invoiceId_3party, setInvoiceId_3party] = useState("");
   const [requestId, setRequestId] = useState("");
 
@@ -122,7 +122,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         const {
           id,
           requestId,
-          bookkeeping_status_admin,
+          bookkeeping_status_spv,
           investorId,
           buyer_name,
           supplier_name,
@@ -135,7 +135,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         } = items;
         setDynamorequestid(id);
         setRequestId(requestId);
-        setBookkeeping_status_admin(bookkeeping_status_admin);
+        setBookkeeping_status_spv(bookkeeping_status_spv);
         setInvestorId(investorId);
         setTransaction_fee_rate(transaction_fee_rate);
         setBuyer_name(buyer_name);
@@ -154,8 +154,8 @@ const RequestForm = ({ className, value, ...rest }) => {
 
   useEffect(() => {
     if (
-      bookkeeping_status_admin === "Under Review" ||
-      bookkeeping_status_admin === "Approved"
+      bookkeeping_status_spv === "Under Review" ||
+      bookkeeping_status_spv === "Approved"
     ) {
       const id = value.value;
       getBook({ id });
@@ -178,22 +178,22 @@ const RequestForm = ({ className, value, ...rest }) => {
         }
       }
     }
-  }, [bookkeeping_status_admin, value]);
+  }, [bookkeeping_status_spv, value]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      if (bookkeeping_status_admin === "" || bookkeeping_status_admin === "Open") {
+      if (bookkeeping_status_spv === "" || bookkeeping_status_spv === "Open") {
         const id = dynamorequestid;
         await updateRequest({
           id,
           transaction_fee_amount,
           transaction_fee_rate,
           payout_date,
-          bookkeeping_status_admin,
+          bookkeeping_status_spv,
         });
-      } else if (bookkeeping_status_admin === "Under Review") {
+      } else if (bookkeeping_status_spv === "Under Review") {
         const id = dynamorequestid;
         const result = await createWave({
           transaction_fee_amount,
@@ -204,7 +204,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         var invoiceurl_3party = invoice.pdfUrl;
         var invoicepdfurl_3party = invoice.viewUrl;
         await createBookkeeping({
-          bookkeeping_status_admin,
+          bookkeeping_status_spv,
           requestId,
           invoiceId_3party,
           invoiceurl_3party,
@@ -215,13 +215,13 @@ const RequestForm = ({ className, value, ...rest }) => {
           transaction_fee_amount,
           transaction_fee_rate,
           payout_date,
-          bookkeeping_status_admin,
+          bookkeeping_status_spv,
         });
-      } else if (bookkeeping_status_admin === "Approved") {
+      } else if (bookkeeping_status_spv === "Approved") {
         const id = dynamobookkeepingid;
         await updateBookkeeping({
           id,
-          bookkeeping_status_admin,
+          bookkeeping_status_spv,
         });
         console.log(invoiceId_3party);
         await approveInvoice({
@@ -231,7 +231,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           const id = dynamorequestid;
           await updateRequest({
             id,
-            bookkeeping_status_admin,
+            bookkeeping_status_spv,
           });
         }
         assignid();
@@ -241,7 +241,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
     setRequestSuccess(true);
     setRequestLoading(false);
-    navigate("/admin/bookkeeping");
+    navigate("/spv/bookkeeping");
   }
 
   function updateRequest(input) {
@@ -383,16 +383,15 @@ const RequestForm = ({ className, value, ...rest }) => {
         }`,
         variables: {
           input: {
-            invoiceNumber:
-            `${input.id}`,
+            invoiceNumber: `${input.id}`,
             businessId:
-              "QnVzaW5lc3M6NGUyMmMxN2QtYjY5Yy00ZjA1LWE5ZWYtZTg5YWQ2ZmFlNTU1",
+              "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNh",
             customerId:
-              "QnVzaW5lc3M6NGUyMmMxN2QtYjY5Yy00ZjA1LWE5ZWYtZTg5YWQ2ZmFlNTU1O0N1c3RvbWVyOjU4OTAxNjI2",
+              "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNhO0N1c3RvbWVyOjY2MTM3MzQx",
             items: [
               {
                 productId:
-                  "QnVzaW5lc3M6NGUyMmMxN2QtYjY5Yy00ZjA1LWE5ZWYtZTg5YWQ2ZmFlNTU1O1Byb2R1Y3Q6Njk1MTExMDU=",
+                  "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNhO1Byb2R1Y3Q6NzkxNDM3ODM=",
                 quantity: 1,
                 unitPrice: input.transaction_fee_amount,
                 description: `Transaction ID: ${input.id}`,
@@ -491,11 +490,13 @@ const RequestForm = ({ className, value, ...rest }) => {
                     <Grid item xs={12} sm={12}>
                       <Select
                         fullWidth
-                        name="bookkeeping_status_admin"
-                        label="Bookkeeping Status Admin/Servicer"
-                        onChange={(e) => setBookkeeping_status_admin(e.target.value)}
+                        name="bookkeeping_status_spv"
+                        label="Bookkeeping Status SPV"
+                        onChange={(e) =>
+                          setBookkeeping_status_spv(e.target.value)
+                        }
                         required
-                        value={bookkeeping_status_admin || ""}
+                        value={bookkeeping_status_spv || ""}
                         variant="outlined"
                       >
                         {status.map((item, index) => (

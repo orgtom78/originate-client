@@ -7,6 +7,7 @@ import {
   BarChart as BarChartIcon,
   Settings as SettingsIcon,
   User as UserIcon,
+  BookOpen as BookOpenIcon,
   CreditCard as CreditCardIcon,
   DollarSign as DollarSignIcon,
   Home as HomeIcon,
@@ -36,6 +37,11 @@ const items = [
     href: "/spv/requests",
     icon: CreditCardIcon,
     title: "Invoices",
+  },
+  {
+    href: "/spv/bookkeeping",
+    icon: BookOpenIcon,
+    title: "Bookkeeping",
   },
   {
     href: "/spv/bank",
