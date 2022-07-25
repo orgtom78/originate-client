@@ -37,7 +37,9 @@ const {
 
 const yup = [
   Yup.object().shape({
-    [financials_reporting_period.name]: Yup.string(),
+    [financials_reporting_period.name]: Yup.string().required(
+      `${financials_reporting_period.requiredErrorMsg}`
+    ),
     [supplierId.name]: Yup.string(),
     [buyerId.name]: Yup.string(),
     [identityId.name]: Yup.string(),

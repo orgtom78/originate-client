@@ -24,16 +24,12 @@
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
           "s3Key": "amplify-builds/plaid-3237594867574a724c6c-build.zip"
         },
-        "newinvoicenotification": {
-          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/newinvoicenotification-2b4e377667345a523942-build.zip"
-        },
         "zoho": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/zoho-787257493976636b5a43-build.zip",
-          "zohoClientId": "1000.B2431PKHZX8NF86FB9VJV5T60P0U7J",
-          "zohoClientSecret": "5cbdd5028d4e84106129411e2449400e828e6697fd",
-          "zohoToken": "1000.efcbfbfac4b26d09deb9ea63d95f8295.d31aeb86cc808ea54f48d0763470819a"
+          "s3Key": "amplify-builds/zoho-386e6259397141583347-build.zip",
+          "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
+          "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11",
+          "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471"
         },
         "ocdefi": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
@@ -42,6 +38,18 @@
         "sofr": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
           "s3Key": "amplify-builds/sofr-7567714366612b2f5777-build.zip"
+        },
+        "dueinvoicenotification": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/dueinvoicenotification-485173337068372f4350-build.zip"
+        },
+        "newinvoicenot": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/newinvoicenot-6a707a4576624f2b6e7a-build.zip"
+        },
+        "dueinvoicenot": {
+          "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
+          "s3Key": "amplify-builds/dueinvoicenot-433374784c36696e6a36-build.zip"
         }
       }
     }

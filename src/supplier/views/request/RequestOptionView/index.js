@@ -42,7 +42,7 @@ const Invoice = () => {
   const { id } = useParams();
 
   return (
-    <Page className={clsx(classes.root)} title="Bank Accounts">
+    <Page className={clsx(classes.root)} title="Invoice Request Options">
       <Container maxWidth={false}>
         <Box mt={3}>
           <Grid
