@@ -66,6 +66,8 @@ export default function NewAccount() {
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
+  const [buyer_zoho_template_number, setBuyer_zoho_template_number] =
+    useState("");
 
   const context = useUser();
   const { id } = useParams();
@@ -120,6 +122,7 @@ export default function NewAccount() {
             buyer_address_number,
             buyer_address_postalcode,
             buyer_address_city,
+            buyer_zoho_template_number,
           },
         },
       } = buyer;
@@ -138,6 +141,7 @@ export default function NewAccount() {
       setBuyer_address_number(buyer_address_number);
       setBuyer_address_postalcode(buyer_address_postalcode);
       setBuyer_address_city(buyer_address_city);
+      setBuyer_zoho_template_number(buyer_zoho_template_number);
     }
     load();
   }, [sub, id]);
@@ -194,7 +198,8 @@ export default function NewAccount() {
     const tokenData = await auth.json();
     const accessToken = await tokenData.access_token;
     const res = await fetch(
-      "https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates//277418000000062107/createdocument?testing=true",
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${buyer_zoho_template_number}/createdocument?testing=true`,
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${buyer_zoho_template_number}/createdocument`,
       {
         method: "POST",
         headers: {

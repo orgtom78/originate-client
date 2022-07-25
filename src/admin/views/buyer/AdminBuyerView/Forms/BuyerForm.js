@@ -168,6 +168,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
     useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
+  const [buyer_address_number, setBuyer_address_number] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
   const [buyer_country, setBuyer_country] = useState("");
   const [buyer_industry, setBuyer_industry] = useState("");
@@ -180,6 +181,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_industry_code, setBuyer_industry_code] = useState("");
   const [buyer_register_number, setBuyer_register_number] = useState("");
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
+  const [buyer_zoho_template_number, setBuyer_zoho_template_number] =
+    useState("");
   const [_version, setVersion] = useState("");
 
   const [buyerloading, setBuyerLoading] = useState(false);
@@ -214,6 +217,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_date_of_incorporation,
               buyer_address_city,
               buyer_address_street,
+              buyer_address_number,
               buyer_address_postalcode,
               buyer_country,
               buyer_industry,
@@ -223,6 +227,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_industry_code,
               buyer_register_number,
               buyer_trading_name,
+              buyer_zoho_template_number,
               _version,
             },
           },
@@ -246,6 +251,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_type(buyer_type);
         setBuyer_address_city(buyer_address_city);
         setBuyer_address_street(buyer_address_street);
+        setBuyer_address_number(buyer_address_number);
         setBuyer_address_postalcode(buyer_address_postalcode);
         setBuyer_country(buyer_country);
         setBuyer_industry(buyer_industry);
@@ -257,6 +263,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_industry_code(buyer_industry_code);
         setBuyer_register_number(buyer_register_number);
         setBuyer_trading_name(buyer_trading_name);
+        setBuyer_zoho_template_number(buyer_zoho_template_number);
         setVersion(_version);
       } catch (err) {
         console.log("error fetching data..", err);
@@ -286,6 +293,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_date_of_incorporation,
         buyer_address_city,
         buyer_address_street,
+        buyer_address_number,
         buyer_address_postalcode,
         buyer_country,
         buyer_industry,
@@ -295,6 +303,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_industry_code,
         buyer_register_number,
         buyer_trading_name,
+        buyer_zoho_template_number,
         _version,
       });
     } catch (e) {
@@ -479,6 +488,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         )}
                       </Select>
                     </Grid>
+                    <Grid item xs={12} sm={12}>
+                      <TextField
+                        fullWidth
+                        label="Zoho Template Number"
+                        name="buyer_zoho_template_number"
+                        onChange={(e) =>
+                          setBuyer_zoho_template_number(e.target.value)
+                        }
+                        required
+                        value={buyer_zoho_template_number || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
@@ -558,7 +580,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Discount / Spread over Base Rate"
                         name="buyer_loan_discount_fee"
                         onChange={(e) =>
@@ -572,7 +594,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Transaction Fee in % of Spread"
                         name="buyer_loan_transaction_fee"
                         onChange={(e) =>
@@ -586,7 +608,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Broker Fee in % of Transaction Fee"
                         name="buyer_loan_broker_fee"
                         onChange={(e) =>
@@ -652,6 +674,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Street Number"
+                        name="buyer_address_number"
+                        onChange={(e) =>
+                          setBuyer_address_number(e.target.value)
+                        }
+                        required
+                        value={buyer_address_number || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={12} xs={12}>
                       <TextField
                         fullWidth
                         label="Address refinment"
