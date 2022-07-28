@@ -178,10 +178,6 @@ export default function NewAccount() {
     console.log(res);
   }
 
-  function _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function _submitForm(values, actions) {
     try {
       const userId = sub;

@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import {
-  InputField,
-  DatePickerField,
-  UploadField,
-} from "src/components/FormFields";
+import { useParams } from "react-router-dom";
+import { InputField, DatePickerField } from "src/components/FormFields";
+import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -51,6 +49,8 @@ export default function ShareholderForm(props) {
   const classes = useStyles();
   const {
     formField: {
+      balance_sheet_attachment,
+      income_statement_attachment,
       accounts_payable,
       accounts_receivable,
       cash,
@@ -62,7 +62,6 @@ export default function ShareholderForm(props) {
       short_term_debt,
       working_capital,
       ebit,
-      financials_attachment,
       net_profit,
       financials_rating,
       financials_reporting_period,
@@ -74,30 +73,127 @@ export default function ShareholderForm(props) {
 
   const { values: formValues } = useFormikContext();
   const updatefields = { values: formValues };
-  const finattachment = updatefields.values.financials_attachment;
+  const balance_sheet_update = updatefields.values.balance_sheet_attachment;
+  const income_update = updatefields.values.income_statement_attachment;
+  const { ident } = useParams();
+  const { groupid } = useParams();
+  const finId = props.fin;
 
-  const [img, setImg] = useState("");
+  const [balanceimg, setBalanceimg] = useState("");
+  const [balancepdf, setBalancepdf] = useState("");
+  const [incomeimg, setIncomeimg] = useState("");
+  const [incomepdf, setIncomepdf] = useState("");
 
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [balanceloading, setBalanceLoading] = useState(false);
+  const [balancesuccess, setBalanceSuccess] = useState(false);
+  const [incomeloading, setIncomeLoading] = useState(false);
+  const [incomesuccess, setIncomeSuccess] = useState(false);
 
   useEffect(() => {
-    if (finattachment) {
+    if (balance_sheet_update) {
       async function geturl() {
-        const u = await Storage.vault.get(finattachment);
-        setImg(u);
+        var uploadext = balance_sheet_update.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(balance_sheet_update, {
+            level: "private",
+            identityId: ident,
+          });
+          setBalanceimg(u);
+        } else {
+          const h = await Storage.get(balance_sheet_update, {
+            level: "private",
+            identityId: ident,
+          });
+          setBalancepdf(h);
+        }
       }
       geturl();
     }
-  }, [finattachment]);
+  }, [balance_sheet_update, ident]);
 
-  async function handleClick() {
-    setSuccess(false);
-    setLoading(true);
-    const b = await img;
+  async function handleBalanceClick() {
+    setBalanceSuccess(false);
+    setBalanceLoading(true);
+    const b = await balanceimg;
     if (b) {
-      setSuccess(true);
-      setLoading(false);
+      setBalanceSuccess(true);
+      setBalanceLoading(false);
+    }
+  }
+
+  function balanceisimageorpdf() {
+    if (balanceimg) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={balanceimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={balancepdf}
+          />
+        </>
+      );
+    }
+  }
+
+  useEffect(() => {
+    if (income_update) {
+      async function geturl() {
+        var uploadext = income_update.split(".").pop();
+        var imageExtensions = ["jpg", "jpeg", "bmp", "gif", "png"];
+        const d = imageExtensions.includes(uploadext);
+        if (d === true) {
+          const u = await Storage.get(income_update, {
+            level: "private",
+            identityId: ident,
+          });
+          setIncomeimg(u);
+        } else {
+          const h = await Storage.get(income_update, {
+            level: "private",
+            identityId: ident,
+          });
+          setIncomepdf(h);
+        }
+      }
+      geturl();
+    }
+  }, [income_update, ident]);
+
+  async function handleIncomeClick() {
+    setIncomeSuccess(false);
+    setIncomeLoading(true);
+    const b = await incomeimg;
+    if (b) {
+      setIncomeSuccess(true);
+      setIncomeLoading(false);
+    }
+  }
+
+  function incomeisimageorpdf() {
+    if (incomeimg) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={incomeimg} />
+        </>
+      );
+    } else {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            src={incomepdf}
+          />
+        </>
+      );
     }
   }
 
@@ -108,35 +204,80 @@ export default function ShareholderForm(props) {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={6}>
-              {finattachment ? (
-                <>
-                  <img className={classes.img} alt="complex" src={img} />
-                </>
+              {balance_sheet_update ? (
+                <>{balanceisimageorpdf()}</>
               ) : (
                 <>
-                  <UploadField
-                    name={financials_attachment.name}
-                    id={financials_attachment.name}
+                  <AdminUploadField
+                    name={balance_sheet_attachment.name}
+                    id={balance_sheet_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={finId}
                   />
-                  <label htmlFor={financials_attachment.name}>
+                  <label htmlFor={balance_sheet_attachment.name}>
                     <LoaderButton
-                      id={financials_attachment.name}
+                      id={balance_sheet_attachment.name}
                       fullWidth
                       component="span"
                       startIcon={<UploadIcon />}
-                      disabled={loading}
-                      success={success}
-                      loading={loading}
-                      onClick={handleClick}
+                      disabled={balanceloading}
+                      success={balancesuccess}
+                      loading={balanceloading}
+                      onClick={handleBalanceClick}
                     >
                       {" "}
-                      Company financial report*
+                      Company Balance Sheet*
                     </LoaderButton>
                   </label>
                 </>
               )}
+            </Grid>
+            <Grid item xs={6}>
+              {income_update ? (
+                <>{incomeisimageorpdf()}</>
+              ) : (
+                <>
+                  <AdminUploadField
+                    name={income_statement_attachment.name}
+                    id={income_statement_attachment.name}
+                    accept="image/*,application/pdf"
+                    style={{ display: "none" }}
+                    identityId={ident}
+                    userid={groupid}
+                    sectorid={finId}
+                  />
+                  <label htmlFor={income_statement_attachment.name}>
+                    <LoaderButton
+                      id={income_statement_attachment.name}
+                      fullWidth
+                      component="span"
+                      startIcon={<UploadIcon />}
+                      disabled={incomeloading}
+                      success={incomesuccess}
+                      loading={incomeloading}
+                      onClick={handleIncomeClick}
+                    >
+                      {" "}
+                      Company Income Statement*
+                    </LoaderButton>
+                  </label>
+                </>
+              )}
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <DatePickerField
+                name={financials_reporting_period.name}
+                label={financials_reporting_period.label}
+                format="yyyy"
+                views={["year"]}
+                minDate={new Date("2000/12/31")}
+                maxDate={new Date()}
+                fullWidth
+                variant="outlined"
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
@@ -262,18 +403,6 @@ export default function ShareholderForm(props) {
               <InputField
                 name={total_liabilities.name}
                 label={total_liabilities.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <DatePickerField
-                name={financials_reporting_period.name}
-                label={financials_reporting_period.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
                 fullWidth
                 variant="outlined"
               />

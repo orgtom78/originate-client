@@ -84,6 +84,7 @@ export default function AddressForm(props) {
       broker_date_of_incorporation,
       broker_address_city,
       broker_address_street,
+      broker_address_number,
       broker_address_postalcode,
       broker_country,
       broker_industry,
@@ -250,10 +251,18 @@ export default function AddressForm(props) {
                 variant="outlined"
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={6}>             
               <InputField
                 name={broker_address_street.name}
                 label={broker_address_street.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>             
+              <InputField
+                name={broker_address_number.name}
+                label={broker_address_number.label}
                 fullWidth
                 variant="outlined"
               />

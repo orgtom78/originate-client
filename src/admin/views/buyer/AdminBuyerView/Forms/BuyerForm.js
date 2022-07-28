@@ -686,7 +686,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         variant="outlined"
                       />
                     </Grid>
-                    <Grid item md={12} xs={12}>
+                    <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
                         label="Address refinment"
@@ -714,7 +714,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
+                          format="MM/DD/YYYY"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
                           onChange={(date) => {

@@ -73,6 +73,7 @@ const AdminNewSupplierBuyerView = lazy(() => import('src/admin/views/supplier/Ad
 const AdminRequestView = lazy(() => import('src/admin/views/request/AdminRequestView'));
 const AdminRequestListView = lazy(() => import('src/admin/views/request/AdminRequestListView'));
 const AdminNewRequestView = lazy(() => import('src/admin/views/request/AdminNewRequestView'));
+const AdminNewMultiRequestView = lazy(() => import('src/admin/views/request/AdminNewMultiRequestView'));
 const AdminBuyerTransactionListView = lazy(() => import('src/admin/views/buyer/AdminBuyerTransactionListView'));
 const AdminSupplierTransactionListView = lazy(() => import('src/admin/views/supplier/AdminSupplierTransactionListView'));
 
@@ -234,6 +235,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'newrequestsupplierlist', element: !isAdmin ? <AdminLoginView /> : <AdminSupplierTransactionListView  />},
       { path: 'newrequestlist/:supId', element: !isAdmin ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
       { path: 'newrequest/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewRequestView />  },
+      { path: 'newmultirequest', element: !isAdmin ? <LoginView /> : <AdminNewMultiRequestView />  },
 
       { path: 'investors', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorListView />  },
       { path: 'investor/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorView />  },

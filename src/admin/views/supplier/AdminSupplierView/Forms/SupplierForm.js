@@ -99,6 +99,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
     useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
+  const [supplier_address_number, setSupplier_address_number] = useState("");
   const [supplier_address_postalcode, setSupplier_address_postalcode] =
     useState("");
   const [supplier_country, setSupplier_country] = useState("");
@@ -161,6 +162,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
               supplier_date_of_incorporation,
               supplier_address_city,
               supplier_address_street,
+              supplier_address_number,
               supplier_address_postalcode,
               supplier_country,
               supplier_industry,
@@ -182,6 +184,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
         setSupplier_type(supplier_type);
         setSupplier_address_city(supplier_address_city);
         setSupplier_address_street(supplier_address_street);
+        setSupplier_address_number(supplier_address_number);
         setSupplier_address_postalcode(supplier_address_postalcode);
         setSupplier_country(supplier_country);
         setSupplier_industry(supplier_industry);
@@ -280,6 +283,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
         supplier_date_of_incorporation,
         supplier_address_city,
         supplier_address_street,
+        supplier_address_number,
         supplier_address_postalcode,
         supplier_country,
         supplier_industry,
@@ -487,6 +491,19 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         }
                         required
                         value={supplier_address_street || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Street Number"
+                        name="supplier_address_number"
+                        onChange={(e) =>
+                          setSupplier_address_number(e.target.value)
+                        }
+                        required
+                        value={supplier_address_number || ""}
                         variant="outlined"
                       />
                     </Grid>

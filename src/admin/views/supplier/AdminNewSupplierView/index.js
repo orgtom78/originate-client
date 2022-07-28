@@ -76,6 +76,7 @@ export default function NewSupplier() {
       const supplier_type = values["supplier_type"];
       const supplier_address_city = values["supplier_address_city"];
       const supplier_address_street = values["supplier_address_street"];
+      const supplier_address_number = values["supplier_address_number"];
       const supplier_address_postalcode = values["supplier_address_postalcode"];
       const supplier_address_refinment = values["supplier_address_refinment"];
       const supplier_country = values["supplier_country"];
@@ -85,12 +86,6 @@ export default function NewSupplier() {
         values["supplier_date_of_incorporation"];
       const supplier_registration_cert_attachment =
         values["supplier_registration_cert_attachment"];
-      const supplier_articles_of_association_attachment =
-        values["supplier_articles_of_association_attachment"];
-      const supplier_shareholder_list_attachment =
-        values["supplier_shareholder_list_attachment"];
-      const supplier_director_list_attachment =
-        values["supplier_director_list_attachment"];
       const supplier_register_number = values["supplier_register_number"];
       const supplier_trading_name = values["supplier_trading_name"];
       const supplier_website = values["supplier_website"];
@@ -118,25 +113,21 @@ export default function NewSupplier() {
       const ubo_country_of_residence = values["ubo_country_of_residence"];
       const ubo_status = "Under Review";
 
-      const financials_attachment = values["financial_accounts_attachment"];
+      const balance_sheet_attachment = values["balance_sheet_attachment"];
+      const income_statement_attachment = values["income_statement_attachment"];  
       const financials_reporting_period = values["financials_reporting_period"];
       const net_profit = values["net_profit"];
-      const financials_rating = values["financials_rating"];
       const sales = values["sales"];
       const total_assets = values["total_assets"];
       const total_liabilities = values["total_liabilities"];
-      const ebit = values["ebit"];
       const financials_status = "Under Review";
       const accounts_payable = values["accounts_payable"];
       const accounts_receivable = values["accounts_receivable"];
       const cash = values["cash"];
-      const equity_book_value = values["equity_book_value"];
-      const equity_market_value = values["equity_market_value"];
+      const total_equity = values["equity_book_value"];
       const interest_expenses = values["interest_expenses"];
       const inventory = values["inventory"];
-      const retained_earnings = values["retained_earnings"];
       const short_term_debt = values["short_term_debt"];
-      const working_capital = values["working_capital"];
 
       await createSupplier({
         userId,
@@ -148,18 +139,16 @@ export default function NewSupplier() {
         supplier_date_of_incorporation,
         supplier_address_city,
         supplier_address_street,
+        supplier_address_number,
         supplier_address_postalcode,
         supplier_country,
         supplier_industry,
         supplier_registration_cert_attachment,
-        supplier_articles_of_association_attachment,
-        supplier_shareholder_list_attachment,
-        supplier_director_list_attachment,
-        supplier_register_number,
-        supplier_trading_name,
         supplier_website,
         supplier_address_refinment,
         supplier_industry_code,
+        supplier_register_number,
+        supplier_trading_name,
       });
 
       await createDirector({
@@ -201,22 +190,18 @@ export default function NewSupplier() {
         financialsId,
         supplierId,
         identityId,
+        balance_sheet_attachment,
+        income_statement_attachment,
         accounts_payable,
         accounts_receivable,
         cash,
-        equity_book_value,
-        equity_market_value,
         interest_expenses,
         inventory,
-        retained_earnings,
         short_term_debt,
-        working_capital,
-        ebit,
-        financials_attachment,
         net_profit,
-        financials_rating,
         financials_reporting_period,
         sales,
+        total_equity,
         total_assets,
         total_liabilities,
         financials_status,
