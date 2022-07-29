@@ -251,7 +251,7 @@ export default function NewAccount() {
       const period = moment(values["invoice_due_date"]).diff(
         payout_date,
         "days"
-      );
+      )+1;
       const base_rate = buyer_loan_rate;
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;

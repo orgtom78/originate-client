@@ -315,7 +315,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     async function checkBrokerStatus() {
       const invoicedue = moment(invoice_due_date).utc().startOf("day");
       const payoutd = moment(payout_date).utc().startOf("day");
-      const period = moment(invoicedue).diff(payoutd, "days");
+      const period = moment(invoicedue).diff(payoutd, "days")+1;
       const spread =
         (((Number(invoice_amount) * Number(discount_fee_rate)) / 100) *
           Number(period)) /
@@ -371,8 +371,8 @@ const RequestForm = ({ className, value, ...rest }) => {
     console.log(standduedate);
     if (standardizedinput !== standduedate) {
       console.log("not equal calculate new discount");
-      const oldperiod = moment(standduedate).diff(standardpayout, "days");
-      const newperiod = moment(standardizedinput).diff(standardpayout, "days");
+      const oldperiod = moment(standduedate).diff(standardpayout, "days")+1;
+      const newperiod = moment(standardizedinput).diff(standardpayout, "days")+1;
       console.log(newperiod);
       const periodratio = Number(newperiod) / Number(oldperiod);
       const newtotaldiscount =

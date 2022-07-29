@@ -232,10 +232,8 @@ export default function NewAccount() {
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
       const payout_date = moment();
-      const period = moment(values["invoice_due_date"]).diff(
-        payout_date,
-        "days"
-      );
+      const period =
+        moment(values["invoice_due_date"]).diff(payout_date, "days") + 1;
       const transaction_fee_amount =
         (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
         360;
