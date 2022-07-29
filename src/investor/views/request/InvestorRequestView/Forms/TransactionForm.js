@@ -21,9 +21,9 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -373,6 +373,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
+      const request_status = "Approved";
       await updateRequest({
         id,
         request_status,

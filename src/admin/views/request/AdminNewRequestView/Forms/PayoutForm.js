@@ -705,7 +705,7 @@ export default function PayoutForm(props) {
               <DatePickerField
                 name={invoice_date.name}
                 label={invoice_date.label}
-                format="dd/MM/yyyy"
+                format="MM/DD/YYYY"
                 minDate={subDays(new Date(), 30)}
                 maxDate={new Date()}
                 fullWidth
@@ -716,9 +716,9 @@ export default function PayoutForm(props) {
               <DatePickerField
                 name={invoice_due_date.name}
                 label={invoice_due_date.label}
-                format="dd/MM/yyyy"
+                format="MM/DD/YYYY"
                 minDate={new Date()}
-                maxDate={addDays(new Date(), 270)}
+                maxDate={addDays(new Date(), 180)}
                 fullWidth
                 variant="outlined"
               />

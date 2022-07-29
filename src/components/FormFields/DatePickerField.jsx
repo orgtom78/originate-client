@@ -4,6 +4,7 @@ import { Grid, TextField } from "@mui/material";
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import moment from "moment";
 
 
 export default function DatePickerField(props) {
@@ -16,7 +17,8 @@ export default function DatePickerField(props) {
 
   useEffect(() => {
     if (value) {
-      const date = new Date(value);
+      const date = moment(value).utc().startOf("day");
+      console.log(date)
       setSelectedDate(date);
     }
   }, [value]);

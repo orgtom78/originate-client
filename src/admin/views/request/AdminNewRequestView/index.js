@@ -271,8 +271,9 @@ export default function NewAccount() {
       const sold_goods_description = values["sold_goods_description"];
       const invoice_amount = values["invoice_amount"];
       const invoice_currency = values["invoice_currency"];
-      const invoice_date = values["invoice_date"];
-      const invoice_due_date = values["invoice_due_date"];
+      const invoice_date = moment(values["invoice_date"]).utc().startOf("day");
+      const invoice_due_date = moment(values["invoice_due_date"]).utc().startOf("day");
+      console.log(invoice_due_date);
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
       const ipu_attachment = values["ipu_attachment"];
