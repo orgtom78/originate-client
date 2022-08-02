@@ -3,15 +3,12 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views";
 import {
-  AppBar,
   Avatar,
   Box,
   Card,
   Chip,
   Container,
   Checkbox,
-  Tab,
-  Tabs,
   Table,
   TableBody,
   TableCell,
@@ -41,18 +38,30 @@ const useStyles = makeStyles((theme) => ({
     minHeight: "100%",
     paddingBottom: theme.spacing(3),
     paddingTop: theme.spacing(3),
+    display: "flex",
+    flexDirection: "column",
   },
-  avatar: {
-    marginRight: theme.spacing(2),
+  productCard: {
+    height: "100%",
+  },
+  statsItem: {
+    alignItems: "center",
+    display: "flex",
+  },
+  statsIcon: {
+    marginRight: theme.spacing(1),
+  },
+  palette: {
+    alternative: orange,
   },
 }));
 
-const greenTheme = createTheme((theme) => ({
+const greenTheme = createTheme({
   palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-}));
-const orangeTheme = createTheme((theme) => ({
+});
+const orangeTheme = createTheme({
   palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-}));
+});
 
 const AdminTransactionListView = () => {
   const classes = useStyles();
@@ -70,7 +79,7 @@ const AdminTransactionListView = () => {
   useEffect(() => {
     async function getRequests() {
       let filter = {
-        bookkeeping_status_spv: { eq: "" || "Open" },
+        bookkeeping_status_spv: { attributeType: "string" },
       };
       const {
         data: {
@@ -165,10 +174,10 @@ const AdminTransactionListView = () => {
     },
     { id: "amount", numeric: true, disablePadding: false, label: "Amount" },
     {
-      id: "latest_update",
+      id: "status",
       numeric: false,
       disablePadding: false,
-      label: "Latest update",
+      label: "Status",
     },
   ];
 
@@ -323,39 +332,6 @@ const AdminTransactionListView = () => {
     }
   }
 
-  function TabPanel(props) {
-    const { children, value, index, ...other } = props;
-
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <Typography>{children}</Typography>
-          </Box>
-        )}
-      </div>
-    );
-  }
-
-  TabPanel.propTypes = {
-    children: PropTypes.node,
-    index: PropTypes.number.isRequired,
-    value: PropTypes.number.isRequired,
-  };
-
-  function a11yProps(index) {
-    return {
-      id: `simple-tab-${index}`,
-      "aria-controls": `simple-tabpanel-${index}`,
-    };
-  }
-
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
@@ -365,344 +341,125 @@ const AdminTransactionListView = () => {
     setValue(index);
   };
 
+  function getLink(requeststatus, bookstatus, id) {
+    if (requeststatus === "Approved" && bookstatus !== "Approved") {
+      return `/spv/bookkeeping/${id}/`;
+    } else {
+      return <></>;
+    }
+  }
+
   return (
     <Page title="Bookkeeping">
       <React.Fragment>
-        <AppBar position="static">
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            indicatorColor="secondary"
-            textColor="inherit"
-            variant="fullWidth"
-            aria-label="full width tabs example"
-          >
-            <Tab label="Open" {...a11yProps(0)} />
-            <Tab label="Review" {...a11yProps(1)} />
-            <Tab label="Approved" {...a11yProps(2)} />
-          </Tabs>
-        </AppBar>
         <SwipeableViews
           axis={classes.direction === "rtl" ? "x-reverse" : "x"}
           index={value}
           onChangeIndex={handleChangeIndex}
         >
-          <TabPanel value={value} index={0}>
-            <Container maxWidth={false}>
-              <Box mt={3}>
-                <Card>
-                  <PerfectScrollbar>
-                    <Box minWidth={1050}>
-                      <TableContainer>
-                        <Table>
-                          <EnhancedTableHead
-                            classes={classes}
-                            numSelected={selectedCustomerIds.length}
-                            onSelectAllClick={handleSelectAll}
-                            onRequestSort={handleRequestSort}
-                            rowCount={request.length}
-                          />
-                          <TableBody>
-                            {request
-                              .slice(page * limit, page * limit + limit)
-                              .map((request, index) => {
-                                return (
-                                  <TableRow
-                                    hover
-                                    key={request.requestId}
-                                    selected={
-                                      selectedCustomerIds.indexOf(
-                                        request.requestId
-                                      ) !== -1
-                                    }
-                                    tabIndex={-1}
-                                  >
-                                    <TableCell padding="checkbox">
-                                      <Checkbox
-                                        checked={
-                                          selectedCustomerIds.indexOf(
-                                            request.requestId
-                                          ) !== -1
-                                        }
-                                        onChange={(event) =>
-                                          handleSelectOne(
-                                            event,
-                                            request.requestId
-                                          )
-                                        }
-                                        value="true"
-                                      />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Box alignItems="center" display="flex">
-                                        <Link
-                                          to={`/spv/bookkeeping/${request.requestId}/`}
+          <Container maxWidth={false}>
+            <Box mt={3}>
+              <Card>
+                <PerfectScrollbar>
+                  <Box minWidth={1050}>
+                    <TableContainer>
+                      <Table>
+                        <EnhancedTableHead
+                          classes={classes}
+                          numSelected={selectedCustomerIds.length}
+                          onSelectAllClick={handleSelectAll}
+                          onRequestSort={handleRequestSort}
+                          rowCount={request.length}
+                        />
+                        <TableBody>
+                          {request
+                            .slice(page * limit, page * limit + limit)
+                            .map((request, index) => {
+                              return (
+                                <TableRow
+                                  hover
+                                  key={request.requestId}
+                                  selected={
+                                    selectedCustomerIds.indexOf(
+                                      request.requestId
+                                    ) !== -1
+                                  }
+                                  tabIndex={-1}
+                                >
+                                  <TableCell padding="checkbox">
+                                    <Checkbox
+                                      checked={
+                                        selectedCustomerIds.indexOf(
+                                          request.requestId
+                                        ) !== -1
+                                      }
+                                      onChange={(event) =>
+                                        handleSelectOne(
+                                          event,
+                                          request.requestId
+                                        )
+                                      }
+                                      value="true"
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    <Box alignItems="center" display="flex">
+                                      <Link
+                                        to={getLink(
+                                          request.request_status,
+                                          request.bookkeeping_status_spv,
+                                          request.requestId
+                                        )}
+                                      >
+                                        <Avatar
+                                          className={classes.avatar}
+                                          src={`${request.buyer_logo}`}
                                         >
-                                          <Avatar
-                                            className={classes.avatar}
-                                            src={`${request.buyer_logo}`}
-                                          >
-                                            {getInitials(request.buyer_name)}
-                                          </Avatar>
-                                        </Link>
-                                        <Typography
-                                          color="textPrimary"
-                                          variant="body1"
-                                        >
-                                          {request.buyer_name}
-                                        </Typography>
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell>{`${request.supplier_name}`}</TableCell>
-                                    <TableCell>
-                                      <NumberFormat
+                                          {getInitials(request.buyer_name)}
+                                        </Avatar>
+                                      </Link>
+                                      <Typography
                                         color="textPrimary"
-                                        variant="h3"
-                                        value={request.invoice_amount}
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                        prefix={"$"}
-                                      />
-                                    </TableCell>
-                                    <TableCell>
-                                      {moment(request.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                  </PerfectScrollbar>
-                  <TablePagination
-                    component="div"
-                    count={request.length}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleLimitChange}
-                    page={page}
-                    rowsPerPage={limit}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                  />
-                </Card>
-              </Box>
-            </Container>
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <Container maxWidth={false}>
-              <Box mt={3}>
-                <Card>
-                  <PerfectScrollbar>
-                    <Box minWidth={1050}>
-                      <TableContainer>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={
-                                    selectedCustomerIds.length ===
-                                    reviewbook.length
-                                  }
-                                  color="primary"
-                                  indeterminate={
-                                    selectedCustomerIds.length > 0 &&
-                                    selectedCustomerIds.length <
-                                      reviewbook.length
-                                  }
-                                  onChange={handleSelectAll}
-                                />
-                              </TableCell>
-                              <TableCell>Buyer's Name</TableCell>
-                              <TableCell>Invoice PDF</TableCell>
-                              <TableCell>Invoice URL</TableCell>
-                              <TableCell>Latest update</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {reviewbook
-                              .slice(page * limit, page * limit + limit)
-                              .map((book, index) => {
-                                return (
-                                  <TableRow
-                                    hover
-                                    key={book.id}
-                                    selected={
-                                      selectedCustomerIds.indexOf(book.id) !==
-                                      -1
-                                    }
-                                    tabIndex={-1}
-                                  >
-                                    <TableCell padding="checkbox">
-                                      <Checkbox
-                                        checked={
-                                          selectedCustomerIds.indexOf(
-                                            book.id
-                                          ) !== -1
-                                        }
-                                        onChange={(event) =>
-                                          handleSelectOne(event, book.id)
-                                        }
-                                        value="true"
-                                      />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Box alignItems="center" display="flex">
-                                        <Link
-                                          to={`/spv/bookkeeping/${book.requestId}/`}
-                                        >
-                                          <Avatar
-                                            className={classes.avatar}
-                                            src={`${book.buyer_name}`}
-                                          >
-                                            {getInitials(book.buyer_name)}
-                                          </Avatar>
-                                        </Link>
-                                        <Typography
-                                          color="textPrimary"
-                                          variant="body1"
-                                        >
-                                          {book.buyerId}
-                                        </Typography>
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell>{`${book.invoiceurl_3party}`}</TableCell>
-                                    <TableCell>{`${book.invoicepdfurl_3party}`}</TableCell>
-                                    <TableCell>
-                                      {moment(book.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                  </PerfectScrollbar>
-                  <TablePagination
-                    component="div"
-                    count={request.length}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleLimitChange}
-                    page={page}
-                    rowsPerPage={limit}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                  />
-                </Card>
-              </Box>
-            </Container>
-          </TabPanel>
-          <TabPanel value={value} index={2}>
-            <Container maxWidth={false}>
-              <Box mt={3}>
-                <Card>
-                  <PerfectScrollbar>
-                    <Box minWidth={1050}>
-                      <TableContainer>
-                        <Table>
-                          <TableHead>
-                            <TableRow>
-                              <TableCell padding="checkbox">
-                                <Checkbox
-                                  checked={
-                                    selectedCustomerIds.length ===
-                                    approvebook.length
-                                  }
-                                  color="primary"
-                                  indeterminate={
-                                    selectedCustomerIds.length > 0 &&
-                                    selectedCustomerIds.length <
-                                      approvebook.length
-                                  }
-                                  onChange={handleSelectAll}
-                                />
-                              </TableCell>
-                              <TableCell>Buyer's Name</TableCell>
-                              <TableCell>Invoice PDF</TableCell>
-                              <TableCell>Invoice URL</TableCell>
-                              <TableCell>Latest update</TableCell>
-                            </TableRow>
-                          </TableHead>
-                          <TableBody>
-                            {approvebook
-                              .slice(page * limit, page * limit + limit)
-                              .map((book, index) => {
-                                return (
-                                  <TableRow
-                                    hover
-                                    key={book.id}
-                                    selected={
-                                      selectedCustomerIds.indexOf(
-                                        book.requestId
-                                      ) !== -1
-                                    }
-                                    tabIndex={-1}
-                                  >
-                                    <TableCell padding="checkbox">
-                                      <Checkbox
-                                        checked={
-                                          selectedCustomerIds.indexOf(
-                                            book.id
-                                          ) !== -1
-                                        }
-                                        onChange={(event) =>
-                                          handleSelectOne(event, book.id)
-                                        }
-                                        value="true"
-                                      />
-                                    </TableCell>
-                                    <TableCell>
-                                      <Box alignItems="center" display="flex">
-                                        <Link
-                                          to={`/spv/bookkeeping/${book.requestId}/`}
-                                        >
-                                          <Avatar
-                                            className={classes.avatar}
-                                            src={`${book.buyer_name}`}
-                                          >
-                                            {getInitials(book.buyer_name)}
-                                          </Avatar>
-                                        </Link>
-                                        <Typography
-                                          color="textPrimary"
-                                          variant="body1"
-                                        >
-                                          {book.buyerId}
-                                        </Typography>
-                                      </Box>
-                                    </TableCell>
-                                    <TableCell>{`${book.invoiceurl_3party}`}</TableCell>
-                                    <TableCell>{`${book.invoicepdfurl_3party}`}</TableCell>
-                                    <TableCell>
-                                      {moment(book.createdAt).format(
-                                        "DD/MM/YYYY"
-                                      )}
-                                    </TableCell>
-                                  </TableRow>
-                                );
-                              })}
-                          </TableBody>
-                        </Table>
-                      </TableContainer>
-                    </Box>
-                  </PerfectScrollbar>
-                  <TablePagination
-                    component="div"
-                    count={request.length}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleLimitChange}
-                    page={page}
-                    rowsPerPage={limit}
-                    rowsPerPageOptions={[5, 10, 25, 50]}
-                  />
-                </Card>
-              </Box>
-            </Container>
-          </TabPanel>
+                                        variant="body1"
+                                      >
+                                        {request.buyer_name}
+                                      </Typography>
+                                    </Box>
+                                  </TableCell>
+                                  <TableCell>{`${request.supplier_name}`}</TableCell>
+                                  <TableCell>
+                                    <NumberFormat
+                                      color="textPrimary"
+                                      variant="h3"
+                                      value={request.invoice_amount}
+                                      displayType={"text"}
+                                      thousandSeparator={true}
+                                      prefix={"$"}
+                                    />
+                                  </TableCell>
+                                  <TableCell>
+                                    {checkstatus(request.request_status)}
+                                  </TableCell>
+                                </TableRow>
+                              );
+                            })}
+                        </TableBody>
+                      </Table>
+                    </TableContainer>
+                  </Box>
+                </PerfectScrollbar>
+                <TablePagination
+                  component="div"
+                  count={request.length}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleLimitChange}
+                  page={page}
+                  rowsPerPage={limit}
+                  rowsPerPageOptions={[5, 10, 25, 50]}
+                />
+              </Card>
+            </Box>
+          </Container>
         </SwipeableViews>
       </React.Fragment>
     </Page>

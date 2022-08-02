@@ -97,6 +97,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
   const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
+  const [discount_fee_amount, setDiscount_fee_amount] = useState("");
   const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
   const [bookkeeping_status, setBookkeeping_status] = useState("");
   const [requestId, setRequestId] = useState("");
@@ -128,18 +129,22 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_due_date,
           transaction_fee_rate,
           transaction_fee_amount,
+          discount_fee_amount,
         } = items;
         setDynamorequestid(id);
         setRequestId(requestId);
         setBookkeeping_status_spv(bookkeeping_status_spv);
         setBookkeeping_status(bookkeeping_status);
         setTransaction_fee_rate(transaction_fee_rate);
-        setInvoice_amount(invoice_amount);
+        const round = Number(invoice_amount).toFixed(2);
+        setInvoice_amount(round);
         setInvoice_currency(invoice_currency);
         setPayout_date(payout_date);
         setInvoice_due_date(invoice_due_date);
-        const round = Number(transaction_fee_amount).toFixed(2);
-        setTransaction_fee_amount(round);
+        const round1 = Number(transaction_fee_amount).toFixed(2);
+        setTransaction_fee_amount(round1);
+        const round2 = Number(discount_fee_amount).toFixed(2);
+        setDiscount_fee_amount(round2);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -190,35 +195,30 @@ const RequestForm = ({ className, value, ...rest }) => {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      if (bookkeeping_status_spv === "Under Review") {
+      const bookkeeping_status_spv = "Approved";
+      const id = dynamobookkeepingid;
+      await createWavePurchase({
+        invoice_amount,
+        discount_fee_amount,
+        id,
+      });
+      await createWaveSale({
+        invoice_amount,
+        discount_fee_amount,
+        id,
+      });
+      await updateBookkeeping({
+        id,
+        bookkeeping_status_spv,
+      });
+      async function assignid() {
         const id = dynamorequestid;
-        await createWavePurchase({
-          invoice_amount,
-          id,
-        });
-        await createWaveSale({
-          invoice_amount,
-          id,
-        });
         await updateRequest({
           id,
           bookkeeping_status_spv,
         });
-      } else if (bookkeeping_status_spv === "Approved") {
-        const id = dynamobookkeepingid;
-        await updateBookkeeping({
-          id,
-          bookkeeping_status_spv,
-        });
-        async function assignid() {
-          const id = dynamorequestid;
-          await updateRequest({
-            id,
-            bookkeeping_status_spv,
-          });
-        }
-        assignid();
       }
+      assignid();
     } catch (e) {
       onError(e);
     }
@@ -272,14 +272,14 @@ const RequestForm = ({ className, value, ...rest }) => {
               accountId:
                 "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               direction: "DEPOSIT",
-              amount: `${Number(input.invoice_amount).toFixed(2)}`,
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
             },
             lineItems: {
               description: `RequestId: ${input.id}`,
               accountId:
                 "QWNjb3VudDoxNTE1MTAxMzg4OTA3MDcwMzAwO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               balance: "CREDIT",
-              amount: `${Number(input.invoice_amount).toFixed(2)}`,
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
             },
           },
         },
@@ -321,14 +321,14 @@ const RequestForm = ({ className, value, ...rest }) => {
               accountId:
                 "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               direction: "WITHDRAWAL",
-              amount: `${Number(input.invoice_amount).toFixed(2)}`,
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
             },
             lineItems: {
               description: `RequestId: ${input.id}`,
               accountId:
                 "QWNjb3VudDoxNTE1MTAxNTUxODEzODM3NjYyO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               balance: "DEBIT",
-              amount: `${Number(input.invoice_amount).toFixed(2)}`,
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
             },
           },
         },
@@ -392,16 +392,14 @@ const RequestForm = ({ className, value, ...rest }) => {
                     <Grid item xs={12} sm={12}>
                       <Select
                         fullWidth
-                        name="bookkeeping_status_spv"
-                        label="Bookkeeping Status SPV"
-                        onChange={(e) =>
-                          setBookkeeping_status_spv(e.target.value)
-                        }
+                        name="invoice_currency"
+                        label="Invoice Currency"
+                        onChange={(e) => setInvoice_currency(e.target.value)}
                         required
-                        value={bookkeeping_status_spv || ""}
+                        value={invoice_currency || ""}
                         variant="outlined"
                       >
-                        {status.map((item, index) => (
+                        {curr.map((item, index) => (
                           <MenuItem key={index} value={item.label}>
                             {item.label}
                           </MenuItem>
@@ -420,21 +418,17 @@ const RequestForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Select
+                      <TextField
+                        name="discount_fee_amount"
+                        label="Total Discount"
                         fullWidth
-                        name="invoice_currency"
-                        label="Invoice Currency"
-                        onChange={(e) => setInvoice_currency(e.target.value)}
-                        required
-                        value={invoice_currency || ""}
                         variant="outlined"
-                      >
-                        {curr.map((item, index) => (
-                          <MenuItem key={index} value={item.label}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        required
+                        value={discount_fee_amount || ""}
+                      />
                     </Grid>
                     <Grid
                       container
@@ -504,32 +498,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         />
                       </LocalizationProvider>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_rate"
-                        label="Transaction Fee Rate in % of Spread"
-                        fullWidth
-                        variant="outlined"
-                        onChange={(e) =>
-                          setTransaction_fee_rate(e.target.value)
-                        }
-                        required
-                        value={transaction_fee_rate || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_amount"
-                        label="Originate Transaction Fee Amount"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        required
-                        value={transaction_fee_amount || ""}
-                      />
-                    </Grid>
                   </Grid>
                 </CardContent>
                 <Divider />
@@ -541,7 +509,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                     loading={requestloading}
                     onClick={handleRequestSubmit}
                   >
-                    Create/Approve Invoice
+                    Create Bookkeeping Entries
                   </LoaderButton>
                 </Box>
               </Card>
