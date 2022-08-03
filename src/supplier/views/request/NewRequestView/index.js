@@ -97,13 +97,11 @@ export default function NewAccount() {
         },
       } = buyer;
       const buyername = await buyer_name;
-      const invid = investorId;
-      const buyid = buyerId;
-      setInvestid(invid);
+      setInvestid(investorId);
       setBrokerid(brokerId);
       setSpvid(spvId);
       setBuyername(buyername);
-      setBuyid(buyid);
+      setBuyid(buyerId);
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
@@ -134,8 +132,6 @@ export default function NewAccount() {
     }
     load();
   }, []);
-
-  React.useEffect(() => {}, []);
 
   async function burn(id) {
     const myInit = {

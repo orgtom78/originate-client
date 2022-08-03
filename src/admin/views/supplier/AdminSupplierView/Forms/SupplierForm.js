@@ -33,6 +33,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/supplier/AdminSupplierView/Lists/directorlist.js";
 import UboListView from "src/admin/views/supplier/AdminSupplierView/Lists/ubolist.js";
+import BuyerListView from "src/admin/views/supplier/AdminSupplierView/Lists/buyerlist.js";
 import AdminUpdateBankView from "src/admin/views/bank/AdminUpdateBankView/index.js";
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
@@ -114,6 +115,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [supplier_industry_code, setSupplier_industry_code] = useState("");
   const [supplier_register_number, setSupplier_register_number] = useState("");
   const [supplier_trading_name, setSupplier_trading_name] = useState("");
+  const [buyer_zoho_template_ipu, setBuyer_zoho_template_ipu] = useState("");
+  const [buyer_zoho_template_offer, setBuyer_zoho_template_offer] =
+    useState("");
+  const [buyer_zoho_template_raa_offer, setBuyer_zoho_template_raa_offer] =
+    useState("");
 
   //Financials:
   const [financialsId, setFinancialsId] = useState("");
@@ -172,6 +178,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
               supplier_industry_code,
               supplier_register_number,
               supplier_trading_name,
+              buyer_zoho_template_ipu,
+              buyer_zoho_template_offer,
+              buyer_zoho_template_raa_offer,
             },
           },
         } = supplier;
@@ -196,6 +205,9 @@ const SupplierForm = ({ className, value, ...rest }) => {
         setSupplier_industry_code(supplier_industry_code);
         setSupplier_register_number(supplier_register_number);
         setSupplier_trading_name(supplier_trading_name);
+        setBuyer_zoho_template_ipu(buyer_zoho_template_ipu);
+        setBuyer_zoho_template_offer(buyer_zoho_template_offer);
+        setBuyer_zoho_template_raa_offer(buyer_zoho_template_raa_offer);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -658,7 +670,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
             </Card>
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
@@ -914,6 +925,21 @@ const SupplierForm = ({ className, value, ...rest }) => {
             <Card>
               <CardContent>
                 <AdminUpdateBankView value={supplierId} user={userId} />
+              </CardContent>
+            </Card>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography className={classes.heading}>
+              Company Zoho Templates
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Card>
+              <CardContent>
+                <BuyerListView value={supplierId} />
               </CardContent>
             </Card>
           </AccordionDetails>
