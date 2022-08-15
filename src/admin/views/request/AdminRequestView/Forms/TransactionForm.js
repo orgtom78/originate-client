@@ -411,6 +411,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         discount_fee_amount,
         transaction_fee_rate,
         transaction_fee_amount,
+        broker_fee_rate,
         broker_fee_amount,
         bookkeeping_status_admin,
         bookkeeping_status_spv,
