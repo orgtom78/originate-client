@@ -24,9 +24,10 @@ import { onError } from "src/libs/errorLib.js";
 import { Storage } from "aws-amplify";
 import { green } from "@mui/material/colors";
 import { useParams } from "react-router-dom";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const idtype = [
   {
@@ -116,10 +117,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   const [director_nationality, setDirector_nationality] = useState("");
   const [director_poa_attachment, setDirector_poa_attachment] = useState("");
   const [director_date_of_birth, setDirector_date_of_birth] = useState("");
-  const [
-    director_country_of_residence,
-    setDirector_country_of_residence,
-  ] = useState("");
+  const [director_country_of_residence, setDirector_country_of_residence] =
+    useState("");
 
   const [directorloading, setDirectorLoading] = useState(false);
   const [directorsuccess, setDirectorSuccess] = useState(false);
@@ -270,7 +269,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   }, [director_id_attachment, identityId]);
 
   function directoridisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(directoridimg)) {
       return (
         <>
@@ -447,7 +447,8 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
   }, [director_poa_attachment, identityId]);
 
   function directorpoaisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(directorpoaimg)) {
       return (
         <>
@@ -657,7 +658,7 @@ const UpdateDirectorForm = ({ className, value, ...rest }) => {
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
+                    <DesktopDatePicker
                       value={director_date_of_birth || ""}
                       margin="normal"
                       variant="outlined"

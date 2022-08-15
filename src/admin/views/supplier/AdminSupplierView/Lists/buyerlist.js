@@ -95,7 +95,9 @@ const BuyerListView = (value) => {
                         <TableRow hover key={buyer.buyerId}>
                           <TableCell>
                             <Box alignItems="center" display="flex">
-                              <Link to={`/admin/esign/${buyer.id}/${buyer.supplierId}/`}>
+                              <Link
+                                to={`/admin/esign/${buyer.buyerId}/${buyer.supplierId}/`}
+                              >
                                 <Avatar
                                   className={classes.avatar}
                                   src={`${buyer.avatarUrl}`}

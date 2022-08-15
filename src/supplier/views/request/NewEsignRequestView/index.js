@@ -66,8 +66,11 @@ export default function NewAccount() {
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
-  const [buyer_zoho_template_number, setBuyer_zoho_template_number] =
-    useState("");
+
+  const [esignId, setEsignId] = useState("");
+  const [esign_template_ipu, setEsign_template_ipu] = useState("");
+  const [esign_template_offer, setEsign_template_offer] = useState("");
+  const [esign_template_raa_offer, setEsign_template_raa_offer] = useState("");
 
   const context = useUser();
   const { id } = useParams();
@@ -122,7 +125,6 @@ export default function NewAccount() {
             buyer_address_number,
             buyer_address_postalcode,
             buyer_address_city,
-            buyer_zoho_template_number,
           },
         },
       } = buyer;
@@ -141,10 +143,36 @@ export default function NewAccount() {
       setBuyer_address_number(buyer_address_number);
       setBuyer_address_postalcode(buyer_address_postalcode);
       setBuyer_address_city(buyer_address_city);
-      setBuyer_zoho_template_number(buyer_zoho_template_number);
     }
     load();
   }, [sub, id]);
+
+  React.useEffect(() => {
+    async function getEsign() {
+      try {
+        let filter = {
+          supplierId: { eq: supid },
+          buyerId: { eq: buyid },
+        };
+        const {
+          data: {
+            listEsigns: { items: itemsPage1, nextToken },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listEsigns, { filter: filter })
+        );
+        const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
+        const items = n.data.listEsigns.items[0];
+        setEsignId(items.id);
+        setEsign_template_ipu(items.esign_template_ipu);
+        setEsign_template_offer(items.esign_template_offer);
+        setEsign_template_raa_offer(items.esign_template_raa_offer);
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    getEsign();
+  }, [supid, buyid]);
 
   React.useEffect(() => {
     async function load() {
@@ -198,8 +226,8 @@ export default function NewAccount() {
     const tokenData = await auth.json();
     const accessToken = await tokenData.access_token;
     const res = await fetch(
-      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${buyer_zoho_template_number}/createdocument?testing=true`,
-      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${buyer_zoho_template_number}/createdocument`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument?testing=true`,
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
       {
         method: "POST",
         headers: {

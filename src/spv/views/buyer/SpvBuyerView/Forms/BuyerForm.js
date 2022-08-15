@@ -22,9 +22,11 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -121,10 +123,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_logo, setBuyer_logo] = useState("");
   const [buyer_name, setBuyer_name] = useState("");
   const [buyer_type, setBuyer_type] = useState("");
-  const [
-    buyer_date_of_incorporation,
-    setBuyer_date_of_incorporation,
-  ] = useState("");
+  const [buyer_date_of_incorporation, setBuyer_date_of_incorporation] =
+    useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
@@ -436,7 +436,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           fullWidth
                           value={buyer_date_of_incorporation || ""}
                           margin="normal"

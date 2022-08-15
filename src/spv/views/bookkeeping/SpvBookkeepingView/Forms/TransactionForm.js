@@ -30,9 +30,9 @@ import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
 import moment from "moment";
 
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const curr = currencies;
 
@@ -70,21 +70,6 @@ const useStyles = makeStyles(() => ({
     marginLeft: -12,
   },
 }));
-
-const status = [
-  {
-    value: "Open",
-    label: "Open",
-  },
-  {
-    value: "Under Review",
-    label: "Under Review",
-  },
-  {
-    value: "Approved",
-    label: "Approved",
-  },
-];
 
 const RequestForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();

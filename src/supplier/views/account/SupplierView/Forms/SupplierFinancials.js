@@ -17,9 +17,11 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation, Storage } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
@@ -61,16 +63,12 @@ const SupplierFinancials = ({ className, ...rest }) => {
   const [dynamofinid, setdynamofinId] = useState("");
   const [financialsId, setFinancialsId] = useState("");
   const [balance_sheet_attachment, setBalance_sheet_attachment] = useState("");
-  const [
-    income_statement_attachment,
-    setIncome_statement_attachment,
-  ] = useState("");
+  const [income_statement_attachment, setIncome_statement_attachment] =
+    useState("");
   const [ebit, setEbit] = useState("");
   const [net_profit, setNet_profit] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [retained_earnings, setRetained_earnings] = useState("");
@@ -253,7 +251,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   }, [balance_sheet_attachment, identityId]);
 
   function balanceisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(balanceimg)) {
       return (
         <>
@@ -435,7 +434,8 @@ const SupplierFinancials = ({ className, ...rest }) => {
   }, [income_statement_attachment, identityId]);
 
   function incomeisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(incomeimg)) {
       return (
         <>

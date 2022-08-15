@@ -22,9 +22,11 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -93,16 +95,12 @@ const BrokerForm = ({ className, value, ...rest }) => {
   const [broker_logo, setBroker_logo] = useState("");
   const [broker_name, setBroker_name] = useState("");
   const [broker_type, setBroker_type] = useState("");
-  const [
-    broker_date_of_incorporation,
-    setBroker_date_of_incorporation,
-  ] = useState("");
+  const [broker_date_of_incorporation, setBroker_date_of_incorporation] =
+    useState("");
   const [broker_address_city, setBroker_address_city] = useState("");
   const [broker_address_street, setBroker_address_street] = useState("");
-  const [
-    broker_address_postalcode,
-    setBroker_address_postalcode,
-  ] = useState("");
+  const [broker_address_postalcode, setBroker_address_postalcode] =
+    useState("");
   const [broker_country, setBroker_country] = useState("");
   const [broker_industry, setBroker_industry] = useState("");
   const [
@@ -110,9 +108,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
     setBroker_registration_cert_attachment,
   ] = useState("");
   const [broker_website, setBroker_website] = useState("");
-  const [broker_address_refinment, setBroker_address_refinment] = useState(
-    ""
-  );
+  const [broker_address_refinment, setBroker_address_refinment] = useState("");
   const [broker_industry_code, setBroker_industry_code] = useState("");
   const [broker_register_number, setBroker_register_number] = useState("");
   const [broker_trading_name, setBroker_trading_name] = useState("");
@@ -123,10 +119,8 @@ const BrokerForm = ({ className, value, ...rest }) => {
   //const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -380,9 +374,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Company Trading Name"
                         name="broker_trading_name"
-                        onChange={(e) =>
-                          setBroker_trading_name(e.target.value)
-                        }
+                        onChange={(e) => setBroker_trading_name(e.target.value)}
                         value={broker_trading_name || ""}
                         variant="outlined"
                       />
@@ -433,9 +425,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Company City"
                         name="broker_address_city"
-                        onChange={(e) =>
-                          setBroker_address_city(e.target.value)
-                        }
+                        onChange={(e) => setBroker_address_city(e.target.value)}
                         required
                         value={broker_address_city || ""}
                         variant="outlined"
@@ -487,7 +477,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={broker_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -584,9 +574,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewbrokerdirector/${dynamobrokerid}`}
-                >
+                <Link to={`/admin/adminnewbrokerdirector/${dynamobrokerid}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -706,7 +694,7 @@ const BrokerForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"

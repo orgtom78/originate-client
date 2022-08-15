@@ -27,7 +27,6 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
-import moment from "moment";
 import getInitials from "src/utils/getInitials";
 import { green, orange } from "@mui/material/colors";
 import NumberFormat from "react-number-format";

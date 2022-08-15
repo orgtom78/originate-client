@@ -21,9 +21,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -315,7 +315,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     async function checkBrokerStatus() {
       const invoicedue = moment(invoice_due_date).utc().startOf("day");
       const payoutd = moment(payout_date).utc().startOf("day");
-      const period = moment(invoicedue).diff(payoutd, "days")+1;
+      const period = moment(invoicedue).diff(payoutd, "days") + 1;
       const spread =
         (((Number(invoice_amount) * Number(discount_fee_rate)) / 100) *
           Number(period)) /
@@ -371,8 +371,9 @@ const RequestForm = ({ className, value, ...rest }) => {
     console.log(standduedate);
     if (standardizedinput !== standduedate) {
       console.log("not equal calculate new discount");
-      const oldperiod = moment(standduedate).diff(standardpayout, "days")+1;
-      const newperiod = moment(standardizedinput).diff(standardpayout, "days")+1;
+      const oldperiod = moment(standduedate).diff(standardpayout, "days") + 1;
+      const newperiod =
+        moment(standardizedinput).diff(standardpayout, "days") + 1;
       console.log(newperiod);
       const periodratio = Number(newperiod) / Number(oldperiod);
       const newtotaldiscount =
@@ -769,9 +770,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Invoice Number"
                         fullWidth
                         variant="outlined"
-                        onChange={(e) =>
-                          setInvoice_number(e.target.value)
-                        }
+                        onChange={(e) => setInvoice_number(e.target.value)}
                         required
                         value={invoice_number || ""}
                       />
