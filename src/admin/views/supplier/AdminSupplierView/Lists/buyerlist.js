@@ -49,7 +49,7 @@ const BuyerListView = (value) => {
 
   useEffect(() => {
     async function getBuyers() {
-      const id = value.value;
+      const id = await value.value;
       let filter = {
         supplierId: { contains: id },
       };
@@ -65,7 +65,7 @@ const BuyerListView = (value) => {
       setBuyer(items);
     }
     getBuyers();
-  }, [value]);
+  }, [value.value]);
 
   const handleLimitChange = (event) => {
     setLimit(event.target.value);

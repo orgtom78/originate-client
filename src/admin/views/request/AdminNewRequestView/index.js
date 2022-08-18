@@ -136,11 +136,10 @@ export default function NewAccount() {
 
   React.useEffect(() => {
     async function listSOFR() {
-      const today = moment().startOf("day");
-      const querystartdate = moment(today)
+      const queryenddate = moment().utc().startOf("day").format("MM/DD/YYYY");
+      const querystartdate = moment(queryenddate)
         .subtract(10, "days")
         .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
       let filter = { id: { between: [querystartdate, queryenddate] } };
       const {
         data: {
@@ -152,86 +151,39 @@ export default function NewAccount() {
       if (items === null || items === undefined || items.length <= 0) {
         return 0;
       } else {
-        setSofr(items);
+        const filteredarray = items.filter(
+          (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+        );
+        const d = filteredarray.sort(function (a, b) {
+          return new Date(b.id) - new Date(a.id);
+        });
+        setSofr(d[0]);
       }
     }
     listSOFR();
   }, []);
 
   React.useEffect(() => {
-    async function checkdayssofr() {
-      const today = moment().startOf("day");
-      setPayout_date(today);
-      const weekday = moment(today).day();
-
-      if (weekday === 3 || weekday === 4 || weekday === 5) {
-        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 6) {
-        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 0) {
-        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 1) {
-        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 2) {
-        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      }
-    }
-    checkdayssofr();
-  }, [sofr]);
-
-  React.useEffect(() => {
     async function checkifmatch() {
-      if (match === null || match === undefined || match.length <= 0) {
+      if (sofr === null || sofr === undefined || sofr.length <= 0) {
         return 0;
       } else {
         const sofrterm = buyer_loan_rate;
         if (sofrterm === "SOFR(1M)") {
-          const dyndisc =
-            Number(match[0].SOFRM1) + Number(buyer_loan_discount_fee);
+          const dyndisc = Number(sofr.SOFRM1) + Number(buyer_loan_discount_fee);
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(3M)") {
-          const dyndisc =
-            Number(match[0].SOFRM3) + Number(buyer_loan_discount_fee);
+          const dyndisc = Number(sofr.SOFRM3) + Number(buyer_loan_discount_fee);
+          console.log(dyndisc)
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc =
-            Number(match[0].SOFR) + Number(buyer_loan_discount_fee);
+          const dyndisc = Number(sofr.SOFR) + Number(buyer_loan_discount_fee);
           setDynamic_discount(dyndisc);
         }
       }
     }
     checkifmatch();
-  }, [match, buyer_loan_discount_fee, buyer_loan_rate]);
+  }, [sofr, buyer_loan_discount_fee, buyer_loan_rate]);
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

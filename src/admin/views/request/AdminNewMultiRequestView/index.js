@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import {
   Container,
   Divider,
@@ -24,6 +24,7 @@ import {
 import * as Yup from "yup";
 import { v4 as uuid } from "uuid";
 import currencies from "src/components/FormLists/currencies.js";
+import * as mutations from "src/graphql/mutations.js";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation, Storage } from "aws-amplify";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
@@ -47,7 +48,16 @@ const validationSchema = Yup.object().shape({
       invoice_date: Yup.string().required("Invoice Date is required"),
       invoice_due_date: Yup.string().required("Invoice Due Date is required"),
       invoice_number: Yup.string().required("Invoice Number is required"),
-      invoice_attachment: Yup.string(),
+      invoice_attachment: Yup.object().shape({
+      value: Yup.string().required("Invoice is required"),
+      loading: Yup.boolean(),
+      success: Yup.boolean(),
+      }),
+      bill_of_lading_attachment: Yup.object().shape({
+      value: Yup.string().required("BL is required"),
+      loading: Yup.boolean(),
+      success: Yup.boolean(),
+      }),
     })
   ),
 });
@@ -67,31 +77,245 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MyForm() {
   const classes = useStyles();
-  const { buyerid } = useParams();
-  const { supplierid } = useParams();
-  const { ident } = useParams();
+  const { buyId } = useParams();
+  const { supId } = useParams();
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [number_of_invoices, setNumber_of_invoices] = useState("");
-  const [invoice_attachment, setInvoice_attachment] = useState("");
-  const [invoiceimg, setInvoiceImg] = useState("");
-  const [invoicepdf, setInvoicepdf] = useState("");
-  const [invoiceloading, setInvoiceLoading] = useState(false);
-  const [invoicesuccess, setInvoiceSuccess] = useState(false);
 
   const [esign_template_ipu, setEsign_template_ipu] = useState("");
+  const [ipu_buyer_action_id, setIpu_buyer_action_id] = useState("");
+  const [ipu_supplier_action_id, setIpu_supplier_action_id] = useState("");
+
   const [esign_template_offer, setEsign_template_offer] = useState("");
-  const [esign_template_raa_offer, setEsign_template_raa_offer] = useState("");
+  const [offer_supplier_action_id, setOffer_supplier_action_id] = useState("");
+
+  const [ipu_signature_email, setIpu_signature_email] = useState("");
+  const [ipu_email_error, setIpu_email_error] = useState(true);
+
+  const [ident, setIdent] = useState("");
+  const [userId, setUserId] = useState("");
+  const [investid, setInvestid] = useState("");
+  const [brokerid, setBrokerid] = useState("");
+  const [spvid, setSpvid] = useState("");
+  const [buyername, setBuyername] = useState("");
+  const [suppliername, setSuppliername] = useState("");
+  const [supplier_contact_email, setSupplier_contact_email] = useState("");
+
+  const [investEmail, setInvestEmail] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
+  const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
+    useState("");
+  const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
+  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
+  const [dynamic_discount, setDynamic_discount] = useState("");
+  const [sofr, setSofr] = useState([]);
+  const [esignobj, setEsignobj] = useState({
+    InvoiceNo1: "",
+    InvoiceDate1: "",
+    InvoiceCurr1: "",
+    InvoiceDD1: "",
+    InvoiceFV1: "",
+    InvoiceNo2: "",
+    InvoiceDate2: "",
+    InvoiceCurr2: "",
+    InvoiceDD2: "",
+    InvoiceFV2: "",
+    InvoiceNo3: "",
+    InvoiceDate3: "",
+    InvoiceCurr3: "",
+    InvoiceDD3: "",
+    InvoiceFV3: "",
+    InvoiceNo4: "",
+    InvoiceDate4: "",
+    InvoiceCurr4: "",
+    InvoiceDD4: "",
+    InvoiceFV4: "",
+    InvoiceNo5: "",
+    InvoiceDate5: "",
+    InvoiceCurr5: "",
+    InvoiceDD5: "",
+    InvoiceFV5: "",
+  });
+
+  useEffect(() => {
+    async function load() {
+      const buyer = await getbuyername({ id });
+      const {
+        data: {
+          getBuyer: {
+            buyer_name,
+            investorId,
+            brokerId,
+            spvId,
+            identityId,
+            buyer_loan_discount_fee,
+            buyer_loan_transaction_fee,
+            buyer_loan_broker_fee,
+            buyer_loan_rate,
+          },
+        },
+      } = buyer;
+      const buyername = await buyer_name;
+      setIdent(identityId);
+      setInvestid(investorId);
+      setBrokerid(brokerId);
+      setSpvid(spvId);
+      setBuyername(buyername);
+      setBuyer_loan_discount_fee(buyer_loan_discount_fee);
+      setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
+      setBuyer_loan_broker_fee(buyer_loan_broker_fee);
+      setBuyer_loan_rate(buyer_loan_rate);
+    }
+    load();
+  }, [id]);
+
+  function getbuyername(input) {
+    return API.graphql(graphqlOperation(queries.getBuyer, input));
+  }
+
+  useEffect(() => {
+    async function load() {
+      let filter = { supplierId: { eq: supId } };
+      const {
+        data: {
+          listSuppliers: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(
+        graphqlOperation(queries.listSuppliers, {
+          filter: filter,
+        })
+      );
+      const n = {
+        data: { listSuppliers: { items: itemsPage1, nextToken } },
+      };
+      const items = n.data.listSuppliers.items;
+      const suppliername = await items[0].supplier_name;
+      const uId = await items[0].userId;
+      const supemail = await items[0].supplier_contact_email;
+      setSuppliername(suppliername);
+      setSupplier_contact_email(supemail);
+      setUserId(uId);
+    }
+    load();
+  }, [supId]);
+
+  useEffect(() => {
+    async function load() {
+      const investor = await getInvestoremail(investid);
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = investor;
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const res = n.data.listInvestors.items[0];
+      const email = await res.investor_email;
+      setInvestEmail(email);
+    }
+    load();
+  }, [investid]);
+
+  function getInvestoremail(input) {
+    let filter = { userId: { eq: input } };
+    return API.graphql(
+      graphqlOperation(queries.listInvestors, { filter: filter })
+    );
+  }
+
+  useEffect(() => {
+    async function listSOFR() {
+      const queryenddate = moment().utc().startOf("day").format("MM/DD/YYYY");
+      const querystartdate = moment(queryenddate)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      let filter = { id: { between: [querystartdate, queryenddate] } };
+      const {
+        data: {
+          listSOFRs: { items },
+        },
+      } = await API.graphql(
+        graphqlOperation(queries.listSOFRs, { filter: filter })
+      );
+      if (items === null || items === undefined || items.length <= 0) {
+        return 0;
+      } else {
+        const filteredarray = items.filter(
+          (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+        );
+        const d = filteredarray.sort(function (a, b) {
+          return new Date(b.id) - new Date(a.id);
+        });
+        setSofr(d[0]);
+      }
+    }
+    listSOFR();
+  }, []);
+
+  useEffect(() => {
+    async function checkifmatch() {
+      if (sofr === null || sofr === undefined || sofr.length <= 0) {
+        return 0;
+      } else {
+        const sofrterm = buyer_loan_rate;
+        if (sofrterm === "SOFR(1M)") {
+          const dyndisc = Number(sofr.SOFRM1) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(3M)") {
+          const dyndisc = Number(sofr.SOFRM3) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(Daily)") {
+          const dyndisc = Number(sofr.SOFR) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        }
+      }
+    }
+    checkifmatch();
+  }, [sofr, buyer_loan_discount_fee, buyer_loan_rate]);
+
+  useEffect(() => {
+    async function getEsign() {
+      try {
+        let filter = {
+          supplierId: { contains: supId },
+          buyerId: { eq: buyId },
+        };
+        const {
+          data: {
+            listEsigns: { items: itemsPage1, nextToken },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listEsigns, { filter: filter })
+        );
+        const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
+        const items = n.data.listEsigns.items[0];
+        console.log(items);
+        setEsign_template_ipu(items.esign_template_ipu);
+        setIpu_buyer_action_id(items.ipu_buyer_action_id);
+        setIpu_supplier_action_id(items.ipu_supplier_action_id);
+        setEsign_template_offer(items.esign_template_offer);
+        setOffer_supplier_action_id(items.offer_supplier_action_id);
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    getEsign();
+  }, [supId, buyId]);
 
   const initialValues = {
     invoice: [
       {
-        id: uuid(),
+        id: "request-" + uuid(),
         invoice_amount: "",
         sold_goods_description: "",
         currency: "",
-        invoice_date: moment(),
-        invoice_due_date: moment(),
+        invoice_date: "",
+        invoice_due_date: "",
         invoice_number: "",
-        invoice_attachment: {value: "", success: false, loading: false},
+        invoice_attachment: "",
+        bill_of_lading_attachment: "",
+        cargo_insurance_attachment: "",
+        purchase_order_attachment: "",
       },
     ],
   };
@@ -104,7 +328,7 @@ export default function MyForm() {
     if (previousNumber < numberOfInvoices) {
       for (let i = previousNumber; i < numberOfInvoices; i++) {
         invoice.push({
-          id: uuid(),
+          id: "request-" + uuid(),
           invoice_amount: "",
           sold_goods_description: "",
           currency: "",
@@ -112,6 +336,9 @@ export default function MyForm() {
           invoice_due_date: "",
           invoice_number: "",
           invoice_attachment: "",
+          bill_of_lading_attachment: "",
+          cargo_insurance_attachment: "",
+          purchase_order_attachment: "",
         });
       }
     } else {
@@ -119,7 +346,6 @@ export default function MyForm() {
         invoice.splice(i, 1);
       }
     }
-    console.log(invoice);
     setValues({ ...values, invoice });
     // call formik onChange method
     field.onChange(e);
@@ -144,68 +370,37 @@ export default function MyForm() {
     );
   };
 
-  useEffect(() => {
-    async function getEsign() {
-      try {
-        let filter = {
-          supplierId: { eq: supplierid },
-          buyerId: { eq: buyerid },
-        };
-        //const {
-        //  data: {
-        //    listEsigns: { items: itemsPage1, nextToken },
-        //  },
-        // } = await API.graphql(graphqlOperation(queries.listEsigns, { filter: filter }));
-        // const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
-        // const items = n.data.listEsigns.items[0];
-        // setEsign_template_ipu(items.esign_template_ipu);
-        // setEsign_template_offer(items.esign_template_offer);
-        // setEsign_template_raa_offer(items.esign_template_raa_offer);
-      } catch (err) {
-        console.log("error fetching data..", err);
-      }
-    }
-    getEsign();
-  }, [supplierid, buyerid]);
-
   const UploadField = ({ ...props }) => {
-    const [field, meta, helper] = useField(props);
+    const [field, meta] = useField(props);
     const { touched, error } = meta;
     const { setFieldValue } = useFormikContext();
     const isError = touched && error && true;
-    const { value } = field;
-    const [uploadedFile, setUploadedFile] = useState("");
     const file = useState(null);
-    console.log(field);
-    console.log(props);
-
-    useEffect(() => {
-      console.log(value);
-      if (value) {
-        const { link } = value;
-        setUploadedFile(value);
-      }
-    }, [value]);
 
     async function s3Up(file) {
-      const userid = "test";
-      const sectorid = "test";
-      const name = "test";
+      const userid = userId;
+      const sectorid = props.sectorid;
+      const name = props.name;
       var fileExtension = file.name.split(".").pop();
       const filename = `${userid}${sectorid}${name}.${fileExtension}`;
       const stored = await Storage.put(filename, file, {
         level: "private",
-        identityId: "us-east-2:041c4503-0acb-4e82-b5ac-443c0a3cb735",
+        identityId: ident,
         contentType: file.type,
       });
-      return "test";
+      return stored.key;
     }
 
     async function _onChange(event) {
-      setFieldValue(props.id, {value: "", success: false, loading: true});
+      setFieldValue(props.id, { value: "", success: false, loading: true });
       file.current = event.target.files[0];
-      //const newfile = file.current ? await s3Up(file.current) : null;
-      setFieldValue(props.id, {value: file.current.name, success: true, loading: false});
+      const newfile = file.current ? await s3Up(file.current) : null;
+      //setFieldValue(props.id, {value: file.current.name, success: true, loading: false});
+      setFieldValue(props.id, {
+        value: newfile,
+        success: true,
+        loading: false,
+      });
     }
 
     return (
@@ -221,101 +416,420 @@ export default function MyForm() {
     );
   };
 
-  async function handleUpload(e, field, values, setValues) {
-    console.log(e);
-    console.log(field);
-    console.log(values);
-    console.log(setValues);
-    const invoice = [...values.invoice];
-    const invoice_attachment = "test";
-
-    async function s3Up(file) {
-      const userid = "userid";
-      const sectorid = "sectorid";
-      const name = "name";
-      var fileExtension = file.name.split(".").pop();
-      const filename = `${userid}${sectorid}${name}.${fileExtension}`;
-      const stored = await Storage.put(filename, file, {
-        level: "private",
-        identityId: await "props.identityid",
-        contentType: file.type,
-      });
-      console.log(stored.key);
-      return stored.key;
+  function updateEsignobj(invoices) {
+    if (invoices.length === 1) {
+      const object = {
+        InvoiceNo1: invoices[0].invoice_number,
+        InvoiceDate1: moment(invoices[0].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr1: invoices[0].currency,
+        InvoiceDD1: moment(invoices[0].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV1: invoices[0].invoice_amount,
+      };
+      let newobj = {
+        ...esignobj,
+        ...object,
+      };
+      setEsignobj(newobj);
+      return newobj;
+    } else if (invoices.length === 2) {
+      const object = {
+        InvoiceNo1: invoices[0].invoice_number,
+        InvoiceDate1: moment(invoices[0].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr1: invoices[0].currency,
+        InvoiceDD1: moment(invoices[0].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV1: invoices[0].invoice_amount,
+        InvoiceNo2: invoices[1].invoice_number,
+        InvoiceDate2: moment(invoices[1].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr2: invoices[1].currency,
+        InvoiceDD2: moment(invoices[1].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV2: invoices[1].invoice_amount,
+      };
+      let newobj = {
+        ...esignobj,
+        ...object,
+      };
+      setEsignobj(newobj);
+      return newobj;
+    } else if (invoices.length === 3) {
+      const object = {
+        InvoiceNo1: invoices[0].invoice_number,
+        InvoiceDate1: moment(invoices[0].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr1: invoices[0].currency,
+        InvoiceDD1: moment(invoices[0].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV1: invoices[0].invoice_amount,
+        InvoiceNo2: invoices[1].invoice_number,
+        InvoiceDate2: moment(invoices[1].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr2: invoices[1].currency,
+        InvoiceDD2: moment(invoices[1].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV2: invoices[1].invoice_amount,
+        InvoiceNo3: invoices[2].invoice_number,
+        InvoiceDate3: moment(invoices[2].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr3: invoices[2].currency,
+        InvoiceDD3: moment(invoices[2].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV3: invoices[2].invoice_amount,
+      };
+      let newobj = {
+        ...esignobj,
+        ...object,
+      };
+      setEsignobj(newobj);
+      return newobj;
+    } else if (invoices.length === 4) {
+      const object = {
+        InvoiceNo1: invoices[0].invoice_number,
+        InvoiceDate1: moment(invoices[0].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr1: invoices[0].currency,
+        InvoiceDD1: moment(invoices[0].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV1: invoices[0].invoice_amount,
+        InvoiceNo2: invoices[1].invoice_number,
+        InvoiceDate2: moment(invoices[1].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr2: invoices[1].currency,
+        InvoiceDD2: moment(invoices[1].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV2: invoices[1].invoice_amount,
+        InvoiceNo3: invoices[2].invoice_number,
+        InvoiceDate3: moment(invoices[2].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr3: invoices[2].currency,
+        InvoiceDD3: moment(invoices[2].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV3: invoices[2].invoice_amount,
+        InvoiceNo4: invoices[3].invoice_number,
+        InvoiceDate4: moment(invoices[3].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr4: invoices[3].currency,
+        InvoiceDD4: moment(invoices[3].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV4: invoices[3].invoice_amount,
+      };
+      let newobj = {
+        ...esignobj,
+        ...object,
+      };
+      setEsignobj(newobj);
+      return newobj;
+    } else if (invoices.length === 5) {
+      const object = {
+        InvoiceNo1: invoices[0].invoice_number,
+        InvoiceDate1: moment(invoices[0].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr1: invoices[0].currency,
+        InvoiceDD1: moment(invoices[0].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV1: invoices[0].invoice_amount,
+        InvoiceNo2: invoices[1].invoice_number,
+        InvoiceDate2: moment(invoices[1].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr2: invoices[1].currency,
+        InvoiceDD2: moment(invoices[1].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV2: invoices[1].invoice_amount,
+        InvoiceNo3: invoices[2].invoice_number,
+        InvoiceDate3: moment(invoices[2].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr3: invoices[2].currency,
+        InvoiceDD3: moment(invoices[2].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV3: invoices[2].invoice_amount,
+        InvoiceNo4: invoices[3].invoice_number,
+        InvoiceDate4: moment(invoices[3].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr4: invoices[3].currency,
+        InvoiceDD4: moment(invoices[3].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV4: invoices[3].invoice_amount,
+        InvoiceNo5: invoices[4].invoice_number,
+        InvoiceDate5: moment(invoices[4].invoice_date).format("MM/DD/YYYY"),
+        InvoiceCurr5: invoices[4].currency,
+        InvoiceDD5: moment(invoices[4].invoice_due_date).format("MM/DD/YYYY"),
+        InvoiceFV5: invoices[4].invoice_amount,
+      };
+      let newobj = {
+        ...esignobj,
+        ...object,
+      };
+      setEsignobj(newobj);
+      return newobj;
     }
-    setValues({ ...values, invoice });
-    console.log(setValues({ ...values, invoice }));
-
-    // call formik onChange method
-    field.onChange(e);
   }
 
-  function handleinvoiceChange(event) {
-    const file = null;
-    file.current = event.target.files[0];
-    const newinvoicefile = file.current;
-    oninvoiceChange(newinvoicefile);
-    return (
-      <Field name={invoice_attachment}>
-        {({ field }) => (
-          <>
-            <input
-              name={invoice_attachment}
-              id={invoice_attachment}
-              accept="image/*,application/pdf"
-              style={{ display: "none" }}
-              type="file"
-              onChange={(event) => handleinvoiceChange(event)}
-            />
-            <label htmlFor={invoice_attachment}>
-              <LoaderButton
-                id={invoice_attachment}
-                fullWidth
-                component="span"
-                startIcon={<UploadIcon />}
-              >
-                {invoice_attachment}
-              </LoaderButton>
-            </label>
-          </>
-        )}
-      </Field>
+  async function _createSignRequest(values) {
+    const invoices = values.invoice;
+    const obj = updateEsignobj(invoices);
+    const date = new moment().format("DD MMMM YYYY");
+    const client = process.env.REACT_APP_ZOHO_CLIENT_ID;
+    const secret = process.env.REACT_APP_ZOHO_CLIENT_SECRET;
+    const token = process.env.REACT_APP_ZOHO_TOKEN;
+    const auth = await fetch(
+      `https://cors-anywhere-oc.herokuapp.com/https://accounts.zoho.com/oauth/v2/token?refresh_token=${token}&client_id=${client}&client_secret=${secret}&grant_type=refresh_token`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Connection: "keep-alive",
+        },
+      }
+    );
+    const tokenData = await auth.json();
+    const accessToken = await tokenData.access_token;
+    const res1 = await fetch(
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument?testing=true`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+        },
+        body: new URLSearchParams({
+          data: `{
+            "templates": {
+                "field_data": {
+                    "field_text_data": {
+                        "Date": "${date}",
+                        "Invoice-No1": "${obj.InvoiceCurr1}",
+                        "Invoice-Date1": "${obj.InvoiceDate1}",
+                        "Invoice-Curr1": "${obj.InvoiceCurr1}",
+                        "Invoice-DD1": "${obj.InvoiceDD1}",
+                        "Invoice-FV1": "${obj.InvoiceFV1}",
+                        "Invoice-No2": "${obj.InvoiceCurr2}",
+                        "Invoice-Date2": "${obj.InvoiceDate2}",
+                        "Invoice-Curr2": "${obj.InvoiceCurr2}",
+                        "Invoice-DD2": "${obj.InvoiceDD2}",
+                        "Invoice-FV2": "${obj.InvoiceFV2}",
+                        "Invoice-No3": "${obj.InvoiceCurr3}",
+                        "Invoice-Date3": "${obj.InvoiceDate3}",
+                        "Invoice-Curr3": "${obj.InvoiceCurr3}",
+                        "Invoice-DD3": "${obj.InvoiceDD3}",
+                        "Invoice-FV3": "${obj.InvoiceFV3}",
+                        "Invoice-No4": "${obj.InvoiceCurr4}",
+                        "Invoice-Date4": "${obj.InvoiceDate4}",
+                        "Invoice-Curr4": "${obj.InvoiceCurr4}",
+                        "Invoice-DD4": "${obj.InvoiceDD4}",
+                        "Invoice-FV4": "${obj.InvoiceFV4}",
+                        "Invoice-No5": "${obj.InvoiceCurr5}",
+                        "Invoice-Date5": "${obj.InvoiceDate5}",
+                        "Invoice-Curr5": "${obj.InvoiceCurr5}",
+                        "Invoice-DD5": "${obj.InvoiceDD5}",
+                        "Invoice-FV5": "${obj.InvoiceFV5}",
+                    },
+                    "field_boolean_data": {},
+                    "field_date_data": {}
+                },
+                "actions": [
+                    {
+                        "recipient_name": ${ipu_signature_email},
+                        "recipient_email": ${ipu_signature_email},
+                        "action_id": ${ipu_buyer_action_id},
+                        "signing_order": 2,
+                        "role": "Buyer",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    },
+                    {
+                        "recipient_name": ${supplier_contact_email},
+                        "recipient_email": ${supplier_contact_email},
+                        "action_id": ${ipu_supplier_action_id},
+                        "signing_order": 3,
+                        "role": "Supplier",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    }
+                ],
+                "notes": ""
+            }
+        }`,
+          is_quicksend: "true",
+          locale: "en",
+        }),
+      }
+    );
+    const data = await res1.json();
+    const eid = data.requests.request_id;
+
+    const res2 = await fetch(
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_offer}/createdocument?testing=true`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+        },
+        body: new URLSearchParams({
+          data: `{
+            "templates": {
+                "field_data": {
+                    "field_text_data": {
+                        "Invoice-No1": "${obj.InvoiceCurr1}",
+                        "Invoice-Date1": "${obj.InvoiceDate1}",
+                        "Invoice-Curr1": "${obj.InvoiceCurr1}",
+                        "Invoice-DD1": "${obj.InvoiceDD1}",
+                        "Invoice-FV1": "${obj.InvoiceFV1}",
+                        "Invoice-No2": "${obj.InvoiceCurr2}",
+                        "Invoice-Date2": "${obj.InvoiceDate2}",
+                        "Invoice-Curr2": "${obj.InvoiceCurr2}",
+                        "Invoice-DD2": "${obj.InvoiceDD2}",
+                        "Invoice-FV2": "${obj.InvoiceFV2}",
+                        "Invoice-No3": "${obj.InvoiceCurr3}",
+                        "Invoice-Date3": "${obj.InvoiceDate3}",
+                        "Invoice-Curr3": "${obj.InvoiceCurr3}",
+                        "Invoice-DD3": "${obj.InvoiceDD3}",
+                        "Invoice-FV3": "${obj.InvoiceFV3}",
+                        "Invoice-No4": "${obj.InvoiceCurr4}",
+                        "Invoice-Date4": "${obj.InvoiceDate4}",
+                        "Invoice-Curr4": "${obj.InvoiceCurr4}",
+                        "Invoice-DD4": "${obj.InvoiceDD4}",
+                        "Invoice-FV4": "${obj.InvoiceFV4}",
+                        "Invoice-No5": "${obj.InvoiceCurr5}",
+                        "Invoice-Date5": "${obj.InvoiceDate5}",
+                        "Invoice-Curr5": "${obj.InvoiceCurr5}",
+                        "Invoice-DD5": "${obj.InvoiceDD5}",
+                        "Invoice-FV5": "${obj.InvoiceFV5}",
+                    },
+                    "field_boolean_data": {},
+                    "field_date_data": {}
+                },
+                "actions": [
+                    {
+                        "recipient_name": ${supplier_contact_email},
+                        "recipient_email": ${supplier_contact_email},
+                        "action_id": ${offer_supplier_action_id},
+                        "signing_order": 3,
+                        "role": "Supplier",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    }
+                ],
+                "notes": ""
+            }
+        }`,
+          is_quicksend: "true",
+          locale: "en",
+        }),
+      }
+    );
+    const data2 = await res2.json();
+    const oid = data2.requests.request_id;
+
+    return { ipu_esign_id: eid, offer_esign_id: oid };
+  }
+
+  async function _submitForm(values) {
+    const zoho_object = await _createSignRequest(values);
+    console.log(zoho_object);
+    const ipu_esign_id = zoho_object.ipu_esign_id;
+    console.log(ipu_esign_id);
+    const offer_esign_id = zoho_object.offer_esign_id;
+    console.log(offer_esign_id);
+    const invoices = values.invoice;
+    invoices.forEach((element) => {
+      try {
+        const ipu_e_signatureId = ipu_esign_id;
+        const offer_notice_e_signatureId = offer_esign_id;
+        const buyerId = buyId;
+        const supplierId = supId;
+        const investorId = investid;
+        const brokerId = brokerid;
+        const spvId = spvid;
+        const identityId = ident;
+        const investor_email = investEmail;
+        const payout_date = moment().utc().startOf("day").toISOString();
+        var period =
+          moment(element.invoice_due_date).diff(payout_date, "days") + 1;
+        const base_rate = buyer_loan_rate;
+        const transaction_fee_rate = buyer_loan_transaction_fee;
+        const discount_fee_rate = buyer_loan_discount_fee;
+        const broker_fee_rate = buyer_loan_broker_fee;
+        var transaction_fee_amount =
+          element.invoice_amount *
+          (buyer_loan_discount_fee / 100) *
+          (transaction_fee_rate / 100) *
+          (period / 360);
+        var discount_fee_amount =
+          (((element.invoice_amount * dynamic_discount) / 100) * period) / 360;
+        const broker_fee_amount =
+          transaction_fee_amount * (broker_fee_rate / 100);
+        const buyer_name = buyername;
+        const supplier_name = suppliername;
+
+        var id = element.id;
+        var requestId = element.id;
+        var invoice_amount = element.invoice_amount;
+        var invoice_currency = element.currency;
+        var invoice_number = element.invoice_number;
+        var invoice_date = moment(element.invoice_date)
+          .utc()
+          .startOf("day")
+          .toISOString();
+        var invoice_due_date = moment(element.invoice_due_date)
+          .utc()
+          .startOf("day")
+          .toISOString();
+        var sold_goods_description = element.sold_goods_description;
+
+        var invoice_attachment = element.invoice_attachment.value;
+        var purchase_order_attachment = element.purchase_order_attachment.value;
+        var cargo_insurance_attachment =
+          element.cargo_insurance_attachment.value;
+        var bill_of_lading_attachment = element.bill_of_lading_attachment.value;
+        const request_status = "Under Review";
+
+        createRequest({
+          id,
+          requestId,
+          userId,
+          supplierId,
+          buyerId,
+          investorId,
+          brokerId,
+          spvId,
+          identityId,
+          investor_email,
+
+          ipu_e_signatureId,
+          offer_notice_e_signatureId,
+
+          base_rate,
+          discount_fee_rate,
+          transaction_fee_rate,
+          discount_fee_amount,
+          transaction_fee_amount,
+          broker_fee_rate,
+          broker_fee_amount,
+          buyer_name,
+          supplier_name,
+
+          invoice_amount,
+          invoice_currency,
+          invoice_number,
+          invoice_date,
+          invoice_due_date,
+          sold_goods_description,
+
+          invoice_attachment,
+          purchase_order_attachment,
+          cargo_insurance_attachment,
+          bill_of_lading_attachment,
+
+          request_status,
+        });
+      } catch (e) {
+        onError(e);
+      }
+    });
+    navigate("/admin/requests");
+    window.location.reload();
+  }
+
+  function createRequest(input) {
+    return API.graphql(
+      graphqlOperation(mutations.createRequest, { input: input })
     );
   }
 
-  async function oninvoiceChange(newfile) {
-    setInvoiceSuccess(false);
-    setInvoiceLoading(true);
-    try {
-      const u = newfile ? await s3Up(newfile, "invoice_attachment") : null;
-      var invoice_attachment = u;
-      await updateRequest({
-        invoice_attachment,
-      });
-    } catch (e) {
-      onError(e);
+  function _handleSubmit(values) {
+    _submitForm(values);
+  }
+
+  function ValidateEmail(input) {
+    setIpu_signature_email(input);
+    var validRegex =
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    if (input.match(validRegex)) {
+      setIpu_email_error(false);
+      return false;
+    } else {
+      setIpu_email_error(true);
+      return true;
     }
-    setInvoiceSuccess(true);
-    setInvoiceLoading(false);
-  }
-
-  function updateRequest(input) {
-    return input;
-  }
-
-  async function s3Up(file, name) {
-    var fileExtension = file.name.split(".").pop();
-    const sub = "test";
-    const requestId = "test2";
-    const identityId = "test3";
-    const filename = `${sub}${requestId}${name}.${fileExtension}`;
-
-    const stored = await Storage.put(filename, file, {
-      level: "private",
-      identityId: identityId,
-      contentType: file.type,
-    });
-    return stored.key;
   }
 
   return (
@@ -326,9 +840,7 @@ export default function MyForm() {
           <Formik
             initialValues={initialValues}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              console.log("onSubmit", JSON.stringify(values, null, 2));
-            }}
+            onSubmit={_handleSubmit}
           >
             {({
               values,
@@ -366,6 +878,29 @@ export default function MyForm() {
                     </FormControl>
                   )}
                 </Field>
+                <Divider style={{ marginTop: 20, marginBottom: 20 }} />
+                <Field name="ipu_signature_email">
+                {({ field }) => (
+                  <FormControl fullWidth>
+                    <TextField
+                      id="ipu_signature_email"
+                      name="ipu_signature_email"
+                      label="Ipu Signature Email (Buyer)"
+                      value={ipu_signature_email || ""}
+                      onChange={(e) => ValidateEmail(e.target.value)}
+                      required
+                      error={ipu_email_error || undefined}
+                      helperText={
+                        ipu_email_error === true
+                          ? "The email address of your buyer's contact who is signing the IPU is not valid"
+                          : ""
+                      }
+                      variant="outlined"
+                    />
+                  </FormControl>
+                  )}
+                </Field>
+
                 <Divider style={{ marginTop: 20, marginBottom: 20 }} />
                 <FieldArray name="invoice">
                   {() => (
@@ -421,6 +956,36 @@ export default function MyForm() {
                         const errorinvoice_attachment = getIn(
                           errors,
                           invoice_attachment
+                        );
+
+                        const bill_of_lading_attachment = `invoice[${index}].bill_of_lading_attachment`;
+                        const touchedbill_of_lading_attachment = getIn(
+                          touched,
+                          bill_of_lading_attachment
+                        );
+                        const errorbill_of_lading_attachment = getIn(
+                          errors,
+                          bill_of_lading_attachment
+                        );
+
+                        const cargo_insurance_attachment = `invoice[${index}].cargo_insurance_attachment`;
+                        const touchedcargo_insurance_attachment = getIn(
+                          touched,
+                          cargo_insurance_attachment
+                        );
+                        const errorcargo_insurance_attachment = getIn(
+                          errors,
+                          cargo_insurance_attachment
+                        );
+
+                        const purchase_order_attachment = `invoice[${index}].purchase_order_attachment`;
+                        const touchedpurchase_order_attachment = getIn(
+                          touched,
+                          purchase_order_attachment
+                        );
+                        const errorpurchase_order_attachment = getIn(
+                          errors,
+                          purchase_order_attachment
                         );
 
                         return (
@@ -552,16 +1117,24 @@ export default function MyForm() {
                                   onBlur={handleBlur}
                                 />
                               </Grid>
-                              <Grid item xs={12} sm={4}>
+                              <Grid item xs={12} sm={6}>
                                 <>
                                   <UploadField
-                                    name={invoice_attachment}
+                                    name={"invoice_attachment"}
                                     id={invoice_attachment}
                                     accept="image/*,application/pdf"
                                     style={{ display: "none" }}
-                                    identityid={invoice_attachment}
-                                    userid={invoice_attachment}
-                                    sectorid={invoice_attachment}
+                                    sectorid={p.id}
+                                    helperText={
+                                      touchedinvoice_attachment &&
+                                      errorinvoice_attachment
+                                        ? errorinvoice_attachment
+                                        : ""
+                                    }
+                                    error={Boolean(
+                                      touchedinvoice_attachment &&
+                                        errorinvoice_attachment
+                                    )}
                                   />
                                   <label htmlFor={invoice_attachment}>
                                     <LoaderButton
@@ -575,7 +1148,133 @@ export default function MyForm() {
                                       loading={p.invoice_attachment.loading}
                                     >
                                       {" "}
-                                      Invoice
+                                      Invoice*
+                                    </LoaderButton>
+                                  </label>
+                                </>
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <>
+                                  <UploadField
+                                    name={"bill_of_lading_attachment"}
+                                    id={bill_of_lading_attachment}
+                                    accept="image/*,application/pdf"
+                                    style={{ display: "none" }}
+                                    sectorid={p.id}
+                                    helperText={
+                                      touchedbill_of_lading_attachment &&
+                                      errorbill_of_lading_attachment
+                                        ? errorbill_of_lading_attachment
+                                        : ""
+                                    }
+                                    error={Boolean(
+                                      touchedbill_of_lading_attachment &&
+                                        errorbill_of_lading_attachment
+                                    )}
+                                  />
+                                  <label htmlFor={bill_of_lading_attachment}>
+                                    <LoaderButton
+                                      id={bill_of_lading_attachment}
+                                      key={bill_of_lading_attachment}
+                                      fullWidth
+                                      component="span"
+                                      startIcon={<UploadIcon />}
+                                      disabled={
+                                        p.bill_of_lading_attachment.loading
+                                      }
+                                      success={
+                                        p.bill_of_lading_attachment.success
+                                      }
+                                      loading={
+                                        p.bill_of_lading_attachment.loading
+                                      }
+                                    >
+                                      {" "}
+                                      Bill of Lading*
+                                    </LoaderButton>
+                                  </label>
+                                </>
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <>
+                                  <UploadField
+                                    name={"cargo_insurance_attachment"}
+                                    id={cargo_insurance_attachment}
+                                    accept="image/*,application/pdf"
+                                    style={{ display: "none" }}
+                                    sectorid={p.id}
+                                    helperText={
+                                      touchedcargo_insurance_attachment &&
+                                      errorcargo_insurance_attachment
+                                        ? errorcargo_insurance_attachment
+                                        : ""
+                                    }
+                                    error={Boolean(
+                                      touchedcargo_insurance_attachment &&
+                                        errorcargo_insurance_attachment
+                                    )}
+                                  />
+                                  <label htmlFor={cargo_insurance_attachment}>
+                                    <LoaderButton
+                                      id={cargo_insurance_attachment}
+                                      key={cargo_insurance_attachment}
+                                      fullWidth
+                                      component="span"
+                                      startIcon={<UploadIcon />}
+                                      disabled={
+                                        p.cargo_insurance_attachment.loading
+                                      }
+                                      success={
+                                        p.cargo_insurance_attachment.success
+                                      }
+                                      loading={
+                                        p.cargo_insurance_attachment.loading
+                                      }
+                                    >
+                                      {" "}
+                                      Cargo Insurance
+                                    </LoaderButton>
+                                  </label>
+                                </>
+                              </Grid>
+                              <Grid item xs={12} sm={6}>
+                                <>
+                                  <UploadField
+                                    name={"purchase_order_attachment"}
+                                    id={purchase_order_attachment}
+                                    accept="image/*,application/pdf"
+                                    style={{ display: "none" }}
+                                    sectorid={p.id}
+                                    helperText={
+                                      touchedpurchase_order_attachment &&
+                                      errorpurchase_order_attachment
+                                        ? errorpurchase_order_attachment
+                                        : ""
+                                    }
+                                    error={Boolean(
+                                      touchedpurchase_order_attachment &&
+                                        errorpurchase_order_attachment
+                                    )}
+                                  />
+                                  <label htmlFor={purchase_order_attachment}>
+                                    <LoaderButton
+                                      id={purchase_order_attachment}
+                                      key={purchase_order_attachment}
+                                      fullWidth
+                                      component="span"
+                                      startIcon={<UploadIcon />}
+                                      disabled={
+                                        p.purchase_order_attachment.loading
+                                      }
+                                      success={
+                                        p.purchase_order_attachment.success
+                                      }
+                                      loading={
+                                        p.purchase_order_attachment.loading
+                                      }
+                                    >
+                                      {" "}
+                                      Purchase Order
                                     </LoaderButton>
                                   </label>
                                 </>
@@ -595,7 +1294,7 @@ export default function MyForm() {
                   variant="contained"
                   // disabled={!isValid || values.invoice.length === 0}
                 >
-                  submit
+                  Submit
                 </Button>
               </Form>
             )}

@@ -62,6 +62,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
   const [esign_template_ipu, setEsign_template_ipu] = useState("");
   const [esign_template_offer, setEsign_template_offer] = useState("");
   const [esign_template_raa_offer, setEsign_template_raa_offer] = useState("");
+  const [ipu_buyer_action_id, setIpu_buyer_action_id] = useState("");
+  const [ipu_supplier_action_id, setIpu_supplier_action_id] = useState("");
+  const [offer_supplier_action_id, setOffer_supplier_action_id] = useState("");
+  const [raa_offer_oc_action_id, setRaa_offer_oc_action_id] = useState("");
 
   const [supplierloading, setTemplateLoading] = useState(false);
   const [suppliersuccess, setTemplateSuccess] = useState(false);
@@ -86,6 +90,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
         setEsign_template_ipu(items.esign_template_ipu);
         setEsign_template_offer(items.esign_template_offer);
         setEsign_template_raa_offer(items.esign_template_raa_offer);
+        setIpu_buyer_action_id(items.ipu_buyer_action_id);
+        setIpu_supplier_action_id(items.ipu_supplier_action_id);
+        setOffer_supplier_action_id(items.offer_supplier_action_id);
+        setRaa_offer_oc_action_id(items.raa_offer_oc_action_id);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -104,6 +112,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
           esign_template_ipu,
           esign_template_offer,
           esign_template_raa_offer,
+          ipu_buyer_action_id,
+          ipu_supplier_action_id,
+          offer_supplier_action_id,
+          raa_offer_oc_action_id,
         });
       } else {
         const esignId = "esign-" + uuid();
@@ -116,6 +128,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
           esign_template_ipu,
           esign_template_offer,
           esign_template_raa_offer,
+          ipu_buyer_action_id,
+          ipu_supplier_action_id,
+          offer_supplier_action_id,
+          raa_offer_oc_action_id,
         });
       }
     } catch (e) {
@@ -157,6 +173,28 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
             <Grid item sm={12} xs={12}>
               <TextField
                 fullWidth
+                label="IPU Buyer Action ID"
+                name="ipu_buyer_action_id"
+                onChange={(e) => setIpu_buyer_action_id(e.target.value)}
+                required
+                value={ipu_buyer_action_id || ""}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} xs={12}>
+              <TextField
+                fullWidth
+                label="IPU Supplier Action ID"
+                name="ipu_supplier_action_id"
+                onChange={(e) => setIpu_supplier_action_id(e.target.value)}
+                required
+                value={ipu_supplier_action_id || ""}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} xs={12}>
+              <TextField
+                fullWidth
                 label="Offer File Template Number"
                 name="esign_template_offer"
                 onChange={(e) => setEsign_template_offer(e.target.value)}
@@ -168,11 +206,33 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
             <Grid item sm={12} xs={12}>
               <TextField
                 fullWidth
+                label="Offer Supplier Action ID"
+                name="offer_supplier_action_id"
+                onChange={(e) => setOffer_supplier_action_id(e.target.value)}
+                required
+                value={offer_supplier_action_id || ""}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} xs={12}>
+              <TextField
+                fullWidth
                 label="RAA Offer File Template Number"
                 name="esign_template_raa_offer"
                 onChange={(e) => setEsign_template_raa_offer(e.target.value)}
                 required
                 value={esign_template_raa_offer || ""}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item sm={12} xs={12}>
+              <TextField
+                fullWidth
+                label="RAA Offer Originate Capital Action ID"
+                name="raa_offer_oc_action_id"
+                onChange={(e) => setRaa_offer_oc_action_id(e.target.value)}
+                required
+                value={raa_offer_oc_action_id || ""}
                 variant="outlined"
               />
             </Grid>

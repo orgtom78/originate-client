@@ -116,10 +116,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [supplier_industry_code, setSupplier_industry_code] = useState("");
   const [supplier_register_number, setSupplier_register_number] = useState("");
   const [supplier_trading_name, setSupplier_trading_name] = useState("");
-  const [buyer_zoho_template_ipu, setBuyer_zoho_template_ipu] = useState("");
-  const [buyer_zoho_template_offer, setBuyer_zoho_template_offer] =
-    useState("");
-  const [buyer_zoho_template_raa_offer, setBuyer_zoho_template_raa_offer] =
+  const [supplier_contact_name, setSupplier_contact_name] = useState("");
+  const [supplier_contact_email, setSupplier_contact_email] = useState("");
+  const [supplier_contact_phone, setSupplier_contact_phone] = useState("");
+  const [supplier_contact_position, setSupplier_contact_position] =
     useState("");
 
   //Financials:
@@ -179,9 +179,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
               supplier_industry_code,
               supplier_register_number,
               supplier_trading_name,
-              buyer_zoho_template_ipu,
-              buyer_zoho_template_offer,
-              buyer_zoho_template_raa_offer,
+              supplier_contact_name,
+              supplier_contact_email,
+              supplier_contact_phone,
+              supplier_contact_position,
             },
           },
         } = supplier;
@@ -206,9 +207,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
         setSupplier_industry_code(supplier_industry_code);
         setSupplier_register_number(supplier_register_number);
         setSupplier_trading_name(supplier_trading_name);
-        setBuyer_zoho_template_ipu(buyer_zoho_template_ipu);
-        setBuyer_zoho_template_offer(buyer_zoho_template_offer);
-        setBuyer_zoho_template_raa_offer(buyer_zoho_template_raa_offer);
+        setSupplier_contact_name(supplier_contact_name);
+        setSupplier_contact_email(supplier_contact_email);
+        setSupplier_contact_phone(supplier_contact_phone);
+        setSupplier_contact_position(supplier_contact_position);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -306,6 +308,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
         supplier_industry_code,
         supplier_register_number,
         supplier_trading_name,
+        supplier_contact_name,
+        supplier_contact_email,
+        supplier_contact_phone,
+        supplier_contact_position,
       });
     } catch (e) {
       onError(e);
@@ -424,6 +430,56 @@ const SupplierForm = ({ className, value, ...rest }) => {
                           setSupplier_trading_name(e.target.value)
                         }
                         value={supplier_trading_name || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Name"
+                        name="supplier_contact_name"
+                        onChange={(e) =>
+                          setSupplier_contact_name(e.target.value)
+                        }
+                        required
+                        value={supplier_contact_name || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Email"
+                        name="supplier_contact_email"
+                        onChange={(e) =>
+                          setSupplier_contact_email(e.target.value)
+                        }
+                        value={supplier_contact_email || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Phone"
+                        name="supplier_contact_phone"
+                        onChange={(e) =>
+                          setSupplier_contact_phone(e.target.value)
+                        }
+                        required
+                        value={supplier_contact_phone || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Position"
+                        name="supplier_contact_position"
+                        onChange={(e) =>
+                          setSupplier_contact_position(e.target.value)
+                        }
+                        value={supplier_contact_position || ""}
                         variant="outlined"
                       />
                     </Grid>

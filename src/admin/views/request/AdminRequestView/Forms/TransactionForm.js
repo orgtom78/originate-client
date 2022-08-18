@@ -198,105 +198,84 @@ const RequestForm = ({ className, value, ...rest }) => {
     getRequest();
   }, [id]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function listSOFR() {
-      const today = moment().startOf("day");
-      const querystartdate = moment(today)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
-      let filter = { id: { between: [querystartdate, queryenddate] } };
-      const {
-        data: {
-          listSOFRs: { items },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listSOFRs, { filter: filter })
-      );
-      if (items === null || items === undefined || items.length <= 0) {
-        return 0;
+      if (payout_date) {
+        const queryenddate = moment(payout_date)
+          .utc()
+          .startOf("day")
+          .format("MM/DD/YYYY");
+        const querystartdate = moment(queryenddate)
+          .subtract(10, "days")
+          .format("MM/DD/YYYY");
+        let filter = { id: { between: [querystartdate, queryenddate] } };
+        const {
+          data: {
+            listSOFRs: { items },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listSOFRs, { filter: filter })
+        );
+        if (items === null || items === undefined || items.length <= 0) {
+          return 0;
+        } else {
+          const filteredarray = items.filter(
+            (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+          );
+          const d = filteredarray.sort(function (a, b) {
+            return new Date(b.id) - new Date(a.id);
+          });
+          setSofr(d[0]);
+        }
       } else {
-        setSofr(items);
+        const queryenddate = moment().utc().startOf("day").format("MM/DD/YYYY");
+        const querystartdate = moment(queryenddate)
+          .subtract(10, "days")
+          .format("MM/DD/YYYY");
+        let filter = { id: { between: [querystartdate, queryenddate] } };
+        const {
+          data: {
+            listSOFRs: { items },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listSOFRs, { filter: filter })
+        );
+        if (items === null || items === undefined || items.length <= 0) {
+          return 0;
+        } else {
+          const filteredarray = items.filter(
+            (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+          );
+          const d = filteredarray.sort(function (a, b) {
+            return new Date(b.id) - new Date(a.id);
+          });
+          setSofr(d[0]);
+        }
       }
     }
     listSOFR();
-  }, []);
-
-  React.useEffect(() => {
-    async function checkdayssofr() {
-      const today = moment(payout_date).startOf("day");
-      const weekday = moment(today).day();
-      if (weekday === 3 || weekday === 4 || weekday === 5) {
-        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 6) {
-        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 0) {
-        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 1) {
-        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 2) {
-        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      }
-    }
-    checkdayssofr();
-  }, [sofr, payout_date]);
+  }, [payout_date]);
 
   React.useEffect(() => {
     async function checkifmatch() {
-      if (match === null || match === undefined || match.length <= 0) {
+      if (sofr === null || sofr === undefined || sofr.length <= 0) {
         return 0;
       } else {
         const sofrterm = base_rate;
         if (sofrterm === "SOFR(1M)") {
-          const dyndisc = Number(match[0].SOFRM1) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFRM1);
+          const dyndisc = Number(sofr.SOFRM1) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         } else if (sofrterm === "SOFR(3M)") {
-          const dyndisc = Number(match[0].SOFRM3) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFRM3);
+          const dyndisc = Number(sofr.SOFRM3) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc = Number(match[0].SOFR) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFR);
+          const dyndisc = Number(sofr.SOFR) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         }
       }
     }
     checkifmatch();
-  }, [match, discount_fee_rate, base_rate]);
+  }, [sofr, discount_fee_rate, base_rate]);
 
   useEffect(() => {
     function checkstatus() {
@@ -337,6 +316,7 @@ const RequestForm = ({ className, value, ...rest }) => {
       const transaction_fee_amount =
         (Number(spread) * Number(transaction_fee_rate)) / 100;
       setTransaction_fee_amount(transaction_fee_amount);
+
       const discount_fee_amount =
         (((Number(invoice_amount) * Number(dynamic_discount)) / 100) *
           Number(period)) /
