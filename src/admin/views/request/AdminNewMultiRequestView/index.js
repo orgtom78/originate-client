@@ -806,7 +806,7 @@ export default function MyForm() {
       }
     });
     navigate("/admin/requests");
-    window.location.reload();
+    //window.location.reload();
   }
 
   function createRequest(input) {
