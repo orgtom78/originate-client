@@ -23,9 +23,9 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -91,17 +91,13 @@ const SupplierForm = ({ className, ...rest }) => {
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_type, setSupplier_type] = useState("");
-  const [
-    supplier_date_of_incorporation,
-    setSupplier_date_of_incorporation,
-  ] = useState("");
+  const [supplier_date_of_incorporation, setSupplier_date_of_incorporation] =
+    useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
   const [supplier_address_number, setSupplier_address_number] = useState("");
-  const [
-    supplier_address_postalcode,
-    setSupplier_address_postalcode,
-  ] = useState("");
+  const [supplier_address_postalcode, setSupplier_address_postalcode] =
+    useState("");
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
 
@@ -332,7 +328,9 @@ const SupplierForm = ({ className, ...rest }) => {
                           InputLabelProps={{
                             shrink: true,
                           }}
-                          renderInput={(params) => <TextField fullWidth {...params} />}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
                         />
                       </LocalizationProvider>
                     </Grid>

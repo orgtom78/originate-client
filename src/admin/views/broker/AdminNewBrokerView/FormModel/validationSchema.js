@@ -9,18 +9,16 @@ const {
     broker_date_of_incorporation,
     broker_address_city,
     broker_address_street,
+    broker_address_number,
     broker_address_postalcode,
     broker_country,
     broker_industry,
     broker_registration_cert_attachment,
-    broker_articles_of_association_attachment,
-    broker_shareholder_list_attachment,
-    broker_director_list_attachment,
-    broker_register_number,
-    broker_trading_name,
     broker_website,
     broker_address_refinment,
     broker_industry_code,
+    broker_register_number,
+    broker_trading_name,
     director_name,
     director_email,
     director_phone_number,
@@ -39,6 +37,9 @@ const {
     ubo_nationality,
     ubo_poa_attachment,
     ubo_country_of_residence,
+
+    balance_sheet_attachment,
+    income_statement_attachment,
     accounts_payable,
     accounts_receivable,
     cash,
@@ -50,7 +51,6 @@ const {
     short_term_debt,
     working_capital,
     ebit,
-    financials_attachment,
     net_profit,
     financials_rating,
     financials_reporting_period,
@@ -94,13 +94,11 @@ const yup = [
     [broker_address_street.name]: Yup.string().required(
       `${broker_address_street.requiredErrorMsg}`
     ),
+    [broker_address_number.name]: Yup.string().required(
+      `${broker_address_number.requiredErrorMsg}`
+    ),
     [broker_address_postalcode.name]: Yup.string()
-      .required(`${broker_address_postalcode.requiredErrorMsg}`)
-      .test(
-        "len",
-        `${broker_address_postalcode.invalidErrorMsg}`,
-        (val) => val && val.length === 5
-      ),
+      .required(`${broker_address_postalcode.requiredErrorMsg}`),
     [broker_address_refinment.name]: Yup.string(),
     [broker_country.name]: Yup.string().required(
       `${broker_country.requiredErrorMsg}`
@@ -111,9 +109,6 @@ const yup = [
     [broker_industry_code.name]: Yup.string(),
     [broker_register_number.name]: Yup.string(),
     [broker_registration_cert_attachment.name]: Yup.string(),
-    [broker_articles_of_association_attachment.name]: Yup.string(),
-    [broker_shareholder_list_attachment.name]: Yup.string(),
-    [broker_director_list_attachment.name]: Yup.string(),
   }),
 
   Yup.object().shape({
@@ -149,7 +144,8 @@ const yup = [
     [short_term_debt.name]: Yup.string(),
     [working_capital.name]: Yup.string(),
     [ebit.name]: Yup.string(),
-    [financials_attachment.name]: Yup.string(),
+    [balance_sheet_attachment.name]: Yup.string(),
+    [income_statement_attachment.name]: Yup.string(),
     [net_profit.name]: Yup.string(),
     [financials_rating.name]: Yup.string(),
     [financials_reporting_period.name]: Yup.string()

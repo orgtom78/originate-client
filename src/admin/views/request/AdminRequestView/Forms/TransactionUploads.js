@@ -749,7 +749,8 @@ function BuyerUploads(value) {
             style={{ width: "100%", height: "100%" }}
             allowFullScreen
             src={ipupdf}
-          />
+            sandbox>
+            </iframe>
           <div>
             <input
               id={ipupdf}

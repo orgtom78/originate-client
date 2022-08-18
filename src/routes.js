@@ -73,6 +73,7 @@ const AdminNewSupplierBuyerView = lazy(() => import('src/admin/views/supplier/Ad
 const AdminRequestView = lazy(() => import('src/admin/views/request/AdminRequestView'));
 const AdminRequestListView = lazy(() => import('src/admin/views/request/AdminRequestListView'));
 const AdminNewRequestView = lazy(() => import('src/admin/views/request/AdminNewRequestView'));
+const AdminNewMultiRequestView = lazy(() => import('src/admin/views/request/AdminNewMultiRequestView'));
 const AdminBuyerTransactionListView = lazy(() => import('src/admin/views/buyer/AdminBuyerTransactionListView'));
 const AdminSupplierTransactionListView = lazy(() => import('src/admin/views/supplier/AdminSupplierTransactionListView'));
 
@@ -81,6 +82,8 @@ const AdminFinancialsView = lazy(() => import("src/admin/views/financials/AdminU
 
 const AdminNewDocumentView = lazy(() => import('src/admin/views/document/AdminNewDocumentView'));
 const AdminDocumentView = lazy(() => import('src/admin/views/document/AdminUpdateDocumentView'));
+
+const AdminSignatureView = lazy(() => import('src/admin/views/document/AdminSignatureTemplateView'));
 
 const AdminGroupListView = lazy(() => import('src/admin/views/user/AdminGroupListView'));
 const AdminGroupView = lazy(() => import('src/admin/views/user/AdminGroupView'));
@@ -226,6 +229,8 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'adminnewdocument/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminNewDocumentView />},
       { path: 'document/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminDocumentView />},
 
+      { path: 'esign/:buyerid/:supplierid', element: !isAdmin  ? <AdminLoginView /> : <AdminSignatureView />},
+
       { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin  ? <AdminLoginView /> : <AdminNewFinancialsView />},
       { path: 'financials/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminFinancialsView />},
 
@@ -234,6 +239,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'newrequestsupplierlist', element: !isAdmin ? <AdminLoginView /> : <AdminSupplierTransactionListView  />},
       { path: 'newrequestlist/:supId', element: !isAdmin ? <AdminLoginView /> : <AdminBuyerTransactionListView  />},
       { path: 'newrequest/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewRequestView />  },
+      { path: 'newmultirequest/:id/:buyId/:supId', element: !isAdmin ? <LoginView /> : <AdminNewMultiRequestView />  },
 
       { path: 'investors', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorListView />  },
       { path: 'investor/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorView />  },

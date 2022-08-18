@@ -51,8 +51,7 @@ const DiscountFeeAvg = ({ className, value, ...rest }) => {
       var b = fin.map(Number);
       const sum = b.reduce((partial_sum, a) => partial_sum + a, 0);
       const avg = sum / b.length;
-      const round = Math.round(avg);
-      return round;
+      return avg;
     } else {
       return;
     }
@@ -64,7 +63,7 @@ const DiscountFeeAvg = ({ className, value, ...rest }) => {
         <Grid container justifyContent="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              DISCOUNT FEE (Avg.)
+              SPREAD (Avg.)
             </Typography>
             <Typography color="textPrimary" variant="h3">
               <NumberFormat
@@ -72,7 +71,7 @@ const DiscountFeeAvg = ({ className, value, ...rest }) => {
                 variant="h3"
                 value={addamounts()}
                 displayType={"text"}
-                thousandSeparator={true}
+                decimalScale="2"
               />
               %
             </Typography>

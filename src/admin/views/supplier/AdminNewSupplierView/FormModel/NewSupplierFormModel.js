@@ -1,12 +1,6 @@
 const model = {
   formId: "NewSupplier",
   formField: {
-    userId: {
-      name: "userId",
-      label: "User ID",
-      requiredErrorMsg:
-        "Please get the userId from your admin and dont make one up!",
-    },
     supplier_logo: {
       name: "supplier_logo",
       label: "Company Logo",
@@ -45,6 +39,11 @@ const model = {
       name: "supplier_address_street",
       label: "Street*",
       requiredErrorMsg: "Street is required",
+    },
+    supplier_address_number: {
+      name: "supplier_address_number",
+      label: "Street Number*",
+      requiredErrorMsg: "Street Number is required",
     },
     supplier_address_postalcode: {
       name: "supplier_address_postalcode",
@@ -206,10 +205,10 @@ const model = {
       label: "Equity Book Value",
       requiredErrorMsg: "Equity Book Value is required",
     },
-    equity_market_value: {
-      name: "equity_market_value",
-      label: "Equity Market Value",
-      requiredErrorMsg: "Equity Market Value is required",
+    total_equity: {
+      name: "total_equity",
+      label: "Total Equity",
+      requiredErrorMsg: "Total Equity is required",
     },
     interest_expenses: {
       name: "interest_expenses",

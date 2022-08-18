@@ -8,7 +8,7 @@ import {
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
@@ -84,6 +84,7 @@ export default function AddressForm(props) {
       supplier_date_of_incorporation,
       supplier_address_city,
       supplier_address_street,
+      supplier_address_number,
       supplier_address_postalcode,
       supplier_country,
       supplier_industry,
@@ -255,6 +256,14 @@ export default function AddressForm(props) {
               <InputField
                 name={supplier_address_street.name}
                 label={supplier_address_street.label}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={supplier_address_number.name}
+                label={supplier_address_number.label}
                 fullWidth
                 variant="outlined"
               />

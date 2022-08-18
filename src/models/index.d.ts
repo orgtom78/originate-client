@@ -448,7 +448,10 @@ export declare class Request {
   readonly discount_fee_amount?: string | null;
   readonly transaction_fee_rate?: string | null;
   readonly transaction_fee_amount?: string | null;
+<<<<<<< HEAD
+=======
   readonly base_rate?: string | null;
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
   readonly purchase_order_amount?: string | null;
   readonly purchase_order_attachment?: string | null;
   readonly purchase_order_date?: string | null;
@@ -485,7 +488,10 @@ export declare class Request {
 
 export declare class SOFR {
   readonly id: string;
+<<<<<<< HEAD
+=======
   readonly SOFR?: string | null;
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
   readonly SOFRM1?: string | null;
   readonly SOFRM3?: string | null;
   readonly updatedAt?: string | null;

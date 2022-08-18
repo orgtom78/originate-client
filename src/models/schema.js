@@ -3452,6 +3452,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+<<<<<<< HEAD
+=======
                 "base_rate": {
                     "name": "base_rate",
                     "isArray": false,
@@ -3459,6 +3461,7 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
                 "purchase_order_amount": {
                     "name": "purchase_order_amount",
                     "isArray": false,
@@ -3747,6 +3750,8 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+<<<<<<< HEAD
+=======
                 "SOFR": {
                     "name": "SOFR",
                     "isArray": false,
@@ -3754,6 +3759,7 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
                 "SOFRM1": {
                     "name": "SOFRM1",
                     "isArray": false,
@@ -5418,5 +5424,9 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
+<<<<<<< HEAD
+    "version": "0af191dd27ced3300fc4af1c7df3fcf4"
+=======
     "version": "660f77556c8da5c42aabf8b300897154"
+>>>>>>> 8450a79011d666b00a743fa835391f6f3ce2f367
 };

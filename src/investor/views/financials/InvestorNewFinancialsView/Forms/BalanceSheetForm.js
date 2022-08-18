@@ -51,7 +51,7 @@ export default function BalanceSheetForm(props) {
     formField: {
       balance_sheet_attachment,
       financials_reporting_period,
-      cash, 
+      cash,
       accounts_receivable,
       inventory,
       other_current_assets,

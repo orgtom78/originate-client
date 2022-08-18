@@ -1,6 +1,14 @@
 import React, { useState } from "react";
-import { Button, CircularProgress, Container, Step, Stepper, StepLabel, Typography } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Button,
+  CircularProgress,
+  Container,
+  Step,
+  Stepper,
+  StepLabel,
+  Typography,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import { useNavigate, useParams } from "react-router-dom";
 import { Formik, Form } from "formik";
 import { API, graphqlOperation } from "aws-amplify";
@@ -75,6 +83,7 @@ export default function NewBroker() {
       const broker_type = values["broker_type"];
       const broker_address_city = values["broker_address_city"];
       const broker_address_street = values["broker_address_street"];
+      const broker_address_number = values["broker_address_number"];
       const broker_address_postalcode = values["broker_address_postalcode"];
       const broker_address_refinment = values["broker_address_refinment"];
       const broker_country = values["broker_country"];
@@ -84,16 +93,10 @@ export default function NewBroker() {
         values["broker_date_of_incorporation"];
       const broker_registration_cert_attachment =
         values["broker_registration_cert_attachment"];
-      const broker_articles_of_association_attachment =
-        values["broker_articles_of_association_attachment"];
-      const broker_shareholder_list_attachment =
-        values["broker_shareholder_list_attachment"];
-      const broker_director_list_attachment =
-        values["broker_director_list_attachment"];
       const broker_register_number = values["broker_register_number"];
       const broker_trading_name = values["broker_trading_name"];
       const broker_website = values["broker_website"];
-      
+
       const director_name = values["director_name"];
       const director_email = values["director_email"];
       const director_phone_number = values["director_phone_number"];
@@ -117,7 +120,8 @@ export default function NewBroker() {
       const ubo_country_of_residence = values["ubo_country_of_residence"];
       const ubo_status = "Under Review";
 
-      const financials_attachment = values["financial_accounts_attachment"];
+      const balance_sheet_attachment = values["balance_sheet_attachment"];
+      const income_statement_attachment = values["income_statement_attachment"];
       const financials_reporting_period = values["financials_reporting_period"];
       const net_profit = values["net_profit"];
       const financials_rating = values["financials_rating"];
@@ -147,18 +151,16 @@ export default function NewBroker() {
         broker_date_of_incorporation,
         broker_address_city,
         broker_address_street,
+        broker_address_number,
         broker_address_postalcode,
         broker_country,
         broker_industry,
         broker_registration_cert_attachment,
-        broker_articles_of_association_attachment,
-        broker_shareholder_list_attachment,
-        broker_director_list_attachment,
-        broker_register_number,
-        broker_trading_name,
         broker_website,
         broker_address_refinment,
         broker_industry_code,
+        broker_register_number,
+        broker_trading_name,
       });
 
       await createDirector({
@@ -197,6 +199,8 @@ export default function NewBroker() {
         userId,
         financialsId,
         brokerId,
+        balance_sheet_attachment,
+        income_statement_attachment,
         accounts_payable,
         accounts_receivable,
         cash,
@@ -208,7 +212,6 @@ export default function NewBroker() {
         short_term_debt,
         working_capital,
         ebit,
-        financials_attachment,
         net_profit,
         financials_rating,
         financials_reporting_period,
@@ -220,7 +223,7 @@ export default function NewBroker() {
 
       await updateUsergroup({
         id,
-        brokerId
+        brokerId,
       });
 
       navigate("/admin/brokers");

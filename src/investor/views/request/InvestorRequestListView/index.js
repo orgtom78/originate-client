@@ -35,9 +35,9 @@ import { Search as SearchIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { subDays } from "date-fns";
 
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -297,8 +297,9 @@ const InvestorTransactionListView = () => {
                         <TableCell>Supplier's Name</TableCell>
                         <TableCell>Invoice Number</TableCell>
                         <TableCell>Amount</TableCell>
-                        <TableCell>Discount Fee</TableCell>
+                        <TableCell>Total Discount</TableCell>
                         <TableCell>Platform Fee</TableCell>
+                        <TableCell>Discount Fee</TableCell>
                         <TableCell>Currency</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Invoice Date</TableCell>
@@ -355,6 +356,17 @@ const InvestorTransactionListView = () => {
                                 color="textPrimary"
                                 variant="h3"
                                 value={request.transaction_fee_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                prefix={"$"}
+                                decimalScale="2"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <NumberFormat
+                                color="textPrimary"
+                                variant="h3"
+                                value={Number(request.discount_fee_amount) - Number(request.transaction_fee_amount)}
                                 displayType={"text"}
                                 thousandSeparator={true}
                                 prefix={"$"}

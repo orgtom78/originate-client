@@ -23,9 +23,9 @@ import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -129,13 +129,6 @@ const rate = [
   },
 ];
 
-const emptyi = [
-  {
-    userId: "",
-    investor_name: "",
-  },
-];
-
 const BuyerForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -168,6 +161,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
     useState("");
   const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_address_street, setBuyer_address_street] = useState("");
+  const [buyer_address_number, setBuyer_address_number] = useState("");
   const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
   const [buyer_country, setBuyer_country] = useState("");
   const [buyer_industry, setBuyer_industry] = useState("");
@@ -180,6 +174,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_industry_code, setBuyer_industry_code] = useState("");
   const [buyer_register_number, setBuyer_register_number] = useState("");
   const [buyer_trading_name, setBuyer_trading_name] = useState("");
+  const [buyer_contact_name, setBuyer_contact_name] = useState("");
+  const [buyer_contact_email, setBuyer_contact_email] = useState("");
+  const [buyer_contact_phone, setBuyer_contact_phone] = useState("");
+  const [buyer_contact_position, setBuyer_contact_position] = useState("");
   const [_version, setVersion] = useState("");
 
   const [buyerloading, setBuyerLoading] = useState(false);
@@ -214,6 +212,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_date_of_incorporation,
               buyer_address_city,
               buyer_address_street,
+              buyer_address_number,
               buyer_address_postalcode,
               buyer_country,
               buyer_industry,
@@ -223,6 +222,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_industry_code,
               buyer_register_number,
               buyer_trading_name,
+              buyer_contact_name,
+              buyer_contact_email,
+              buyer_contact_phone,
+              buyer_contact_position,
               _version,
             },
           },
@@ -246,6 +249,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_type(buyer_type);
         setBuyer_address_city(buyer_address_city);
         setBuyer_address_street(buyer_address_street);
+        setBuyer_address_number(buyer_address_number);
         setBuyer_address_postalcode(buyer_address_postalcode);
         setBuyer_country(buyer_country);
         setBuyer_industry(buyer_industry);
@@ -257,6 +261,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_industry_code(buyer_industry_code);
         setBuyer_register_number(buyer_register_number);
         setBuyer_trading_name(buyer_trading_name);
+        setBuyer_contact_name(buyer_contact_name);
+        setBuyer_contact_email(buyer_contact_email);
+        setBuyer_contact_phone(buyer_contact_phone);
+        setBuyer_contact_position(buyer_contact_position);
         setVersion(_version);
       } catch (err) {
         console.log("error fetching data..", err);
@@ -286,6 +294,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_date_of_incorporation,
         buyer_address_city,
         buyer_address_street,
+        buyer_address_number,
         buyer_address_postalcode,
         buyer_country,
         buyer_industry,
@@ -295,6 +304,10 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_industry_code,
         buyer_register_number,
         buyer_trading_name,
+        buyer_contact_name,
+        buyer_contact_email,
+        buyer_contact_phone,
+        buyer_contact_position,
         _version,
       });
     } catch (e) {
@@ -558,7 +571,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Discount / Spread over Base Rate"
                         name="buyer_loan_discount_fee"
                         onChange={(e) =>
@@ -572,7 +585,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Transaction Fee in % of Spread"
                         name="buyer_loan_transaction_fee"
                         onChange={(e) =>
@@ -586,7 +599,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
-                        type='number'
+                        type="number"
                         label="Broker Fee in % of Transaction Fee"
                         name="buyer_loan_broker_fee"
                         onChange={(e) =>
@@ -594,6 +607,50 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         }
                         required
                         value={buyer_loan_broker_fee || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Main Contact Name"
+                        name="buyer_contact_name"
+                        onChange={(e) => setBuyer_contact_name(e.target.value)}
+                        required
+                        value={buyer_contact_name || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Main Contact Email"
+                        name="buyer_contact_email"
+                        onChange={(e) => setBuyer_contact_email(e.target.value)}
+                        value={buyer_contact_email || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Main Contact Phone"
+                        name="buyer_contact_phone"
+                        onChange={(e) => setBuyer_contact_phone(e.target.value)}
+                        required
+                        value={buyer_contact_phone || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Main Contact Position"
+                        name="buyer_contact_position"
+                        onChange={(e) =>
+                          setBuyer_contact_position(e.target.value)
+                        }
+                        value={buyer_contact_position || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -654,6 +711,19 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
+                        label="Street Number"
+                        name="buyer_address_number"
+                        onChange={(e) =>
+                          setBuyer_address_number(e.target.value)
+                        }
+                        required
+                        value={buyer_address_number || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
                         label="Address refinment"
                         name="buyer_address_refinment"
                         onChange={(e) =>
@@ -679,7 +749,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
                           id="date_of_incorporation"
                           label="Company Date of Incorporation"
                           name="date_of_incorporation"
-                          format="dd/MM/yyyy"
+                          format="MM/DD/YYYY"
                           minDate={new Date("1500/12/31")}
                           maxDate={new Date()}
                           onChange={(date) => {
@@ -719,8 +789,8 @@ const BuyerForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <Select
                         fullWidth
-                        label="Supplier Industry"
-                        name="supplier_industry"
+                        label="Buyer Industry"
+                        name="buyer_industry"
                         onChange={(e) => setBuyer_industry(e.target.value)}
                         required
                         value={buyer_industry || ""}

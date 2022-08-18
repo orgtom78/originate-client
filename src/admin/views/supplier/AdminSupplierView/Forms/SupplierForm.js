@@ -23,9 +23,10 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
@@ -33,6 +34,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/supplier/AdminSupplierView/Lists/directorlist.js";
 import UboListView from "src/admin/views/supplier/AdminSupplierView/Lists/ubolist.js";
+import BuyerListView from "src/admin/views/supplier/AdminSupplierView/Lists/buyerlist.js";
 import AdminUpdateBankView from "src/admin/views/bank/AdminUpdateBankView/index.js";
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
@@ -99,6 +101,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
     useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
+  const [supplier_address_number, setSupplier_address_number] = useState("");
   const [supplier_address_postalcode, setSupplier_address_postalcode] =
     useState("");
   const [supplier_country, setSupplier_country] = useState("");
@@ -113,6 +116,11 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const [supplier_industry_code, setSupplier_industry_code] = useState("");
   const [supplier_register_number, setSupplier_register_number] = useState("");
   const [supplier_trading_name, setSupplier_trading_name] = useState("");
+  const [supplier_contact_name, setSupplier_contact_name] = useState("");
+  const [supplier_contact_email, setSupplier_contact_email] = useState("");
+  const [supplier_contact_phone, setSupplier_contact_phone] = useState("");
+  const [supplier_contact_position, setSupplier_contact_position] =
+    useState("");
 
   //Financials:
   const [financialsId, setFinancialsId] = useState("");
@@ -161,6 +169,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
               supplier_date_of_incorporation,
               supplier_address_city,
               supplier_address_street,
+              supplier_address_number,
               supplier_address_postalcode,
               supplier_country,
               supplier_industry,
@@ -170,6 +179,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
               supplier_industry_code,
               supplier_register_number,
               supplier_trading_name,
+              supplier_contact_name,
+              supplier_contact_email,
+              supplier_contact_phone,
+              supplier_contact_position,
             },
           },
         } = supplier;
@@ -182,6 +195,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
         setSupplier_type(supplier_type);
         setSupplier_address_city(supplier_address_city);
         setSupplier_address_street(supplier_address_street);
+        setSupplier_address_number(supplier_address_number);
         setSupplier_address_postalcode(supplier_address_postalcode);
         setSupplier_country(supplier_country);
         setSupplier_industry(supplier_industry);
@@ -193,6 +207,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
         setSupplier_industry_code(supplier_industry_code);
         setSupplier_register_number(supplier_register_number);
         setSupplier_trading_name(supplier_trading_name);
+        setSupplier_contact_name(supplier_contact_name);
+        setSupplier_contact_email(supplier_contact_email);
+        setSupplier_contact_phone(supplier_contact_phone);
+        setSupplier_contact_position(supplier_contact_position);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -280,6 +298,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
         supplier_date_of_incorporation,
         supplier_address_city,
         supplier_address_street,
+        supplier_address_number,
         supplier_address_postalcode,
         supplier_country,
         supplier_industry,
@@ -289,6 +308,10 @@ const SupplierForm = ({ className, value, ...rest }) => {
         supplier_industry_code,
         supplier_register_number,
         supplier_trading_name,
+        supplier_contact_name,
+        supplier_contact_email,
+        supplier_contact_phone,
+        supplier_contact_position,
       });
     } catch (e) {
       onError(e);
@@ -413,6 +436,56 @@ const SupplierForm = ({ className, value, ...rest }) => {
                     <Grid item md={6} xs={12}>
                       <TextField
                         fullWidth
+                        label="Supplier Main Contact Name"
+                        name="supplier_contact_name"
+                        onChange={(e) =>
+                          setSupplier_contact_name(e.target.value)
+                        }
+                        required
+                        value={supplier_contact_name || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Email"
+                        name="supplier_contact_email"
+                        onChange={(e) =>
+                          setSupplier_contact_email(e.target.value)
+                        }
+                        value={supplier_contact_email || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Phone"
+                        name="supplier_contact_phone"
+                        onChange={(e) =>
+                          setSupplier_contact_phone(e.target.value)
+                        }
+                        required
+                        value={supplier_contact_phone || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Supplier Main Contact Position"
+                        name="supplier_contact_position"
+                        onChange={(e) =>
+                          setSupplier_contact_position(e.target.value)
+                        }
+                        value={supplier_contact_position || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
                         label="Company Website"
                         name="supplier_website"
                         onChange={(e) => setSupplier_website(e.target.value)}
@@ -487,6 +560,19 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         }
                         required
                         value={supplier_address_street || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Street Number"
+                        name="supplier_address_number"
+                        onChange={(e) =>
+                          setSupplier_address_number(e.target.value)
+                        }
+                        required
+                        value={supplier_address_number || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -641,7 +727,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
             </Card>
           </AccordionDetails>
         </Accordion>
-
         <Accordion>
           <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
             <Typography className={classes.heading}>
@@ -897,6 +982,21 @@ const SupplierForm = ({ className, value, ...rest }) => {
             <Card>
               <CardContent>
                 <AdminUpdateBankView value={supplierId} user={userId} />
+              </CardContent>
+            </Card>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography className={classes.heading}>
+              Company Zoho Templates
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Card>
+              <CardContent>
+                <BuyerListView value={supplierId} />
               </CardContent>
             </Card>
           </AccordionDetails>

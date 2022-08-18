@@ -23,9 +23,9 @@ import NumberFormat from "react-number-format";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -1887,7 +1887,7 @@ const Limits = ({ className, value, data, ...rest }) => {
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Amounts 
+                  Amounts
                 </TableCell>
                 <TableCell align="right">
                   <Select
@@ -1895,7 +1895,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                     id="financials_denomination"
                     onChange={(e) => setFinancials_denomination(e.target.value)}
                     required
-                    value={financials_denomination|| ""}
+                    value={financials_denomination || ""}
                     variant="standard"
                   >
                     {denominationValue.map((item, index) => (
@@ -1906,17 +1906,15 @@ const Limits = ({ className, value, data, ...rest }) => {
                   </Select>
                 </TableCell>
                 <TableCell align="right">
-                <Button
+                  <Button
                     variant="outlined"
                     onClick={() => updateProfitabilityPY()}
                   >
                     Update
                   </Button>
                 </TableCell>
-                <TableCell align="right">
-                </TableCell>
-                <TableCell align="right">
-                </TableCell>
+                <TableCell align="right"></TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
@@ -1965,7 +1963,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   Time in Business
                 </TableCell>
                 <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DesktopDatePicker
                       fullWidth
                       value={buyer_date_of_incorporation || new Date()}
@@ -2502,7 +2500,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   Most Recent Country Downgrade
                 </TableCell>
                 <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DesktopDatePicker
                       fullWidth
                       value={
@@ -2565,7 +2563,7 @@ const Limits = ({ className, value, data, ...rest }) => {
                   Length of Supplier/A/D Relationship
                 </TableCell>
                 <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <LocalizationProvider dateAdapter={AdapterMoment}>
                     <DesktopDatePicker
                       fullWidth
                       value={

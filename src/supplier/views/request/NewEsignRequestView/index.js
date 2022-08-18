@@ -53,10 +53,24 @@ export default function NewAccount() {
   const [investEmail, setInvestEmail] = useState("");
   const [buyername, setBuyername] = useState("");
   const [suppliername, setSuppliername] = useState("");
+  const [supplier_address_street, setSupplier_address_street] = useState("");
+  const [supplier_address_number, setSupplier_address_number] = useState("");
+  const [supplier_address_postalcode, setSupplier_address_postalcode] =
+    useState("");
+  const [supplier_address_city, setSupplier_address_city] = useState("");
+  const [buyer_address_street, setBuyer_address_street] = useState("");
+  const [buyer_address_number, setBuyer_address_number] = useState("");
+  const [buyer_address_postalcode, setBuyer_address_postalcode] = useState("");
+  const [buyer_address_city, setBuyer_address_city] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
+
+  const [esignId, setEsignId] = useState("");
+  const [esign_template_ipu, setEsign_template_ipu] = useState("");
+  const [esign_template_offer, setEsign_template_offer] = useState("");
+  const [esign_template_raa_offer, setEsign_template_raa_offer] = useState("");
 
   const context = useUser();
   const { id } = useParams();
@@ -71,11 +85,24 @@ export default function NewAccount() {
     // attempt to fetch the info of the user that was already logged in
     async function onLoad() {
       const data = await context;
-      const { sub, supplierId, identity, supplier_name } = data;
+      const {
+        sub,
+        supplierId,
+        identity,
+        supplier_name,
+        supplier_address_street,
+        supplier_address_number,
+        supplier_address_postalcode,
+        supplier_address_city,
+      } = data;
       setSub(sub);
       setIdent(identity);
       setSupid(supplierId);
       setSuppliername(supplier_name);
+      setSupplier_address_postalcode(supplier_address_postalcode);
+      setSupplier_address_city(supplier_address_city);
+      setSupplier_address_street(supplier_address_street);
+      setSupplier_address_number(supplier_address_number);
     }
     onLoad();
   }, [context]);
@@ -94,6 +121,10 @@ export default function NewAccount() {
             buyer_loan_discount_fee,
             buyer_loan_transaction_fee,
             buyer_loan_broker_fee,
+            buyer_address_street,
+            buyer_address_number,
+            buyer_address_postalcode,
+            buyer_address_city,
           },
         },
       } = buyer;
@@ -108,9 +139,40 @@ export default function NewAccount() {
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
+      setBuyer_address_street(buyer_address_street);
+      setBuyer_address_number(buyer_address_number);
+      setBuyer_address_postalcode(buyer_address_postalcode);
+      setBuyer_address_city(buyer_address_city);
     }
     load();
   }, [sub, id]);
+
+  React.useEffect(() => {
+    async function getEsign() {
+      try {
+        let filter = {
+          supplierId: { eq: supid },
+          buyerId: { eq: buyid },
+        };
+        const {
+          data: {
+            listEsigns: { items: itemsPage1, nextToken },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listEsigns, { filter: filter })
+        );
+        const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
+        const items = n.data.listEsigns.items[0];
+        setEsignId(items.id);
+        setEsign_template_ipu(items.esign_template_ipu);
+        setEsign_template_offer(items.esign_template_offer);
+        setEsign_template_raa_offer(items.esign_template_raa_offer);
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    getEsign();
+  }, [supid, buyid]);
 
   React.useEffect(() => {
     async function load() {
@@ -164,7 +226,8 @@ export default function NewAccount() {
     const tokenData = await auth.json();
     const accessToken = await tokenData.access_token;
     const res = await fetch(
-      "https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/277571000000027081/createdocument?testing=true",
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument?testing=true`,
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
       {
         method: "POST",
         headers: {
@@ -172,7 +235,7 @@ export default function NewAccount() {
           Authorization: `Zoho-oauthtoken ${accessToken}`,
         },
         body: new URLSearchParams({
-          data: `{"templates":{"field_data":{"field_text_data":{"SellerName1":"${suppliername}","ObligorName1":"${buyername}","SellerName2":"${suppliername}","ObligorName2":"${buyername}","InvoiceNumber":"${values["invoice_number"]}","InvoiceDate":"${invoicedate}","InvoiceDueDate":"${invoiceduedate}","PaymentDate":"${invoiceduedate}","Currency":"${values["invoice_currency"]}","Amount":"${values["invoice_amount"]}","GoodsDescription":"${values["sold_goods_description"]}","SellerName3":"${suppliername}","ObligorName3":"${buyername}"},"field_boolean_data":{},"field_date_data":{"Date1":"${date}","Date2":"${date}"}},"actions":[{"action_id":"277571000000027102","action_type":"SIGN","recipient_name":"Tobias Pfuetze","role":"Purchaser","recipient_email":"tobias.pfuetze@originatecapital.co","recipient_phonenumber":"","recipient_countrycode":"","private_notes":"","verify_recipient":false,"language":"en"},{"action_id":"277571000000027146","action_type":"SIGN","recipient_name":"${supEmail}","role":"Seller","recipient_email":"${supEmail}","recipient_phonenumber":"","recipient_countrycode":"","private_notes":"","verify_recipient":false,"language":"en"},{"action_id":"277571000000027148","action_type":"SIGN","recipient_name":"${values["ipu_signature_name"]}","role":"Obligor","recipient_email":"${values["ipu_signature_email"]}","recipient_phonenumber":"","recipient_countrycode":"","private_notes":"","verify_recipient":false,"language":"en"}],"notes":"","request_name":"ObIigor Notice and Irrevocable Payment Undertaking"}}`,
+          data: `{ "templates": { "field_data": { "field_text_data": { "Seller Name": "${suppliername}", "Seller Number": "${supplier_address_number}", "Seller Street": "${supplier_address_street}", "Seller City": "${supplier_address_city}", "Seller Postcode": "${supplier_address_postalcode}", "Buyer Contact Name": "${values["ipu_signature_name"]}", "Buyer Name": "${buyername}", "Buyer Number": "${buyer_address_number}", "Buyer Street": "${buyer_address_street}", "Buyer City": "${buyer_address_city}", "Buyer Postcode": "${buyer_address_postalcode}", "Buyer Contact Name2": "${values["ipu_signature_name"]}", "Amount": "${values["invoice_amount"]}", "Currency": "${values["invoice_currency"]}", "Issue Date": "${invoicedate}", "Invoice Number": "${values["invoice_number"]}", "Due Date": "${invoiceduedate}", "Seller Name2": "${suppliername}", "Buyer Name2": "${buyername}", "Debtor": "Debtor" }, "field_boolean_data": {}, "field_date_data": { "Date - 1": "${date}" } }, "actions": [ { "recipient_name": "admin@originatecapital.co", "recipient_email": "admin@originatecapital.co", "action_id": "277418000000062128", "signing_order": 1, "role": "Admin", "verify_recipient": false, "private_notes": "" }, { "recipient_name": "${supEmail}", "recipient_email": "${supEmail}", "action_id": "277418000000062172", "signing_order": 2, "role": "Seller", "verify_recipient": false, "private_notes": "" }, { "recipient_name": "${values["ipu_signature_name"]}", "recipient_email": "${values["ipu_signature_email"]}", "action_id": "277418000000062174", "signing_order": 3, "role": "Buyer", "verify_recipient": false, "private_notes": "" } ], "notes": "" } }`,
           is_quicksend: "true",
           locale: "en",
         }),
@@ -197,10 +260,8 @@ export default function NewAccount() {
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
       const payout_date = moment();
-      const period = moment(values["invoice_due_date"]).diff(
-        payout_date,
-        "days"
-      );
+      const period =
+        moment(values["invoice_due_date"]).diff(payout_date, "days") + 1;
       const transaction_fee_amount =
         (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
         360;

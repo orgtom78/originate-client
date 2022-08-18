@@ -169,11 +169,11 @@ const Limits = (input) => {
               </TableRow>
               <TableRow>
                 <TableCell component="th" scope="row">
-                  Discount (pa)
+                  Discount / Spread over SOFR
                 </TableCell>
                 <TableCell align="right">
                   <NumberFormat
-                    label="Loan Rate"
+                    label="Discount / Spread over SOFR"
                     value={buyer_loan_rate || ""}
                     thousandSeparator={true}
                     suffix={"%"}

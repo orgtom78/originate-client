@@ -30,9 +30,9 @@ import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
 import moment from "moment";
 
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const curr = currencies;
 
@@ -71,38 +71,22 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const status = [
-  {
-    value: "Open",
-    label: "Open",
-  },
-  {
-    value: "Under Review",
-    label: "Under Review",
-  },
-  {
-    value: "Approved",
-    label: "Approved",
-  },
-];
-
 const RequestForm = ({ className, value, ...rest }) => {
   const navigate = useNavigate();
   const classes = useStyles();
   const [dynamorequestid, setDynamorequestid] = useState("");
   const [dynamobookkeepingid, setDynamobookkeepingid] = useState("");
-  const [investorId, setInvestorId] = useState("");
-  const [buyer_name, setBuyer_name] = useState("");
-  const [supplier_name, setSupplier_name] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
   const [payout_date, setPayout_date] = useState("");
   const [invoice_due_date, setInvoice_due_date] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
   const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
+  const [discount_fee_amount, setDiscount_fee_amount] = useState("");
   const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
-  const [invoiceId_3party, setInvoiceId_3party] = useState("");
+  const [bookkeeping_status, setBookkeeping_status] = useState("");
   const [requestId, setRequestId] = useState("");
+  const [transactionId, setTransactionId] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
@@ -123,29 +107,29 @@ const RequestForm = ({ className, value, ...rest }) => {
           id,
           requestId,
           bookkeeping_status_spv,
-          investorId,
-          buyer_name,
-          supplier_name,
+          bookkeeping_status,
           invoice_amount,
           invoice_currency,
           payout_date,
           invoice_due_date,
           transaction_fee_rate,
           transaction_fee_amount,
+          discount_fee_amount,
         } = items;
         setDynamorequestid(id);
         setRequestId(requestId);
         setBookkeeping_status_spv(bookkeeping_status_spv);
-        setInvestorId(investorId);
+        setBookkeeping_status(bookkeeping_status);
         setTransaction_fee_rate(transaction_fee_rate);
-        setBuyer_name(buyer_name);
-        setSupplier_name(supplier_name);
-        setInvoice_amount(invoice_amount);
+        const round = Number(invoice_amount).toFixed(2);
+        setInvoice_amount(round);
         setInvoice_currency(invoice_currency);
         setPayout_date(payout_date);
         setInvoice_due_date(invoice_due_date);
-        const round = Number(transaction_fee_amount).toFixed(2);
-        setTransaction_fee_amount(round);
+        const round1 = Number(transaction_fee_amount).toFixed(2);
+        setTransaction_fee_amount(round1);
+        const round2 = Number(discount_fee_amount).toFixed(2);
+        setDiscount_fee_amount(round2);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -155,7 +139,9 @@ const RequestForm = ({ className, value, ...rest }) => {
   useEffect(() => {
     if (
       bookkeeping_status_spv === "Under Review" ||
-      bookkeeping_status_spv === "Approved"
+      bookkeeping_status_spv === "Approved" ||
+      bookkeeping_status === "Under Review" ||
+      bookkeeping_status === "Approved"
     ) {
       const id = value.value;
       getBook({ id });
@@ -169,73 +155,55 @@ const RequestForm = ({ className, value, ...rest }) => {
           );
           const bookitem = await bookkeeping.data.listBookkeepings.items[0];
           const idd = bookitem.id;
-          const partid = bookitem.invoiceId_3party;
-          console.log(partid);
+          const transid = bookitem.transactionId;
           setDynamobookkeepingid(idd);
-          setInvoiceId_3party(partid);
+          setTransactionId(transid);
         } catch (err) {
           console.log("error fetching data..", err);
         }
       }
+    } else {
+      async function createBook() {
+        try {
+          await createBookkeeping({
+            requestId,
+          });
+        } catch (err) {
+          console.log("error fetching data..", err);
+        }
+      }
+      createBook();
     }
-  }, [bookkeeping_status_spv, value]);
+  }, [bookkeeping_status_spv, requestId, bookkeeping_status, value]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      if (bookkeeping_status_spv === "" || bookkeeping_status_spv === "Open") {
+      const bookkeeping_status_spv = "Approved";
+      const id = dynamobookkeepingid;
+      await createWavePurchase({
+        invoice_amount,
+        discount_fee_amount,
+        id,
+      });
+      await createWaveSale({
+        invoice_amount,
+        discount_fee_amount,
+        id,
+      });
+      await updateBookkeeping({
+        id,
+        bookkeeping_status_spv,
+      });
+      async function assignid() {
         const id = dynamorequestid;
         await updateRequest({
           id,
-          transaction_fee_amount,
-          transaction_fee_rate,
-          payout_date,
           bookkeeping_status_spv,
         });
-      } else if (bookkeeping_status_spv === "Under Review") {
-        const id = dynamorequestid;
-        const result = await createWave({
-          transaction_fee_amount,
-          id,
-        });
-        const invoice = result.data.invoiceCreate.invoice;
-        const invoiceId_3party = invoice.id;
-        var invoiceurl_3party = invoice.pdfUrl;
-        var invoicepdfurl_3party = invoice.viewUrl;
-        await createBookkeeping({
-          bookkeeping_status_spv,
-          requestId,
-          invoiceId_3party,
-          invoiceurl_3party,
-          invoicepdfurl_3party,
-        });
-        await updateRequest({
-          id,
-          transaction_fee_amount,
-          transaction_fee_rate,
-          payout_date,
-          bookkeeping_status_spv,
-        });
-      } else if (bookkeeping_status_spv === "Approved") {
-        const id = dynamobookkeepingid;
-        await updateBookkeeping({
-          id,
-          bookkeeping_status_spv,
-        });
-        console.log(invoiceId_3party);
-        await approveInvoice({
-          invoiceId_3party,
-        });
-        async function assignid() {
-          const id = dynamorequestid;
-          await updateRequest({
-            id,
-            bookkeeping_status_spv,
-          });
-        }
-        assignid();
       }
+      assignid();
     } catch (e) {
       onError(e);
     }
@@ -256,7 +224,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     );
   }
 
-  async function createWave(input) {
+  async function createWavePurchase(input) {
     // Default options are marked with *
     var url = "https://gql.waveapps.com/graphql/public";
     const response = await fetch(url, {
@@ -267,136 +235,37 @@ const RequestForm = ({ className, value, ...rest }) => {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
-        query: `mutation ($input: InvoiceCreateInput!) {
-          invoiceCreate(input: $input) {
+        query: `mutation ($input: MoneyTransactionCreateInput! ) {
+          moneyTransactionCreate(input: $input) {
             didSucceed
-            inputErrors {
+            inputErrors{
               message
-              code
-              path
             }
-            invoice {
+            transaction{
               id
-              createdAt
-              modifiedAt
-              pdfUrl
-              viewUrl
-              status
-              title
-              subhead
-              invoiceNumber
-              invoiceDate
-              poNumber
-              customer {
-                id
-                name
-                # Can add additional customer fields here
-              }
-              currency {
-                code
-              }
-              dueDate
-              amountDue {
-                value
-                currency {
-                  symbol
-                }
-              }
-              amountPaid {
-                value
-                currency {
-                  symbol
-                }
-              }
-              taxTotal {
-                value
-                currency {
-                  symbol
-                }
-              }
-              total {
-                value
-                currency {
-                  symbol
-                }
-              }
-              exchangeRate
-              footer
-              memo
-              disableCreditCardPayments
-              disableBankPayments
-              itemTitle
-              unitTitle
-              priceTitle
-              amountTitle
-              hideName
-              hideDescription
-              hideUnit
-              hidePrice
-              hideAmount
-              items {
-                product {
-                  id
-                  name
-                  # Can add additional product fields here
-                }
-                description
-                quantity
-                price
-                subtotal {
-                  value
-                  currency {
-                    symbol
-                  }
-                }
-                total {
-                  value
-                  currency {
-                    symbol
-                  }
-                }
-                account {
-                  id
-                  name
-                  subtype {
-                    name
-                    value
-                  }
-                  # Can add additional account fields here
-                }
-                taxes {
-                  amount {
-                    value
-                  }
-                  salesTax {
-                    id
-                    name
-                    # Can add additional sales tax fields here
-                  }
-                }
-              }
-              lastSentAt
-              lastSentVia
-              lastViewedAt
             }
-          }
+        }
         }`,
         variables: {
           input: {
-            invoiceNumber: `${input.id}`,
             businessId:
               "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNh",
-            customerId:
-              "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNhO0N1c3RvbWVyOjY2MTM3MzQx",
-            items: [
-              {
-                productId:
-                  "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNhO1Byb2R1Y3Q6NzkxNDM3ODM=",
-                quantity: 1,
-                unitPrice: input.transaction_fee_amount,
-                description: `Transaction ID: ${input.id}`,
-              },
-            ],
+            date: moment().format("YYYY-MM-DD"),
+            externalId: `Purchase: ${input.id}`,
+            description: `RequestId: ${input.id}`,
+            anchor: {
+              accountId:
+                "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
+              direction: "DEPOSIT",
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+            },
+            lineItems: {
+              description: `RequestId: ${input.id}`,
+              accountId:
+                "QWNjb3VudDoxNTE1MTAxMzg4OTA3MDcwMzAwO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
+              balance: "CREDIT",
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+            },
           },
         },
       }),
@@ -404,7 +273,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     return response.json(); // parses JSON response into native JavaScript objects
   }
 
-  async function approveInvoice(input) {
+  async function createWaveSale(input) {
     // Default options are marked with *
     var url = "https://gql.waveapps.com/graphql/public";
     const response = await fetch(url, {
@@ -415,19 +284,37 @@ const RequestForm = ({ className, value, ...rest }) => {
         // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
-        query: `mutation ($input: InvoiceApproveInput!) {
-          invoiceApprove(input: $input) {
+        query: `mutation ($input: MoneyTransactionCreateInput! ) {
+          moneyTransactionCreate(input: $input) {
             didSucceed
-            inputErrors {
+            inputErrors{
               message
-              code
-              path
             }
-          }
+            transaction{
+              id
+            }
+        }
         }`,
         variables: {
           input: {
-            invoiceId: `${input.invoiceId_3party}`,
+            businessId:
+              "QnVzaW5lc3M6N2Q3NjU4MDktMzVkYS00M2M5LWJhMWEtNjRkMDU0MjIwMzNh",
+            date: moment().format("YYYY-MM-DD"),
+            externalId: `Sale: ${input.id}`,
+            description: `RequestId: ${input.id}`,
+            anchor: {
+              accountId:
+                "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
+              direction: "WITHDRAWAL",
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+            },
+            lineItems: {
+              description: `RequestId: ${input.id}`,
+              accountId:
+                "QWNjb3VudDoxNTE1MTAxNTUxODEzODM3NjYyO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
+              balance: "DEBIT",
+              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+            },
           },
         },
       }),
@@ -490,16 +377,14 @@ const RequestForm = ({ className, value, ...rest }) => {
                     <Grid item xs={12} sm={12}>
                       <Select
                         fullWidth
-                        name="bookkeeping_status_spv"
-                        label="Bookkeeping Status SPV"
-                        onChange={(e) =>
-                          setBookkeeping_status_spv(e.target.value)
-                        }
+                        name="invoice_currency"
+                        label="Invoice Currency"
+                        onChange={(e) => setInvoice_currency(e.target.value)}
                         required
-                        value={bookkeeping_status_spv || ""}
+                        value={invoice_currency || ""}
                         variant="outlined"
                       >
-                        {status.map((item, index) => (
+                        {curr.map((item, index) => (
                           <MenuItem key={index} value={item.label}>
                             {item.label}
                           </MenuItem>
@@ -518,21 +403,17 @@ const RequestForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <Select
+                      <TextField
+                        name="discount_fee_amount"
+                        label="Total Discount"
                         fullWidth
-                        name="invoice_currency"
-                        label="Invoice Currency"
-                        onChange={(e) => setInvoice_currency(e.target.value)}
-                        required
-                        value={invoice_currency || ""}
                         variant="outlined"
-                      >
-                        {curr.map((item, index) => (
-                          <MenuItem key={index} value={item.label}>
-                            {item.label}
-                          </MenuItem>
-                        ))}
-                      </Select>
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        required
+                        value={discount_fee_amount || ""}
+                      />
                     </Grid>
                     <Grid
                       container
@@ -602,32 +483,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         />
                       </LocalizationProvider>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_rate"
-                        label="Transaction Fee Rate in % of Spread"
-                        fullWidth
-                        variant="outlined"
-                        onChange={(e) =>
-                          setTransaction_fee_rate(e.target.value)
-                        }
-                        required
-                        value={transaction_fee_rate || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_amount"
-                        label="Originate Transaction Fee Amount"
-                        fullWidth
-                        variant="outlined"
-                        InputProps={{
-                          readOnly: true,
-                        }}
-                        required
-                        value={transaction_fee_amount || ""}
-                      />
-                    </Grid>
                   </Grid>
                 </CardContent>
                 <Divider />
@@ -639,7 +494,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                     loading={requestloading}
                     onClick={handleRequestSubmit}
                   >
-                    Create/Approve Invoice
+                    Create Bookkeeping Entries
                   </LoaderButton>
                 </Box>
               </Card>

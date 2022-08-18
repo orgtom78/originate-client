@@ -97,13 +97,11 @@ export default function NewAccount() {
         },
       } = buyer;
       const buyername = await buyer_name;
-      const invid = investorId;
-      const buyid = buyerId;
-      setInvestid(invid);
+      setInvestid(investorId);
       setBrokerid(brokerId);
       setSpvid(spvId);
       setBuyername(buyername);
-      setBuyid(buyid);
+      setBuyid(buyerId);
       setBuyer_loan_discount_fee(buyer_loan_discount_fee);
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
@@ -134,8 +132,6 @@ export default function NewAccount() {
     }
     load();
   }, []);
-
-  React.useEffect(() => {}, []);
 
   async function burn(id) {
     const myInit = {
@@ -178,10 +174,6 @@ export default function NewAccount() {
     console.log(res);
   }
 
-  function _sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
   async function _submitForm(values, actions) {
     try {
       const userId = sub;
@@ -195,10 +187,8 @@ export default function NewAccount() {
       const discount_fee_rate = buyer_loan_discount_fee;
       const broker_fee_rate = buyer_loan_broker_fee;
       const payout_date = moment();
-      const period = moment(values["invoice_due_date"]).diff(
-        payout_date,
-        "days"
-      );
+      const period =
+        moment(values["invoice_due_date"]).diff(payout_date, "days") + 1;
       const transaction_fee_amount =
         (((values["invoice_amount"] * transaction_fee_rate) / 100) * period) /
         360;

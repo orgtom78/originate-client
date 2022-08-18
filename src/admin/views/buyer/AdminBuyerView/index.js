@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import AssetRisk from "src/admin/views/buyer/AdminBuyerView/AssetRisk.js";
+import AccountDebtor from "./AccountDebtor";
+import Description from "./Description";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -75,6 +77,16 @@ const Buyer = (value) => {
       <Page className={classes.root} title="Account">
         <Container maxWidth="lg">
           <Grid container spacing={3}>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
+              <AccountDebtor value={item} />
+            </Grid>
+            <Grid item lg={6} sm={6} xl={6} xs={12}>
+              <Description value={item} />
+            </Grid>
+            </Grid>
+          <br></br>
+          <br></br>
+          <Grid container spacing={1}>
           <Grid item lg={12} md={12} xs={12}>
             <AssetRisk value={fin} data={item} />
             </Grid>

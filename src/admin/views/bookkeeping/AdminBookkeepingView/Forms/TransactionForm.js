@@ -30,9 +30,9 @@ import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
 import moment from "moment";
 
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DesktopDatePicker from "@mui/lab/DesktopDatePicker";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const curr = currencies;
 
@@ -100,6 +100,8 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
   const [transaction_fee_amount, setTransaction_fee_amount] = useState("");
+  const [broker_fee_rate, setBroker_fee_rate] = useState("");
+  const [broker_fee_amount, setBroker_fee_amount] = useState("");
   const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
   const [invoiceId_3party, setInvoiceId_3party] = useState("");
   const [requestId, setRequestId] = useState("");
@@ -132,6 +134,8 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_due_date,
           transaction_fee_rate,
           transaction_fee_amount,
+          broker_fee_amount,
+          broker_fee_rate,
         } = items;
         setDynamorequestid(id);
         setRequestId(requestId);
@@ -141,11 +145,14 @@ const RequestForm = ({ className, value, ...rest }) => {
         setBuyer_name(buyer_name);
         setSupplier_name(supplier_name);
         setInvoice_amount(invoice_amount);
+        const round = Number(broker_fee_amount).toFixed(2);
+        setBroker_fee_amount(round);
+        setBroker_fee_rate(broker_fee_rate);
         setInvoice_currency(invoice_currency);
         setPayout_date(payout_date);
         setInvoice_due_date(invoice_due_date);
-        const round = Number(transaction_fee_amount).toFixed(2);
-        setTransaction_fee_amount(round);
+        const round1 = Number(transaction_fee_amount).toFixed(2);
+        setTransaction_fee_amount(round1);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -184,7 +191,10 @@ const RequestForm = ({ className, value, ...rest }) => {
     setRequestSuccess(false);
     setRequestLoading(true);
     try {
-      if (bookkeeping_status_admin === "" || bookkeeping_status_admin === "Open") {
+      if (
+        bookkeeping_status_admin === "" ||
+        bookkeeping_status_admin === "Open"
+      ) {
         const id = dynamorequestid;
         await updateRequest({
           id,
@@ -217,6 +227,13 @@ const RequestForm = ({ className, value, ...rest }) => {
           payout_date,
           bookkeeping_status_admin,
         });
+        if (broker_fee_amount !== "") {
+          const id = dynamorequestid;
+          await createWavePayable({
+            id,
+            broker_fee_amount,
+          });
+        }
       } else if (bookkeeping_status_admin === "Approved") {
         const id = dynamobookkeepingid;
         await updateBookkeeping({
@@ -383,8 +400,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         }`,
         variables: {
           input: {
-            invoiceNumber:
-            `${input.id}`,
+            invoiceNumber: `${input.id}`,
             businessId:
               "QnVzaW5lc3M6NGUyMmMxN2QtYjY5Yy00ZjA1LWE5ZWYtZTg5YWQ2ZmFlNTU1",
             customerId:
@@ -398,6 +414,55 @@ const RequestForm = ({ className, value, ...rest }) => {
                 description: `Transaction ID: ${input.id}`,
               },
             ],
+          },
+        },
+      }),
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
+  }
+
+  async function createWavePayable(input) {
+    // Default options are marked with *
+    var url = "https://gql.waveapps.com/graphql/public";
+    const response = await fetch(url, {
+      method: "POST", // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        authorization: `Bearer ${process.env.REACT_APP_WAVE_API_KEY}`,
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        query: `mutation ($input: MoneyTransactionCreateInput! ) {
+          moneyTransactionCreate(input: $input) {
+            didSucceed
+            inputErrors{
+              message
+            }
+            transaction{
+              id
+            }
+        }
+        }`,
+        variables: {
+          input: {
+            businessId:
+              "QnVzaW5lc3M6NGUyMmMxN2QtYjY5Yy00ZjA1LWE5ZWYtZTg5YWQ2ZmFlNTU1",
+            date: moment().format("YYYY-MM-DD"),
+            externalId: `Payable: ${input.id}`,
+            description: `RequestId: ${input.id}`,
+            anchor: {
+              accountId:
+                "QWNjb3VudDoxMzI4NjY5MTMwMjczOTY0NTg4O0J1c2luZXNzOjRlMjJjMTdkLWI2OWMtNGYwNS1hOWVmLWU4OWFkNmZhZTU1NQ==",
+              direction: "WITHDRAWAL",
+              amount: `${input.broker_fee_amount}`,
+            },
+            lineItems: {
+              description: `RequestId: ${input.id}`,
+              accountId:
+                "QWNjb3VudDoxMjM4MDI3MjAzMDQwNjI1MDUwO0J1c2luZXNzOjRlMjJjMTdkLWI2OWMtNGYwNS1hOWVmLWU4OWFkNmZhZTU1NQ==",
+              balance: "DEBIT",
+              amount: `${input.broker_fee_amount}`,
+            },
           },
         },
       }),
@@ -493,7 +558,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                         fullWidth
                         name="bookkeeping_status_admin"
                         label="Bookkeeping Status Admin/Servicer"
-                        onChange={(e) => setBookkeeping_status_admin(e.target.value)}
+                        onChange={(e) =>
+                          setBookkeeping_status_admin(e.target.value)
+                        }
                         required
                         value={bookkeeping_status_admin || ""}
                         variant="outlined"
@@ -610,7 +677,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setTransaction_fee_rate(e.target.value)
                         }
-                        required
+                        InputProps={{
+                          readOnly: true,
+                        }}
                         value={transaction_fee_rate || ""}
                       />
                     </Grid>
@@ -625,6 +694,28 @@ const RequestForm = ({ className, value, ...rest }) => {
                         }}
                         required
                         value={transaction_fee_amount || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="broker_fee_rate"
+                        label="Broker Fee Rate in %"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setBroker_fee_rate(e.target.value)}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                        value={broker_fee_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="broker_fee_amount"
+                        label="Broker Fee Amount"
+                        fullWidth
+                        variant="outlined"
+                        value={broker_fee_amount || ""}
                       />
                     </Grid>
                   </Grid>

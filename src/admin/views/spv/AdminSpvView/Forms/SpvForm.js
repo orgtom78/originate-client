@@ -22,9 +22,11 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import AdapterDateFns from "@mui/lab/AdapterDateFns";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
+
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
+
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -93,16 +95,11 @@ const SpvForm = ({ className, value, ...rest }) => {
   const [spv_logo, setSpv_logo] = useState("");
   const [spv_name, setSpv_name] = useState("");
   const [spv_type, setSpv_type] = useState("");
-  const [
-    spv_date_of_incorporation,
-    setSpv_date_of_incorporation,
-  ] = useState("");
+  const [spv_date_of_incorporation, setSpv_date_of_incorporation] =
+    useState("");
   const [spv_address_city, setSpv_address_city] = useState("");
   const [spv_address_street, setSpv_address_street] = useState("");
-  const [
-    spv_address_postalcode,
-    setSpv_address_postalcode,
-  ] = useState("");
+  const [spv_address_postalcode, setSpv_address_postalcode] = useState("");
   const [spv_country, setSpv_country] = useState("");
   const [spv_industry, setSpv_industry] = useState("");
   const [
@@ -110,9 +107,7 @@ const SpvForm = ({ className, value, ...rest }) => {
     setSpv_registration_cert_attachment,
   ] = useState("");
   const [spv_website, setSpv_website] = useState("");
-  const [spv_address_refinment, setSpv_address_refinment] = useState(
-    ""
-  );
+  const [spv_address_refinment, setSpv_address_refinment] = useState("");
   const [spv_industry_code, setSpv_industry_code] = useState("");
   const [spv_register_number, setSpv_register_number] = useState("");
   const [spv_trading_name, setSpv_trading_name] = useState("");
@@ -123,10 +118,8 @@ const SpvForm = ({ className, value, ...rest }) => {
   //const [financials_attachment, setFinancials_attachment] = useState("");
   const [net_profit, setNet_profit] = useState("");
   const [financials_rating, setFinancials_rating] = useState("");
-  const [
-    financials_reporting_period,
-    setFinancials_reporting_period,
-  ] = useState("");
+  const [financials_reporting_period, setFinancials_reporting_period] =
+    useState("");
   const [sales, setSales] = useState("");
   const [total_assets, setTotal_assets] = useState("");
   const [total_liabilities, setTotal_liabilities] = useState("");
@@ -151,9 +144,7 @@ const SpvForm = ({ className, value, ...rest }) => {
     getSpv({ id });
     async function getSpv(input) {
       try {
-        const spv = await API.graphql(
-          graphqlOperation(queries.getSpv, input)
-        );
+        const spv = await API.graphql(graphqlOperation(queries.getSpv, input));
         const {
           data: {
             getSpv: {
@@ -190,9 +181,7 @@ const SpvForm = ({ className, value, ...rest }) => {
         setSpv_address_postalcode(spv_address_postalcode);
         setSpv_country(spv_country);
         setSpv_industry(spv_industry);
-        setSpv_registration_cert_attachment(
-          spv_registration_cert_attachment
-        );
+        setSpv_registration_cert_attachment(spv_registration_cert_attachment);
         setSpv_website(spv_website);
         setSpv_address_refinment(spv_address_refinment);
         setSpv_industry_code(spv_industry_code);
@@ -337,9 +326,7 @@ const SpvForm = ({ className, value, ...rest }) => {
   }
 
   function updateSpv(input) {
-    return API.graphql(
-      graphqlOperation(mutations.updateSpv, { input: input })
-    );
+    return API.graphql(graphqlOperation(mutations.updateSpv, { input: input }));
   }
   function updateFinancials(input) {
     return API.graphql(
@@ -380,9 +367,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Company Trading Name"
                         name="spv_trading_name"
-                        onChange={(e) =>
-                          setSpv_trading_name(e.target.value)
-                        }
+                        onChange={(e) => setSpv_trading_name(e.target.value)}
                         value={spv_trading_name || ""}
                         variant="outlined"
                       />
@@ -420,9 +405,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Company Registration Number"
                         name="spv_register_number"
-                        onChange={(e) =>
-                          setSpv_register_number(e.target.value)
-                        }
+                        onChange={(e) => setSpv_register_number(e.target.value)}
                         required
                         value={spv_register_number || ""}
                         variant="outlined"
@@ -433,9 +416,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Company City"
                         name="spv_address_city"
-                        onChange={(e) =>
-                          setSpv_address_city(e.target.value)
-                        }
+                        onChange={(e) => setSpv_address_city(e.target.value)}
                         required
                         value={spv_address_city || ""}
                         variant="outlined"
@@ -459,9 +440,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Street"
                         name="spv_address_street"
-                        onChange={(e) =>
-                          setSpv_address_street(e.target.value)
-                        }
+                        onChange={(e) => setSpv_address_street(e.target.value)}
                         required
                         value={spv_address_street || ""}
                         variant="outlined"
@@ -487,7 +466,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={spv_date_of_incorporation || ""}
                           margin="normal"
                           variant="outlined"
@@ -545,9 +524,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                         fullWidth
                         label="Spv Industry Code"
                         name="spv_industry_code"
-                        onChange={(e) =>
-                          setSpv_industry_code(e.target.value)
-                        }
+                        onChange={(e) => setSpv_industry_code(e.target.value)}
                         value={spv_industry_code || ""}
                         variant="outlined"
                       />
@@ -584,9 +561,7 @@ const SpvForm = ({ className, value, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Link
-                  to={`/admin/adminnewspvdirector/${dynamospvid}`}
-                >
+                <Link to={`/admin/adminnewspvdirector/${dynamospvid}`}>
                   <Button>Add Director</Button>
                 </Link>
               </Box>
@@ -706,7 +681,7 @@ const SpvForm = ({ className, value, ...rest }) => {
                       xs={12}
                     >
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DatePicker
+                        <DesktopDatePicker
                           value={financials_reporting_period || ""}
                           margin="normal"
                           variant="outlined"

@@ -62,7 +62,7 @@ const LatestLimits = ({ className, ...rest }) => {
       const items = await n.data.listRequests.items;
       var x = items.filter((e) => e.request_status === "Approved");
       let today = moment().toISOString();
-      var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) <= 7);
+      var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) <= 7 && moment(e.invoice_due_date) - moment(today) >0);
       const d = z.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
@@ -106,7 +106,7 @@ const LatestLimits = ({ className, ...rest }) => {
               <TableRow>
                 <TableCell>Buyer</TableCell>
                 <TableCell>Amount</TableCell>
-                <TableCell sortDirection="desc">Created At</TableCell>
+                <TableCell sortDirection="desc">Due At</TableCell>
                 <TableCell>Status</TableCell>
               </TableRow>
             </TableHead>
@@ -127,7 +127,7 @@ const LatestLimits = ({ className, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    {moment(limit.createdAt).format("DD/MM/YYYY")}
+                    {moment(limit.invoice_due_date).format("DD/MM/YYYY")}
                   </TableCell>
                   <TableCell>{checkstatus(limit.request_status)}</TableCell>
                 </TableRow>

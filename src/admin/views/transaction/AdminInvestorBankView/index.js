@@ -13,7 +13,6 @@ import {
   createTheme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
-import { Pagination } from "@mui/material";
 import Page from "src/components/Page";
 import { green, orange } from "@mui/material/colors";
 import { ArrowUp as ArrowUpIcon } from "react-feather";
@@ -65,7 +64,7 @@ const Banks = () => {
     async function getBankaccounts() {
       try {
         let filter = {
-          id: { eq: id},
+          id: { eq: id },
         };
         const data = await API.graphql(
           graphqlOperation(queries.listPlaidauths, { filter: filter })

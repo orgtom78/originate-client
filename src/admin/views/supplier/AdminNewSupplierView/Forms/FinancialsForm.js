@@ -54,18 +54,13 @@ export default function ShareholderForm(props) {
       accounts_payable,
       accounts_receivable,
       cash,
-      equity_book_value,
-      equity_market_value,
       interest_expenses,
       inventory,
-      retained_earnings,
       short_term_debt,
-      working_capital,
-      ebit,
       net_profit,
-      financials_rating,
       financials_reporting_period,
       sales,
+      total_equity,
       total_assets,
       total_liabilities,
     },
@@ -267,6 +262,18 @@ export default function ShareholderForm(props) {
                 </>
               )}
             </Grid>
+            <Grid item xs={12} md={6}>
+              <DatePickerField
+                name={financials_reporting_period.name}
+                label={financials_reporting_period.label}
+                format="yyyy"
+                views={["year"]}
+                minDate={new Date("2000/12/31")}
+                maxDate={new Date()}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
                 name={accounts_payable.name}
@@ -293,16 +300,8 @@ export default function ShareholderForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={equity_book_value.name}
-                label={equity_book_value.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={equity_market_value.name}
-                label={equity_market_value.label}
+                name={total_equity.name}
+                label={total_equity.label}
                 fullWidth
                 variant="outlined"
               />
@@ -325,14 +324,6 @@ export default function ShareholderForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={retained_earnings.name}
-                label={retained_earnings.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={short_term_debt.name}
                 label={short_term_debt.label}
                 fullWidth
@@ -341,32 +332,8 @@ export default function ShareholderForm(props) {
             </Grid>
             <Grid item xs={12} sm={6}>
               <InputField
-                name={working_capital.name}
-                label={working_capital.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={ebit.name}
-                label={ebit.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
                 name={net_profit.name}
                 label={net_profit.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={financials_rating.name}
-                label={financials_rating.label}
                 fullWidth
                 variant="outlined"
               />
@@ -391,18 +358,6 @@ export default function ShareholderForm(props) {
               <InputField
                 name={total_liabilities.name}
                 label={total_liabilities.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <DatePickerField
-                name={financials_reporting_period.name}
-                label={financials_reporting_period.label}
-                format="yyyy"
-                views={["year"]}
-                minDate={new Date("2000/12/31")}
-                maxDate={new Date()}
                 fullWidth
                 variant="outlined"
               />

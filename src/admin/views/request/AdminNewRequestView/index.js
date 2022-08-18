@@ -135,99 +135,55 @@ export default function NewAccount() {
   }
 
   React.useEffect(() => {
-    async function checkdayssofr() {
-      const today = moment().startOf("day");
-      setPayout_date(today);
+    async function listSOFR() {
+      const queryenddate = moment().utc().startOf("day").format("MM/DD/YYYY");
+      const querystartdate = moment(queryenddate)
+        .subtract(10, "days")
+        .format("MM/DD/YYYY");
+      let filter = { id: { between: [querystartdate, queryenddate] } };
       const {
         data: {
           listSOFRs: { items },
         },
-      } = sofr;
-      const weekday = moment(today).day();
-      if (weekday === 3 || weekday === 4 || weekday === 5) {
-        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 6) {
-        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 0) {
-        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 1) {
-        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 2) {
-        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
-        const match = items.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      }
-      if (match === null || match === undefined || match.length <= 0) {
-        return 0;
-      } else {
-        const sofrterm = buyer_loan_rate;
-        if (sofrterm === "SOFR(1M)") {
-          const dyndisc =
-            Number(match[0].SOFRM1) + Number(buyer_loan_discount_fee);
-          setDynamic_discount(dyndisc);
-        } else if (sofrterm === "SOFR(3M)") {
-          const dyndisc =
-            Number(match[0].SOFRM3) + Number(buyer_loan_discount_fee);
-          console.log(dyndisc);
-          setDynamic_discount(dyndisc);
-        } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc =
-            Number(match[0].SOFR) + Number(buyer_loan_discount_fee);
-          setDynamic_discount(dyndisc);
-        }
-      }
-    }
-    checkdayssofr();
-  }, [buyer_loan_rate, buyer_loan_discount_fee, payout_date, match, sofr]);
-
-  React.useEffect(() => {
-    async function listSOFR(start, end) {
-      const today = moment().startOf("day");
-      console.log(today);
-      const querystartdate = moment(today)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
-      let filter = { id: { between: [querystartdate, queryenddate] } };
-      const result = await API.graphql(
+      } = await API.graphql(
         graphqlOperation(queries.listSOFRs, { filter: filter })
       );
-      if (result === null || result === undefined || result.length <= 0) {
+      if (items === null || items === undefined || items.length <= 0) {
         return 0;
       } else {
-        setSofr(result);
+        const filteredarray = items.filter(
+          (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+        );
+        const d = filteredarray.sort(function (a, b) {
+          return new Date(b.id) - new Date(a.id);
+        });
+        setSofr(d[0]);
       }
     }
     listSOFR();
   }, []);
+
+  React.useEffect(() => {
+    async function checkifmatch() {
+      if (sofr === null || sofr === undefined || sofr.length <= 0) {
+        return 0;
+      } else {
+        const sofrterm = buyer_loan_rate;
+        if (sofrterm === "SOFR(1M)") {
+          const dyndisc = Number(sofr.SOFRM1) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(3M)") {
+          const dyndisc = Number(sofr.SOFRM3) + Number(buyer_loan_discount_fee);
+          console.log(dyndisc)
+          setDynamic_discount(dyndisc);
+        } else if (sofrterm === "SOFR(Daily)") {
+          const dyndisc = Number(sofr.SOFR) + Number(buyer_loan_discount_fee);
+          setDynamic_discount(dyndisc);
+        }
+      }
+    }
+    checkifmatch();
+  }, [sofr, buyer_loan_discount_fee, buyer_loan_rate]);
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -247,7 +203,7 @@ export default function NewAccount() {
       const period = moment(values["invoice_due_date"]).diff(
         payout_date,
         "days"
-      );
+      )+1;
       const base_rate = buyer_loan_rate;
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
@@ -267,8 +223,9 @@ export default function NewAccount() {
       const sold_goods_description = values["sold_goods_description"];
       const invoice_amount = values["invoice_amount"];
       const invoice_currency = values["invoice_currency"];
-      const invoice_date = values["invoice_date"];
-      const invoice_due_date = values["invoice_due_date"];
+      const invoice_date = moment(values["invoice_date"]).utc().startOf("day");
+      const invoice_due_date = moment(values["invoice_due_date"]).utc().startOf("day");
+      console.log(invoice_due_date);
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
       const ipu_attachment = values["ipu_attachment"];
