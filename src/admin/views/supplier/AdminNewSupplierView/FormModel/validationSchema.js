@@ -107,7 +107,7 @@ const yup = [
 
   Yup.object().shape({
     [director_name.name]: Yup.string(),
-    [director_email.name]: Yup.email(),
+    [director_email.name]: Yup.string().email(),
     [director_phone_number.name]: Yup.string(),
     [director_id_attachment.name]: Yup.string(),
     [director_id_number.name]: Yup.string(),
@@ -116,7 +116,7 @@ const yup = [
     [director_poa_attachment.name]: Yup.string(),
     [director_country_of_residence.name]: Yup.string(),
     [ubo_name.name]: Yup.string(),
-    [ubo_email.name]: Yup.email(),
+    [ubo_email.name]: Yup.string().email(),
     [ubo_phone_number.name]: Yup.string(),
     [ubo_id_attachment.name]: Yup.string(),
     [ubo_id_number.name]: Yup.string(),

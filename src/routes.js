@@ -80,6 +80,7 @@ const AdminSupplierTransactionListView = lazy(() => import('src/admin/views/supp
 const AdminNewFinancialsView = lazy(() => import('src/admin/views/financials/AdminNewFinancialsView'));
 const AdminFinancialsView = lazy(() => import("src/admin/views/financials/AdminUpdateFinancialsView"));
 
+const AdminNewSupplierDocumentView = lazy(() => import('src/admin/views/document/AdminNewSupplierDocumentView'));
 const AdminNewDocumentView = lazy(() => import('src/admin/views/document/AdminNewDocumentView'));
 const AdminDocumentView = lazy(() => import('src/admin/views/document/AdminUpdateDocumentView'));
 
@@ -226,6 +227,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'newbuyer/:id/:user/:ident', element: !isAdmin ? <AdminLoginView /> : <AdminNewBuyerView />  },
       { path: 'newsupplierbuyer', element: !isAdmin ? <AdminLoginView /> : <AdminNewSupplierBuyerView />  },
 
+      { path: 'adminnewsupplierdocument/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminNewSupplierDocumentView />},
       { path: 'adminnewdocument/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminNewDocumentView />},
       { path: 'document/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminDocumentView />},
 

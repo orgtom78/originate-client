@@ -35,6 +35,7 @@ import { green } from "@mui/material/colors";
 import DirectorListView from "src/admin/views/supplier/AdminSupplierView/Lists/directorlist.js";
 import UboListView from "src/admin/views/supplier/AdminSupplierView/Lists/ubolist.js";
 import BuyerListView from "src/admin/views/supplier/AdminSupplierView/Lists/buyerlist.js";
+import DocumentListView from "src/admin/views/supplier/AdminSupplierView/Lists/documentlist.js";
 import AdminUpdateBankView from "src/admin/views/bank/AdminUpdateBankView/index.js";
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
@@ -93,6 +94,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [userId, setUserId] = useState("");
   const [dynamosupplierid, setdynamosupplierId] = useState("");
+  const [identityId, setIdentityId] = useState("");
   const [supplierId, setSupplierId] = useState("");
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
@@ -162,6 +164,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
             getSupplier: {
               id,
               userId,
+              identityId,
               supplierId,
               supplier_logo,
               supplier_name,
@@ -188,6 +191,7 @@ const SupplierForm = ({ className, value, ...rest }) => {
         } = supplier;
         setdynamosupplierId(id);
         setUserId(userId);
+        setIdentityId(identityId);
         setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
         setSupplier_name(supplier_name);
@@ -441,7 +445,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setSupplier_contact_name(e.target.value)
                         }
-                        required
                         value={supplier_contact_name || ""}
                         variant="outlined"
                       />
@@ -466,7 +469,6 @@ const SupplierForm = ({ className, value, ...rest }) => {
                         onChange={(e) =>
                           setSupplier_contact_phone(e.target.value)
                         }
-                        required
                         value={supplier_contact_phone || ""}
                         variant="outlined"
                       />
@@ -998,6 +1000,29 @@ const SupplierForm = ({ className, value, ...rest }) => {
               <CardContent>
                 <BuyerListView value={supplierId} />
               </CardContent>
+            </Card>
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography className={classes.heading}>
+              Additional Documents
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Card>
+              <CardContent>
+                <DocumentListView id={supplierId} ident={identityId} />
+              </CardContent>
+              <Divider />
+              <Box display="flex" justifyContent="flex-end" p={2}>
+                <Link
+                  to={`/admin/adminnewsupplierdocument/${dynamosupplierid}`}
+                >
+                  <Button>Add Document</Button>
+                </Link>
+              </Box>
             </Card>
           </AccordionDetails>
         </Accordion>
