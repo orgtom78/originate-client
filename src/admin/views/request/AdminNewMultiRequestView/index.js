@@ -585,35 +585,35 @@ export default function MyForm() {
                       "Invoice-Date1": "${obj.InvoiceDate1}",
                       "Invoice-Curr1": "${obj.InvoiceCurr1}",
                       "Invoice-DD1": "${obj.InvoiceDD1}",
-                      "Invoice-FV1": "${obj.InvoiceFV1.toLocaleString(
+                      "Invoice-FV1": "${Number(obj.InvoiceFV1).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No2": "${obj.InvoiceNo2}",
                       "Invoice-Date2": "${obj.InvoiceDate2}",
                       "Invoice-Curr2": "${obj.InvoiceCurr2}",
                       "Invoice-DD2": "${obj.InvoiceDD2}",
-                      "Invoice-FV2": "${obj.InvoiceFV2.toLocaleString(
+                      "Invoice-FV2": "${Number(obj.InvoiceFV2).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No3": "${obj.InvoiceNo3}",
                       "Invoice-Date3": "${obj.InvoiceDate3}",
                       "Invoice-Curr3": "${obj.InvoiceCurr3}",
                       "Invoice-DD3": "${obj.InvoiceDD3}",
-                      "Invoice-FV3": "${obj.InvoiceFV3.toLocaleString(
+                      "Invoice-FV3": "${Number(obj.InvoiceFV3).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No4": "${obj.InvoiceNo4}",
                       "Invoice-Date4": "${obj.InvoiceDate4}",
                       "Invoice-Curr4": "${obj.InvoiceCurr4}",
                       "Invoice-DD4": "${obj.InvoiceDD4}",
-                      "Invoice-FV4": "${obj.InvoiceFV4.toLocaleString(
+                      "Invoice-FV4": "${Number(obj.InvoiceFV4).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No5": "${obj.InvoiceNo5}",
                       "Invoice-Date5": "${obj.InvoiceDate5}",
                       "Invoice-Curr5": "${obj.InvoiceCurr5}",
                       "Invoice-DD5": "${obj.InvoiceDD5}",
-                      "Invoice-FV5": "${obj.InvoiceFV5.toLocaleString(
+                      "Invoice-FV5": "${Number(obj.InvoiceFV5).toLocaleString(
                         "en-US"
                       )}",
                     },
@@ -669,35 +669,35 @@ export default function MyForm() {
                       "Invoice-Date1": "${obj.InvoiceDate1}",
                       "Invoice-Curr1": "${obj.InvoiceCurr1}",
                       "Invoice-DD1": "${obj.InvoiceDD1}",
-                      "Invoice-FV1": "${obj.InvoiceFV1.toLocaleString(
+                      "Invoice-FV1": "${Number(obj.InvoiceFV1).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No2": "${obj.InvoiceNo2}",
                       "Invoice-Date2": "${obj.InvoiceDate2}",
                       "Invoice-Curr2": "${obj.InvoiceCurr2}",
                       "Invoice-DD2": "${obj.InvoiceDD2}",
-                      "Invoice-FV2": "${obj.InvoiceFV2.toLocaleString(
+                      "Invoice-FV2": "${Number(obj.InvoiceFV2).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No3": "${obj.InvoiceNo3}",
                       "Invoice-Date3": "${obj.InvoiceDate3}",
                       "Invoice-Curr3": "${obj.InvoiceCurr3}",
                       "Invoice-DD3": "${obj.InvoiceDD3}",
-                      "Invoice-FV3": "${obj.InvoiceFV3.toLocaleString(
+                      "Invoice-FV3": "${Number(obj.InvoiceFV3).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No4": "${obj.InvoiceNo4}",
                       "Invoice-Date4": "${obj.InvoiceDate4}",
                       "Invoice-Curr4": "${obj.InvoiceCurr4}",
                       "Invoice-DD4": "${obj.InvoiceDD4}",
-                      "Invoice-FV4": "${obj.InvoiceFV4.toLocaleString(
+                      "Invoice-FV4": "${Number(obj.InvoiceFV4).toLocaleString(
                         "en-US"
                       )}",
                       "Invoice-No5": "${obj.InvoiceNo5}",
                       "Invoice-Date5": "${obj.InvoiceDate5}",
                       "Invoice-Curr5": "${obj.InvoiceCurr5}",
                       "Invoice-DD5": "${obj.InvoiceDD5}",
-                      "Invoice-FV5": "${obj.InvoiceFV5.toLocaleString(
+                      "Invoice-FV5": "${Number(obj.InvoiceFV5).toLocaleString(
                         "en-US"
                       )}",
                     },

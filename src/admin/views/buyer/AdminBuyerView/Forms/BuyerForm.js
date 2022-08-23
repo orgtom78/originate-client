@@ -809,8 +809,17 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         label="Buyer Industry Code"
                         name="buyer_industry_code"
                         onChange={(e) => setBuyer_industry_code(e.target.value)}
-                        required
                         value={buyer_industry_code || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Buyer Website"
+                        name="buyer_website"
+                        onChange={(e) => setBuyer_website(e.target.value)}
+                        value={buyer_website || ""}
                         variant="outlined"
                       />
                     </Grid>

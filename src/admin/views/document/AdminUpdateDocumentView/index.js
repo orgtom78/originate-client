@@ -307,7 +307,7 @@ const UpdateDocumentForm = ({ className, value, ...rest }) => {
     }
     setDocumentSuccess(true);
     setDocumentLoading(false);
-    navigate("/admin/buyers");
+    window.location.reload();
   }
 
   return (
