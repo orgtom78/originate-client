@@ -203,6 +203,7 @@ export default function HistoryForm(props) {
               <InputField
                 name={buyer_next_year_projected_transaction_amount.name}
                 label={buyer_next_year_projected_transaction_amount.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -212,6 +213,7 @@ export default function HistoryForm(props) {
               <InputField
                 name={buyer_reporting_year_transaction_amount.name}
                 label={buyer_reporting_year_transaction_amount.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -220,6 +222,7 @@ export default function HistoryForm(props) {
               <InputField
                 name={buyer_previous_year_transaction_amount.name}
                 label={buyer_previous_year_transaction_amount.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -228,6 +231,7 @@ export default function HistoryForm(props) {
               <InputField
                 name={buyer_previous_year_number_invoices.name}
                 label={buyer_previous_year_number_invoices.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />

@@ -26,7 +26,7 @@
         },
         "zoho": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/zoho-386e6259397141583347-build.zip",
+          "s3Key": "amplify-builds/zoho-75477437782f6d653933-build.zip",
           "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
           "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471",
           "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11"
@@ -37,7 +37,7 @@
         },
         "sofr": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/sofr-7567714366612b2f5777-build.zip"
+          "s3Key": "amplify-builds/sofr-4a762b61666c4b59524a-build.zip"
         },
         "dueinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
@@ -52,11 +52,11 @@
           "s3Key": "amplify-builds/dueinvoicenot-433374784c36696e6a36-build.zip"
         },
         "zohooffer": {
-          "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
-          "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471",
-          "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11",
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/zohooffer-3546334f7a3469527244-build.zip"
+          "s3Key": "amplify-builds/zohooffer-673155476146794a2f45-build.zip",
+          "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
+          "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11",
+          "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471"
         }
       }
     }

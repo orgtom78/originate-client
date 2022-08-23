@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "date-fns";
 import clsx from "clsx";
 import PropTypes from "prop-types";
@@ -383,9 +383,9 @@ const SupplierForm = ({ className, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Button href={`/app/newsupplierdirector/${supplierId}`}>
-                  Add Director
-                </Button>
+                <Link to={`/app/newsupplierdirector/${supplierId}`}>
+                  <Button>Add Director</Button>
+                </Link>
               </Box>
             </Card>
           </AccordionDetails>
@@ -403,9 +403,9 @@ const SupplierForm = ({ className, ...rest }) => {
               </CardContent>
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
-                <Button href={`/app/newsupplierubo/${supplierId}`}>
-                  Add Owner
-                </Button>
+                <Link to={`/app/newsupplierubo/${supplierId}`}>
+                  <Button>Add Owner</Button>
+                </Link>
               </Box>
             </Card>
           </AccordionDetails>

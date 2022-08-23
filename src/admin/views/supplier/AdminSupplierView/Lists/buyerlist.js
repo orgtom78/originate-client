@@ -96,7 +96,7 @@ const BuyerListView = (value) => {
                           <TableCell>
                             <Box alignItems="center" display="flex">
                               <Link
-                                to={`/admin/esign/${buyer.buyerId}/${buyer.supplierId}/`}
+                                to={`/admin/esign/${buyer.userId}/${buyer.buyerId}/${buyer.supplierId}/`}
                               >
                                 <Avatar
                                   className={classes.avatar}

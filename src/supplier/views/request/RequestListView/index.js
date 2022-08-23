@@ -167,10 +167,15 @@ const TransactionListView = () => {
                   <TableHead>
                     <TableRow>
                       <TableCell>Buyer's Name</TableCell>
+                      <TableCell>Invoice Number</TableCell>
                       <TableCell>Amount</TableCell>
-                      <TableCell>Goods</TableCell>
+                      <TableCell>Total Discount</TableCell>
+                      <TableCell>Platfrom Fee</TableCell>
+                      <TableCell>Discount Fee</TableCell>
+                      <TableCell>Currency</TableCell>
                       <TableCell>Status</TableCell>
-                      <TableCell>Due Date</TableCell>
+                      <TableCell>Invoice Date</TableCell>
+                      <TableCell>Invoice Due Date</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -191,6 +196,7 @@ const TransactionListView = () => {
                               </Typography>
                             </Box>
                           </TableCell>
+                          <TableCell>{`${request.invoice_number}`}</TableCell>
                           <TableCell>
                             <NumberFormat
                               color="textPrimary"
@@ -202,10 +208,43 @@ const TransactionListView = () => {
                             />
                           </TableCell>
                           <TableCell>
-                            {`${request.sold_goods_description}`}
+                            <NumberFormat
+                              color="textPrimary"
+                              variant="h3"
+                              value={request.discount_fee_amount}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              prefix={"$"}
+                            />
                           </TableCell>
                           <TableCell>
+                              <NumberFormat
+                                color="textPrimary"
+                                variant="h3"
+                                value={request.transaction_fee_amount}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                prefix={"$"}
+                                decimalScale="2"
+                              />
+                            </TableCell>
+                            <TableCell>
+                              <NumberFormat
+                                color="textPrimary"
+                                variant="h3"
+                                value={Number(request.discount_fee_amount) - Number(request.transaction_fee_amount)}
+                                displayType={"text"}
+                                thousandSeparator={true}
+                                prefix={"$"}
+                                decimalScale="2"
+                              />
+                            </TableCell>
+                            <TableCell>{`${request.invoice_currency}`}</TableCell>
+                          <TableCell>
                             {checkstatus(request.request_status)}
+                          </TableCell>
+                          <TableCell>
+                            {checkpayout(request.invoice_date)}
                           </TableCell>
                           <TableCell>
                             {checkpayout(request.invoice_due_date)}

@@ -29,6 +29,8 @@ import * as queries from "src/graphql/queries.js";
 import currencies from "src/components/FormLists/currencies.js";
 import { addDays, subDays } from "date-fns";
 import moment from "moment";
+import DOMPurify from "dompurify";
+import { v4 as uuid } from "uuid";
 
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -76,8 +78,10 @@ const RequestForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const [dynamorequestid, setDynamorequestid] = useState("");
   const [dynamobookkeepingid, setDynamobookkeepingid] = useState("");
+  const [invoice_number, setInvoice_number] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
   const [payout_date, setPayout_date] = useState("");
+  const [invoice_date, setInvoice_date] = useState("");
   const [invoice_due_date, setInvoice_due_date] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
   const [transaction_fee_rate, setTransaction_fee_rate] = useState("");
@@ -86,7 +90,12 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [bookkeeping_status_spv, setBookkeeping_status_spv] = useState("");
   const [bookkeeping_status, setBookkeeping_status] = useState("");
   const [requestId, setRequestId] = useState("");
+  const [investor_email, setInvestor_email] = useState("");
   const [transactionId, setTransactionId] = useState("");
+  const [buyerId, setBuyerId] = useState("");
+  const [supplierId, setSupplierId] = useState("");
+  const [esign_template_raa_offer, setEsign_template_raa_offer] = useState("");
+  const [raa_offer_oc_action_id, setRaa_offer_oc_action_id] = useState("");
 
   const [requestloading, setRequestLoading] = useState(false);
   const [requestsuccess, setRequestSuccess] = useState(false);
@@ -106,11 +115,16 @@ const RequestForm = ({ className, value, ...rest }) => {
         const {
           id,
           requestId,
+          buyerId,
+          supplierId,
           bookkeeping_status_spv,
           bookkeeping_status,
+          investor_email,
+          invoice_number,
           invoice_amount,
           invoice_currency,
           payout_date,
+          invoice_date,
           invoice_due_date,
           transaction_fee_rate,
           transaction_fee_amount,
@@ -118,13 +132,18 @@ const RequestForm = ({ className, value, ...rest }) => {
         } = items;
         setDynamorequestid(id);
         setRequestId(requestId);
+        setBuyerId(buyerId);
+        setSupplierId(supplierId);
         setBookkeeping_status_spv(bookkeeping_status_spv);
         setBookkeeping_status(bookkeeping_status);
+        setInvestor_email(investor_email);
         setTransaction_fee_rate(transaction_fee_rate);
         const round = Number(invoice_amount).toFixed(2);
+        setInvoice_number(invoice_number);
         setInvoice_amount(round);
         setInvoice_currency(invoice_currency);
         setPayout_date(payout_date);
+        setInvoice_date(invoice_date);
         setInvoice_due_date(invoice_due_date);
         const round1 = Number(transaction_fee_amount).toFixed(2);
         setTransaction_fee_amount(round1);
@@ -137,44 +156,51 @@ const RequestForm = ({ className, value, ...rest }) => {
   }, [value]);
 
   useEffect(() => {
-    if (
-      bookkeeping_status_spv === "Under Review" ||
-      bookkeeping_status_spv === "Approved" ||
-      bookkeeping_status === "Under Review" ||
-      bookkeeping_status === "Approved"
-    ) {
-      const id = value.value;
-      getBook({ id });
-      async function getBook(input) {
-        try {
-          let filter = {
-            requestId: { eq: input.id },
-          };
-          const bookkeeping = await API.graphql(
-            graphqlOperation(queries.listBookkeepings, { filter: filter })
-          );
-          const bookitem = await bookkeeping.data.listBookkeepings.items[0];
-          const idd = bookitem.id;
-          const transid = bookitem.transactionId;
-          setDynamobookkeepingid(idd);
-          setTransactionId(transid);
-        } catch (err) {
-          console.log("error fetching data..", err);
-        }
+    const id = value.value;
+    getBook({ id });
+    async function getBook(input) {
+      try {
+        let filter = {
+          requestId: { eq: input.id },
+        };
+        const bookkeeping = await API.graphql(
+          graphqlOperation(queries.listBookkeepings, { filter: filter })
+        );
+        const bookitem = await bookkeeping.data.listBookkeepings.items[0];
+        const idd = await bookitem.id;
+        const transid = await bookitem.transactionId;
+        setDynamobookkeepingid(idd);
+        setTransactionId(transid);
+      } catch (err) {
+        console.log("error fetching data..", err);
       }
-    } else {
-      async function createBook() {
-        try {
-          await createBookkeeping({
-            requestId,
-          });
-        } catch (err) {
-          console.log("error fetching data..", err);
-        }
-      }
-      createBook();
     }
-  }, [bookkeeping_status_spv, requestId, bookkeeping_status, value]);
+  }, [bookkeeping_status_spv, bookkeeping_status, value]);
+
+  useEffect(() => {
+    async function getEsign() {
+      try {
+        let filter = {
+          supplierId: { contains: supplierId },
+          buyerId: { eq: buyerId },
+        };
+        const {
+          data: {
+            listEsigns: { items: itemsPage1, nextToken },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listEsigns, { filter: filter })
+        );
+        const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
+        const items = n.data.listEsigns.items[0];
+        setEsign_template_raa_offer(items.esign_template_raa_offer);
+        setRaa_offer_oc_action_id(items.raa_offer_oc_action_id);
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    getEsign();
+  }, [supplierId, buyerId]);
 
   async function handleRequestSubmit() {
     setRequestSuccess(false);
@@ -182,28 +208,58 @@ const RequestForm = ({ className, value, ...rest }) => {
     try {
       const bookkeeping_status_spv = "Approved";
       const id = dynamobookkeepingid;
-      await createWavePurchase({
-        invoice_amount,
-        discount_fee_amount,
-        id,
-      });
-      await createWaveSale({
-        invoice_amount,
-        discount_fee_amount,
-        id,
-      });
-      await updateBookkeeping({
-        id,
-        bookkeeping_status_spv,
-      });
-      async function assignid() {
-        const id = dynamorequestid;
-        await updateRequest({
+      console.log(id);
+      if (id) {
+        await createWavePurchase({
+          invoice_amount,
+          discount_fee_amount,
+          id,
+        });
+        await createWaveSale({
+          invoice_amount,
+          discount_fee_amount,
+          id,
+        });
+        await updateBookkeeping({
           id,
           bookkeeping_status_spv,
         });
+        async function assignid() {
+          const id = dynamorequestid;
+          await updateRequest({
+            id,
+            bookkeeping_status_spv,
+          });
+        }
+        assignid();
+        await createRAASignRequest();
+      } else {
+        const id = uuid();
+        const bookkeeping_status_spv = "Approved";
+        await createBookkeeping({
+          id,
+          bookkeeping_status_spv,
+        });
+        await createWavePurchase({
+          invoice_amount,
+          discount_fee_amount,
+          id,
+        });
+        await createWaveSale({
+          invoice_amount,
+          discount_fee_amount,
+          id,
+        });
+        async function assignid() {
+          const id = dynamorequestid;
+          await updateRequest({
+            id,
+            bookkeeping_status_spv,
+          });
+        }
+        assignid();
+        await createRAASignRequest();
       }
-      assignid();
     } catch (e) {
       onError(e);
     }
@@ -326,6 +382,113 @@ const RequestForm = ({ className, value, ...rest }) => {
     return API.graphql(
       graphqlOperation(mutations.createBookkeeping, { input: input })
     );
+  }
+
+  async function createRAASignRequest() {
+    const date = new moment().format("DD MMMM YYYY");
+    const client = process.env.REACT_APP_ZOHO_CLIENT_ID;
+    const secret = process.env.REACT_APP_ZOHO_CLIENT_SECRET;
+    const token = process.env.REACT_APP_ZOHO_TOKEN;
+    const auth = await fetch(
+      `https://cors-anywhere-oc.herokuapp.com/https://accounts.zoho.com/oauth/v2/token?refresh_token=${token}&client_id=${client}&client_secret=${secret}&grant_type=refresh_token`,
+      {
+        method: "POST",
+        headers: {
+          Accept: "*/*",
+          Connection: "keep-alive",
+        },
+      }
+    );
+    const tokenData = await auth.json();
+    const accessToken = await tokenData.access_token;
+    const reqid = DOMPurify.sanitize(esign_template_raa_offer);
+    console.log(reqid);
+    const res1 = await fetch(
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument?testing=true`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Authorization: `Zoho-oauthtoken ${accessToken}`,
+        },
+        body: new URLSearchParams({
+          data: `{
+            "templates": {
+                "field_data": {
+                    "field_text_data": {
+                        "Date": "${date}",
+                        "Purchase-Amount": "${(
+                          Number(invoice_amount) - Number(discount_fee_amount)
+                        ).toLocaleString("en-US")}",
+                        "Purchase-Date": "${moment(payout_date).format(
+                          "MM/DD/YYYY"
+                        )}",
+                        "Invoice-Curr1": "${invoice_currency}",
+                        "Invoice-FV1": "${Number(invoice_amount).toLocaleString(
+                          "en-US"
+                        )}",
+                        "Invoice-DD1": "${moment(invoice_due_date).format(
+                          "MM/DD/YYYY"
+                        )}",
+                        "Invoice-Date1": "${moment(invoice_date).format(
+                          "MM/DD/YYYY"
+                        )}",
+                        "Invoice-No1": "${invoice_number}",
+                        "Invoice-FV2": "",
+                        "Invoice-No2": "",
+                        "Invoice-Curr2": "",
+                        "Invoice-Date2": "",
+                        "Invoice-DD2": "",
+                        "Invoice-DD3": "",
+                        "Invoice-FV3": "",
+                        "Invoice-Curr3": "",
+                        "Invoice-Date3": "",
+                        "Invoice-No3": "",
+                        "Invoice-Curr4": "",
+                        "Invoice-FV4": "",
+                        "Invoice-DD4": "",
+                        "Invoice-Date4": "",
+                        "Invoice-No4": "",
+                        "Invoice-DD5": "",
+                        "Invoice-FV5": "",
+                        "Invoice-Date5": "",
+                        "Invoice-Curr5": "",
+                        "Invoice-No5": ""
+                    },
+                    "field_boolean_data": {},
+                    "field_date_data": {}
+                },
+                "actions": [
+                    {
+                        "recipient_name": "tobias.pfuetze@originatecapital.co",
+                        "recipient_email": "tobias.pfuetze@originatecapital.co",
+                        "action_id": "${raa_offer_oc_action_id}",
+                        "signing_order": 2,
+                        "role": "SPV",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    },
+                    {
+                        "recipient_name": "${investor_email}",
+                        "recipient_email": "${investor_email}",
+                        "action_id": "277418000000108048",
+                        "signing_order": 3,
+                        "role": "Investor",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    }
+                ],
+                "notes": ""
+            }
+        }`,
+          is_quicksend: "true",
+          locale: "en",
+        }),
+      }
+    );
+    const data = await res1.json();
+    console.log(data);
   }
 
   function NumberFormatCustom(props) {

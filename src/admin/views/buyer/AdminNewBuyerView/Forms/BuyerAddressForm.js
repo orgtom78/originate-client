@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import PropTypes from "prop-types";
-import { InputField, SelectField, DatePickerField } from "src/components/FormFields";
+import {
+  InputField,
+  SelectField,
+  DatePickerField,
+} from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
-import { Card, CardContent, Divider, Grid } from "@mui/material";
+import { Card, CardContent, Divider, Grid, MenuItem } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { Upload as UploadIcon } from "react-feather";
@@ -14,6 +18,8 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { green } from "@mui/material/colors";
 import currencies from "src/components/FormLists/currencies.js";
 import countries from "src/components/FormLists/countries.js";
+import { API, graphqlOperation } from "aws-amplify";
+import * as queries from "src/graphql/queries.js";
 
 const cr = countries;
 const curr = currencies;
@@ -86,6 +92,7 @@ const useStyles = makeStyles(() => ({
 
 export default function BuyerAddressForm(props) {
   const classes = useStyles();
+  const [investor, setInvestor] = useState([]);
 
   const {
     formField: {
@@ -102,7 +109,7 @@ export default function BuyerAddressForm(props) {
       buyer_payment_terms,
       buyer_sample_trading_docs_attachment,
       buyer_date_of_incorporation,
-      buyer_contact_email
+      buyer_contact_email,
     },
   } = props;
   const { id } = useParams();
@@ -118,6 +125,26 @@ export default function BuyerAddressForm(props) {
 
   const [certloading, setCertLoading] = useState(false);
   const [certsuccess, setCertSuccess] = useState(false);
+
+  useEffect(() => {
+    async function getInvestors() {
+      const {
+        data: {
+          listInvestors: { items: itemsPage1, nextToken },
+        },
+      } = await API.graphql(graphqlOperation(queries.listInvestors));
+      const n = { data: { listInvestors: { items: itemsPage1, nextToken } } };
+      const items = n.data.listInvestors.items;
+      const ids = items.map((item) => {
+        const container = {};
+        container.value = item.userId;
+        container.label = item.investor_name;
+        return container;
+      });
+      setInvestor(ids);
+    }
+    getInvestors();
+  }, []);
 
   useEffect(() => {
     if (updateregcert) {
@@ -211,9 +238,10 @@ export default function BuyerAddressForm(props) {
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
-              <InputField
+              <SelectField
                 name={investorId.name}
                 label={investorId.label}
+                data={investor}
                 fullWidth
                 variant="outlined"
               />

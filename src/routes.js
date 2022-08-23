@@ -11,7 +11,7 @@ const SupplierView = lazy(() => import('src/supplier/views/account/SupplierView'
 const RequestListView = lazy(() => import('src/supplier/views/request/RequestListView'));
 const RequestOptionView = lazy(() => import('src/supplier/views/request/RequestOptionView'));
 const NewRequestView = lazy(() => import('src/supplier/views/request/NewRequestView'));
-const NewEsignRequestView = lazy(() => import('src/supplier/views/request/NewEsignRequestView'));
+const NewMultiRequestView = lazy(() => import('src/supplier/views/request/NewMultiRequestView'));
 const DashboardView = lazy(() => import('src/supplier/views/reports/DashboardView'));
 
 const LoginView = lazy(() => import('src/supplier/views/auth/LoginView'));
@@ -172,7 +172,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'requests', element: !isAuthenticated ? <LoginView /> : <RequestListView />  },
       { path: 'newrequest/:id', element: !isAuthenticated ? <LoginView /> : <NewRequestView />  },
       { path: 'requestoptions/:id', element: !isAuthenticated ? <LoginView /> : <RequestOptionView />  },
-      { path: 'newesignrequest/:id', element: !isAuthenticated ? <LoginView /> : <NewEsignRequestView />  },
+      { path: 'newmultirequest/:id/:buyId/:supId', element: !isAuthenticated ? <LoginView /> : <NewMultiRequestView />  },
       { path: 'dashboard', element: !isAuthenticated ? <LoginView /> : <DashboardView /> },
       { path: 'buyers', element: !isAuthenticated ? <LoginView /> : <BuyerListView /> },
       { path: 'settings', element: !isAuthenticated ? <LoginView /> : <SettingsView /> },
@@ -229,7 +229,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'adminnewdocument/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminNewDocumentView />},
       { path: 'document/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminDocumentView />},
 
-      { path: 'esign/:buyerid/:supplierid', element: !isAdmin  ? <AdminLoginView /> : <AdminSignatureView />},
+      { path: 'esign/:userid/:buyerid/:supplierid', element: !isAdmin  ? <AdminLoginView /> : <AdminSignatureView />},
 
       { path: 'adminnewfinancials/:id/:buyId/:ident', element: !isAdmin  ? <AdminLoginView /> : <AdminNewFinancialsView />},
       { path: 'financials/:id', element: !isAdmin  ? <AdminLoginView /> : <AdminFinancialsView />},

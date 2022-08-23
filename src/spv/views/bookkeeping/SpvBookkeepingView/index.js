@@ -20,7 +20,7 @@ const Transaction = (value) => {
 
   return (
     <React.Fragment>
-      <Page className={classes.root} title="Buyer">
+      <Page className={classes.root} title="SPV Bookkeeping">
         <Container maxWidth="lg">
           <Grid container spacing={3}>
             <Grid item lg={12} md={6} xs={12}>

@@ -338,6 +338,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={net_profit.name}
                 label={net_profit.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -346,6 +347,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={sales.name}
                 label={sales.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -354,6 +356,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={net_operating_loss.name}
                 label={net_operating_loss.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -362,6 +365,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={ebit.name}
                 label={ebit.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -370,6 +374,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={total_equity.name}
                 label={total_equity.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -378,6 +383,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={cash_flow_from_operating_activities.name}
                 label={cash_flow_from_operating_activities.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -386,6 +392,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={interest_expenses.name}
                 label={interest_expenses.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -394,6 +401,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={current_assets.name}
                 label={current_assets.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -402,6 +410,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={current_liabilities.name}
                 label={current_liabilities.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -410,6 +419,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={inventory_beginning.name}
                 label={inventory_beginning.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -418,6 +428,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={inventory_end.name}
                 label={inventory_end.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />
@@ -426,6 +437,7 @@ export default function BuyerFinancialsForm(props) {
               <InputField
                 name={cost_of_goods_sold.name}
                 label={cost_of_goods_sold.label}
+                type="number"
                 fullWidth
                 variant="outlined"
               />

@@ -201,7 +201,7 @@ const AdminTransactionListView = () => {
 
   return (
     <React.Fragment>
-      <Page className={clsx(classes.root)} title="Customers">
+      <Page className={clsx(classes.root)} title="Invoices">
         <Container maxWidth={false}>
           <Divider />
           <br></br>

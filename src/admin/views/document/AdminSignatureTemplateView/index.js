@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const UpdateTemplateForm = ({ className, value, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const { userid } = useParams();
   const { buyerid } = useParams();
   const { supplierid } = useParams();
 
@@ -107,8 +108,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
     try {
       const id = esignId;
       if (id !== "") {
+        const userId = userid;
         await updateTemplates({
           id,
+          userId,
           esign_template_ipu,
           esign_template_offer,
           esign_template_raa_offer,
@@ -121,8 +124,10 @@ const UpdateTemplateForm = ({ className, value, ...rest }) => {
         const esignId = "esign-" + uuid();
         const buyerId = buyerid;
         const supplierId = supplierid;
+        const userId = userid;
         await createTemplate({
           esignId,
+          userId,
           supplierId,
           buyerId,
           esign_template_ipu,

@@ -20,24 +20,30 @@ export const UserProvider = ({ children }) => {
   const [supplier_logo, setSupplier_logo] = useState("");
   const [supplier_name, setSupplier_name] = useState("");
   const [supplier_type, setSupplier_type] = useState("");
-  const [
-    supplier_date_of_incorporation,
-    setSupplier_date_of_incorporation,
-  ] = useState("");
+  const [supplier_date_of_incorporation, setSupplier_date_of_incorporation] =
+    useState("");
   const [supplier_address_city, setSupplier_address_city] = useState("");
   const [supplier_address_street, setSupplier_address_street] = useState("");
   const [supplier_address_number, setSupplier_address_number] = useState("");
   const [supplier_website, setSupplier_website] = useState("");
-  const [
-    supplier_address_postalcode,
-    setSupplier_address_postalcode,
-  ] = useState("");
+  const [supplier_contact_email, setSupplier_contact_email] = useState("");
+  const [supplier_contact_name, setSupplier_contact_name] = useState("");
+  const [supplier_contact_position, setSupplier_contact_position] =
+    useState("");
+  const [supplier_contact_phone, setSupplier_contact_phone] = useState("");
+  const [supplier_address_postalcode, setSupplier_address_postalcode] =
+    useState("");
   const [supplier_country, setSupplier_country] = useState("");
   const [supplier_industry, setSupplier_industry] = useState("");
   const [
     supplier_registration_cert_attachment,
     setSupplier_registration_cert_attachment,
   ] = useState("");
+  const [supplier_address_refinment, setSupplier_address_refinment] =
+    useState("");
+  const [supplier_industry_code, setSupplier_industry_code] = useState("");
+  const [supplier_register_number, setSupplier_register_number] = useState("");
+  const [supplier_trading_name, setSupplier_trading_name] = useState("");
   const [
     supplier_articles_of_association_attachment,
     setSupplier_articles_of_association_attachment,
@@ -81,13 +87,12 @@ export const UserProvider = ({ children }) => {
       );
       const n = { data: { listSuppliers: { items: itemsPage1, nextToken } } };
       const supplier = n.data.listSuppliers.items[0];
-      if (supplier){ 
-        setIdentity(supplier.identityId)
+      if (supplier) {
+        setIdentity(supplier.identityId);
+      } else {
+        const ident = await loadIdentity();
+        setIdentity(ident);
       }
-        else { 
-          const ident = await loadIdentity();
-          setIdentity(ident);
-        }
       return supplier;
     }
 
@@ -106,16 +111,23 @@ export const UserProvider = ({ children }) => {
           supplier_address_city,
           supplier_address_street,
           supplier_address_number,
-          supplier_website,
           supplier_address_postalcode,
           supplier_country,
           supplier_industry,
           supplier_registration_cert_attachment,
-          supplier_articles_of_association_attachment,
-          supplier_director_list_attachment,
-          supplier_shareholder_list_attachment,
+          supplier_website,
+          supplier_address_refinment,
+          supplier_industry_code,
+          supplier_register_number,
+          supplier_trading_name,
+          supplier_contact_name,
+          supplier_contact_email,
+          supplier_contact_phone,
+          supplier_contact_position,
         } = supplierdata;
         setId(id);
+        setSupplierId(supplierId);
+        setSupplier_logo(supplier_logo);
         setSupplierId(supplierId);
         setSupplier_logo(supplier_logo);
         setSupplier_name(supplier_name);
@@ -124,20 +136,21 @@ export const UserProvider = ({ children }) => {
         setSupplier_address_city(supplier_address_city);
         setSupplier_address_street(supplier_address_street);
         setSupplier_address_number(supplier_address_number);
-        setSupplier_website(supplier_website);
         setSupplier_address_postalcode(supplier_address_postalcode);
         setSupplier_country(supplier_country);
         setSupplier_industry(supplier_industry);
         setSupplier_registration_cert_attachment(
           supplier_registration_cert_attachment
         );
-        setSupplier_articles_of_association_attachment(
-          supplier_articles_of_association_attachment
-        );
-        setSupplier_director_list_attachment(supplier_director_list_attachment);
-        setSupplier_shareholder_list_attachment(
-          supplier_shareholder_list_attachment
-        );
+        setSupplier_website(supplier_website);
+        setSupplier_address_refinment(supplier_address_refinment);
+        setSupplier_industry_code(supplier_industry_code);
+        setSupplier_register_number(supplier_register_number);
+        setSupplier_trading_name(supplier_trading_name);
+        setSupplier_contact_name(supplier_contact_name);
+        setSupplier_contact_email(supplier_contact_email);
+        setSupplier_contact_phone(supplier_contact_phone);
+        setSupplier_contact_position(supplier_contact_position);
       }
     }
     onLoad();
@@ -164,13 +177,18 @@ export const UserProvider = ({ children }) => {
       supplier_address_street,
       supplier_address_number,
       supplier_address_postalcode,
-      supplier_website,
       supplier_country,
       supplier_industry,
       supplier_registration_cert_attachment,
-      supplier_articles_of_association_attachment,
-      supplier_director_list_attachment,
-      supplier_shareholder_list_attachment,
+      supplier_website,
+      supplier_address_refinment,
+      supplier_industry_code,
+      supplier_register_number,
+      supplier_trading_name,
+      supplier_contact_name,
+      supplier_contact_email,
+      supplier_contact_phone,
+      supplier_contact_position,
     }),
     [
       id,
@@ -186,13 +204,18 @@ export const UserProvider = ({ children }) => {
       supplier_address_street,
       supplier_address_number,
       supplier_address_postalcode,
-      supplier_website,
       supplier_country,
       supplier_industry,
       supplier_registration_cert_attachment,
-      supplier_articles_of_association_attachment,
-      supplier_director_list_attachment,
-      supplier_shareholder_list_attachment,
+      supplier_website,
+      supplier_address_refinment,
+      supplier_industry_code,
+      supplier_register_number,
+      supplier_trading_name,
+      supplier_contact_name,
+      supplier_contact_email,
+      supplier_contact_phone,
+      supplier_contact_position,
     ]
   );
 

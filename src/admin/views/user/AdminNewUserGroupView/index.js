@@ -34,10 +34,8 @@ export default function NewUserGroup() {
   const navigate = useNavigate();
   const currentValidationSchema = validationSchema[0];
   const AWS = require("aws-sdk");
-  AWS.config = new AWS.Config();
-  AWS.config.accessKeyId = awsconfig.accessKeyId;
-  AWS.config.secretAccessKey = awsconfig.secretAccessKey;
-  AWS.config.region = "us-east-2";
+  AWS.config = new AWS.Config({
+  accessKeyId: awsconfig.accessKeyId, secretAccessKey: awsconfig.secretAccessKey, region: "us-east-2"});
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));

@@ -98,7 +98,9 @@ const yup = [
     [income_statement_attachment.name]: Yup.string(),
     [financials_status.name]: Yup.string(),
     [financials_denomination.name]: Yup.string(),
-    [financials_reporting_period.name]: Yup.string(),
+    [financials_reporting_period.name]: Yup.string().required(
+      `${financials_reporting_period.requiredErrorMsg}`
+    ),
     [sales.name]: Yup.number().nullable(),
     [net_profit.name]: Yup.number().nullable(),
     [net_operating_loss.name]: Yup.number().nullable(),

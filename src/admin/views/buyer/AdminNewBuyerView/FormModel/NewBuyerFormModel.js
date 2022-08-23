@@ -3,9 +3,9 @@ const model = {
   formField: {
     investorId: {
       name: "investorId",
-      label: "Investor ID",
+      label: "Investor",
       requiredErrorMsg:
-        "Please get the Id of the Investor from your admin and dont make one up!",
+        "Please select the corresponding investor to associate an ID!",
     },
     buyer_loan_request_amount: {
       name: "buyer_loan_request_amount",
@@ -134,7 +134,7 @@ const model = {
     },
     financials_reporting_period: {
       name: "financials_reporting_period",
-      label: "Financial Reporting Period",
+      label: "Financial Reporting Period*",
       requiredErrorMsg: "Financial Reporting Period is required",
     },
     financials_denomination: {

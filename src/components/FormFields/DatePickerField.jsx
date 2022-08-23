@@ -18,7 +18,6 @@ export default function DatePickerField(props) {
   useEffect(() => {
     if (value) {
       const date = moment(value).utc().startOf("day");
-      console.log(date)
       setSelectedDate(date);
     }
   }, [value]);

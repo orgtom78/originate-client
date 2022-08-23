@@ -38,6 +38,7 @@ import LoaderButton from "src/components/LoaderButton.js";
 import { Upload as UploadIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import DOMPurify from "dompurify";
+import { useUser } from "src/components/context/usercontext.js";
 
 import Page from "src/components/Page";
 
@@ -84,6 +85,7 @@ export default function MyForm() {
   const { buyId } = useParams();
   const { supId } = useParams();
   const { id } = useParams();
+  const context = useUser();
   const navigate = useNavigate();
   const [number_of_invoices, setNumber_of_invoices] = useState("");
 
@@ -180,30 +182,17 @@ export default function MyForm() {
   }
 
   useEffect(() => {
-    async function load() {
-      let filter = { supplierId: { eq: supId } };
-      const {
-        data: {
-          listSuppliers: { items: itemsPage1, nextToken },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listSuppliers, {
-          filter: filter,
-        })
-      );
-      const n = {
-        data: { listSuppliers: { items: itemsPage1, nextToken } },
-      };
-      const items = n.data.listSuppliers.items;
-      const suppliername = await items[0].supplier_name;
-      const uId = await items[0].userId;
-      const supemail = await items[0].supplier_contact_email;
-      setSuppliername(suppliername);
-      setSupplier_contact_email(supemail);
-      setUserId(uId);
+    // attempt to fetch the info of the user that was already logged in
+    async function onLoad() {
+      const data = await context;
+      const { sub, identity, supplier_name, supplier_contact_email } = data;
+      setIdent(identity);
+      setSupplier_contact_email(supplier_contact_email);
+      setSuppliername(supplier_name);
+      setUserId(sub);
     }
-    load();
-  }, [supId]);
+    onLoad();
+  }, [context]);
 
   useEffect(() => {
     async function load() {
@@ -580,42 +569,42 @@ export default function MyForm() {
             "templates": {
                 "field_data": {
                     "field_text_data": {
-                      "Date": "${date}",
-                      "Invoice-No1": "${obj.InvoiceNo1}",
-                      "Invoice-Date1": "${obj.InvoiceDate1}",
-                      "Invoice-Curr1": "${obj.InvoiceCurr1}",
-                      "Invoice-DD1": "${obj.InvoiceDD1}",
-                      "Invoice-FV1": "${obj.InvoiceFV1.toLocaleString(
-                        "en-US"
-                      )}",
-                      "Invoice-No2": "${obj.InvoiceNo2}",
-                      "Invoice-Date2": "${obj.InvoiceDate2}",
-                      "Invoice-Curr2": "${obj.InvoiceCurr2}",
-                      "Invoice-DD2": "${obj.InvoiceDD2}",
-                      "Invoice-FV2": "${obj.InvoiceFV2.toLocaleString(
-                        "en-US"
-                      )}",
-                      "Invoice-No3": "${obj.InvoiceNo3}",
-                      "Invoice-Date3": "${obj.InvoiceDate3}",
-                      "Invoice-Curr3": "${obj.InvoiceCurr3}",
-                      "Invoice-DD3": "${obj.InvoiceDD3}",
-                      "Invoice-FV3": "${obj.InvoiceFV3.toLocaleString(
-                        "en-US"
-                      )}",
-                      "Invoice-No4": "${obj.InvoiceNo4}",
-                      "Invoice-Date4": "${obj.InvoiceDate4}",
-                      "Invoice-Curr4": "${obj.InvoiceCurr4}",
-                      "Invoice-DD4": "${obj.InvoiceDD4}",
-                      "Invoice-FV4": "${obj.InvoiceFV4.toLocaleString(
-                        "en-US"
-                      )}",
-                      "Invoice-No5": "${obj.InvoiceNo5}",
-                      "Invoice-Date5": "${obj.InvoiceDate5}",
-                      "Invoice-Curr5": "${obj.InvoiceCurr5}",
-                      "Invoice-DD5": "${obj.InvoiceDD5}",
-                      "Invoice-FV5": "${obj.InvoiceFV5.toLocaleString(
-                        "en-US"
-                      )}",
+                        "Date": "${date}",
+                        "Invoice-No1": "${obj.InvoiceNo1}",
+                        "Invoice-Date1": "${obj.InvoiceDate1}",
+                        "Invoice-Curr1": "${obj.InvoiceCurr1}",
+                        "Invoice-DD1": "${obj.InvoiceDD1}",
+                        "Invoice-FV1": "${obj.InvoiceFV1.toLocaleString(
+                          "en-US"
+                        )}",
+                        "Invoice-No2": "${obj.InvoiceNo2}",
+                        "Invoice-Date2": "${obj.InvoiceDate2}",
+                        "Invoice-Curr2": "${obj.InvoiceCurr2}",
+                        "Invoice-DD2": "${obj.InvoiceDD2}",
+                        "Invoice-FV2": "${obj.InvoiceFV2.toLocaleString(
+                          "en-US"
+                        )}",
+                        "Invoice-No3": "${obj.InvoiceNo3}",
+                        "Invoice-Date3": "${obj.InvoiceDate3}",
+                        "Invoice-Curr3": "${obj.InvoiceCurr3}",
+                        "Invoice-DD3": "${obj.InvoiceDD3}",
+                        "Invoice-FV3": "${obj.InvoiceFV3.toLocaleString(
+                          "en-US"
+                        )}",
+                        "Invoice-No4": "${obj.InvoiceNo4}",
+                        "Invoice-Date4": "${obj.InvoiceDate4}",
+                        "Invoice-Curr4": "${obj.InvoiceCurr4}",
+                        "Invoice-DD4": "${obj.InvoiceDD4}",
+                        "Invoice-FV4": "${obj.InvoiceFV4.toLocaleString(
+                          "en-US"
+                        )}",
+                        "Invoice-No5": "${obj.InvoiceNo5}",
+                        "Invoice-Date5": "${obj.InvoiceDate5}",
+                        "Invoice-Curr5": "${obj.InvoiceCurr5}",
+                        "Invoice-DD5": "${obj.InvoiceDD5}",
+                        "Invoice-FV5": "${obj.InvoiceFV5.toLocaleString(
+                          "en-US"
+                        )}",
                     },
                     "field_boolean_data": {},
                     "field_date_data": {}
@@ -842,7 +831,7 @@ export default function MyForm() {
     await _submitForm(values);
     setTimeout(4000);
     handleClose();
-    navigate("/admin/requests");
+    navigate("/app/requests");
   }
 
   const handleClose = () => {
@@ -1042,6 +1031,7 @@ export default function MyForm() {
                                     margin="normal"
                                     variant="outlined"
                                     label="Invoice Amount"
+                                    type="number"
                                     name={invoice_amount}
                                     value={p.invoice_amount}
                                     required

@@ -134,9 +134,9 @@ const BuyerList = () => {
     }
   }
 
-  function getLink(status, id) {
+  function getLink(status, id, buyid, supid) {
     if (status === "Approved") {
-      return `/app/requestoptions/${id}`;
+      return `/app/newmultirequest/${id}/${buyid}/${supid}`;
     } else {
       return <></>;
     }
@@ -152,7 +152,7 @@ const BuyerList = () => {
               <Grid item key={buyerdata.buyerId} lg={4} md={6} xs={12}>
                 <Card>
                   <CardActionArea>
-                    <Link to={getLink(buyerdata.buyer_status, buyerdata.id)}>
+                    <Link to={getLink(buyerdata.buyer_status, buyerdata.id, buyerdata.buyerId, buyerdata.supplierId)}>
                       <CardContent>
                         <Box display="flex" justifyContent="center" mb={3}>
                           <Avatar
