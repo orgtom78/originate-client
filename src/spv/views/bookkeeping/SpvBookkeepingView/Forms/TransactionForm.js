@@ -226,13 +226,14 @@ const RequestForm = ({ className, value, ...rest }) => {
         });
         async function assignid() {
           const id = dynamorequestid;
+          const raa_offer_notice_e_signatureId = await createRAASignRequest();
           await updateRequest({
             id,
             bookkeeping_status_spv,
+            raa_offer_notice_e_signatureId,
           });
         }
         assignid();
-        await createRAASignRequest();
       } else {
         const id = uuid();
         const bookkeeping_status_spv = "Approved";
@@ -252,9 +253,11 @@ const RequestForm = ({ className, value, ...rest }) => {
         });
         async function assignid() {
           const id = dynamorequestid;
+          const raa_offer_notice_e_signatureId = await createRAASignRequest();
           await updateRequest({
             id,
             bookkeeping_status_spv,
+            raa_offer_notice_e_signatureId,
           });
         }
         assignid();
@@ -490,6 +493,8 @@ const RequestForm = ({ className, value, ...rest }) => {
     );
     const data = await res1.json();
     console.log(data);
+    const rid = data.requests.request_id;
+    return rid;
   }
 
   function NumberFormatCustom(props) {

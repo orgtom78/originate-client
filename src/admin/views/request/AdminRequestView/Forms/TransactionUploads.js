@@ -10,7 +10,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
 import { onError } from "src/libs/errorLib.js";
@@ -60,23 +60,24 @@ function BuyerUploads(value) {
   const [requestId, setRequestId] = useState("");
   const [identityId, setIdentityId] = useState("");
   const [invoice_attachment, setInvoice_attachment] = useState("");
-  const [purchase_order_attachment, setPurchase_order_attachment] = useState(
-    ""
-  );
+  const [purchase_order_attachment, setPurchase_order_attachment] =
+    useState("");
   const [offer_notice_attachment, setOffer_notice_attachment] = useState("");
+  const [raa_offer_notice_attachment, setRaa_offer_notice_attachment] =
+    useState("");
   const [ipu_attachment, setIpu_attachment] = useState("");
-  const [bill_of_lading_attachment, setBill_of_lading_attachment] = useState(
-    ""
-  );
-  const [cargo_insurance_attachment, setCargo_insurance_attachment] = useState(
-    ""
-  );
+  const [bill_of_lading_attachment, setBill_of_lading_attachment] =
+    useState("");
+  const [cargo_insurance_attachment, setCargo_insurance_attachment] =
+    useState("");
   const [invoiceloading, setInvoiceLoading] = useState(false);
   const [invoicesuccess, setInvoiceSuccess] = useState(false);
   const [purchaseoloading, setPurchaseoLoading] = useState(false);
   const [purchaseosuccess, setPurchaseoSuccess] = useState(false);
   const [offernloading, setOffernLoading] = useState(false);
   const [offernsuccess, setOffernSuccess] = useState(false);
+  const [raaoffernloading, setRaaoffernLoading] = useState(false);
+  const [raaoffernsuccess, setRaaoffernSuccess] = useState(false);
   const [ipuloading, setIpuLoading] = useState(false);
   const [ipusuccess, setIpuSuccess] = useState(false);
   const [blloading, setBlLoading] = useState(false);
@@ -90,6 +91,8 @@ function BuyerUploads(value) {
   const [purchaseopdf, setPurchaseopdf] = useState("");
   const [offernimg, setOffernImg] = useState("");
   const [offernpdf, setOffernpdf] = useState("");
+  const [raaoffernimg, setRaaoffernImg] = useState("");
+  const [raaoffernpdf, setRaaoffernpdf] = useState("");
   const [ipuimg, setIpuImg] = useState("");
   const [ipupdf, setIpupdf] = useState("");
   const [blimg, setBlImg] = useState("");
@@ -105,6 +108,8 @@ function BuyerUploads(value) {
   const purchaseoname = "Purchase Order";
   const offernlabel = "offer_notice_attachment";
   const offernname = "Offer Notice";
+  const raaoffernlabel = "raa_offer_notice_attachment";
+  const raaoffernname = "RAA Offer Notice";
   const ipulabel = "ipu_attachment";
   const ipuname = "IPU";
   const bllabel = "bill_of_lading_attachment";
@@ -113,8 +118,8 @@ function BuyerUploads(value) {
   const cargoiname = "Cargo Insurance";
 
   useEffect(() => {
-    const id = value.value.value
-    getTransaction({id});
+    const id = value.value.value;
+    getTransaction({ id });
   }, [value]);
 
   async function getTransaction(input) {
@@ -132,9 +137,10 @@ function BuyerUploads(value) {
             invoice_attachment,
             purchase_order_attachment,
             offer_notice_attachment,
+            raa_offer_notice_attachment,
             ipu_attachment,
             bill_of_lading_attachment,
-            cargo_insurance_attachment
+            cargo_insurance_attachment,
           },
         },
       } = request;
@@ -145,6 +151,7 @@ function BuyerUploads(value) {
       setInvoice_attachment(invoice_attachment);
       setPurchase_order_attachment(purchase_order_attachment);
       setOffer_notice_attachment(offer_notice_attachment);
+      setRaa_offer_notice_attachment(raa_offer_notice_attachment);
       setIpu_attachment(ipu_attachment);
       setBill_of_lading_attachment(bill_of_lading_attachment);
       setCargo_insurance_attachment(cargo_insurance_attachment);
@@ -217,7 +224,8 @@ function BuyerUploads(value) {
   }, [invoice_attachment, identityId]);
 
   function invoiceisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(invoiceimg)) {
       return (
         <>
@@ -381,7 +389,8 @@ function BuyerUploads(value) {
   }, [purchase_order_attachment, identityId]);
 
   function purchaseoisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(purchaseoimg)) {
       return (
         <>
@@ -547,7 +556,8 @@ function BuyerUploads(value) {
   }, [offer_notice_attachment, identityId]);
 
   function offernisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(offernimg)) {
       return (
         <>
@@ -666,6 +676,173 @@ function BuyerUploads(value) {
   }
 
   useEffect(() => {
+    if (raa_offer_notice_attachment) {
+      async function getraaoffernistimgurl() {
+        var uploadext = raa_offer_notice_attachment.split(".").pop();
+        var imageExtensions = [
+          "jpg",
+          "jpeg",
+          "bmp",
+          "gif",
+          "png",
+          "tiff",
+          "eps",
+          "svg",
+        ];
+        const x = imageExtensions.includes(uploadext);
+        if (x === true) {
+          const y = await Storage.get(raa_offer_notice_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
+          setRaaoffernImg(y);
+        }
+      }
+      getraaoffernistimgurl();
+    }
+  }, [raa_offer_notice_attachment, identityId]);
+
+  useEffect(() => {
+    if (raa_offer_notice_attachment) {
+      async function getraaoffernistpdfurl() {
+        var uploadext = raa_offer_notice_attachment.split(".").pop();
+        var imageExtensions = ["pdf", "PDF"];
+        const x = imageExtensions.includes(uploadext);
+        if (x === true) {
+          const y = await Storage.get(raa_offer_notice_attachment, {
+            level: "private",
+            identityId: identityId,
+          });
+          setRaaoffernpdf(y);
+        }
+      }
+      getraaoffernistpdfurl();
+    }
+  }, [raa_offer_notice_attachment, identityId]);
+
+  function raaoffernisimageorpdf(label, name) {
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    if (regex.test(raaoffernimg)) {
+      return (
+        <>
+          <img className={classes.img} alt="complex" src={raaoffernimg} />
+          <div>
+            <input
+              id={raaoffernimg}
+              accept="image/*,application/pdf"
+              style={{ display: "none" }}
+              type="file"
+              onChange={(event) => handleraaoffernChange(event)}
+            />
+            <label htmlFor={raaoffernimg}>
+              <LoaderButton
+                id={raaoffernimg}
+                fullWidth
+                component="span"
+                startIcon={<UploadIcon />}
+                disabled={raaoffernloading}
+                success={raaoffernsuccess}
+                loading={raaoffernloading}
+              >
+                {" "}
+                Update File
+              </LoaderButton>
+            </label>
+          </div>
+        </>
+      );
+    } else if (regex.test(raaoffernpdf)) {
+      return (
+        <>
+          <iframe
+            title="file"
+            style={{ width: "100%", height: "100%" }}
+            allowFullScreen
+            src={raaoffernpdf}
+          />
+          <div>
+            <input
+              id={raaoffernpdf}
+              accept="image/*,application/pdf"
+              style={{ display: "none" }}
+              type="file"
+              onChange={(event) => handleraaoffernChange(event)}
+            />
+            <label htmlFor={raaoffernpdf}>
+              <LoaderButton
+                id={raaoffernpdf}
+                fullWidth
+                component="span"
+                startIcon={<UploadIcon />}
+                disabled={raaoffernloading}
+                success={raaoffernsuccess}
+                loading={raaoffernloading}
+              >
+                {" "}
+                Update File
+              </LoaderButton>
+            </label>
+          </div>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <input
+            name={label}
+            id={label}
+            accept="image/*,application/pdf"
+            style={{ display: "none" }}
+            type="file"
+            onChange={(event) => handleraaoffernChange(event)}
+          />
+          <label htmlFor={label}>
+            <LoaderButton
+              id={label}
+              fullWidth
+              component="span"
+              startIcon={<UploadIcon />}
+              disabled={raaoffernloading}
+              success={raaoffernsuccess}
+              loading={raaoffernloading}
+            >
+              {" "}
+              {name}
+            </LoaderButton>
+          </label>
+        </>
+      );
+    }
+  }
+
+  function handleraaoffernChange(event) {
+    file.current = event.target.files[0];
+    const newraaoffernfile = file.current;
+    onraaoffernChange(newraaoffernfile);
+  }
+
+  async function onraaoffernChange(newfile) {
+    setRaaoffernSuccess(false);
+    setRaaoffernLoading(true);
+    try {
+      const u = newfile
+        ? await s3Up(newfile, "raa_offer_notice_attachment")
+        : null;
+      var raa_offer_notice_attachment = u;
+      await updateRequest({
+        id,
+        raa_offer_notice_attachment,
+      });
+    } catch (e) {
+      onError(e);
+    }
+    setRaaoffernSuccess(true);
+    setRaaoffernLoading(false);
+    navigate("/admin/requests");
+  }
+
+  useEffect(() => {
     if (ipu_attachment) {
       async function getipuimgurl() {
         var uploadext = ipu_attachment.split(".").pop();
@@ -711,7 +888,8 @@ function BuyerUploads(value) {
   }, [ipu_attachment, identityId]);
 
   function ipuisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(ipuimg)) {
       return (
         <>
@@ -749,8 +927,8 @@ function BuyerUploads(value) {
             style={{ width: "100%", height: "100%" }}
             allowFullScreen
             src={ipupdf}
-            sandbox>
-            </iframe>
+            sandbox
+          ></iframe>
           <div>
             <input
               id={ipupdf}
@@ -876,7 +1054,8 @@ function BuyerUploads(value) {
   }, [bill_of_lading_attachment, identityId]);
 
   function blisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(blimg)) {
       return (
         <>
@@ -1042,7 +1221,8 @@ function BuyerUploads(value) {
   }, [cargo_insurance_attachment, identityId]);
 
   function cargoiisimageorpdf(label, name) {
-    var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
+    var regex =
+      /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-/]))?/;
     if (regex.test(cargoiimg)) {
       return (
         <>
@@ -1207,6 +1387,12 @@ function BuyerUploads(value) {
                 <>
                   <Typography>Cargo Insurance:</Typography>
                   {cargoiisimageorpdf(cargoilabel, cargoiname)}
+                </>
+              </Grid>
+              <Grid item md={12} xs={12}>
+                <>
+                  <Typography>RAA Offer Notice:</Typography>
+                  {raaoffernisimageorpdf(raaoffernlabel, raaoffernname)}
                 </>
               </Grid>
             </Card>
