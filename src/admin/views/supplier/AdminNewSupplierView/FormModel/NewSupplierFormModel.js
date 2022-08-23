@@ -262,7 +262,7 @@ const model = {
     },
     financials_reporting_period: {
       name: "financials_reporting_period",
-      label: "Reporting Period",
+      label: "Reporting Period*",
       requiredErrorMsg: "Reporting Period is required",
     },
     sales: {
