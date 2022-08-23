@@ -106,20 +106,6 @@
           ]
         }
       ]
-    },
-    "zohooffer": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "zohooffer",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
     }
   },
   "storage": {
@@ -239,22 +225,6 @@
             "UserPoolId"
           ]
         },
-        {
-          "category": "api",
-          "resourceName": "originateclientdev",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "zohooffer": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
         {
           "category": "api",
           "resourceName": "originateclientdev",

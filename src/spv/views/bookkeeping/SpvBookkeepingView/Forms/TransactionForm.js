@@ -226,13 +226,14 @@ const RequestForm = ({ className, value, ...rest }) => {
         });
         async function assignid() {
           const id = dynamorequestid;
+          const raa_offer_notice_e_signatureId = await createRAASignRequest();
           await updateRequest({
             id,
             bookkeeping_status_spv,
+            raa_offer_notice_e_signatureId,
           });
         }
         assignid();
-        await createRAASignRequest();
       } else {
         const id = uuid();
         const bookkeeping_status_spv = "Approved";
@@ -252,9 +253,11 @@ const RequestForm = ({ className, value, ...rest }) => {
         });
         async function assignid() {
           const id = dynamorequestid;
+          const raa_offer_notice_e_signatureId = await createRAASignRequest();
           await updateRequest({
             id,
             bookkeeping_status_spv,
+            raa_offer_notice_e_signatureId,
           });
         }
         assignid();
@@ -403,6 +406,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     const accessToken = await tokenData.access_token;
     const reqid = DOMPurify.sanitize(esign_template_raa_offer);
     console.log(reqid);
+    // file deepcode ignore Ssrf: <please specify a reason of ignoring this>
     const res1 = await fetch(
       `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument?testing=true`,
       //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument`,
@@ -489,6 +493,8 @@ const RequestForm = ({ className, value, ...rest }) => {
     );
     const data = await res1.json();
     console.log(data);
+    const rid = data.requests.request_id;
+    return rid;
   }
 
   function NumberFormatCustom(props) {
