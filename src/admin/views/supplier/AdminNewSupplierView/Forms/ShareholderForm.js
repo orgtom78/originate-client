@@ -247,7 +247,7 @@ export default function ShareholderForm(props) {
   async function handleUboPoaClick() {
     setUbopoaSuccess(false);
     setUbopoaLoading(true);
-    const b = await director_updatepoa;
+    const b = await ubo_updatepoa;
     if (b) {
       setUbopoaSuccess(true);
       setUbopoaLoading(false);
