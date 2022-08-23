@@ -555,9 +555,10 @@ export default function MyForm() {
     const accessToken = await tokenData.access_token;
     const reqid = DOMPurify.sanitize(esign_template_ipu);
     console.log(reqid);
+    // file deepcode ignore Ssrf: <please specify a reason of ignoring this>
     const res1 = await fetch(
-      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument?testing=true`,
-      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument?testing=true`,
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid}/createdocument`,
       {
         method: "POST",
         headers: {
@@ -641,8 +642,8 @@ export default function MyForm() {
     const eid = data.requests.request_id;
     const reqid2 = DOMPurify.sanitize(esign_template_offer);
     const res2 = await fetch(
-      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid2}/createdocument?testing=true`,
-      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${esign_template_ipu}/createdocument`,
+      //`https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid2}/createdocument?testing=true`,
+      `https://cors-anywhere-oc.herokuapp.com/https://sign.zoho.com/api/v1/templates/${reqid2}/createdocument`,
       {
         method: "POST",
         headers: {

@@ -92,6 +92,14 @@
         "sofr": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
           "s3Key": "amplify-builds/sofr-697153386c54776e444b-build.zip"
+        },
+        "newinvoicenot": {
+          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
+          "s3Key": "amplify-builds/newinvoicenot-5158777a57735478426e-build.zip"
+        },
+        "dueinvoicenot": {
+          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
+          "s3Key": "amplify-builds/dueinvoicenot-446c4f74495233386437-build.zip"
         }
       }
     }
