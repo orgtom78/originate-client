@@ -57,8 +57,6 @@
           ]
         }
       ]
-<<<<<<< HEAD
-=======
     },
     "zoho": {
       "service": "API Gateway",
@@ -73,21 +71,6 @@
           ]
         }
       ]
-    },
-    "ocdefi": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "ocdefi",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        }
-      ]
->>>>>>> 8d5ab9573fa829dc6c5b99789c69c9335a3ac590
     }
   },
   "storage": {
@@ -125,12 +108,17 @@
       "service": "Lambda",
       "dependsOn": [
         {
-          "category": "api",
-          "resourceName": "originateclientdev",
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc",
           "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
+            "UserPoolId"
+          ]
+        },
+        {
+          "category": "api",
+          "resourceName": "originateclientprod",
+          "attributes": [
+            "GraphQLAPIIdOutput"
           ]
         }
       ]
@@ -208,11 +196,7 @@
         },
         {
           "category": "api",
-<<<<<<< HEAD
           "resourceName": "originateclientprod",
-=======
-          "resourceName": "originateclientdev",
->>>>>>> 8d5ab9573fa829dc6c5b99789c69c9335a3ac590
           "attributes": [
             "GraphQLAPIIdOutput",
             "GraphQLAPIEndpointOutput",
