@@ -73,7 +73,7 @@ const Password = ({ className, ...rest }) => {
           />
           <TextField
             fullWidth
-            label="Confirm password"
+            label="Confirm new password"
             margin="normal"
             name="confirm"
             onChange={handleChange}

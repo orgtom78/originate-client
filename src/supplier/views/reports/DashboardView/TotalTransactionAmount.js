@@ -1,8 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Card, CardContent, Grid, Typography, colors } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Avatar,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  colors,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
@@ -89,6 +96,7 @@ const TotalTransactionAmount = ({ className, ...rest }) => {
                 displayType={"text"}
                 thousandSeparator={true}
                 prefix={"$"}
+                decimalScale="2"
               />
             </Typography>
           </Grid>
