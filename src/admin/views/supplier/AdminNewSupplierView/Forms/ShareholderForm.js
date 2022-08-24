@@ -4,7 +4,7 @@ import { InputField, SelectField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import SelectListField from "src/components/FormFields/SelectListField.jsx";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { Upload as UploadIcon } from "react-feather";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
@@ -89,7 +89,7 @@ export default function ShareholderForm(props) {
     },
   } = props;
 
-  const { id } = useParams();
+  const { ID } = useParams();
   const dirId = props.dir;
   const uboId = props.ubo;
   const { ident } = useParams();
@@ -411,7 +411,7 @@ export default function ShareholderForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={dirId}
                   />
                   <label htmlFor={director_id_attachment.name}>
@@ -444,7 +444,7 @@ export default function ShareholderForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={dirId}
                   />
                   <label htmlFor={director_poa_attachment.name}>
@@ -536,7 +536,7 @@ export default function ShareholderForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={uboId}
                   />
                   <label htmlFor={ubo_id_attachment.name}>
@@ -569,7 +569,7 @@ export default function ShareholderForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={uboId}
                   />
                   <label htmlFor={ubo_poa_attachment.name}>

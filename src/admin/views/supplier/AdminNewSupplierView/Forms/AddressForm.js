@@ -97,7 +97,7 @@ export default function AddressForm(props) {
     },
   } = props;
 
-  const { id } = useParams();
+  const { ID } = useParams();
   const supId = props.value;
   const { ident } = useParams();
 
@@ -332,7 +332,7 @@ export default function AddressForm(props) {
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={supId}
                   />
                   <label htmlFor={supplier_registration_cert_attachment.name}>
@@ -367,7 +367,7 @@ export default function AddressForm(props) {
                     accept="image/*"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={supId}
                   />
                   <label htmlFor={supplier_logo.name}>
