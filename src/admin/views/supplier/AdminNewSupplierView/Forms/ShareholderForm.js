@@ -410,7 +410,7 @@ export default function ShareholderForm(props) {
                     id={director_id_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={dirId}
                   />
@@ -443,7 +443,7 @@ export default function ShareholderForm(props) {
                     id={director_poa_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={dirId}
                   />
@@ -535,7 +535,7 @@ export default function ShareholderForm(props) {
                     id={ubo_id_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={uboId}
                   />
@@ -568,7 +568,7 @@ export default function ShareholderForm(props) {
                     id={ubo_poa_attachment.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={uboId}
                   />

@@ -331,7 +331,7 @@ export default function AddressForm(props) {
                     id={supplier_registration_cert_attachment.name}
                     accept="image/*, application/pdf"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={supId}
                   />
@@ -366,7 +366,7 @@ export default function AddressForm(props) {
                     id={supplier_logo.name}
                     accept="image/*"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={supId}
                   />
