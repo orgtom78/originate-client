@@ -308,6 +308,15 @@ export default function HistoryForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
+              <SelectField
+                name={buyer_use_of_goods_purchased.name}
+                label={buyer_use_of_goods_purchased.label}
+                data={productUse}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
               <SliderField
                 name={buyer_invoices_paid_on_time.name}
                 label={buyer_invoices_paid_on_time.label}
@@ -335,15 +344,6 @@ export default function HistoryForm(props) {
               <SliderField
                 name={buyer_invoices_past_due_90_days.name}
                 label={buyer_invoices_past_due_90_days.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <SelectField
-                name={buyer_use_of_goods_purchased.name}
-                label={buyer_use_of_goods_purchased.label}
-                data={productUse}
                 fullWidth
                 variant="outlined"
               />

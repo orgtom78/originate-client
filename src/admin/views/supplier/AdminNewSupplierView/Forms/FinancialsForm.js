@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { InputField, DatePickerField } from "src/components/FormFields";
 import AdminUploadField from "src/components/FormFields/AdminUploadField.js";
 import { Card, CardContent, Divider, Grid } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import makeStyles from "@mui/styles/makeStyles";
 import { useFormikContext } from "formik";
 import { Storage } from "aws-amplify";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -66,7 +66,7 @@ export default function ShareholderForm(props) {
     },
   } = props;
 
-  const { id } = useParams();
+  const { ID } = useParams();
   const finId = props.fin;
   const { ident } = useParams();
   const { values: formValues } = useFormikContext();
@@ -209,7 +209,7 @@ export default function ShareholderForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={finId}
                   />
                   <label htmlFor={balance_sheet_attachment.name}>
@@ -241,7 +241,7 @@ export default function ShareholderForm(props) {
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
                     identityid={ident}
-                    userid={id}
+                    userid={ID}
                     sectorid={finId}
                   />
                   <label htmlFor={income_statement_attachment.name}>
