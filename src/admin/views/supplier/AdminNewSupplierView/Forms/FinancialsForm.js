@@ -208,7 +208,7 @@ export default function ShareholderForm(props) {
                     id={balance_sheet_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={finId}
                   />
@@ -240,7 +240,7 @@ export default function ShareholderForm(props) {
                     id={income_statement_attachment.name}
                     accept="image/*,application/pdf"
                     style={{ display: "none" }}
-                    identityId={ident}
+                    identityid={ident}
                     userid={id}
                     sectorid={finId}
                   />
