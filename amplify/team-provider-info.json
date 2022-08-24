@@ -37,7 +37,8 @@
         },
         "sofr": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/sofr-6c4f4d75595265387631-build.zip"
+          "s3Key": "amplify-builds/sofr-6b567244777645703078-build.zip",
+          "scrapingantApiKey": "c4a3ca0d79664156bb49defab5f39e68"
         },
         "dueinvoicenotification": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
