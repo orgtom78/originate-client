@@ -63,7 +63,7 @@ const model = {
     },
     buyer_sample_trading_docs_attachment: {
       name: "buyer_sample_trading_docs_attachment",
-      requiredErrorMsg: "Sample Trading Documents are required",
+      requiredErrorMsg: "Sample Trading Documents such as a recent invoice, proof of payment, purchase order or similar is required",
     },
 
     financials_reporting_period: {
@@ -125,7 +125,7 @@ const model = {
     buyer_previous_year_transaction_amount: {
       name: "buyer_previous_year_transaction_amount",
       label: "Whole Year (2020) Invoice Amount ($)*",
-      requiredErrorMsg: "Previous Invoice Amount is required",
+      requiredErrorMsg: "Invoice Amount for 2020 is required",
     },
     buyer_reporting_year_transaction_amount: {
       name: "buyer_reporting_year_transaction_amount",
@@ -135,13 +135,13 @@ const model = {
     buyer_next_year_projected_transaction_amount: {
       name: "buyer_next_year_projected_transaction_amount",
       label: "Whole Year (2022) Anticipated Invoice Amount ($)*",
-      requiredErrorMsg: "Anticipated Invoice Amount is required",
+      requiredErrorMsg: "Anticipated Invoice Amount for 2022 is required",
     }, 
     buyer_previous_year_number_invoices: {
       name: "buyer_previous_year_number_invoices",
       label: "Whole Year (2020) Number of Invoices issued*",
       requiredErrorMsg:
-        "The Number of Invoices issued in the previous year (2020) is required",
+        "The Number of Invoices issued in 2020 is required",
     },
     buyer_insurance_name: {
       name: "buyer_insurance_name",
@@ -168,27 +168,28 @@ const model = {
     },
     buyer_invoices_paid_on_time: {
       name: "buyer_invoices_paid_on_time",
-      label: "Buyer invoices paid on time",
-      requiredErrorMsg:
-      "Buyer invoices paid on time is required",
+      label: "Invoices paid on time (%)",
+      requiredErrorMsg: "Invoices paid is required",
+    },
+    buyer_invoices_past_due: {
+      name: "buyer_invoices_past_due",
+      label: "Invoices past due (%)",
+      requiredErrorMsg: "Invoices past due is required",
     },
     buyer_invoices_past_due_30_days: {
       name: "buyer_invoices_past_due_30_days",
-      label: "Invoices overdue for more than 30 Days",
-      requiredErrorMsg:
-      "Buyer Invoices past due 30 days is required",
+      label: "Invoices past due 30 days (%)",
+      requiredErrorMsg: "Invoices past due 30 days is required",
     },
     buyer_invoices_past_due_60_days: {
       name: "buyer_invoices_past_due_60_days",
-      label: "Invoices overdue for more than 60 Days",
-      requiredErrorMsg:
-      "Buyer Invoices past due 60 days is required",
+      label: "Invoices past due 60 days (%)",
+      requiredErrorMsg: "Invoices past due 60 days is required",
     },
     buyer_invoices_past_due_90_days: {
       name: "buyer_invoices_past_due_90_days",
-      label: "Invoices overdue for more than 90 Days",
-      requiredErrorMsg:
-      "Buyer Invoices past due 90 days is required",
+      label: "Invoices past due 90 days (%)",
+      requiredErrorMsg: "Invoices past due 90 days is required",
     },
   },
 };

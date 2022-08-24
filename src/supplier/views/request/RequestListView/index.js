@@ -79,7 +79,7 @@ const TransactionListView = () => {
 
     async function test() {
       const c = await getRequests();
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -205,6 +205,7 @@ const TransactionListView = () => {
                               displayType={"text"}
                               thousandSeparator={true}
                               prefix={"$"}
+                              decimalScale="2"
                             />
                           </TableCell>
                           <TableCell>
@@ -215,36 +216,47 @@ const TransactionListView = () => {
                               displayType={"text"}
                               thousandSeparator={true}
                               prefix={"$"}
+                              decimalScale="2"
                             />
                           </TableCell>
                           <TableCell>
-                              <NumberFormat
-                                color="textPrimary"
-                                variant="h3"
-                                value={request.transaction_fee_amount}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                prefix={"$"}
-                                decimalScale="2"
-                              />
-                            </TableCell>
-                            <TableCell>
-                              <NumberFormat
-                                color="textPrimary"
-                                variant="h3"
-                                value={Number(request.discount_fee_amount) - Number(request.transaction_fee_amount)}
-                                displayType={"text"}
-                                thousandSeparator={true}
-                                prefix={"$"}
-                                decimalScale="2"
-                              />
-                            </TableCell>
-                            <TableCell>{`${request.invoice_currency}`}</TableCell>
+                            <NumberFormat
+                              color="textPrimary"
+                              variant="h3"
+                              value={request.transaction_fee_amount}
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              prefix={"$"}
+                              decimalScale="2"
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <NumberFormat
+                              color="textPrimary"
+                              variant="h3"
+                              value={
+                                Number(request.discount_fee_amount) -
+                                Number(request.transaction_fee_amount)
+                              }
+                              displayType={"text"}
+                              thousandSeparator={true}
+                              prefix={"$"}
+                              decimalScale="2"
+                            />
+                          </TableCell>
+                          <TableCell>{`${request.invoice_currency}`}</TableCell>
                           <TableCell>
                             {checkstatus(request.request_status)}
                           </TableCell>
                           <TableCell>
-                            {checkpayout(request.invoice_date)}
+                            <StyledEngineProvider injectFirst>
+                              <ThemeProvider theme={greenTheme}>
+                                <Chip
+                                  label={moment(request.invoice_date).format("DD/MM/YYYY")}
+                                  color="secondary"
+                                />
+                              </ThemeProvider>
+                            </StyledEngineProvider>
                           </TableCell>
                           <TableCell>
                             {checkpayout(request.invoice_due_date)}

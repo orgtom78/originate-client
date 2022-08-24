@@ -102,7 +102,6 @@ export default function NewAccount() {
       const buyer_sample_trading_docs_attachment =
         values["buyer_sample_trading_docs_attachment"];
 
-      const financials_reporting_period = values["financials_reporting_period"];
       const sales = values["sales"];
       const ebit = values["ebit"];
       const net_profit = values["net_profit"];
@@ -173,23 +172,43 @@ export default function NewAccount() {
         buyer_invoices_past_due_90_days,
         buyer_use_of_goods_purchased,
       });
-
-      await createFinancials({
-        userId,
-        financialsId,
-        identityId,
-        buyerId,
-        balance_sheet_attachment,
-        income_statement_attachment,
-        sales,
-        net_profit,
-        ebit,
-        cost_of_goods_sold,
-        current_assets,
-        current_liabilities,
-        total_equity,
-        financials_reporting_period,
-      });
+      const financials_reporting_period = values["financials_reporting_period"];
+      if (financials_reporting_period) {
+        await createFinancials({
+          userId,
+          financialsId,
+          identityId,
+          buyerId,
+          balance_sheet_attachment,
+          income_statement_attachment,
+          sales,
+          net_profit,
+          ebit,
+          cost_of_goods_sold,
+          current_assets,
+          current_liabilities,
+          total_equity,
+          financials_reporting_period,
+        });
+      } else {
+        const financials_reporting_period = new Date().getFullYear() - 1;
+        await createFinancials({
+          userId,
+          financialsId,
+          identityId,
+          buyerId,
+          balance_sheet_attachment,
+          income_statement_attachment,
+          sales,
+          net_profit,
+          ebit,
+          cost_of_goods_sold,
+          current_assets,
+          current_liabilities,
+          total_equity,
+          financials_reporting_period,
+        });
+      }
     } catch (e) {
       onError(e);
     }

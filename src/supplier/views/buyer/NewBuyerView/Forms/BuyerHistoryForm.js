@@ -179,13 +179,21 @@ export default function HistoryForm(props) {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={12}>
               <DatePickerField
                 name={buyer_supplier_year_business_relation_started.name}
                 label={buyer_supplier_year_business_relation_started.label}
                 format="yyyy"
                 views={["year"]}
                 maxDate={new Date()}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_previous_year_number_invoices.name}
+                label={buyer_previous_year_number_invoices.label}
                 fullWidth
                 variant="outlined"
               />
@@ -215,22 +223,6 @@ export default function HistoryForm(props) {
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <InputField
-                name={buyer_previous_year_number_invoices.name}
-                label={buyer_previous_year_number_invoices.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <InputField
-                name={buyer_insurance_name.name}
-                label={buyer_insurance_name.label}
-                fullWidth
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
               <SelectField
                 name={buyer_existing_disputes.name}
                 label={buyer_existing_disputes.label}
@@ -252,6 +244,14 @@ export default function HistoryForm(props) {
                 name={buyer_use_of_goods_purchased.name}
                 label={buyer_use_of_goods_purchased.label}
                 data={productUse}
+                fullWidth
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <InputField
+                name={buyer_insurance_name.name}
+                label={buyer_insurance_name.label}
                 fullWidth
                 variant="outlined"
               />
