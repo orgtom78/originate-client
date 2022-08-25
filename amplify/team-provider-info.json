@@ -102,7 +102,8 @@
           "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11",
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
           "s3Key": "amplify-builds/zoho-6443694a534855757338-build.zip"
-        }
+        },
+        "ocdefi": {}
       }
     }
   }
