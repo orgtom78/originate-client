@@ -7,7 +7,6 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 
 const Limits = ({ className, value, ...rest }) => {
-  console.log(value);
   const [fin, setFin] = useState([]);
   const [financials, setFinancials] = useState([]);
   const [financials2, setFinancials2] = useState([]);
@@ -15,7 +14,7 @@ const Limits = ({ className, value, ...rest }) => {
 
   useEffect(() => {
     async function getFinancials() {
-      const id = await value.buyer;
+      const id = await value;
       let filter = {
         buyerId: { eq: id },
       };
@@ -33,7 +32,6 @@ const Limits = ({ className, value, ...rest }) => {
       } else {
         setFin([]);
       }
-      return items;
     }
     getFinancials();
   }, [value]);

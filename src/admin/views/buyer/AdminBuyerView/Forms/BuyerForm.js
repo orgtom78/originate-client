@@ -871,7 +871,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <FinancialOverviewCsv buyer={buyerId}/>
+            <FinancialOverviewCsv value={buyerId}/>
           </AccordionDetails>
         </Accordion>
         <Accordion>

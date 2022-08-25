@@ -120,7 +120,7 @@ const BuyerList = () => {
 
   function getLink(status, id, buyid) {
     if (status === "Approved") {
-      return `/admin/newmultirequest/${id}/${buyid}/${supId}`;
+      return `/admin/newrequestoptions/${id}/${buyid}/${supId}`;
     } else {
       return <></>;
     }
