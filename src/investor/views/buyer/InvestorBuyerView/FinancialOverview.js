@@ -55,10 +55,13 @@ const Limits = ({ className, value, ...rest }) => {
     async function get1() {
       try {
         const data = await value;
-        const s = data.sort(function(a,b){
+        const s = data.sort(function (a, b) {
           // Turn your strings into dates, and then subtract them
           // to get a value that is either negative, positive, or zero.
-          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+          return (
+            new Date(b.financials_reporting_period) -
+            new Date(a.financials_reporting_period)
+          );
         });
         const a = await s[0];
         if (a !== undefined) {
@@ -76,10 +79,13 @@ const Limits = ({ className, value, ...rest }) => {
     async function get2() {
       try {
         const data = await value;
-        const s = data.sort(function(a,b){
+        const s = data.sort(function (a, b) {
           // Turn your strings into dates, and then subtract them
           // to get a value that is either negative, positive, or zero.
-          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+          return (
+            new Date(b.financials_reporting_period) -
+            new Date(a.financials_reporting_period)
+          );
         });
         const a = await s[1];
         if (a !== undefined) {
@@ -97,10 +103,13 @@ const Limits = ({ className, value, ...rest }) => {
     async function get3() {
       try {
         const data = await value;
-        const s = data.sort(function(a,b){
+        const s = data.sort(function (a, b) {
           // Turn your strings into dates, and then subtract them
           // to get a value that is either negative, positive, or zero.
-          return new Date(b.financials_reporting_period) - new Date(a.financials_reporting_period);
+          return (
+            new Date(b.financials_reporting_period) -
+            new Date(a.financials_reporting_period)
+          );
         });
         const a = await s[2];
         if (a !== undefined) {
@@ -143,12 +152,16 @@ const Limits = ({ className, value, ...rest }) => {
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(financials2.financials_reporting_period).format("YYYY")}
+                    {moment(financials2.financials_reporting_period).format(
+                      "YYYY"
+                    )}
                   </Box>
                 </TableCell>
                 <TableCell align="right">
                   <Box fontWeight="fontWeightBold">
-                    {moment(financials3.financials_reporting_period).format("YYYY")}
+                    {moment(financials3.financials_reporting_period).format(
+                      "YYYY"
+                    )}
                   </Box>
                 </TableCell>
               </TableRow>

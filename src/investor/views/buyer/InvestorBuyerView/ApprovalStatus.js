@@ -53,7 +53,7 @@ const Limits = (input) => {
   const [id, setId] = useState("");
   const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
     useState("");
-  const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
+  const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
 
   const [approveloading, setApproveloading] = useState(false);
   const [approvesuccess, setApprovesuccess] = useState(false);
@@ -66,7 +66,7 @@ const Limits = (input) => {
         const data = await input.value.data.getBuyer;
         setBuyer(data);
         setBuyer_loan_approved_amount(data.buyer_loan_approved_amount);
-        setBuyer_loan_rate(data.buyer_loan_rate);
+        setBuyer_loan_discount_fee(data.buyer_loan_discount_fee);
         setId(data.id);
         return;
       } catch (err) {
@@ -88,7 +88,7 @@ const Limits = (input) => {
         investorId,
         buyer_status,
         buyer_loan_approved_amount,
-        buyer_loan_rate,
+        buyer_loan_discount_fee,
       });
     } catch (e) {
       onError(e);
@@ -174,13 +174,13 @@ const Limits = (input) => {
                 <TableCell align="right">
                   <NumberFormat
                     label="Discount / Spread over SOFR"
-                    value={buyer_loan_rate || ""}
+                    value={buyer_loan_discount_fee || ""}
                     thousandSeparator={true}
                     suffix={"%"}
                     customInput={TextField}
                     onValueChange={(values) => {
                       const { formattedValue, value } = values;
-                      setBuyer_loan_rate(value);
+                      setBuyer_loan_discount_fee(value);
                     }}
                   />
                 </TableCell>

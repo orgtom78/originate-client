@@ -23,6 +23,7 @@ import ApprovalStatus from "./ApprovalStatus";
 import KeyFinancials from "./KeyFinancials";
 import FinancialRatios from "./FinancialRatios";
 import FinancialOverview from "./FinancialOverview";
+import FinancialOverviewCsv from "./FinancialOverviewCsv";
 import FinancialsListView from "src/investor/views/buyer/InvestorBuyerView/Lists/financialslist.js";
 import BuyerUploadView from "src/investor/views/buyer/InvestorBuyerView/Forms/BuyerUploads.js";
 import DirectorView from "src/investor/views/buyer/InvestorBuyerView/Lists/directorlist.js";
@@ -187,7 +188,7 @@ const Buyer = () => {
                   </Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <FinancialOverview value={fin} />
+                  <FinancialOverviewCsv value={fin} />
                 </AccordionDetails>
               </Accordion>
             </Grid>
