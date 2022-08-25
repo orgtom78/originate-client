@@ -37,6 +37,7 @@ import FinancialsListView from "src/admin/views/buyer/AdminBuyerView/Lists/finan
 import * as queries from "src/graphql/queries.js";
 import countries from "src/components/FormLists/countries.js";
 import industries from "src/components/FormLists/industries.js";
+import FinancialOverviewCsv from "../FinancialOverviewCsv";
 
 const cr = countries;
 const indust = industries;
@@ -861,6 +862,16 @@ const BuyerForm = ({ className, value, ...rest }) => {
                 </Link>
               </Box>
             </Card>
+          </AccordionDetails>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary aria-controls="panel1a-content" id="panel1a-header">
+            <Typography className={classes.heading}>
+              Company Financial Overview
+            </Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <FinancialOverviewCsv buyer={buyerId}/>
           </AccordionDetails>
         </Accordion>
         <Accordion>
