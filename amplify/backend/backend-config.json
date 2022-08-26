@@ -144,11 +144,6 @@
         }
       ]
     },
-    "ocdefi": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "sofr": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -227,10 +222,5 @@
       ]
     }
   },
-  "analytics": {
-    "originatetest": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
-    }
-  }
+  "analytics": {}
 }

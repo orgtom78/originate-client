@@ -35,7 +35,7 @@ export default function NewUserGroup() {
   const currentValidationSchema = validationSchema[0];
   const AWS = require("aws-sdk");
   AWS.config = new AWS.Config({
-  accessKeyId: awsconfig.accessKeyId, secretAccessKey: awsconfig.secretAccessKey, region: "us-east-2"});
+  accessKeyId: process.env.REACT_APP_AWSID, secretAccessKey: process.env.REACT_APP_AWSKEY, region: "us-east-2"});
 
   function _sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
