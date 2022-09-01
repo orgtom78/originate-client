@@ -706,7 +706,6 @@ export default function PayoutForm(props) {
                 name={invoice_date.name}
                 label={invoice_date.label}
                 format="MM/DD/YYYY"
-                minDate={subDays(new Date(), 30)}
                 maxDate={new Date()}
                 fullWidth
                 variant="outlined"

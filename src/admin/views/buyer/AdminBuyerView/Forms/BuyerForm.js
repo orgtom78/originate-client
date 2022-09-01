@@ -151,6 +151,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
   const [buyer_loan_approved_amount, setBuyer_loan_approved_amount] =
     useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
+  const [buyer_loan_advance_rate, setBuyer_loan_advance_rate] = useState("");
   const [buyer_loan_discount_fee, setBuyer_loan_discount_fee] = useState("");
   const [buyer_loan_transaction_fee, setBuyer_loan_transaction_fee] =
     useState("");
@@ -203,6 +204,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
               buyer_status,
               buyer_loan_request_amount,
               buyer_loan_approved_amount,
+              buyer_loan_advance_rate,
               buyer_loan_rate,
               buyer_loan_discount_fee,
               buyer_loan_transaction_fee,
@@ -240,6 +242,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         setBuyer_status(buyer_status);
         setBuyer_loan_request_amount(buyer_loan_request_amount);
         setBuyer_loan_approved_amount(buyer_loan_approved_amount);
+        setBuyer_loan_advance_rate(buyer_loan_advance_rate);
         setBuyer_loan_rate(buyer_loan_rate);
         setBuyer_loan_discount_fee(buyer_loan_discount_fee);
         setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
@@ -285,6 +288,7 @@ const BuyerForm = ({ className, value, ...rest }) => {
         buyer_status,
         buyer_loan_request_amount,
         buyer_loan_approved_amount,
+        buyer_loan_advance_rate,
         buyer_loan_rate,
         buyer_loan_discount_fee,
         buyer_loan_transaction_fee,
@@ -523,6 +527,16 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         onChange={(e) => setBuyer_website(e.target.value)}
                         required
                         value={buyer_website || ""}
+                        variant="outlined"
+                      />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Advance Rate in %"
+                        name="buyer_loan_advance_rate"
+                        onChange={(e) => setBuyer_loan_advance_rate(e.target.value)}
+                        value={buyer_loan_advance_rate || ""}
                         variant="outlined"
                       />
                     </Grid>
@@ -811,16 +825,6 @@ const BuyerForm = ({ className, value, ...rest }) => {
                         name="buyer_industry_code"
                         onChange={(e) => setBuyer_industry_code(e.target.value)}
                         value={buyer_industry_code || ""}
-                        variant="outlined"
-                      />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                      <TextField
-                        fullWidth
-                        label="Buyer Website"
-                        name="buyer_website"
-                        onChange={(e) => setBuyer_website(e.target.value)}
-                        value={buyer_website || ""}
                         variant="outlined"
                       />
                     </Grid>

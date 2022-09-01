@@ -38,17 +38,17 @@ const model = {
     },
     invoice_date: {
       name: "invoice_date",
-      label: "Invoice date*",
-      requiredErrorMsg: "Date is required",
+      label: "Invoice Date*",
+      requiredErrorMsg: "Invoice issuance date is required",
     },
     invoice_due_date: {
       name: "invoice_due_date",
       label: "Invoice Due Date*",
-      requiredErrorMsg: "Due Date is required",
+      requiredErrorMsg: "Invoice Due Date is required",
     },
     sold_goods_description: {
       name: "sold_goods_description",
-      label: "Goods description*",
+      label: "Goods Description*",
       requiredErrorMsg: "Description is required",
     },
     invoice_currency: {

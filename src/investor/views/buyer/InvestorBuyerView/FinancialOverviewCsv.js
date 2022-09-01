@@ -86,14 +86,14 @@ const Limits = ({ className, value, ...rest }) => {
     {
       field: "value",
       headerName: "",
-      minWidth: 300,
+      minWidth: 200,
       editable: false,
     },
     {
       field: "year1",
       headerName: moment(financials.financials_reporting_period).format("YYYY"),
       type: "number",
-      minWidth: 300,
+      minWidth: 200,
       editable: false,
     },
     {
@@ -102,7 +102,7 @@ const Limits = ({ className, value, ...rest }) => {
         "YYYY"
       ),
       type: "number",
-      minWidth: 300,
+      minWidth: 200,
       editable: false,
     },
     {
@@ -111,7 +111,7 @@ const Limits = ({ className, value, ...rest }) => {
         "YYYY"
       ),
       type: "number",
-      minWidth: 300,
+      minWidth: 200,
       editable: false,
     },
   ];

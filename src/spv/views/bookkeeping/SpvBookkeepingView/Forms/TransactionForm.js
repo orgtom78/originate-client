@@ -80,6 +80,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [dynamobookkeepingid, setDynamobookkeepingid] = useState("");
   const [invoice_number, setInvoice_number] = useState("");
   const [invoice_amount, setInvoice_amount] = useState("");
+  const [invoice_purchase_amount, setPurchase_amount] = useState("");
   const [payout_date, setPayout_date] = useState("");
   const [invoice_date, setInvoice_date] = useState("");
   const [invoice_due_date, setInvoice_due_date] = useState("");
@@ -122,6 +123,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           investor_email,
           invoice_number,
           invoice_amount,
+          invoice_purchase_amount,
           invoice_currency,
           payout_date,
           invoice_date,
@@ -140,6 +142,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         setTransaction_fee_rate(transaction_fee_rate);
         const round = Number(invoice_amount).toFixed(2);
         setInvoice_number(invoice_number);
+        const round3 = Number(invoice_purchase_amount).toFixed(2);
+        setPurchase_amount(round3);
         setInvoice_amount(round);
         setInvoice_currency(invoice_currency);
         setPayout_date(payout_date);
@@ -211,13 +215,11 @@ const RequestForm = ({ className, value, ...rest }) => {
       console.log(id);
       if (id) {
         await createWavePurchase({
-          invoice_amount,
-          discount_fee_amount,
+          invoice_purchase_amount,
           id,
         });
         await createWaveSale({
-          invoice_amount,
-          discount_fee_amount,
+          invoice_purchase_amount,
           id,
         });
         await updateBookkeeping({
@@ -242,13 +244,11 @@ const RequestForm = ({ className, value, ...rest }) => {
           bookkeeping_status_spv,
         });
         await createWavePurchase({
-          invoice_amount,
-          discount_fee_amount,
+          invoice_purchase_amount,
           id,
         });
         await createWaveSale({
-          invoice_amount,
-          discount_fee_amount,
+          invoice_purchase_amount,
           id,
         });
         async function assignid() {
@@ -316,14 +316,14 @@ const RequestForm = ({ className, value, ...rest }) => {
               accountId:
                 "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               direction: "DEPOSIT",
-              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+              amount: `${input.invoice_purchase_amount}`,
             },
             lineItems: {
               description: `RequestId: ${input.id}`,
               accountId:
                 "QWNjb3VudDoxNTE1MTAxMzg4OTA3MDcwMzAwO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               balance: "CREDIT",
-              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+              amount: `${input.invoice_purchase_amount}`,
             },
           },
         },
@@ -365,14 +365,14 @@ const RequestForm = ({ className, value, ...rest }) => {
               accountId:
                 "QWNjb3VudDoxNTMwMTM4ODQ0MDk4MzE0MjY4O0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               direction: "WITHDRAWAL",
-              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+              amount: `${input.invoice_purchase_amount}`,
             },
             lineItems: {
               description: `RequestId: ${input.id}`,
               accountId:
                 "QWNjb3VudDoxNTE1MTAxNTUxODEzODM3NjYyO0J1c2luZXNzOjdkNzY1ODA5LTM1ZGEtNDNjOS1iYTFhLTY0ZDA1NDIyMDMzYQ==",
               balance: "DEBIT",
-              amount: `${input.invoice_amount - input.discount_fee_amount}`,
+              amount: `${input.invoice_purchase_amount}`,
             },
           },
         },
@@ -422,8 +422,8 @@ const RequestForm = ({ className, value, ...rest }) => {
                 "field_data": {
                     "field_text_data": {
                         "Date": "${date}",
-                        "Purchase-Amount": "${(
-                          Number(invoice_amount) - Number(discount_fee_amount)
+                        "Purchase-Amount": "${Number(
+                          invoice_purchase_amount
                         ).toLocaleString("en-US")}",
                         "Purchase-Date": "${moment(payout_date).format(
                           "MM/DD/YYYY"
@@ -569,6 +569,17 @@ const RequestForm = ({ className, value, ...rest }) => {
                         onChange={(e) => setInvoice_amount(e.target.value)}
                         required
                         value={invoice_amount || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="invoice_purchase_amount"
+                        label="Invoice Purchase Amount"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => setPurchase_amount(e.target.value)}
+                        required
+                        value={invoice_purchase_amount || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>

@@ -12,7 +12,7 @@ import TotalTransactions from "./TotalTransactions";
 import TotalTransactionAmount from "./TotalTransactionAmount";
 import DiscountFeeAvg from "./DiscountFeeAvg";
 import TotalDiscountFee from "./TotalDiscountFee";
-import TransactionFeeAvg from "./TransactionFeeAvg";
+import AdvanceRateAvg from "./AdvanceRateAvg";
 import TotalTransactionFee from "./TotalTransactionFee";
 
 import PastDue from "./PastDue";
@@ -103,7 +103,7 @@ const Dashboard = () => {
             <TotalDiscountFee value={transaction} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
-            <TransactionFeeAvg value={transaction} />
+            <AdvanceRateAvg value={transaction} />
           </Grid>
           <Grid item lg={3} sm={6} xl={3} xs={12}>
             <TotalTransactionFee value={transaction} />

@@ -29,11 +29,6 @@ const Transaction = () => {
         const request = await API.graphql(
           graphqlOperation(queries.getRequest, input)
         );
-        const {
-          data: {
-            getRequest: { items },
-          },
-        } = request;
         const n = request.data.getRequest;
         setReq(n);
         return request;

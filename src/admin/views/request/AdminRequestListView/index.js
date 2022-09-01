@@ -93,12 +93,11 @@ const AdminTransactionListView = () => {
     return items;
   }
 
-  async function handleSearch() {
+  async function handleSearch(input) {
     setSuccess(false);
     setLoading(true);
     try {
-      const term = searchterm;
-      await searchRequest(term);
+      await searchRequest(input);
     } catch (e) {
       onError(e);
     }
@@ -107,7 +106,7 @@ const AdminTransactionListView = () => {
   }
 
   async function searchRequest(input) {
-    if (input === "" || input === undefined) {
+    if (searchterm === "" || searchterm === undefined || searchterm === null ) {
       const c = await getRequests();
       const d = c.sort(function(a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
@@ -207,7 +206,7 @@ const AdminTransactionListView = () => {
           <br></br>
           <Grid
             container
-            spacing={2}
+            spacing={{ xs: 2, md: 3 }}
             justifyContent="center"
             alignItems="center"
           >
@@ -246,7 +245,7 @@ const AdminTransactionListView = () => {
                   onChange={(e) => setInvoicestart(e)}
                   onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
                   required
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <TextField fullWidth {...params} />}
                 />
               </LocalizationProvider>
             </Grid>
@@ -258,7 +257,7 @@ const AdminTransactionListView = () => {
                   onChange={(e) => setInvoiceend(e)}
                   onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
                   required
-                  renderInput={(params) => <TextField {...params} />}
+                  renderInput={(params) => <TextField fullWidth {...params} />}
                 />
               </LocalizationProvider>
             </Grid>
