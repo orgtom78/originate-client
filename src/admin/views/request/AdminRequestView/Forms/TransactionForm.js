@@ -585,8 +585,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                           name="invoice_date"
                           label="Invoice Date"
                           format="MM/DD/YYYY"
-                          minDate={subDays(new Date(), 30)}
-                          maxDate={new Date()}
                           onChange={(date) => {
                             setInvoice_date(date);
                           }}
@@ -619,8 +617,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                           name="invoice_due_date"
                           label="Invoice Due Date"
                           format="MM/DD/YYYY"
-                          minDate={new Date()}
-                          maxDate={addDays(new Date(), 270)}
                           onChange={(date) => {
                             setInvoice_due_date(date);
                           }}

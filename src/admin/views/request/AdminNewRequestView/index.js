@@ -49,7 +49,7 @@ export default function NewAccount() {
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
   const [payout_date, setPayout_date] = useState("");
-  const [match, setMatch] = useState("");
+  const [advance_rate, setAdvance_rate] = useState("");
   const { id } = useParams();
   const { supId } = useParams();
   const requestId = "request-" + uuid();
@@ -70,6 +70,7 @@ export default function NewAccount() {
             buyer_loan_transaction_fee,
             buyer_loan_broker_fee,
             buyer_loan_rate,
+            buyer_loan_advance_rate,
           },
         },
       } = buyer;
@@ -83,6 +84,11 @@ export default function NewAccount() {
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
       setBuyer_loan_rate(buyer_loan_rate);
+      if (buyer_loan_advance_rate) {
+        setAdvance_rate(buyer_loan_advance_rate);
+      } else {
+        setAdvance_rate(100);
+      }
     }
     load();
   }, [id]);
@@ -174,7 +180,7 @@ export default function NewAccount() {
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(3M)") {
           const dyndisc = Number(sofr.SOFRM3) + Number(buyer_loan_discount_fee);
-          console.log(dyndisc)
+          console.log(dyndisc);
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(Daily)") {
           const dyndisc = Number(sofr.SOFR) + Number(buyer_loan_discount_fee);
@@ -189,7 +195,7 @@ export default function NewAccount() {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  async function _submitForm(values, actions) {
+  async function _submitForm(values) {
     await _sleep(1000);
     try {
       const sortkey = requestId;
@@ -200,10 +206,8 @@ export default function NewAccount() {
       const brokerId = brokerid;
       const spvId = spvid;
       const investor_email = investEmail;
-      const period = moment(values["invoice_due_date"]).diff(
-        payout_date,
-        "days"
-      )+1;
+      const period =
+        moment(values["invoice_due_date"]).diff(payout_date, "days") + 1;
       const base_rate = buyer_loan_rate;
       const transaction_fee_rate = buyer_loan_transaction_fee;
       const discount_fee_rate = buyer_loan_discount_fee;
@@ -224,7 +228,9 @@ export default function NewAccount() {
       const invoice_amount = values["invoice_amount"];
       const invoice_currency = values["invoice_currency"];
       const invoice_date = moment(values["invoice_date"]).utc().startOf("day");
-      const invoice_due_date = moment(values["invoice_due_date"]).utc().startOf("day");
+      const invoice_due_date = moment(values["invoice_due_date"])
+        .utc()
+        .startOf("day");
       console.log(invoice_due_date);
       const invoice_attachment = values["invoice_attachment"];
       const offer_notice_attachment = values["offer_notice_attachment"];
@@ -233,6 +239,8 @@ export default function NewAccount() {
       const cargo_insurance_attachment = values["cargo_insurance_attachment"];
       const bill_of_lading_attachment = values["bill_of_lading_attachment"];
       const request_status = "Under Review";
+      const invoice_purchase_amount =
+        (invoice_amount * advance_rate) / 100 - discount_fee_amount;
 
       await createRequest({
         userId,
@@ -268,6 +276,9 @@ export default function NewAccount() {
         bill_of_lading_attachment,
         request_status,
         payout_date,
+
+        invoice_purchase_amount,
+        advance_rate,
       });
     } catch (e) {
       onError(e);
@@ -286,8 +297,8 @@ export default function NewAccount() {
     return API.graphql(graphqlOperation(queries.getBuyer, input));
   }
 
-  function _handleSubmit(values, actions) {
-    _submitForm(values, actions);
+  function _handleSubmit(values) {
+    _submitForm(values);
   }
 
   return (
