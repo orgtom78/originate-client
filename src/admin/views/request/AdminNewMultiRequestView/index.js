@@ -113,6 +113,7 @@ export default function MyForm() {
   const [buyer_loan_broker_fee, setBuyer_loan_broker_fee] = useState("");
   const [buyer_loan_rate, setBuyer_loan_rate] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
+  const [advance_rate, setAdvance_rate] = useState("");
   const [sofr, setSofr] = useState([]);
   const [esignobj, setEsignobj] = useState({
     InvoiceNo1: "",
@@ -158,6 +159,7 @@ export default function MyForm() {
             buyer_loan_transaction_fee,
             buyer_loan_broker_fee,
             buyer_loan_rate,
+            buyer_loan_advance_rate,
           },
         },
       } = buyer;
@@ -171,6 +173,11 @@ export default function MyForm() {
       setBuyer_loan_transaction_fee(buyer_loan_transaction_fee);
       setBuyer_loan_broker_fee(buyer_loan_broker_fee);
       setBuyer_loan_rate(buyer_loan_rate);
+      if (buyer_loan_advance_rate) {
+        setAdvance_rate(buyer_loan_advance_rate);
+      } else {
+        setAdvance_rate(100);
+      }
     }
     load();
   }, [id]);
@@ -761,6 +768,8 @@ export default function MyForm() {
           (period / 360);
         var discount_fee_amount =
           (((element.invoice_amount * dynamic_discount) / 100) * period) / 360;
+        const invoice_purchase_amount =
+          (element.invoice_amount * advance_rate) / 100 - discount_fee_amount;
         const broker_fee_amount =
           transaction_fee_amount * (broker_fee_rate / 100);
         const buyer_name = buyername;
@@ -824,6 +833,9 @@ export default function MyForm() {
           purchase_order_attachment,
           cargo_insurance_attachment,
           bill_of_lading_attachment,
+
+          invoice_purchase_amount,
+          advance_rate,
 
           request_status,
         });
@@ -1066,6 +1078,7 @@ export default function MyForm() {
                                     fullWidth
                                     className={classes.field}
                                   >
+                                    <InputLabel id="currency_label">Currency *</InputLabel>
                                     <Select
                                       id="currency"
                                       label="Currency"
@@ -1099,7 +1112,7 @@ export default function MyForm() {
                                 <Grid item xs={12} sm={4}>
                                   <DatePickerField
                                     id="invoice_date"
-                                    label="Invoice Date"
+                                    label="Invoice Date *"
                                     name={invoice_date}
                                     helperText={
                                       toucheddate && errordate ? errordate : ""
@@ -1110,7 +1123,7 @@ export default function MyForm() {
                                 <Grid item xs={12} sm={4}>
                                   <DatePickerField
                                     id="invoice_due_date"
-                                    label="Invoice Due Date"
+                                    label="Invoice Due Date *"
                                     name={invoice_due_date}
                                     helperText={
                                       touchedduedate && errorduedate

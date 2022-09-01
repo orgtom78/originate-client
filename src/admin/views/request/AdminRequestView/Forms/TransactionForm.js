@@ -114,6 +114,8 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [request_status, setRequest_status] = useState("");
   const [base_rate, setBase_rate] = useState("");
+  const [advance_rate, setAdvance_rate] = useState("");
+  const [invoice_purchase_amount, setInvoice_purchase_amount] = useState("");
   const [discount_fee_rate, setDiscount_fee_rate] = useState("");
   const [discount_fee_rate_adjusted, setDiscount_fee_rate_adjusted] =
     useState("");
@@ -125,7 +127,6 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [broker_fee_rate, setBroker_fee_rate] = useState("");
   const [broker_fee_amount, setBroker_fee_amount] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
-  const [match, setMatch] = useState("");
   const [sofr, setSofr] = useState([]);
   const [sofr_rate, setSofr_rate] = useState("");
   const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
@@ -164,6 +165,8 @@ const RequestForm = ({ className, value, ...rest }) => {
               broker_fee_amount,
               payout_date,
               payback_date,
+              advance_rate,
+              invoice_purchase_amount,
             },
           },
         } = request;
@@ -191,6 +194,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         setPayout_date(momentpayout);
         const momentpayback = moment(payback_date).utc().startOf("day");
         setPayback_date(momentpayback);
+        setAdvance_rate(advance_rate);
+        setInvoice_purchase_amount(invoice_purchase_amount);
       } catch (err) {
         console.log("error fetching data..", err);
       }
@@ -256,7 +261,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     listSOFR();
   }, [payout_date]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function checkifmatch() {
       if (sofr === null || sofr === undefined || sofr.length <= 0) {
         return 0;
@@ -290,7 +295,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     checkstatus();
   }, [request_status]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function checkBrokerStatus() {
       const invoicedue = moment(invoice_due_date).utc().startOf("day");
       const payoutd = moment(payout_date).utc().startOf("day");
@@ -368,6 +373,12 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
   }
 
+  function handleAdvanceRateChange(input){
+    setAdvance_rate(input);
+    var newpurchaseamount = Number(invoice_amount) * Number(input)/100 - Number(discount_fee_amount);
+    setInvoice_purchase_amount(newpurchaseamount);
+  }
+
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
@@ -397,6 +408,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         bookkeeping_status_spv,
         payout_date,
         payback_date,
+        advance_rate,
+        invoice_purchase_amount,
       });
     } catch (e) {
       onError(e);
@@ -494,13 +507,13 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        name="investorId"
-                        label="Investor ID"
+                        name="invoice_number"
+                        label="Invoice Number"
                         fullWidth
                         variant="outlined"
-                        onChange={(e) => setInvestorId(e.target.value)}
+                        onChange={(e) => setInvoice_number(e.target.value)}
                         required
-                        value={investorId || ""}
+                        value={invoice_number || ""}
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -724,6 +737,26 @@ const RequestForm = ({ className, value, ...rest }) => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
+                        name="advance_rate"
+                        label="Advance Rate in %"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) => handleAdvanceRateChange(e.target.value)}
+                        value={advance_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="invoice_purchase_amount"
+                        label="Invoice Purchase Amount"
+                        fullWidth
+                        variant="outlined"
+                        value={invoice_purchase_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
                         name="discount_fee_rate_adjusted"
                         label="Discount/ Spread adjusted for Payback Date"
                         fullWidth
@@ -743,17 +776,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         }
                         required
                         value={sold_goods_description || ""}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="invoice_number"
-                        label="Invoice Number"
-                        fullWidth
-                        variant="outlined"
-                        onChange={(e) => setInvoice_number(e.target.value)}
-                        required
-                        value={invoice_number || ""}
                       />
                     </Grid>
                   </Grid>

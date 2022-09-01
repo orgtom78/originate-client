@@ -21,9 +21,9 @@ import {
 import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { API, graphqlOperation } from "aws-amplify";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
 import * as mutations from "src/graphql/mutations.js";
 import LoaderButton from "src/components/LoaderButton.js";
@@ -101,6 +101,8 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_currency, setInvoice_currency] = useState("");
   const [request_status, setRequest_status] = useState("");
   const [base_rate, setBase_rate] = useState("");
+  const [advance_rate, setAdvance_rate] = useState("");
+  const [invoice_purchase_amount, setInvoice_purchase_amount] = useState("");
   const [discount_fee_rate, setDiscount_fee_rate] = useState("");
   const [discount_fee_rate_adjusted, setDiscount_fee_rate_adjusted] =
     useState("");
@@ -112,7 +114,6 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [broker_fee_rate, setBroker_fee_rate] = useState("");
   const [broker_fee_amount, setBroker_fee_amount] = useState("");
   const [dynamic_discount, setDynamic_discount] = useState("");
-  const [match, setMatch] = useState("");
   const [sofr, setSofr] = useState([]);
   const [sofr_rate, setSofr_rate] = useState("");
   const [bookkeeping_status_admin, setBookkeeping_status_admin] = useState("");
@@ -149,6 +150,8 @@ const RequestForm = ({ className, value, ...rest }) => {
           broker_fee_amount,
           payout_date,
           payback_date,
+          advance_rate,
+          invoice_purchase_amount,
         } = request;
         setId(id);
         setRequest_status(request_status);
@@ -174,111 +177,92 @@ const RequestForm = ({ className, value, ...rest }) => {
         setPayout_date(momentpayout);
         const momentpayback = moment(payback_date).utc().startOf("day");
         setPayback_date(momentpayback);
+        setAdvance_rate(advance_rate);
+        setInvoice_purchase_amount(invoice_purchase_amount);
       } catch (err) {
         console.log("error fetching data..", err);
       }
     }
   }, [value]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function listSOFR() {
-      const today = moment().startOf("day");
-      const querystartdate = moment(today)
-        .subtract(10, "days")
-        .format("MM/DD/YYYY");
-      const queryenddate = moment(today).format("MM/DD/YYYY");
-      let filter = { id: { between: [querystartdate, queryenddate] } };
-      const {
-        data: {
-          listSOFRs: { items },
-        },
-      } = await API.graphql(
-        graphqlOperation(queries.listSOFRs, { filter: filter })
-      );
-      if (items === null || items === undefined || items.length <= 0) {
-        return 0;
+      if (payout_date) {
+        const queryenddate = moment(payout_date)
+          .utc()
+          .startOf("day")
+          .format("MM/DD/YYYY");
+        const querystartdate = moment(queryenddate)
+          .subtract(10, "days")
+          .format("MM/DD/YYYY");
+        let filter = { id: { between: [querystartdate, queryenddate] } };
+        const {
+          data: {
+            listSOFRs: { items },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listSOFRs, { filter: filter })
+        );
+        if (items === null || items === undefined || items.length <= 0) {
+          return 0;
+        } else {
+          const filteredarray = items.filter(
+            (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+          );
+          const d = filteredarray.sort(function (a, b) {
+            return new Date(b.id) - new Date(a.id);
+          });
+          setSofr(d[0]);
+        }
       } else {
-        setSofr(items);
+        const queryenddate = moment().utc().startOf("day").format("MM/DD/YYYY");
+        const querystartdate = moment(queryenddate)
+          .subtract(10, "days")
+          .format("MM/DD/YYYY");
+        let filter = { id: { between: [querystartdate, queryenddate] } };
+        const {
+          data: {
+            listSOFRs: { items },
+          },
+        } = await API.graphql(
+          graphqlOperation(queries.listSOFRs, { filter: filter })
+        );
+        if (items === null || items === undefined || items.length <= 0) {
+          return 0;
+        } else {
+          const filteredarray = items.filter(
+            (e) => moment(queryenddate).diff(moment(e.id), "days") >= 2
+          );
+          const d = filteredarray.sort(function (a, b) {
+            return new Date(b.id) - new Date(a.id);
+          });
+          setSofr(d[0]);
+        }
       }
     }
     listSOFR();
-  }, []);
+  }, [payout_date]);
 
-  React.useEffect(() => {
-    async function checkdayssofr() {
-      const today = moment(payout_date).startOf("day");
-      const weekday = moment(today).day();
-      if (weekday === 3 || weekday === 4 || weekday === 5) {
-        const date = moment(today).subtract(2, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 6) {
-        const date = moment(today).subtract(3, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 0) {
-        const date = moment(today).subtract(4, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 1) {
-        const date = moment(today).subtract(5, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      } else if (weekday === 2) {
-        const date = moment(today).subtract(6, "days").format("MM/DD/YYYY");
-        const match = sofr.filter((item) => item.id === date);
-        if (match === null || match === undefined || match.length <= 0) {
-          return 0;
-        } else {
-          setMatch(match);
-        }
-      }
-    }
-    checkdayssofr();
-  }, [sofr, payout_date]);
-
-  React.useEffect(() => {
+  useEffect(() => {
     async function checkifmatch() {
-      if (match === null || match === undefined || match.length <= 0) {
+      if (sofr === null || sofr === undefined || sofr.length <= 0) {
         return 0;
       } else {
         const sofrterm = base_rate;
         if (sofrterm === "SOFR(1M)") {
-          const dyndisc = Number(match[0].SOFRM1) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFRM1);
+          const dyndisc = Number(sofr.SOFRM1) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         } else if (sofrterm === "SOFR(3M)") {
-          const dyndisc = Number(match[0].SOFRM3) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFRM3);
+          const dyndisc = Number(sofr.SOFRM3) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         } else if (sofrterm === "SOFR(Daily)") {
-          const dyndisc = Number(match[0].SOFR) + Number(discount_fee_rate);
-          const sofrrate = Number(match[0].SOFR);
+          const dyndisc = Number(sofr.SOFR) + Number(discount_fee_rate);
           setDynamic_discount(dyndisc);
-          setSofr_rate(sofrrate);
         }
       }
     }
     checkifmatch();
-  }, [match, discount_fee_rate, base_rate]);
+  }, [sofr, discount_fee_rate, base_rate]);
 
   useEffect(() => {
     function checkstatus() {
@@ -293,7 +277,7 @@ const RequestForm = ({ className, value, ...rest }) => {
     checkstatus();
   }, [request_status]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     async function checkBrokerStatus() {
       const invoicedue = moment(invoice_due_date).utc().startOf("day");
       const payoutd = moment(payout_date).utc().startOf("day");
@@ -369,6 +353,14 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
   }
 
+  function handleAdvanceRateChange(input) {
+    setAdvance_rate(input);
+    var newpurchaseamount =
+      (Number(invoice_amount) * Number(input)) / 100 -
+      Number(discount_fee_amount);
+    setInvoice_purchase_amount(newpurchaseamount);
+  }
+
   async function handleRequestSubmit() {
     setRequestSuccess(false);
     setRequestLoading(true);
@@ -396,6 +388,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         bookkeeping_status_spv,
         payout_date,
         payback_date,
+        advance_rate,
+        invoice_purchase_amount,
       });
     } catch (e) {
       onError(e);
@@ -413,6 +407,7 @@ const RequestForm = ({ className, value, ...rest }) => {
       const transaction_fee_amount = 0;
       const discount_fee_amount = 0;
       const broker_fee_amount = 0;
+      const invoice_purchase_amount = 0;
       await updateRequest({
         id,
         transaction_fee_rate,
@@ -430,6 +425,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_due_date,
         invoice_number,
         request_status,
+        advance_rate,
+        invoice_purchase_amount,
       });
     } catch (e) {
       onError(e);
@@ -526,7 +523,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Invoice Currency"
                         fullWidth
                         variant="outlined"
-                        required
                         value={invoice_currency || ""}
                         InputProps={{
                           readOnly: true,
@@ -539,7 +535,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Invoice Date"
                         fullWidth
                         variant="outlined"
-                        required
                         value={moment(invoice_date).format("MM/DD/YYYY") || ""}
                         InputProps={{
                           readOnly: true,
@@ -552,7 +547,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Invoice Due Date"
                         fullWidth
                         variant="outlined"
-                        required
                         value={
                           moment(invoice_due_date).format("MM/DD/YYYY") || ""
                         }
@@ -589,30 +583,16 @@ const RequestForm = ({ className, value, ...rest }) => {
                       </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DesktopDatePicker
-                          value={payback_date || ""}
-                          margin="normal"
-                          variant="outlined"
-                          id="payback_date"
-                          name="payback_date"
-                          label="Payback Date"
-                          format="MM/DD/YYYY"
-                          onChange={(date) => {
-                            handleLatePayback(date);
-                          }}
-                          required
-                          KeyboardButtonProps={{
-                            "aria-label": "change date",
-                          }}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                          renderInput={(params) => (
-                            <TextField fullWidth {...params} />
-                          )}
-                        />
-                      </LocalizationProvider>
+                      <TextField
+                        label="Base Rate"
+                        name="base_rate"
+                        fullWidth
+                        variant="outlined"
+                        value={base_rate || ""}
+                        InputProps={{
+                          readOnly: true,
+                        }}
+                      />
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
@@ -636,6 +616,68 @@ const RequestForm = ({ className, value, ...rest }) => {
                         InputProps={{
                           readOnly: true,
                         }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="discount_fee_rate"
+                        label="Discount Fee / Spread"
+                        fullWidth
+                        variant="outlined"
+                        value={discount_fee_rate || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="discount_fee_amount"
+                        label="Total Discount"
+                        fullWidth
+                        variant="outlined"
+                        value={discount_fee_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="advance_rate"
+                        label="Advance Rate in %"
+                        fullWidth
+                        variant="outlined"
+                        onChange={(e) =>
+                          handleAdvanceRateChange(e.target.value)
+                        }
+                        value={advance_rate || ""}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="invoice_purchase_amount"
+                        label="Invoice Purchase Amount"
+                        fullWidth
+                        variant="outlined"
+                        value={invoice_purchase_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="transaction_fee_rate"
+                        label="Platform Fee in % of Spread"
+                        fullWidth
+                        variant="outlined"
+                        value={transaction_fee_rate || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="transaction_fee_amount"
+                        label="Platform Fee Amount"
+                        fullWidth
+                        variant="outlined"
+                        value={transaction_fee_amount || ""}
+                        inputProps={{ readOnly: true }}
                       />
                     </Grid>
                   </Grid>
