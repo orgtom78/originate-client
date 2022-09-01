@@ -1067,6 +1067,9 @@ export default function MyForm() {
                                     fullWidth
                                     className={classes.field}
                                   >
+                                    <InputLabel id="currency_label">
+                                      Currency *
+                                    </InputLabel>
                                     <Select
                                       id="currency"
                                       label="Currency"
