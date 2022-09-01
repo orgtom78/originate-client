@@ -37,9 +37,9 @@ import { Search as SearchIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
 import { subDays } from "date-fns";
 
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,7 +74,7 @@ const AdminTransactionListView = () => {
   useEffect(() => {
     async function fetchData() {
       const c = await getRequests();
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -93,11 +93,12 @@ const AdminTransactionListView = () => {
     return items;
   }
 
-  async function handleSearch(input) {
+  async function handleSearch() {
     setSuccess(false);
     setLoading(true);
     try {
-      await searchRequest(input);
+      const term = searchterm;
+      await searchRequest(term);
     } catch (e) {
       onError(e);
     }
@@ -106,14 +107,14 @@ const AdminTransactionListView = () => {
   }
 
   async function searchRequest(input) {
-    if (searchterm === "" || searchterm === undefined || searchterm === null ) {
+    if (input === "" || input === undefined || input === null) {
       const c = await getRequests();
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
     } else {
-      const resterm = input.toLowerCase() + "*";
+      const resterm = searchterm.toLowerCase() + "*";
       // search
       const filter = {
         invoice_number: {
@@ -125,7 +126,7 @@ const AdminTransactionListView = () => {
       );
       if (result.data.searchRequests.items.length > 0) {
         let array = await result.data.searchRequests.items;
-        const d = array.sort(function(a, b) {
+        const d = array.sort(function (a, b) {
           return new Date(b.createdAt) - new Date(a.createdAt);
         });
         setRequest(d);
@@ -150,7 +151,7 @@ const AdminTransactionListView = () => {
     );
     const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
     const items = n.data.listRequests.items;
-    const d = items.sort(function(a, b) {
+    const d = items.sort(function (a, b) {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
     setRequest(d);
