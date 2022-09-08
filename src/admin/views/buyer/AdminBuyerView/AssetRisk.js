@@ -6,7 +6,6 @@ import {
   Box,
   Card,
   CardContent,
-  Grid,
   Table,
   TableRow,
   TableCell,
@@ -18,6 +17,7 @@ import {
   colors,
   Button,
 } from "@mui/material";
+import PerfectScrollbar from "react-perfect-scrollbar";
 import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { onError } from "src/libs/errorLib.js";
@@ -1845,1153 +1845,1165 @@ const Limits = ({ className, value, data, ...rest }) => {
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid item>
-          <Table
-            className={classes.table}
-            size="small"
-            aria-label="simple table"
-          >
-            <TableHead>
-              <TableRow>
-                <TableCell></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">{""}</Box>
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">{"Actual"}</Box>
-                </TableCell>
-                <TableCell align="right" className={classes.tableRow}>
-                  <Box fontWeight="fontWeightBold">{"Low"}</Box>
-                </TableCell>
-                <TableCell align="right" className={classes.tableCellOrange}>
-                  <Box fontWeight="fontWeightBold">{"Medium"}</Box>
-                </TableCell>
-                <TableCell align="right" className={classes.tableCellRed}>
-                  <Box fontWeight="fontWeightBold">{"High"}</Box>
-                </TableCell>
-              </TableRow>
-              <TableRow className={classes.tableRow2}>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">
-                    Account Debtor Size and Time in Operation
-                  </Box>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Amounts 
-                </TableCell>
-                <TableCell align="right">
-                  <Select
-                    fullWidth
-                    id="financials_denomination"
-                    onChange={(e) => setFinancials_denomination(e.target.value)}
-                    required
-                    value={financials_denomination|| ""}
-                    variant="standard"
-                  >
-                    {denominationValue.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </TableCell>
-                <TableCell align="right">
-                <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right">
-                </TableCell>
-                <TableCell align="right">
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Business Classification / Revenue
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={sales || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setSales(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusSales(
-                    sales_risk,
-                    "Low",
-                    "Large 250+ Employees orn $50mm+ Revenue"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusSales(
-                    sales_risk,
-                    "Medium",
-                    "Medium 50-250 Employees or $10.0-$50.0mm Rev."
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusSales(
-                    sales_risk,
-                    "High",
-                    "Small 0-50 Employees or $10.0mm Rev."
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Time in Business
-                </TableCell>
-                <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker
+        <React.Fragment>
+          <PerfectScrollbar>
+            <Table
+              className={classes.table}
+              size="small"
+              aria-label="simple table"
+            >
+              <TableHead>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">{""}</Box>
+                  </TableCell>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">{"Actual"}</Box>
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableRow}>
+                    <Box fontWeight="fontWeightBold">{"Low"}</Box>
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableCellOrange}>
+                    <Box fontWeight="fontWeightBold">{"Medium"}</Box>
+                  </TableCell>
+                  <TableCell align="right" className={classes.tableCellRed}>
+                    <Box fontWeight="fontWeightBold">{"High"}</Box>
+                  </TableCell>
+                </TableRow>
+                <TableRow className={classes.tableRow2}>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">
+                      Account Debtor Size and Time in Operation
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Amounts
+                  </TableCell>
+                  <TableCell align="right">
+                    <Select
                       fullWidth
-                      value={buyer_date_of_incorporation || new Date()}
-                      margin="normal"
-                      variant="standard"
-                      id="date_of_incorporation"
-                      views={["year"]}
-                      maxDate={new Date()}
-                      onChange={(date) => {
-                        setBuyer_date_of_incorporation(date);
-                      }}
-                      required
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDate(
-                    buyer_date_of_incorporation_risk,
-                    "Low",
-                    "10+ Years"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDate(
-                    buyer_date_of_incorporation_risk,
-                    "Medium",
-                    "5-10 Years"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDate(
-                    buyer_date_of_incorporation_risk,
-                    "High",
-                    "0-2 Years"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Financial Statements
-                </TableCell>
-                <TableCell align="right">
-                  <Select
-                    fullWidth
-                    id="supplier_type"
-                    onChange={(e) => setFinancials_status(e.target.value)}
-                    required
-                    value={financials_status || ""}
-                    variant="standard"
-                  >
-                    {auditType.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusFinancials(
-                    financials_status_risk,
-                    "Low",
-                    "Audit: Big 4 / 2nd Tier"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusFinancials(
-                    financials_status_risk,
-                    "Medium",
-                    "Audit: Other"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusFinancials(
-                    financials_status_risk,
-                    "High",
-                    "Management Prepared"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow className={classes.tableRow2}>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">
-                    Account Debtor Financial Condition
-                  </Box>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow title='Company profitability in the most recent reporting year'>
-                <TableCell component="th" scope="row">
-                  Company Profitability - RY
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={net_profit || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setNet_profit(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProfit(net_profit_risk, "Low", "Positive in RY")}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProfit(
-                    net_profit_risk,
-                    "Medium",
-                    "Neg in PY / Pos YOY Trend"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProfit(
-                    net_profit_risk,
-                    "High",
-                    "Neg in PY / Neg YOY Trend"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Company profitability in the year prior to the reporting year'>
-                <TableCell component="th" scope="row">
-                  Company Profitability - PY
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={net_profit_previous_year || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setNet_profit_previous_year(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Ending Equity
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={total_equity || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setTotal_equity(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Net Operating Loss
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={net_operating_loss || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setNet_operating_loss(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow title='Ending equity of the company divided by the net operating loss of the prior year'>
-                <TableCell component="th" scope="row">
-                  Ending Equity / PY NOL
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="equity_net_operating_loss_ratio"
-                    onChange={(e) =>
-                      setEquity_net_operating_loss_ratio(e.target.value)
-                    }
-                    required
-                    value={equity_net_operating_loss_ratio || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusEquityRatio(
-                    equity_net_operating_loss_ratio_risk,
-                    "Low",
-                    "2+"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusEquityRatio(
-                    equity_net_operating_loss_ratio_risk,
-                    "Medium",
-                    "1-2"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusEquityRatio(
-                    equity_net_operating_loss_ratio_risk,
-                    "High",
-                    "0-1"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Operating Activity Cash Flows - RY
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={cash_flow_from_operating_activities || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setCash_flow_from_operating_activities(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCashFlow(
-                    cash_flow_from_operating_activities_risk,
-                    "Low",
-                    "Positive"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCashFlow(
-                    cash_flow_from_operating_activities_risk,
-                    "Medium",
-                    "Neg CF <= PY NOL"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCashFlow(
-                    cash_flow_from_operating_activities_risk,
-                    "High",
-                    "Neg CF >= PY NOL"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Current Ratio
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="current_ratio"
-                    onChange={(e) => setCurrent_ratio(e.target.value)}
-                    required
-                    value={current_ratio || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCurrentRatio(current_ratio_risk, "Low", "1.5+")}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCurrentRatio(
-                    current_ratio_risk,
-                    "Medium",
-                    "1.0 - 1.5 or <1 but Consist. w/ Ind. Avg"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusCurrentRatio(current_ratio_risk, "High", "0-1")}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Inventory Turnover Ratio
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="inventory_turnover"
-                    onChange={(e) => setInventory_turnover(e.target.value)}
-                    required
-                    value={inventory_turnover || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnover(
-                    inventory_turnover_risk,
-                    "Low",
-                    "At or Above Ind. Avg. (w/in 5%)"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnover(
-                    inventory_turnover_risk,
-                    "Medium",
-                    "Mod. Below Ind. Avg. (>= 75%)"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnover(
-                    inventory_turnover_risk,
-                    "High",
-                    "Sig. Below Ind. Avg. (< 75%)"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Inventory turnover trend from the prior year to the reporting year'>
-                <TableCell component="th" scope="row">
-                  Inventory Turnover Ratio / YOY Trend
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="inventory_turnover_trend"
-                    onChange={(e) =>
-                      setInventory_turnover_trend(e.target.value)
-                    }
-                    required
-                    value={inventory_turnover_trend || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnoverTrend(
-                    inventory_turnover_trend_risk,
-                    "Low",
-                    "Flat or Increasing (<5% YOY Decline)"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnoverTrend(
-                    inventory_turnover_trend_risk,
-                    "Medium",
-                    "Mod. Decline (5%-25% YOY)"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInventoryTurnoverTrend(
-                    inventory_turnover_trend_risk,
-                    "High",
-                    "Sig. Decline (>25% YOY)"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Interest Coverage Ratio
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="interest_coverage"
-                    onChange={(e) => setInterest_coverage(e.target.value)}
-                    required
-                    value={interest_coverage || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInterestCoverage(
-                    interest_coverage_risk,
-                    "Low",
-                    "3+"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInterestCoverage(
-                    interest_coverage_risk,
-                    "Medium",
-                    "2-3"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInterestCoverage(
-                    interest_coverage_risk,
-                    "High",
-                    "0-2"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Indications of emerging or existing financial difficulty not
-                  visible on FS
-                </TableCell>
-                <TableCell align="right">
-                  <Select
-                    fullWidth
-                    id="supplier_type"
-                    onChange={(e) => setBuyer_existing_disputes(e.target.value)}
-                    required
-                    value={buyer_existing_disputes || ""}
-                    variant="standard"
-                  >
-                    {boolean.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusBuyerDisputes(
-                    buyer_existing_disputes_risk,
-                    "Low",
-                    "No: Disc. w/ AD; Pub. Sources"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusBuyerDisputes(
-                    buyer_existing_disputes_risk,
-                    "Medium",
-                    "No: Disc. with Sup.; Pub. Sources"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusBuyerDisputes(
-                    buyer_existing_disputes_risk,
-                    "High",
-                    "Yes"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Insurability by Our Carriers
-                </TableCell>
-                <TableCell align="right">
-                  <Select
-                    fullWidth
-                    id="supplier_type"
-                    onChange={(e) => setBuyer_insurance_status(e.target.value)}
-                    required
-                    value={buyer_insurance_status || ""}
-                    variant="standard"
-                  >
-                    {insuranceStatus.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInsurance(
-                    buyer_insurance_status_risk,
-                    "Low",
-                    "Standard Terms"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInsurance(
-                    buyer_insurance_status_risk,
-                    "Medium",
-                    "Restrictive Terms"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInsurance(
-                    buyer_insurance_status_risk,
-                    "High",
-                    "No insurance available"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Most Recent Country Downgrade
-                </TableCell>
-                <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker
-                      fullWidth
-                      value={
-                        buyer_country_year_of_rating_downgrade || new Date()
+                      id="financials_denomination"
+                      onChange={(e) =>
+                        setFinancials_denomination(e.target.value)
                       }
-                      margin="normal"
-                      variant="standard"
-                      id="date_of_incorporation"
-                      views={["year"]}
-                      maxDate={new Date()}
-                      onChange={(date) => {
-                        setBuyer_country_year_of_rating_downgrade(date);
-                      }}
                       required
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                  </LocalizationProvider>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDowngrade(
-                    buyer_country_year_of_rating_downgrade_risk,
-                    "Low",
-                    "2+ years ago"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDowngrade(
-                    buyer_country_year_of_rating_downgrade_risk,
-                    "Medium",
-                    "1-2 years ago"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusDowngrade(
-                    buyer_country_year_of_rating_downgrade_risk,
-                    "High",
-                    "0-1 year ago"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow className={classes.tableRow2}>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">
-                    Supplier / Account Debtor Relationship
-                  </Box>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Length of Supplier/Debtor Relationship
-                </TableCell>
-                <TableCell align="right">
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DesktopDatePicker
+                      value={financials_denomination || ""}
+                      variant="standard"
+                    >
+                      {denominationValue.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Business Classification / Revenue
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
                       fullWidth
-                      value={
-                        buyer_supplier_year_business_relation_started ||
-                        new Date()
-                      }
-                      margin="normal"
                       variant="standard"
-                      id="date_of_incorporation"
-                      views={["year"]}
-                      maxDate={new Date()}
-                      onChange={(date) => {
-                        setBuyer_supplier_year_business_relation_started(date);
+                      value={sales || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setSales(value);
                       }}
-                      required
-                      KeyboardButtonProps={{
-                        "aria-label": "change date",
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      renderInput={(params) => <TextField {...params} />}
                     />
-                  </LocalizationProvider>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusRelationship(
-                    buyer_supplier_year_business_relation_started_risk,
-                    "Low",
-                    "5+ years"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusRelationship(
-                    buyer_supplier_year_business_relation_started_risk,
-                    "Medium",
-                    "1-5 years"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusRelationship(
-                    buyer_supplier_year_business_relation_started_risk,
-                    "High",
-                    "0-1 year"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Number of Invoices - RY
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="buyer_reporting_year_number_invoices"
-                    onChange={(e) =>
-                      setBuyer_reporting_year_number_invoices(e.target.value)
-                    }
-                    required
-                    value={buyer_reporting_year_number_invoices || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusNumberInvoices(
-                    buyer_reporting_year_number_invoices_risk,
-                    "Low",
-                    "12+"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusNumberInvoices(
-                    buyer_reporting_year_number_invoices_risk,
-                    "Medium",
-                    "4-12"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusNumberInvoices(
-                    buyer_reporting_year_number_invoices_risk,
-                    "High",
-                    "0-4"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Invoices paid by the debtor on the actual due date'>
-                <TableCell component="th" scope="row">
-                  Invoices Paid on ADD / Past 24 Mo
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="buyer_invoices_paid_on_time"
-                    onChange={(e) =>
-                      setBuyer_invoices_paid_on_time(e.target.value)
-                    }
-                    required
-                    value={buyer_invoices_paid_on_time || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesOT(
-                    buyer_invoices_paid_on_time_risk,
-                    "Low",
-                    "100%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesOT(
-                    buyer_invoices_paid_on_time_risk,
-                    "Medium",
-                    "90-100%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesOT(
-                    buyer_invoices_paid_on_time_risk,
-                    "High",
-                    "0-90%"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Invoices that are currently 30 days past due date'>
-                <TableCell component="th" scope="row">
-                  Invoices Currently 30 Days PD{" "}
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="buyer_invoices_past_due_30_days"
-                    onChange={(e) =>
-                      setBuyer_invoices_past_due_30_days(e.target.value)
-                    }
-                    required
-                    value={buyer_invoices_past_due_30_days || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD30(
-                    buyer_invoices_past_due_30_days_risk,
-                    "Low",
-                    "0-1%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD30(
-                    buyer_invoices_past_due_30_days_risk,
-                    "Medium",
-                    "1-4%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD30(
-                    buyer_invoices_past_due_30_days_risk,
-                    "High",
-                    "5+%"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Invoices that are currently 60 days past due date'>
-                <TableCell component="th" scope="row">
-                  Invoices Currently 60 Days PD
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="buyer_invoices_past_due_60_days"
-                    onChange={(e) =>
-                      setBuyer_invoices_past_due_60_days(e.target.value)
-                    }
-                    required
-                    value={buyer_invoices_past_due_60_days || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD60(
-                    buyer_invoices_past_due_60_days_risk,
-                    "Low",
-                    "0-1%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD60(
-                    buyer_invoices_past_due_60_days_risk,
-                    "Medium",
-                    "1-2%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusInvoicesPD60(
-                    buyer_invoices_past_due_60_days_risk,
-                    "High",
-                    "2+%"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow className={classes.tableRow2}>
-                <TableCell component="th" scope="row">
-                  <Box fontWeight="fontWeightBold">
-                    Importance of Purchased Goods to Account Debtor
-                  </Box>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Use of Purchased Goods
-                </TableCell>
-                <TableCell align="right">
-                  <Select
-                    fullWidth
-                    id="buyer_use_of_goods_purchased"
-                    onChange={(e) =>
-                      setBuyer_use_of_goods_purchased(e.target.value)
-                    }
-                    required
-                    value={buyer_use_of_goods_purchased || ""}
-                    variant="standard"
-                  >
-                    {productUse.map((item, index) => (
-                      <MenuItem key={index} value={item.value}>
-                        {item.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProductUse(
-                    buyer_use_of_goods_purchased_risk,
-                    "Low",
-                    "Direct Resale"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProductUse(
-                    buyer_use_of_goods_purchased_risk,
-                    "Medium",
-                    "Incorporation into Product"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusProductUse(
-                    buyer_use_of_goods_purchased_risk,
-                    "High",
-                    "Other"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  Inv. Total
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={inventory || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setInventory(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell component="th" scope="row">
-                  COGS
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={cost_of_goods_sold || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setCost_of_goods_sold(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button
-                    variant="outlined"
-                    onClick={() => updateProfitabilityPY()}
-                  >
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow title='Total inventory divided by cost of goods sold in the reporting year'>
-                <TableCell component="th" scope="row">
-                  Inv. Total / COGS - RY
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="inventory_cost_of_goods_sold_ratio"
-                    onChange={(e) =>
-                      setInventory_cost_of_goods_sold_ratio(e.target.value)
-                    }
-                    required
-                    value={inventory_cost_of_goods_sold_ratio || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVCogsRatio(
-                    inventory_cost_of_goods_sold_ratio_risk,
-                    "Low",
-                    "5-20%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVCogsRatio(
-                    inventory_cost_of_goods_sold_ratio_risk,
-                    "Medium",
-                    "1-5% or 20-50%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVCogsRatio(
-                    inventory_cost_of_goods_sold_ratio_risk,
-                    "High",
-                    "0-1% or 50+%"
-                  )}
-                </TableCell>
-              </TableRow>
-              <TableRow title='Sales volume between supplier and debtor in the reporting year'>
-                <TableCell component="th" scope="row">
-                  Sup. Sales - RY
-                </TableCell>
-                <TableCell align="right">
-                  <NumberFormat
-                    fullWidth
-                    variant="standard"
-                    value={buyer_reporting_year_transaction_amount || ""}
-                    thousandSeparator={true}
-                    decimalScale="2"
-                    prefix={"$"}
-                    customInput={TextField}
-                    type="text"
-                    onValueChange={(values) => {
-                      const { formattedValue, value } = values;
-                      setBuyer_reporting_year_transaction_amount(value);
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  <Button variant="outlined" onClick={() => updateBuyer()}>
-                    Update
-                  </Button>
-                </TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
-              </TableRow>
-              <TableRow title='Total inventory divided by supplier to debtor sales amount in the reporting year'>
-                <TableCell component="th" scope="row">
-                  Inv. Total / Sup. Sales - RY
-                </TableCell>
-                <TableCell align="right">
-                  <TextField
-                    fullWidth
-                    id="inventory_buyer_transaction_amount_ratio"
-                    onChange={(e) =>
-                      setInventory_buyer_transaction_amount_ratio(
-                        e.target.value
-                      )
-                    }
-                    required
-                    value={inventory_buyer_transaction_amount_ratio || ""}
-                    variant="standard"
-                  />
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVSalesRatio(
-                    inventory_buyer_transaction_amount_ratio_risk,
-                    "Low",
-                    "5-20%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVSalesRatio(
-                    inventory_buyer_transaction_amount_ratio_risk,
-                    "Medium",
-                    "1-5% or 20-50%"
-                  )}
-                </TableCell>
-                <TableCell align="right">
-                  {checkstatusIVSalesRatio(
-                    inventory_buyer_transaction_amount_ratio_risk,
-                    "High",
-                    "0-1% or 50+%"
-                  )}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-        </Grid>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusSales(
+                      sales_risk,
+                      "Low",
+                      "Large 250+ Employees orn $50mm+ Revenue"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusSales(
+                      sales_risk,
+                      "Medium",
+                      "Medium 50-250 Employees or $10.0-$50.0mm Rev."
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusSales(
+                      sales_risk,
+                      "High",
+                      "Small 0-50 Employees or $10.0mm Rev."
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Time in Business
+                  </TableCell>
+                  <TableCell align="right">
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        fullWidth
+                        value={buyer_date_of_incorporation || new Date()}
+                        margin="normal"
+                        variant="standard"
+                        id="date_of_incorporation"
+                        views={["year"]}
+                        maxDate={new Date()}
+                        onChange={(date) => {
+                          setBuyer_date_of_incorporation(date);
+                        }}
+                        required
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDate(
+                      buyer_date_of_incorporation_risk,
+                      "Low",
+                      "10+ Years"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDate(
+                      buyer_date_of_incorporation_risk,
+                      "Medium",
+                      "5-10 Years"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDate(
+                      buyer_date_of_incorporation_risk,
+                      "High",
+                      "0-2 Years"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Financial Statements
+                  </TableCell>
+                  <TableCell align="right">
+                    <Select
+                      fullWidth
+                      id="supplier_type"
+                      onChange={(e) => setFinancials_status(e.target.value)}
+                      required
+                      value={financials_status || ""}
+                      variant="standard"
+                    >
+                      {auditType.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusFinancials(
+                      financials_status_risk,
+                      "Low",
+                      "Audit: Big 4 / 2nd Tier"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusFinancials(
+                      financials_status_risk,
+                      "Medium",
+                      "Audit: Other"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusFinancials(
+                      financials_status_risk,
+                      "High",
+                      "Management Prepared"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow className={classes.tableRow2}>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">
+                      Account Debtor Financial Condition
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow title="Company profitability in the most recent reporting year">
+                  <TableCell component="th" scope="row">
+                    Company Profitability - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={net_profit || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setNet_profit(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProfit(
+                      net_profit_risk,
+                      "Low",
+                      "Positive in RY"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProfit(
+                      net_profit_risk,
+                      "Medium",
+                      "Neg in PY / Pos YOY Trend"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProfit(
+                      net_profit_risk,
+                      "High",
+                      "Neg in PY / Neg YOY Trend"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Company profitability in the year prior to the reporting year">
+                  <TableCell component="th" scope="row">
+                    Company Profitability - PY
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={net_profit_previous_year || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setNet_profit_previous_year(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Ending Equity
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={total_equity || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setTotal_equity(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Net Operating Loss
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={net_operating_loss || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setNet_operating_loss(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow title="Ending equity of the company divided by the net operating loss of the prior year">
+                  <TableCell component="th" scope="row">
+                    Ending Equity / PY NOL
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="equity_net_operating_loss_ratio"
+                      onChange={(e) =>
+                        setEquity_net_operating_loss_ratio(e.target.value)
+                      }
+                      required
+                      value={equity_net_operating_loss_ratio || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusEquityRatio(
+                      equity_net_operating_loss_ratio_risk,
+                      "Low",
+                      "2+"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusEquityRatio(
+                      equity_net_operating_loss_ratio_risk,
+                      "Medium",
+                      "1-2"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusEquityRatio(
+                      equity_net_operating_loss_ratio_risk,
+                      "High",
+                      "0-1"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Operating Activity Cash Flows - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={cash_flow_from_operating_activities || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setCash_flow_from_operating_activities(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCashFlow(
+                      cash_flow_from_operating_activities_risk,
+                      "Low",
+                      "Positive"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCashFlow(
+                      cash_flow_from_operating_activities_risk,
+                      "Medium",
+                      "Neg CF <= PY NOL"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCashFlow(
+                      cash_flow_from_operating_activities_risk,
+                      "High",
+                      "Neg CF >= PY NOL"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Current Ratio
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="current_ratio"
+                      onChange={(e) => setCurrent_ratio(e.target.value)}
+                      required
+                      value={current_ratio || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCurrentRatio(current_ratio_risk, "Low", "1.5+")}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCurrentRatio(
+                      current_ratio_risk,
+                      "Medium",
+                      "1.0 - 1.5 or <1 but Consist. w/ Ind. Avg"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusCurrentRatio(current_ratio_risk, "High", "0-1")}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Inventory Turnover Ratio
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="inventory_turnover"
+                      onChange={(e) => setInventory_turnover(e.target.value)}
+                      required
+                      value={inventory_turnover || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnover(
+                      inventory_turnover_risk,
+                      "Low",
+                      "At or Above Ind. Avg. (w/in 5%)"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnover(
+                      inventory_turnover_risk,
+                      "Medium",
+                      "Mod. Below Ind. Avg. (>= 75%)"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnover(
+                      inventory_turnover_risk,
+                      "High",
+                      "Sig. Below Ind. Avg. (< 75%)"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Inventory turnover trend from the prior year to the reporting year">
+                  <TableCell component="th" scope="row">
+                    Inventory Turnover Ratio / YOY Trend
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="inventory_turnover_trend"
+                      onChange={(e) =>
+                        setInventory_turnover_trend(e.target.value)
+                      }
+                      required
+                      value={inventory_turnover_trend || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnoverTrend(
+                      inventory_turnover_trend_risk,
+                      "Low",
+                      "Flat or Increasing (<5% YOY Decline)"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnoverTrend(
+                      inventory_turnover_trend_risk,
+                      "Medium",
+                      "Mod. Decline (5%-25% YOY)"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInventoryTurnoverTrend(
+                      inventory_turnover_trend_risk,
+                      "High",
+                      "Sig. Decline (>25% YOY)"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Interest Coverage Ratio
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="interest_coverage"
+                      onChange={(e) => setInterest_coverage(e.target.value)}
+                      required
+                      value={interest_coverage || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInterestCoverage(
+                      interest_coverage_risk,
+                      "Low",
+                      "3+"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInterestCoverage(
+                      interest_coverage_risk,
+                      "Medium",
+                      "2-3"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInterestCoverage(
+                      interest_coverage_risk,
+                      "High",
+                      "0-2"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Indications of emerging or existing financial difficulty not
+                    visible on FS
+                  </TableCell>
+                  <TableCell align="right">
+                    <Select
+                      fullWidth
+                      id="supplier_type"
+                      onChange={(e) =>
+                        setBuyer_existing_disputes(e.target.value)
+                      }
+                      required
+                      value={buyer_existing_disputes || ""}
+                      variant="standard"
+                    >
+                      {boolean.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusBuyerDisputes(
+                      buyer_existing_disputes_risk,
+                      "Low",
+                      "No: Disc. w/ AD; Pub. Sources"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusBuyerDisputes(
+                      buyer_existing_disputes_risk,
+                      "Medium",
+                      "No: Disc. with Sup.; Pub. Sources"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusBuyerDisputes(
+                      buyer_existing_disputes_risk,
+                      "High",
+                      "Yes"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Insurability by Our Carriers
+                  </TableCell>
+                  <TableCell align="right">
+                    <Select
+                      fullWidth
+                      id="supplier_type"
+                      onChange={(e) =>
+                        setBuyer_insurance_status(e.target.value)
+                      }
+                      required
+                      value={buyer_insurance_status || ""}
+                      variant="standard"
+                    >
+                      {insuranceStatus.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInsurance(
+                      buyer_insurance_status_risk,
+                      "Low",
+                      "Standard Terms"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInsurance(
+                      buyer_insurance_status_risk,
+                      "Medium",
+                      "Restrictive Terms"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInsurance(
+                      buyer_insurance_status_risk,
+                      "High",
+                      "No insurance available"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Most Recent Country Downgrade
+                  </TableCell>
+                  <TableCell align="right">
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        fullWidth
+                        value={
+                          buyer_country_year_of_rating_downgrade || new Date()
+                        }
+                        margin="normal"
+                        variant="standard"
+                        id="date_of_incorporation"
+                        views={["year"]}
+                        maxDate={new Date()}
+                        onChange={(date) => {
+                          setBuyer_country_year_of_rating_downgrade(date);
+                        }}
+                        required
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDowngrade(
+                      buyer_country_year_of_rating_downgrade_risk,
+                      "Low",
+                      "2+ years ago"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDowngrade(
+                      buyer_country_year_of_rating_downgrade_risk,
+                      "Medium",
+                      "1-2 years ago"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusDowngrade(
+                      buyer_country_year_of_rating_downgrade_risk,
+                      "High",
+                      "0-1 year ago"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow className={classes.tableRow2}>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">
+                      Supplier / Account Debtor Relationship
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Length of Supplier/Debtor Relationship
+                  </TableCell>
+                  <TableCell align="right">
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DesktopDatePicker
+                        fullWidth
+                        value={
+                          buyer_supplier_year_business_relation_started ||
+                          new Date()
+                        }
+                        margin="normal"
+                        variant="standard"
+                        id="date_of_incorporation"
+                        views={["year"]}
+                        maxDate={new Date()}
+                        onChange={(date) => {
+                          setBuyer_supplier_year_business_relation_started(
+                            date
+                          );
+                        }}
+                        required
+                        KeyboardButtonProps={{
+                          "aria-label": "change date",
+                        }}
+                        InputLabelProps={{
+                          shrink: true,
+                        }}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+                    </LocalizationProvider>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusRelationship(
+                      buyer_supplier_year_business_relation_started_risk,
+                      "Low",
+                      "5+ years"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusRelationship(
+                      buyer_supplier_year_business_relation_started_risk,
+                      "Medium",
+                      "1-5 years"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusRelationship(
+                      buyer_supplier_year_business_relation_started_risk,
+                      "High",
+                      "0-1 year"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Number of Invoices - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="buyer_reporting_year_number_invoices"
+                      onChange={(e) =>
+                        setBuyer_reporting_year_number_invoices(e.target.value)
+                      }
+                      required
+                      value={buyer_reporting_year_number_invoices || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusNumberInvoices(
+                      buyer_reporting_year_number_invoices_risk,
+                      "Low",
+                      "12+"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusNumberInvoices(
+                      buyer_reporting_year_number_invoices_risk,
+                      "Medium",
+                      "4-12"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusNumberInvoices(
+                      buyer_reporting_year_number_invoices_risk,
+                      "High",
+                      "0-4"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Invoices paid by the debtor on the actual due date">
+                  <TableCell component="th" scope="row">
+                    Invoices Paid on ADD / Past 24 Mo
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="buyer_invoices_paid_on_time"
+                      onChange={(e) =>
+                        setBuyer_invoices_paid_on_time(e.target.value)
+                      }
+                      required
+                      value={buyer_invoices_paid_on_time || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesOT(
+                      buyer_invoices_paid_on_time_risk,
+                      "Low",
+                      "100%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesOT(
+                      buyer_invoices_paid_on_time_risk,
+                      "Medium",
+                      "90-100%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesOT(
+                      buyer_invoices_paid_on_time_risk,
+                      "High",
+                      "0-90%"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Invoices that are currently 30 days past due date">
+                  <TableCell component="th" scope="row">
+                    Invoices Currently 30 Days PD{" "}
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="buyer_invoices_past_due_30_days"
+                      onChange={(e) =>
+                        setBuyer_invoices_past_due_30_days(e.target.value)
+                      }
+                      required
+                      value={buyer_invoices_past_due_30_days || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD30(
+                      buyer_invoices_past_due_30_days_risk,
+                      "Low",
+                      "0-1%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD30(
+                      buyer_invoices_past_due_30_days_risk,
+                      "Medium",
+                      "1-4%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD30(
+                      buyer_invoices_past_due_30_days_risk,
+                      "High",
+                      "5+%"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Invoices that are currently 60 days past due date">
+                  <TableCell component="th" scope="row">
+                    Invoices Currently 60 Days PD
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="buyer_invoices_past_due_60_days"
+                      onChange={(e) =>
+                        setBuyer_invoices_past_due_60_days(e.target.value)
+                      }
+                      required
+                      value={buyer_invoices_past_due_60_days || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD60(
+                      buyer_invoices_past_due_60_days_risk,
+                      "Low",
+                      "0-1%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD60(
+                      buyer_invoices_past_due_60_days_risk,
+                      "Medium",
+                      "1-2%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusInvoicesPD60(
+                      buyer_invoices_past_due_60_days_risk,
+                      "High",
+                      "2+%"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow className={classes.tableRow2}>
+                  <TableCell component="th" scope="row">
+                    <Box fontWeight="fontWeightBold">
+                      Importance of Purchased Goods to Account Debtor
+                    </Box>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Use of Purchased Goods
+                  </TableCell>
+                  <TableCell align="right">
+                    <Select
+                      fullWidth
+                      id="buyer_use_of_goods_purchased"
+                      onChange={(e) =>
+                        setBuyer_use_of_goods_purchased(e.target.value)
+                      }
+                      required
+                      value={buyer_use_of_goods_purchased || ""}
+                      variant="standard"
+                    >
+                      {productUse.map((item, index) => (
+                        <MenuItem key={index} value={item.value}>
+                          {item.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProductUse(
+                      buyer_use_of_goods_purchased_risk,
+                      "Low",
+                      "Direct Resale"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProductUse(
+                      buyer_use_of_goods_purchased_risk,
+                      "Medium",
+                      "Incorporation into Product"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusProductUse(
+                      buyer_use_of_goods_purchased_risk,
+                      "High",
+                      "Other"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Inv. Total
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={inventory || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setInventory(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    COGS
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={cost_of_goods_sold || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setCost_of_goods_sold(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button
+                      variant="outlined"
+                      onClick={() => updateProfitabilityPY()}
+                    >
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow title="Total inventory divided by cost of goods sold in the reporting year">
+                  <TableCell component="th" scope="row">
+                    Inv. Total / COGS - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="inventory_cost_of_goods_sold_ratio"
+                      onChange={(e) =>
+                        setInventory_cost_of_goods_sold_ratio(e.target.value)
+                      }
+                      required
+                      value={inventory_cost_of_goods_sold_ratio || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVCogsRatio(
+                      inventory_cost_of_goods_sold_ratio_risk,
+                      "Low",
+                      "5-20%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVCogsRatio(
+                      inventory_cost_of_goods_sold_ratio_risk,
+                      "Medium",
+                      "1-5% or 20-50%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVCogsRatio(
+                      inventory_cost_of_goods_sold_ratio_risk,
+                      "High",
+                      "0-1% or 50+%"
+                    )}
+                  </TableCell>
+                </TableRow>
+                <TableRow title="Sales volume between supplier and debtor in the reporting year">
+                  <TableCell component="th" scope="row">
+                    Sup. Sales - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <NumberFormat
+                      fullWidth
+                      variant="standard"
+                      value={buyer_reporting_year_transaction_amount || ""}
+                      thousandSeparator={true}
+                      decimalScale="2"
+                      prefix={"$"}
+                      customInput={TextField}
+                      type="text"
+                      onValueChange={(values) => {
+                        const { formattedValue, value } = values;
+                        setBuyer_reporting_year_transaction_amount(value);
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    <Button variant="outlined" onClick={() => updateBuyer()}>
+                      Update
+                    </Button>
+                  </TableCell>
+                  <TableCell align="right"></TableCell>
+                  <TableCell align="right"></TableCell>
+                </TableRow>
+                <TableRow title="Total inventory divided by supplier to debtor sales amount in the reporting year">
+                  <TableCell component="th" scope="row">
+                    Inv. Total / Sup. Sales - RY
+                  </TableCell>
+                  <TableCell align="right">
+                    <TextField
+                      fullWidth
+                      id="inventory_buyer_transaction_amount_ratio"
+                      onChange={(e) =>
+                        setInventory_buyer_transaction_amount_ratio(
+                          e.target.value
+                        )
+                      }
+                      required
+                      value={inventory_buyer_transaction_amount_ratio || ""}
+                      variant="standard"
+                    />
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVSalesRatio(
+                      inventory_buyer_transaction_amount_ratio_risk,
+                      "Low",
+                      "5-20%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVSalesRatio(
+                      inventory_buyer_transaction_amount_ratio_risk,
+                      "Medium",
+                      "1-5% or 20-50%"
+                    )}
+                  </TableCell>
+                  <TableCell align="right">
+                    {checkstatusIVSalesRatio(
+                      inventory_buyer_transaction_amount_ratio_risk,
+                      "High",
+                      "0-1% or 50+%"
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </PerfectScrollbar>
+        </React.Fragment>
       </CardContent>
     </Card>
   );

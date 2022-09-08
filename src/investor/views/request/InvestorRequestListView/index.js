@@ -151,7 +151,7 @@ const InvestorTransactionListView = () => {
     const endDate = moment(input.invoiceend).format("YYYY-MM-DD");
     let filter = {
       investorId: { eq: iid },
-      invoice_date: { between: [startDate, endDate] },
+      invoice_due_date: { between: [startDate, endDate] },
     };
     const {
       data: {
@@ -263,7 +263,7 @@ const InvestorTransactionListView = () => {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
                   value={invoicestart}
-                  label="Invoice Date From"
+                  label="Due Date From"
                   onChange={(e) => setInvoicestart(e)}
                   onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
                   required
@@ -275,7 +275,7 @@ const InvestorTransactionListView = () => {
               <LocalizationProvider dateAdapter={AdapterDateFns}>
                 <DesktopDatePicker
                   value={invoiceend}
-                  label="Invoice Date To"
+                  label="Due Date To"
                   onChange={(e) => setInvoiceend(e)}
                   onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
                   required
@@ -379,12 +379,12 @@ const InvestorTransactionListView = () => {
                             </TableCell>
                             <TableCell>
                               {moment(request.invoice_date).format(
-                                "DD/MM/YYYY"
+                                "MM/DD/YYYY"
                               )}
                             </TableCell>
                             <TableCell>
                               {moment(request.invoice_due_date).format(
-                                "DD/MM/YYYY"
+                                "MM/DD/YYYY"
                               )}
                             </TableCell>
                           </TableRow>

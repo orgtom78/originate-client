@@ -97,7 +97,7 @@ const LatestLimits = ({ className, ...rest }) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Invoices Due within 7 Days" />
+      <CardHeader title="Invoices due in the next 7 days" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>
