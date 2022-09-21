@@ -1,8 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react";
 import clsx from "clsx";
 import PropTypes from "prop-types";
-import { Avatar, Box, Card, CardContent, Grid, Typography, colors } from "@mui/material";
-import makeStyles from '@mui/styles/makeStyles';
+import {
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  colors,
+} from "@mui/material";
+import makeStyles from "@mui/styles/makeStyles";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import * as queries from "src/graphql/queries.js";
@@ -32,23 +40,20 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   useEffect(() => {
     const getRequests = async () => {
-      let filter = { sortkey: { contains: "request-" } };
       const {
         data: {
-          listRequests: { items: itemsPage1, nextToken },
+          searchRequests: { total },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listRequests, { filter: filter })
+        graphqlOperation(queries.searchRequests, { limit: 10000 })
       );
-      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listRequests.items;
-      setRequest(items);
+      setRequest(total);
     };
     getRequests();
   }, []);
 
   const handle = useCallback(() => {
-    if (!request || !request.length) {
+    if (!request) {
       return;
     } else {
       const d = request;
@@ -58,8 +63,7 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   function addarrays() {
     if (handle) {
-      var x = request.filter((e) => e.request_status === "Approved");
-      const count = x.length;
+      const count = request;
       return count;
     } else {
       return;
