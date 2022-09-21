@@ -104,7 +104,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   }, [location.pathname]);
 
   const avatar =
-    "https://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg";
+    "http://www.tinygraphs.com/squares/tinygraphs?theme=frogideas&numcolors=4&size=220&fmt=svg";
   const admin_name = "Admin";
   const admin_country = "Berlin, Hong Kong, Shanghai";
 
@@ -115,7 +115,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           className={classes.avatar}
           component={RouterLink}
           src={avatar}
-          to="/app/account"
+          to="/admin"
         />
         <Typography className={classes.name} color="textPrimary" variant="h5">
           {admin_name}
