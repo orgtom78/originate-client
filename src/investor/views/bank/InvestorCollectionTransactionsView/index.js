@@ -250,7 +250,7 @@ const InvestorBankTransactionListView = (input) => {
       const plaidarray = await checkPlaidDates();
       const dynarrayrecentdate = dynarray[0].transaction_date;
       var y = plaidarray.filter(
-        (e) => moment(e.authorized_date) - moment(dynarrayrecentdate) === 0
+        (e) => moment(e.date) - moment(dynarrayrecentdate) === 0
       );
       let index = plaidarray.indexOf(y[0]);
       const sliced = plaidarray.slice(0, index);
