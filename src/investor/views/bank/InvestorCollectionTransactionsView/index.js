@@ -135,7 +135,10 @@ const InvestorBankTransactionListView = (input) => {
             const userId = sub;
             const transactionId = item.transaction_id;
             const investorId = sub;
-            const authorized_date = new Date(item.date);
+            const format = "YYYY-MM-DD";
+            const a_date = new Date(item.date);
+            const authorized_date = moment(a_date)
+            .format(format);
             const category = item.category[0];
             const iso_currency_code = item.iso_currency_code;
             const location = JSON.stringify(item.location);
@@ -145,7 +148,9 @@ const InvestorBankTransactionListView = (input) => {
             const recipient_account_name = item.payment_meta.payee;
             const senderaccountId = item.account_id;
             const transaction_code = item.transaction_code;
-            const transaction_date = new Date(item.date);
+            const t_date = new Date(item.date);
+            const transaction_date = moment(t_date)
+            .format(format);
             const transaction_description = item.name;
             const transaction_source_amount = item.amount;
             const transaction_source_currency = item.iso_currency_code;
@@ -236,7 +241,7 @@ const InvestorBankTransactionListView = (input) => {
       };
       const array = await API.get(apiName, "/api/transactions2", myInit);
       const e = array.transactions.sort(function(a, b) {
-        return new Date(b.authorized_date) - new Date(a.authorized_date);
+        return new Date(b.date) - new Date(a.date);
       });
       return e;
     }
@@ -259,7 +264,10 @@ const InvestorBankTransactionListView = (input) => {
           const userId = sub;
           const transactionId = item.transaction_id;
           const investorId = sub;
-          const authorized_date = new Date(item.date);
+          const format = "YYYY-MM-DD";
+          const a_date = new Date(item.date);
+          const authorized_date = moment(a_date)
+            .format(format);
           const category = item.category[0];
           const iso_currency_code = item.iso_currency_code;
           const location = JSON.stringify(item.location);
@@ -269,7 +277,9 @@ const InvestorBankTransactionListView = (input) => {
           const recipient_account_name = item.payment_meta.payee;
           const senderaccountId = item.account_id;
           const transaction_code = item.transaction_code;
-          const transaction_date = new Date(item.date);
+          const t_date = new Date(item.date);
+          const transaction_date = moment(t_date)
+            .format(format);
           const transaction_description = item.name;
           const transaction_source_amount = item.amount;
           const transaction_source_currency = item.iso_currency_code;
