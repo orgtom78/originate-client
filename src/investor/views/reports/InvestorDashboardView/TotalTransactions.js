@@ -66,9 +66,8 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   function addarrays() {
     if (handle) {
-      var x = request.filter((e) => e.request_status === "Approved");
-      const count = x.length;
-      return count;
+      var x = request
+      return x;
     } else {
       return;
     }
