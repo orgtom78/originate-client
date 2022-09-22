@@ -42,17 +42,15 @@ const TotalTransactions = ({ className, ...rest }) => {
     const getRequests = async () => {
       let user = await Auth.currentAuthenticatedUser();
       let id = user.attributes["custom:groupid"];
-      let filter = { spvId: { eq: id } };
+      const filter = { spvId: { eq: id } };
       const {
         data: {
-          listRequests: { items: itemsPage1, nextToken },
+          searchRequests: { total },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listRequests, { filter: filter })
+        graphqlOperation(queries.searchRequests, { filter: filter, limit: 10000 })
       );
-      const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
-      const items = await n.data.listRequests.items;
-      setRequest(items);
+      setRequest(total);
     };
     getRequests();
   }, []);
