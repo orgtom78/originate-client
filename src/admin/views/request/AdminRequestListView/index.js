@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import clsx from "clsx";
 import {
-  Avatar,
   Box,
   Button,
   Card,
@@ -10,28 +9,19 @@ import {
   Container,
   Divider,
   Grid,
-  Table,
-  TableContainer,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
   TextField,
-  Typography,
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import * as queries from "src/graphql/queries.js";
 import Page from "src/components/Page";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
-import getInitials from "src/utils/getInitials";
 import { green, orange } from "@mui/material/colors";
-import NumberFormat from "react-number-format";
 import LoaderButton from "src/components/LoaderButton.js";
 import { Search as SearchIcon } from "react-feather";
 import { onError } from "src/libs/errorLib.js";
@@ -63,8 +53,6 @@ const orangeTheme = createTheme({
 const AdminTransactionListView = () => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
   const [searchterm, setSearchterm] = useState("");
   const [invoicestart, setInvoicestart] = useState(subDays(new Date(), 7));
   const [invoiceend, setInvoiceend] = useState(new Date());
@@ -120,6 +108,7 @@ const AdminTransactionListView = () => {
         invoice_number: {
           wildcard: resterm,
         },
+        or: { requestId: { eq: searchterm } },
       };
       const result = await API.graphql(
         graphqlOperation(queries.searchRequests, { filter: filter })
@@ -157,47 +146,133 @@ const AdminTransactionListView = () => {
     setRequest(d);
   }
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
+  const columns = [
+    {
+      field: "buyer_name",
+      headerName: "Buyers name",
+      minWidth: 150,
+      editable: false,
+      renderCell: (cellValues) => {
+        return (
+          <Link to={`/admin/request/${cellValues.row.id}`}>
+            {cellValues.row.buyer_name}
+          </Link>
+        );
+      },
+    },
+    {
+      field: "supplier_name",
+      headerName: "Suppliers name",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_number",
+      headerName: "Invoice Number",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_amount",
+      headerName: "Invoice Amount",
+      type: "number",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
 
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
+        const valueFormatted = Number(params.value).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "invoice_status",
+      headerName: "Status",
+      minWidth: 150,
+      editable: false,
+      renderCell: (cellValues) => {
+        if (cellValues.row.invoice_status === "Submitted") {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={orangeTheme}>
+                  <Chip label={cellValues.row.invoice_status} color="primary" />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (
+          cellValues.row.invoice_status === "Under Review" ||
+          cellValues.row.invoice_status === "Documents Pending"
+        ) {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={orangeTheme}>
+                  <Chip
+                    label={cellValues.row.invoice_status}
+                    color="secondary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip label={cellValues.row.invoice_status} color="primary" />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        }
+      },
+    },
+    {
+      field: "invoice_ipu_signed",
+      headerName: "IPU Date",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_due_date",
+      headerName: "Due Date",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_purchase_duration",
+      headerName: "Duration",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "createdAt",
+      headerName: "Created At",
+      minWidth: 150,
+      editable: false,
+    },
+  ];
 
-  function checkstatus(request) {
-    if (request === "Submitted") {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip label={request} color="primary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    } else if (request === "Under Review" || request === "Documents Pending") {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip label={request} color="secondary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={greenTheme}>
-              <Chip label={request} color="primary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    }
-  }
+  const rows = request.map((request) => ({
+    id: request.id,
+    buyer_name: request.buyer_name,
+    supplier_name: request.supplier_name,
+    invoice_number: request.invoice_number,
+    invoice_amount: request.invoice_amount,
+    invoice_status: request.request_status,
+    invoice_ipu_signed: moment(request.invoice_ipu_signed).format("MM/DD/YYYY"),
+    invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),
+    invoice_purchase_duration: moment(request.invoice_due_date).diff(
+      moment(request.invoice_date),
+      "days"
+    ),
+    createdAt: moment(request.createdAt).format("MM/DD/YYYY"),
+  }));
 
   return (
     <React.Fragment>
@@ -268,94 +343,29 @@ const AdminTransactionListView = () => {
           <Box mt={3}>
             <Card>
               <PerfectScrollbar>
-                <Box minWidth={1050}>
-                  <TableContainer>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Buyer's Name</TableCell>
-                          <TableCell>Suppliers' Name</TableCell>
-                          <TableCell>Invoice Number</TableCell>
-                          <TableCell>Amount</TableCell>
-                          <TableCell>Currency</TableCell>
-                          <TableCell>Status</TableCell>
-                          <TableCell>Invoice Date</TableCell>
-                          <TableCell>Invoice Due Date</TableCell>
-                          <TableCell>Created At</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {request
-                          .slice(page * limit, page * limit + limit)
-                          .map((request, index) => {
-                            return (
-                              <TableRow hover key={request.requestId}>
-                                <TableCell>
-                                  <Box alignItems="center" display="flex">
-                                    <Link to={`/admin/request/${request.id}/`}>
-                                      <Avatar
-                                        className={classes.avatar}
-                                        src={`${request.buyer_logo}`}
-                                      >
-                                        {getInitials(request.buyer_name)}
-                                      </Avatar>
-                                    </Link>
-                                    <Typography
-                                      color="textPrimary"
-                                      variant="body1"
-                                    >
-                                      {request.buyer_name}
-                                    </Typography>
-                                  </Box>
-                                </TableCell>
-                                <TableCell>{`${request.supplier_name}`}</TableCell>
-                                <TableCell>{`${request.invoice_number}`}</TableCell>
-                                <TableCell>
-                                  <NumberFormat
-                                    color="textPrimary"
-                                    variant="body1"
-                                    value={request.invoice_amount}
-                                    displayType={"text"}
-                                    thousandSeparator={true}
-                                    prefix={"$"}
-                                  />
-                                </TableCell>
-                                <TableCell>{`${request.invoice_currency}`}</TableCell>
-                                <TableCell>
-                                  {checkstatus(request.request_status)}
-                                </TableCell>
-                                <TableCell>
-                                  {moment(request.invoice_date).format(
-                                    "MM/DD/YYYY"
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {moment(request.invoice_due_date).format(
-                                    "MM/DD/YYYY"
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {moment(request.createdAt).format(
-                                    "MM/DD/YYYY"
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            );
-                          })}
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                </Box>
+                <Grid item>
+                  <Box sx={{ height: 800, width: "100%" }}>
+                    <div style={{ display: "flex", height: "100%" }}>
+                      <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                          components={{
+                            Toolbar: GridToolbar,
+                          }}
+                          componentsProps={{
+                            toolbar: { showQuickFilter: true },
+                          }}
+                          rows={rows}
+                          columns={columns}
+                          pageSize={40}
+                          rowsPerPageOptions={[20]}
+                          checkboxSelection
+                          disableSelectionOnClick
+                        />
+                      </div>
+                    </div>
+                  </Box>
+                </Grid>
               </PerfectScrollbar>
-              <TablePagination
-                component="div"
-                count={request.length}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25, 50]}
-              />
             </Card>
           </Box>
           <Box display="flex" justifyContent="flex-end" p={2}>

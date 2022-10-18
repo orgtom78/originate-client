@@ -98,6 +98,9 @@
     "originateprodstorage": {
       "service": "S3",
       "providerPlugin": "awscloudformation"
+    },
+    "s330286d4d": {
+      "dependsOn": []
     }
   },
   "function": {

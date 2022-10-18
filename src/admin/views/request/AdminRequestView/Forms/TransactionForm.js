@@ -109,11 +109,15 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_amount, setInvoice_amount] = useState("");
   const [invoice_date, setInvoice_date] = useState("");
   const [invoice_due_date, setInvoice_due_date] = useState("");
+  const [invoice_ipu_signed, setInvoice_ipu_signed] = useState("");
+  const [invoice_purchase_duration, setInvoice_purchase_duration] =
+    useState("");
   const [invoice_number, setInvoice_number] = useState("");
   const [sold_goods_description, setSold_goods_description] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
   const [request_status, setRequest_status] = useState("");
   const [base_rate, setBase_rate] = useState("");
+  const [base_rate_amount, setBase_rate_amount] = useState("");
   const [advance_rate, setAdvance_rate] = useState("");
   const [invoice_purchase_amount, setInvoice_purchase_amount] = useState("");
   const [discount_fee_rate, setDiscount_fee_rate] = useState("");
@@ -154,8 +158,11 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_currency,
               invoice_date,
               invoice_due_date,
+              invoice_ipu_signed,
+              invoice_purchase_duration,
               invoice_number,
               base_rate,
+              base_rate_amount,
               transaction_fee_rate,
               transaction_fee_amount,
               discount_fee_rate,
@@ -181,8 +188,16 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_date(momentinvoice);
         const momentinvoicedue = moment(invoice_due_date).utc().startOf("day");
         setInvoice_due_date(momentinvoicedue);
+        const momentipusigned = moment(invoice_ipu_signed).utc().startOf("day");
+        setInvoice_ipu_signed(momentipusigned);
+        const purchaseduration = moment(invoice_due_date).diff(
+          moment(invoice_ipu_signed),
+          "days"
+        );
+        setInvoice_purchase_duration(purchaseduration);
         setInvoice_number(invoice_number);
         setBase_rate(base_rate);
+        setBase_rate_amount(base_rate_amount);
         setDiscount_fee_rate(discount_fee_rate);
         setDiscount_fee_rate_adjusted(discount_fee_rate_adjusted);
         setDiscount_fee_amount(discount_fee_amount);
@@ -269,12 +284,15 @@ const RequestForm = ({ className, value, ...rest }) => {
         const sofrterm = base_rate;
         if (sofrterm === "SOFR(1M)") {
           const dyndisc = Number(sofr.SOFRM1) + Number(discount_fee_rate);
+          setBase_rate_amount(Number(sofr.SOFRM1));
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(3M)") {
           const dyndisc = Number(sofr.SOFRM3) + Number(discount_fee_rate);
+          setBase_rate_amount(Number(sofr.SOFRM3));
           setDynamic_discount(dyndisc);
         } else if (sofrterm === "SOFR(Daily)") {
           const dyndisc = Number(sofr.SOFR) + Number(discount_fee_rate);
+          setBase_rate_amount(Number(sofr.SOFR));
           setDynamic_discount(dyndisc);
         }
       }
@@ -373,9 +391,11 @@ const RequestForm = ({ className, value, ...rest }) => {
     }
   }
 
-  function handleAdvanceRateChange(input){
+  function handleAdvanceRateChange(input) {
     setAdvance_rate(input);
-    var newpurchaseamount = Number(invoice_amount) * Number(input)/100 - Number(discount_fee_amount);
+    var newpurchaseamount =
+      (Number(invoice_amount) * Number(input)) / 100 -
+      Number(discount_fee_amount);
     setInvoice_purchase_amount(newpurchaseamount);
   }
 
@@ -395,6 +415,8 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_currency,
         invoice_date,
         invoice_due_date,
+        invoice_ipu_signed,
+        invoice_purchase_duration,
         invoice_number,
         base_rate,
         discount_fee_rate,
@@ -633,6 +655,48 @@ const RequestForm = ({ className, value, ...rest }) => {
                         />
                       </LocalizationProvider>
                     </Grid>
+                    <Grid
+                      container
+                      justifyContent="space-around"
+                      item
+                      xs={12}
+                      sm={6}
+                    >
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DesktopDatePicker
+                          value={invoice_ipu_signed || ""}
+                          margin="normal"
+                          variant="outlined"
+                          id="invoice_ipu_signed"
+                          name="invoice_ipu_signed"
+                          label="IPU Signed Date"
+                          format="MM/DD/YYYY"
+                          onChange={(date) => {
+                            setInvoice_ipu_signed(date);
+                          }}
+                          required
+                          KeyboardButtonProps={{
+                            "aria-label": "change date",
+                          }}
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          renderInput={(params) => (
+                            <TextField fullWidth {...params} />
+                          )}
+                        />
+                      </LocalizationProvider>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="invoice_purchase_duration"
+                        label="Discount Duration (days)"
+                        fullWidth
+                        variant="outlined"
+                        value={invoice_purchase_duration || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
                         name="invoice_amount"
@@ -737,7 +801,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Advance Rate in %"
                         fullWidth
                         variant="outlined"
-                        onChange={(e) => handleAdvanceRateChange(e.target.value)}
+                        onChange={(e) =>
+                          handleAdvanceRateChange(e.target.value)
+                        }
                         value={advance_rate || ""}
                       />
                     </Grid>
@@ -748,6 +814,16 @@ const RequestForm = ({ className, value, ...rest }) => {
                         fullWidth
                         variant="outlined"
                         value={invoice_purchase_amount || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="base_rate_amount"
+                        label="SOFR Base Rate"
+                        fullWidth
+                        variant="outlined"
+                        value={base_rate_amount || ""}
                         inputProps={{ readOnly: true }}
                       />
                     </Grid>
