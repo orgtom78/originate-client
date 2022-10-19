@@ -7,9 +7,7 @@ import {
   Card,
   Chip,
   Container,
-  Divider,
   Grid,
-  TextField,
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
@@ -22,14 +20,6 @@ import Page from "src/components/Page";
 import { API, graphqlOperation } from "aws-amplify";
 import moment from "moment";
 import { green, orange } from "@mui/material/colors";
-import LoaderButton from "src/components/LoaderButton.js";
-import { Search as SearchIcon } from "react-feather";
-import { onError } from "src/libs/errorLib.js";
-import { subDays } from "date-fns";
-
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -53,11 +43,7 @@ const orangeTheme = createTheme({
 const AdminTransactionListView = () => {
   const classes = useStyles();
   const [request, setRequest] = useState([]);
-  const [searchterm, setSearchterm] = useState("");
-  const [invoicestart, setInvoicestart] = useState(subDays(new Date(), 7));
-  const [invoiceend, setInvoiceend] = useState(new Date());
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [pageSize, setPageSize] = useState(40);
 
   useEffect(() => {
     async function fetchData() {
@@ -75,75 +61,12 @@ const AdminTransactionListView = () => {
       data: {
         listRequests: { items: itemsPage1, nextToken },
       },
-    } = await API.graphql(graphqlOperation(queries.listRequests));
-    const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
-    const items = n.data.listRequests.items;
-    return items;
-  }
-
-  async function handleSearch() {
-    setSuccess(false);
-    setLoading(true);
-    try {
-      const term = searchterm;
-      await searchRequest(term);
-    } catch (e) {
-      onError(e);
-    }
-    setSuccess(false);
-    setLoading(false);
-  }
-
-  async function searchRequest(input) {
-    if (input === "" || input === undefined || input === null) {
-      const c = await getRequests();
-      const d = c.sort(function (a, b) {
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      });
-      setRequest(d);
-    } else {
-      const resterm = searchterm.toLowerCase() + "*";
-      // search
-      const filter = {
-        invoice_number: {
-          wildcard: resterm,
-        },
-        or: { requestId: { eq: searchterm } },
-      };
-      const result = await API.graphql(
-        graphqlOperation(queries.searchRequests, { filter: filter })
-      );
-      if (result.data.searchRequests.items.length > 0) {
-        let array = await result.data.searchRequests.items;
-        const d = array.sort(function (a, b) {
-          return new Date(b.createdAt) - new Date(a.createdAt);
-        });
-        setRequest(d);
-      } else {
-        setRequest([]);
-      }
-    }
-  }
-
-  async function filterRequests(input) {
-    const startDate = moment(input.invoicestart).format("YYYY-MM-DD");
-    const endDate = moment(input.invoiceend).format("YYYY-MM-DD");
-    let filter = {
-      invoice_due_date: { between: [startDate, endDate] },
-    };
-    const {
-      data: {
-        listRequests: { items: itemsPage1, nextToken },
-      },
     } = await API.graphql(
-      graphqlOperation(queries.listRequests, { filter: filter })
+      graphqlOperation(queries.listRequests, { limit: 10000 })
     );
     const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
     const items = n.data.listRequests.items;
-    const d = items.sort(function (a, b) {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
-    setRequest(d);
+    return items;
   }
 
   const columns = [
@@ -239,6 +162,12 @@ const AdminTransactionListView = () => {
       editable: false,
     },
     {
+      field: "payout_date",
+      headerName: "Payout Date",
+      minWidth: 150,
+      editable: false,
+    },
+    {
       field: "invoice_due_date",
       headerName: "Due Date",
       minWidth: 150,
@@ -247,7 +176,7 @@ const AdminTransactionListView = () => {
     {
       field: "invoice_purchase_duration",
       headerName: "Duration",
-      minWidth: 150,
+      minWidth: 100,
       editable: false,
     },
     {
@@ -266,9 +195,10 @@ const AdminTransactionListView = () => {
     invoice_amount: request.invoice_amount,
     invoice_status: request.request_status,
     invoice_ipu_signed: moment(request.invoice_ipu_signed).format("MM/DD/YYYY"),
+    payout_date: moment(request.payout_date).format("MM/DD/YYYY"),
     invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),
     invoice_purchase_duration: moment(request.invoice_due_date).diff(
-      moment(request.invoice_date),
+      moment(request.payout_date),
       "days"
     ),
     createdAt: moment(request.createdAt).format("MM/DD/YYYY"),
@@ -278,68 +208,6 @@ const AdminTransactionListView = () => {
     <React.Fragment>
       <Page className={clsx(classes.root)} title="Invoices">
         <Container maxWidth={false}>
-          <Divider />
-          <br></br>
-          <Grid
-            container
-            spacing={{ xs: 2, md: 3 }}
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Grid item xs={4}>
-              <TextField
-                fullWidth
-                label="Search Invoice Number"
-                name="Search"
-                onChange={(e) => setSearchterm(e.target.value)}
-                required
-                value={searchterm || ""}
-                variant="outlined"
-                onKeyPress={(e) => {
-                  if (e.key === "Enter") {
-                    handleSearch(e.target.value);
-                  }
-                }}
-              />
-            </Grid>
-            <Grid item xs={2}>
-              <LoaderButton
-                startIcon={<SearchIcon />}
-                disabled={loading}
-                success={success}
-                loading={loading}
-                onClick={handleSearch}
-              >
-                Search
-              </LoaderButton>
-            </Grid>
-            <Grid item xs={3}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  value={invoicestart}
-                  label="Due Date From"
-                  onChange={(e) => setInvoicestart(e)}
-                  onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
-                  required
-                  renderInput={(params) => <TextField fullWidth {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-            <Grid item xs={3}>
-              <LocalizationProvider dateAdapter={AdapterDateFns}>
-                <DesktopDatePicker
-                  value={invoiceend}
-                  label="Due Date To"
-                  onChange={(e) => setInvoiceend(e)}
-                  onAccept={(e) => filterRequests({ invoicestart, invoiceend })}
-                  required
-                  renderInput={(params) => <TextField fullWidth {...params} />}
-                />
-              </LocalizationProvider>
-            </Grid>
-          </Grid>
-          <br></br>
-          <Divider />
           <Box mt={3}>
             <Card>
               <PerfectScrollbar>
@@ -356,8 +224,10 @@ const AdminTransactionListView = () => {
                           }}
                           rows={rows}
                           columns={columns}
-                          pageSize={40}
-                          rowsPerPageOptions={[20]}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                          rowsPerPageOptions={[5, 10, 20, 40]}
+                          pagination
                           checkboxSelection
                           disableSelectionOnClick
                         />
