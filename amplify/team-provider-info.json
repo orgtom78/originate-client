@@ -85,7 +85,7 @@
       "function": {
         "plaid": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/plaid-77704e7035514b333765-build.zip",
+          "s3Key": "amplify-builds/plaid-4b717242306b487a734c-build.zip",
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "bf307b6b82edf0b6e709c49e810d16"
         },
@@ -95,7 +95,7 @@
         },
         "sofr": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/sofr-54306a67756b6b436137-build.zip",
+          "s3Key": "amplify-builds/sofr-43507a46504a79456778-build.zip",
           "scrapingantApiKey": "c4a3ca0d79664156bb49defab5f39e68"
         },
         "newinvoicenot": {
@@ -104,16 +104,23 @@
         },
         "dueinvoicenot": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/dueinvoicenot-446c4f74495233386437-build.zip"
+          "s3Key": "amplify-builds/dueinvoicenot-3234514d4f7a7334657a-build.zip"
         },
         "zoho": {
+          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
+          "s3Key": "amplify-builds/zoho-54514862516e58395957-build.zip",
           "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
           "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471",
-          "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11",
-          "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/zoho-6443694a534855757338-build.zip"
-        },
-        "ocdefi": {}
+          "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11"
+        }
+      },
+      "api": {
+        "originateclientprod": {},
+        "plaid": {},
+        "zoho": {}
+      },
+      "storage": {
+        "originateprodstorage": {}
       }
     }
   }

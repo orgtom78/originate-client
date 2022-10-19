@@ -142,15 +142,12 @@
           "category": "api",
           "resourceName": "originateclientprod",
           "attributes": [
-            "GraphQLAPIIdOutput"
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
           ]
         }
       ]
-    },
-    "ocdefi": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
     },
     "sofr": {
       "build": true,
@@ -230,10 +227,5 @@
       ]
     }
   },
-  "analytics": {
-    "originatetest": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
-    }
-  }
+  "analytics": {}
 }
