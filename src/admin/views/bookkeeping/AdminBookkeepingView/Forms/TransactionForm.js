@@ -118,7 +118,10 @@ const RequestForm = ({ className, value, ...rest }) => {
           requestId: { eq: input.id },
         };
         const request = await API.graphql(
-          graphqlOperation(queries.listRequests, { filter: filter })
+          graphqlOperation(queries.listRequests, {
+            filter: filter,
+            limit: 10000,
+          })
         );
         const items = request.data.listRequests.items[0];
         const {

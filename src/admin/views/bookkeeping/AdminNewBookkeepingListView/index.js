@@ -77,7 +77,7 @@ const AdminTransactionListView = () => {
           listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listRequests, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter, limit: 10000 })
       );
       const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
       const items = n.data.listRequests.items;
@@ -86,7 +86,7 @@ const AdminTransactionListView = () => {
 
     async function test() {
       const c = await getRequests();
-      const d = c.sort(function(a, b) {
+      const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
@@ -111,12 +111,12 @@ const AdminTransactionListView = () => {
     async function test() {
       const a = await getBook();
       var b = a.filter((e) => e.bookkeeping_status_admin === "Under Review");
-      const c = b.sort(function(a, b) {
+      const c = b.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setReviewbook(c);
       var d = a.filter((e) => e.bookkeeping_status_admin === "Approved");
-      const e = d.sort(function(a, b) {
+      const e = d.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setApprovebook(e);
