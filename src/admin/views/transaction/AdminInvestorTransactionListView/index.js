@@ -89,7 +89,7 @@ const AdminInvestorListView = () => {
                           <TableRow hover key={investor.investorId}>
                             <TableCell>
                               <Box alignItems="center" display="flex">
-                                <Link to={`/admin/transaction/${investor.userId}/`}>
+                                <Link to={`/admin/accounts/${investor.userId}/`}>
                                   <Avatar
                                     className={classes.avatar}
                                     src={`${investor.investor_logo}`}

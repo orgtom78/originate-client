@@ -111,31 +111,44 @@ const AdminTransactionListView = () => {
       },
     },
     {
-      field: "invoice_status",
+      field: "request_status",
       headerName: "Status",
       minWidth: 150,
       editable: false,
       renderCell: (cellValues) => {
-        if (cellValues.row.invoice_status === "Submitted") {
+        if (cellValues.row.request_status === "Submitted") {
           return (
             <>
               <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={orangeTheme}>
-                  <Chip label={cellValues.row.invoice_status} color="primary" />
+                  <Chip label={cellValues.row.request_status} color="primary" />
                 </ThemeProvider>
               </StyledEngineProvider>
             </>
           );
         } else if (
-          cellValues.row.invoice_status === "Under Review" ||
-          cellValues.row.invoice_status === "Documents Pending"
+          cellValues.row.request_status === "Under Review" ||
+          cellValues.row.request_status === "Documents Pending"
         ) {
           return (
             <>
               <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={orangeTheme}>
                   <Chip
-                    label={cellValues.row.invoice_status}
+                    label={cellValues.row.request_status}
+                    color="secondary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (cellValues.row.request_status === "Approved") {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip
+                    label={cellValues.row.request_status}
                     color="secondary"
                   />
                 </ThemeProvider>
@@ -147,7 +160,7 @@ const AdminTransactionListView = () => {
             <>
               <StyledEngineProvider injectFirst>
                 <ThemeProvider theme={greenTheme}>
-                  <Chip label={cellValues.row.invoice_status} color="primary" />
+                  <Chip label={cellValues.row.request_status} color="primary" />
                 </ThemeProvider>
               </StyledEngineProvider>
             </>
@@ -156,33 +169,100 @@ const AdminTransactionListView = () => {
       },
     },
     {
-      field: "invoice_ipu_signed",
-      headerName: "IPU Date",
-      minWidth: 150,
-      editable: false,
-    },
-    {
-      field: "payout_date",
-      headerName: "Payout Date",
-      minWidth: 150,
-      editable: false,
-    },
-    {
-      field: "invoice_due_date",
-      headerName: "Due Date",
-      minWidth: 150,
-      editable: false,
-    },
-    {
       field: "invoice_purchase_duration",
       headerName: "Duration",
       minWidth: 100,
       editable: false,
     },
     {
+      field: "invoice_ipu_signed",
+      headerName: "IPU Date",
+      minWidth: 100,
+      editable: false,
+    },
+    {
+      field: "payout_date",
+      headerName: "Payout Date",
+      minWidth: 100,
+      editable: false,
+    },
+    {
+      field: "payback_date",
+      headerName: "Payback Date",
+      minWidth: 100,
+      editable: false,
+    },
+    {
+      field: "invoice_due_date",
+      headerName: "Due Date",
+      minWidth: 100,
+      editable: false,
+    },
+    {
+      field: "invoice_discrepancy",
+      headerName: "Discrepancy",
+      minWidth: 100,
+      editable: false,
+      renderCell: (cellValues) => {
+        if (cellValues.row.invoice_discrepancy === 0) {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip
+                    label={cellValues.row.invoice_discrepancy}
+                    color="primary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (cellValues.row.invoice_discrepancy >= 0) {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip
+                    label={cellValues.row.invoice_discrepancy}
+                    color="secondary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (cellValues.row.invoice_discrepancy <= 0) {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={orangeTheme}>
+                  <Chip
+                    label={cellValues.row.invoice_discrepancy}
+                    color="primary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider>
+                  <Chip
+                    label={cellValues.row.invoice_discrepancy}
+                    color="primary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        }
+      },
+    },
+    {
       field: "createdAt",
       headerName: "Created At",
-      minWidth: 150,
+      minWidth: 100,
       editable: false,
     },
   ];
@@ -193,16 +273,32 @@ const AdminTransactionListView = () => {
     supplier_name: request.supplier_name,
     invoice_number: request.invoice_number,
     invoice_amount: request.invoice_amount,
-    invoice_status: request.request_status,
-    invoice_ipu_signed: moment(request.invoice_ipu_signed).format("MM/DD/YYYY"),
-    payout_date: moment(request.payout_date).format("MM/DD/YYYY"),
-    invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),
+    request_status: request.request_status,
     invoice_purchase_duration: moment(request.invoice_due_date).diff(
       moment(request.payout_date),
       "days"
     ),
+    invoice_ipu_signed: moment(request.invoice_ipu_signed).format("MM/DD/YYYY"),
+    payout_date: moment(request.payout_date).format("MM/DD/YYYY"),
+    payback_date: moment(request.payback_date).format("MM/DD/YYYY"),
+    invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),
+    invoice_discrepancy: checkdifference(
+      request.payback_date,
+      request.invoice_due_date
+    ),
     createdAt: moment(request.createdAt).format("MM/DD/YYYY"),
   }));
+
+  function checkdifference(pbdate, ddate) {
+    const d = moment(ddate).format("MM/DD/YYYY");
+    const p = moment(pbdate).format("MM/DD/YYYY");
+    const diff = moment(pbdate).diff(moment(), "days");
+    if (d === p) {
+      return 0;
+    } else {
+      return diff;
+    }
+  }
 
   return (
     <React.Fragment>
@@ -225,7 +321,9 @@ const AdminTransactionListView = () => {
                           rows={rows}
                           columns={columns}
                           pageSize={pageSize}
-                          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
                           rowsPerPageOptions={[5, 10, 20, 40]}
                           pagination
                           checkboxSelection

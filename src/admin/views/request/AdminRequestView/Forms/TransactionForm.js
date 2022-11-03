@@ -98,6 +98,10 @@ const status = [
     value: "Approved",
     label: "Approved",
   },
+  {
+    value: "Settled",
+    label: "Settled",
+  },
 ];
 
 const RequestForm = ({ className, value, ...rest }) => {

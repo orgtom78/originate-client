@@ -100,6 +100,7 @@ const AdminBookkeepingView = lazy(() => import('src/admin/views/bookkeeping/Admi
 const AdminInvestorTransactionListView = lazy(() => import('src/admin/views/transaction/AdminInvestorTransactionListView'));
 const AdminInvestorBankView = lazy(() => import('src/admin/views/transaction/AdminInvestorBankView'));
 const AdminAccountTranscationView = lazy(() => import('src/admin/views/transaction/AdminAccountTransactionView'));
+const AdminTransactionView = lazy(() => import('src/admin/views/transaction/AdminTransactionView'));
 
 const InvestorDashboardView = lazy(() => import('src/investor/views/reports/InvestorDashboardView'));
 const InvestorLoginView = lazy(() => import('src/investor/views/auth/InvestorLoginView'));
@@ -272,8 +273,9 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'bookkeeping/:id', element: !isAdmin ? <AdminLoginView /> : <AdminBookkeepingView />  },
 
       { path: 'transactions', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorTransactionListView />  },
-      { path: 'transaction/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorBankView />  },
-      { path: 'transaction/account/:id', element: !isAdmin ? <AdminLoginView /> : <AdminAccountTranscationView />  },
+      { path: 'transaction/:id', element: !isAdmin ? <AdminLoginView /> : <AdminTransactionView />  },
+      { path: 'accounts/:id', element: !isAdmin ? <AdminLoginView /> : <AdminInvestorBankView />  },
+      { path: 'account/:id', element: !isAdmin ? <AdminLoginView /> : <AdminAccountTranscationView />  },
     ]
   },
   {

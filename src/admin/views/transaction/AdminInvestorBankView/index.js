@@ -10,11 +10,9 @@ import {
   CardContent,
   Grid,
   Typography,
-  createTheme,
 } from "@mui/material";
 import makeStyles from "@mui/styles/makeStyles";
 import Page from "src/components/Page";
-import { green, orange } from "@mui/material/colors";
 import { ArrowUp as ArrowUpIcon } from "react-feather";
 import { ArrowDown as ArrowDownIcon } from "react-feather";
 import * as queries from "src/graphql/queries.js";
@@ -39,17 +37,7 @@ const useStyles = makeStyles((theme) => ({
   statsIcon: {
     marginRight: theme.spacing(1),
   },
-  palette: {
-    alternative: orange,
-  },
 }));
-
-const greenTheme = createTheme({
-  palette: { primary: { main: green[500] }, secondary: { main: green[200] } },
-});
-const orangeTheme = createTheme({
-  palette: { primary: { main: orange[500] }, secondary: { main: orange[200] } },
-});
 
 const Banks = () => {
   const classes = useStyles();
@@ -108,7 +96,7 @@ const Banks = () => {
             <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
-                  <Link to={`/admin/transaction/account/${remittance}/`}>
+                  <Link to={`/admin/account/${remittance}/`}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
                         <Avatar alt="remittance" variant="square">
@@ -139,7 +127,7 @@ const Banks = () => {
             <Grid item spacing={3} xs={6}>
               <Card>
                 <CardActionArea>
-                  <Link to={`/admin/transaction/account/${collection}/`}>
+                  <Link to={`/admin/account/${collection}/`}>
                     <CardContent>
                       <Box display="flex" justifyContent="center" mb={3}>
                         <Avatar alt="collection" variant="square">

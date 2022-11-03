@@ -108,7 +108,7 @@
         },
         "zoho": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/zoho-54514862516e58395957-build.zip",
+          "s3Key": "amplify-builds/zoho-4c793953786b495a4e57-build.zip",
           "zohoClientId": "1000.ONEVZJV65UQH15AEEJ0E3RW6P4C8DD",
           "zohoClientSecret": "026eb9182336af0b124c0162b20389878c1df84471",
           "zohoToken": "1000.ae6c405f00ab0c86662a8315251cd724.02efa25f2328dc956b16589a43bc6f11"
