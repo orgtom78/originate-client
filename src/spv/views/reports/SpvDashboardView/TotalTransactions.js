@@ -48,7 +48,10 @@ const TotalTransactions = ({ className, ...rest }) => {
           searchRequests: { total },
         },
       } = await API.graphql(
-        graphqlOperation(queries.searchRequests, { filter: filter, limit: 10000 })
+        graphqlOperation(queries.searchRequests, {
+          filter: filter,
+          limit: 10000,
+        })
       );
       setRequest(total);
     };
@@ -56,7 +59,7 @@ const TotalTransactions = ({ className, ...rest }) => {
   }, []);
 
   const handle = useCallback(() => {
-    if (!request || !request.length) {
+    if (!request) {
       return;
     } else {
       const d = request;
@@ -66,8 +69,7 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   function addarrays() {
     if (handle) {
-      var x = request.filter((e) => e.request_status === "Approved");
-      const count = x.length;
+      const count = request;
       return count;
     } else {
       return;

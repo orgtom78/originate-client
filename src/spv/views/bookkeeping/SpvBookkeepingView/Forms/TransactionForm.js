@@ -388,7 +388,7 @@ const RequestForm = ({ className, value, ...rest }) => {
   }
 
   async function createRAASignRequest() {
-    const date = new moment().format("DD MMMM YYYY");
+    const date = moment(payout_date).format("DD MMMM YYYY");
     const client = process.env.REACT_APP_ZOHO_CLIENT_ID;
     const secret = process.env.REACT_APP_ZOHO_CLIENT_SECRET;
     const token = process.env.REACT_APP_ZOHO_TOKEN;
