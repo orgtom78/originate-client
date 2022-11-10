@@ -96,11 +96,14 @@ const RequestForm = ({ className, value, ...rest }) => {
   const [invoice_amount, setInvoice_amount] = useState("");
   const [invoice_date, setInvoice_date] = useState("");
   const [invoice_due_date, setInvoice_due_date] = useState("");
+  const [invoice_purchase_duration, setInvoice_purchase_duration] =
+    useState("");
   const [invoice_number, setInvoice_number] = useState("");
   const [sold_goods_description, setSold_goods_description] = useState("");
   const [invoice_currency, setInvoice_currency] = useState("");
   const [request_status, setRequest_status] = useState("");
   const [base_rate, setBase_rate] = useState("");
+  const [base_rate_amount, setBase_rate_amount] = useState("");
   const [advance_rate, setAdvance_rate] = useState("");
   const [invoice_purchase_amount, setInvoice_purchase_amount] = useState("");
   const [discount_fee_rate, setDiscount_fee_rate] = useState("");
@@ -140,7 +143,9 @@ const RequestForm = ({ className, value, ...rest }) => {
           invoice_date,
           invoice_due_date,
           invoice_number,
+          invoice_purchase_duration,
           base_rate,
+          base_rate_amount,
           transaction_fee_rate,
           transaction_fee_amount,
           discount_fee_rate,
@@ -164,8 +169,10 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_date(momentinvoice);
         const momentinvoicedue = moment(invoice_due_date).utc().startOf("day");
         setInvoice_due_date(momentinvoicedue);
+        setInvoice_purchase_duration(invoice_purchase_duration);
         setInvoice_number(invoice_number);
         setBase_rate(base_rate);
+        setBase_rate_amount(base_rate_amount);
         setDiscount_fee_rate(discount_fee_rate);
         setDiscount_fee_rate_adjusted(discount_fee_rate_adjusted);
         setDiscount_fee_amount(discount_fee_amount);
@@ -319,39 +326,6 @@ const RequestForm = ({ className, value, ...rest }) => {
     payout_date,
     transaction_fee_rate,
   ]);
-
-  function handleLatePayback(input) {
-    setPayback_date(input);
-    const standardizedinput = moment(input).utc().startOf("day").toISOString();
-    console.log(standardizedinput);
-    const standardpayout = moment(payout_date)
-      .utc()
-      .startOf("day")
-      .toISOString();
-    console.log(payout_date);
-    console.log(standardpayout);
-    const standduedate = moment(invoice_due_date)
-      .utc()
-      .startOf("day")
-      .toISOString();
-    console.log(standduedate);
-    if (standardizedinput !== standduedate) {
-      console.log("not equal calculate new discount");
-      const oldperiod = moment(standduedate).diff(standardpayout, "days");
-      const newperiod = moment(standardizedinput).diff(standardpayout, "days");
-      console.log(newperiod);
-      const periodratio = Number(newperiod) / Number(oldperiod);
-      const newtotaldiscount =
-        (Number(sofr_rate) + Number(discount_fee_rate)) / periodratio;
-      const newdiscountspread = newtotaldiscount - sofr_rate;
-      console.log(newtotaldiscount);
-      console.log(newdiscountspread);
-      setDiscount_fee_rate_adjusted(newdiscountspread);
-    } else if (standardizedinput === standduedate) {
-      console.log("equal dont do anything");
-      setDiscount_fee_rate_adjusted(0);
-    }
-  }
 
   function handleAdvanceRateChange(input) {
     setAdvance_rate(input);
@@ -535,7 +509,11 @@ const RequestForm = ({ className, value, ...rest }) => {
                         label="Invoice Date"
                         fullWidth
                         variant="outlined"
-                        value={moment(invoice_date).format("MM/DD/YYYY") || ""}
+                        value={
+                          moment(invoice_date)
+                            .add(12, "hours")
+                            .format("MM/DD/YYYY") || ""
+                        }
                         InputProps={{
                           readOnly: true,
                         }}
@@ -548,7 +526,9 @@ const RequestForm = ({ className, value, ...rest }) => {
                         fullWidth
                         variant="outlined"
                         value={
-                          moment(invoice_due_date).format("MM/DD/YYYY") || ""
+                          moment(invoice_due_date)
+                            .add(12, "hours")
+                            .format("MM/DD/YYYY") || ""
                         }
                         InputProps={{
                           readOnly: true,
@@ -621,10 +601,20 @@ const RequestForm = ({ className, value, ...rest }) => {
                     <Grid item xs={12} sm={6}>
                       <TextField
                         name="discount_fee_rate"
-                        label="Discount Fee / Spread"
+                        label="Discount Fee / Spread in %"
                         fullWidth
                         variant="outlined"
                         value={discount_fee_rate || ""}
+                        inputProps={{ readOnly: true }}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        name="base_rate_amount"
+                        label="Base Rate in %"
+                        fullWidth
+                        variant="outlined"
+                        value={base_rate_amount || ""}
                         inputProps={{ readOnly: true }}
                       />
                     </Grid>
@@ -657,16 +647,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                         fullWidth
                         variant="outlined"
                         value={invoice_purchase_amount || ""}
-                        inputProps={{ readOnly: true }}
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField
-                        name="transaction_fee_rate"
-                        label="Platform Fee in % of Spread"
-                        fullWidth
-                        variant="outlined"
-                        value={transaction_fee_rate || ""}
                         inputProps={{ readOnly: true }}
                       />
                     </Grid>

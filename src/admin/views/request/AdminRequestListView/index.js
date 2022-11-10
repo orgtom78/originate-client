@@ -292,8 +292,8 @@ const AdminTransactionListView = () => {
   function checkdifference(pbdate, ddate) {
     const d = moment(ddate).format("MM/DD/YYYY");
     const p = moment(pbdate).format("MM/DD/YYYY");
-    const diff = moment(pbdate).diff(moment(), "days");
-    if (d === p) {
+    const diff = moment(d).diff(moment(p), "days");
+    if (diff === 0) {
       return 0;
     } else {
       return diff;

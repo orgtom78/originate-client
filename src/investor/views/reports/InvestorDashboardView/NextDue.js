@@ -47,9 +47,15 @@ const LatestLimits = ({ className, ...rest }) => {
     const getRequests = async () => {
       let user = await Auth.currentAuthenticatedUser();
       let id = user.attributes["custom:groupid"];
+      const querystartdate = moment()
+      .utc()
+      .startOf("day")
+      const queryenddate = moment()
+      .add(7, "days")
       let filter = {
         request_status: { eq: "Approved" },
         investorId: { eq: id },
+        invoice_due_date: { between: [querystartdate, queryenddate] } 
       };
       const {
         data: {
@@ -60,10 +66,8 @@ const LatestLimits = ({ className, ...rest }) => {
       );
       const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
       const items = await n.data.listRequests.items;
-      var x = items.filter((e) => e.request_status === "Approved");
-      let today = moment().toISOString();
-      var z = x.filter((e) => moment(e.invoice_due_date) - moment(today) <= 7 && moment(e.invoice_due_date) - moment(today) >0);
-      const d = z.sort(function (a, b) {
+      console.log(items)
+      const d = items.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setLimitdata(d);
@@ -127,7 +131,7 @@ const LatestLimits = ({ className, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    {moment(limit.invoice_due_date).format("DD/MM/YYYY")}
+                    {moment(limit.invoice_due_date).format("MM/DD/YYYY")}
                   </TableCell>
                   <TableCell>{checkstatus(limit.request_status)}</TableCell>
                 </TableRow>

@@ -423,6 +423,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         invoice_purchase_duration,
         invoice_number,
         base_rate,
+        base_rate_amount,
         discount_fee_rate,
         discount_fee_rate_adjusted,
         discount_fee_amount,

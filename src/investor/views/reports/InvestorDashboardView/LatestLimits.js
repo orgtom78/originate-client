@@ -123,7 +123,7 @@ const LatestLimits = ({ className, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    {moment(limit.createdAt).format("DD/MM/YYYY")}
+                    {moment(limit.createdAt).format("MM/DD/YYYY")}
                   </TableCell>
                   <TableCell>{checkstatus(limit.request_status)}</TableCell>
                 </TableRow>

@@ -70,7 +70,7 @@ const TransactionListView = () => {
           listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listRequests, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter, limit: 10000 })
       );
       const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
       const items = n.data.listRequests.items;
