@@ -93,7 +93,7 @@ const LatestLimits = ({ className, ...rest }) => {
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
-      <CardHeader title="Latest Requests" />
+      <CardHeader title="Latest invoices" />
       <Divider />
       <PerfectScrollbar>
         <Box minWidth={800}>

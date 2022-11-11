@@ -177,12 +177,6 @@ const InvestorTransactionListView = () => {
       editable: false,
     },
     {
-      field: "invoice_ipu_signed",
-      headerName: "IPU Date",
-      minWidth: 100,
-      editable: false,
-    },
-    {
       field: "payout_date",
       headerName: "Payout Date",
       minWidth: 100,
@@ -193,6 +187,19 @@ const InvestorTransactionListView = () => {
       headerName: "Payback Date",
       minWidth: 100,
       editable: false,
+      renderCell: (cellValues) => {
+        if (cellValues.row.transactionId_payback) {
+          return (
+            <Link
+              to={`/investor/transaction/${cellValues.row.transactionId_payback}`}
+            >
+              {cellValues.row.payback_date}
+            </Link>
+          );
+        } else {
+          return;
+        }
+      },
     },
     {
       field: "invoice_due_date",
@@ -271,6 +278,7 @@ const InvestorTransactionListView = () => {
 
   const rows = request.map((request) => ({
     id: request.id,
+    transactionId_payback: request.transactionId_payback,
     buyer_name: request.buyer_name,
     supplier_name: request.supplier_name,
     invoice_number: request.invoice_number,
@@ -280,7 +288,6 @@ const InvestorTransactionListView = () => {
       moment(request.payout_date),
       "days"
     ),
-    invoice_ipu_signed: moment(request.invoice_ipu_signed).format("MM/DD/YYYY"),
     payout_date: moment(request.payout_date).format("MM/DD/YYYY"),
     payback_date: moment(request.payback_date).format("MM/DD/YYYY"),
     invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),

@@ -117,6 +117,7 @@ const InvestorCollectionTransactionsView = lazy(() => import('src/investor/views
 const InvestorNewFinancialsView = lazy(() => import('src/investor/views/financials/InvestorNewFinancialsView'));
 const InvestorFinancialsView = lazy(() => import("src/investor/views/financials/InvestorUpdateFinancialsView"));
 const InvestorSettingsView = lazy(() => import('src/investor/views/settings/SettingsView'));
+const InvestorTransactionView = lazy(() => import('src/investor/views/bank/InvestorTransactionView'));
 
 const SpvDashboardView = lazy(() => import('src/spv/views/reports/SpvDashboardView'));
 const SpvLoginView = lazy(() => import('src/spv/views/auth/SpvLoginView'));
@@ -297,6 +298,7 @@ const BrokerNewFinancialsView = lazy(() => import('src/broker/views/financials/B
       { path: 'bank/remittance/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorRemittanceTransactionsView />},
       { path: 'bank/collection', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionConnectView />},
       { path: 'bank/collection/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorCollectionTransactionsView />},
+      { path: 'transaction/:id', element: !isInvestor ? <InvestorLoginView /> : <InvestorTransactionView />},
       { path: 'investornewfinancials/:id/:buyId/:ident', element: !isInvestor  ? <InvestorLoginView /> : <InvestorNewFinancialsView />},
       { path: 'financials/:id', element: !isInvestor  ? <InvestorLoginView /> : <InvestorFinancialsView />},
       { path: 'settings', element: !isInvestor ? <InvestorLoginView /> : <InvestorSettingsView /> },

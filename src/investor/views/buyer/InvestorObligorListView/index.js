@@ -108,13 +108,14 @@ const InvestorBuyerListView = () => {
                                       {getInitials(buyer.buyer_name)}
                                     </Avatar>
                                   </Link>
-
-                                  <Typography
-                                    color="textPrimary"
-                                    variant="body1"
-                                  >
-                                    {buyer.buyer_name}
-                                  </Typography>
+                                  <Link to={`/investor/buyer/${buyer.id}`}>
+                                    <Typography
+                                      color="textPrimary"
+                                      variant="body1"
+                                    >
+                                      {buyer.buyer_name}
+                                    </Typography>
+                                  </Link>
                                 </Box>
                               </TableCell>
                               <TableCell>{`${buyer.buyer_country}`}</TableCell>
