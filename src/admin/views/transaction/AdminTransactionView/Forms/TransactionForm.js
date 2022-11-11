@@ -81,12 +81,13 @@ const TransactionForm = ({ className, value, ...rest }) => {
   const theme = useTheme();
 
   const [activeStep, setActiveStep] = useState(0);
-  const maxSteps = 10;
+  const [maxSteps, setMaxSteps] = useState(20);
 
   const [transaction_description, setTransaction_description] = useState("");
   const [transaction_source_amount, setTransaction_source_amount] =
     useState("");
   const [transaction_date, setTransaction_date] = useState("");
+  const [transactionId_payback, setTransactionId_payback] = useState("");
 
   const [request, setRequest] = useState([]);
   const [open, setOpen] = useState(false);
@@ -94,7 +95,6 @@ const TransactionForm = ({ className, value, ...rest }) => {
 
   const handleClickOpen = (input) => {
     setOpen(true);
-    console.log(input);
     setParams(input);
   };
 
@@ -117,6 +117,7 @@ const TransactionForm = ({ className, value, ...rest }) => {
             },
           },
         } = transaction;
+        setTransactionId_payback(id);
         setTransaction_description(transaction_description);
         setTransaction_source_amount(transaction_source_amount);
         setTransaction_date(transaction_date);
@@ -134,6 +135,7 @@ const TransactionForm = ({ className, value, ...rest }) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setRequest(d);
+      setMaxSteps(c.length);
     }
     fetchData();
   }, []);
@@ -141,7 +143,7 @@ const TransactionForm = ({ className, value, ...rest }) => {
   async function getRequests() {
     const format = "YYYY-MM-DD";
     const start = moment().subtract(30, "days").format(format);
-    const end = moment().add(10, "days").format(format);
+    const end = moment().add(14, "days").format(format);
     let filter = {
       invoice_due_date: { between: [start, end] },
     };
@@ -160,10 +162,11 @@ const TransactionForm = ({ className, value, ...rest }) => {
   async function handlePaybackAssociation() {
     const id = params.id;
     const payback_date = transaction_date;
-    const request_status = 'Settled'
+    const request_status = "Settled";
     try {
       await updateRequest({
         id,
+        transactionId_payback,
         payback_date,
         request_status,
       });
