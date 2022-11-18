@@ -130,7 +130,7 @@ const TransactionForm = ({ className, value, ...rest }) => {
 
   useEffect(() => {
     async function fetchData() {
-      const c = await getRequests();
+      const c = await getRequests(transaction_date);
       const d = c.sort(function (a, b) {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
@@ -138,12 +138,12 @@ const TransactionForm = ({ className, value, ...rest }) => {
       setMaxSteps(c.length);
     }
     fetchData();
-  }, []);
+  }, [transaction_date]);
 
-  async function getRequests() {
+  async function getRequests(input) {
     const format = "YYYY-MM-DD";
-    const start = moment().subtract(30, "days").format(format);
-    const end = moment().add(14, "days").format(format);
+    const start = moment(input).subtract(30, "days").format(format);
+    const end = moment(input).add(14, "days").format(format);
     let filter = {
       invoice_due_date: { between: [start, end] },
     };
