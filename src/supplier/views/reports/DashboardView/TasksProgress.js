@@ -54,7 +54,7 @@ const TasksProgress = ({ className, ...rest }) => {
           listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listBuyers, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter, limit: 10000 })
       );
       const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
       const items = await n.data.listBuyers.items;
@@ -86,8 +86,9 @@ const TasksProgress = ({ className, ...rest }) => {
       const p = calculateprogress();
       const app = p["Approved"];
       const rev = p["Under Review"];
-      const sum = app + rev;
-      const perc = (app / sum) * 100;
+      const set = p["Settled"];
+      const sum = app + rev + set;
+      const perc = (app + set / sum) * 100;
       if (Number.isNaN(perc)) {
         return "100";
       } else if (perc !== "NaN") {

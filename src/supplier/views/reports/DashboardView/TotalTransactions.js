@@ -50,7 +50,7 @@ const TotalTransactions = ({ className, ...rest }) => {
           listRequests: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listRequests, { filter: filter })
+        graphqlOperation(queries.listRequests, { filter: filter, limit: 10000 })
       );
       const n = { data: { listRequests: { items: itemsPage1, nextToken } } };
       const items = await n.data.listRequests.items;
@@ -70,7 +70,7 @@ const TotalTransactions = ({ className, ...rest }) => {
 
   function addarrays() {
     if (handle) {
-      var x = request.filter((e) => e.request_status === "Approved");
+      var x = request.filter((e) => e.request_status === "Approved" || e.request_status === "Settled");
       const count = x.length;
       return count;
     } else {

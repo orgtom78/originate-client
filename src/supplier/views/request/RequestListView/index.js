@@ -1,22 +1,16 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import {
-  Avatar,
   Box,
   Card,
   Chip,
   Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TablePagination,
-  TableRow,
-  Typography,
+  Grid,
   ThemeProvider,
   StyledEngineProvider,
   createTheme,
 } from "@mui/material";
+import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import makeStyles from "@mui/styles/makeStyles";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import Page from "src/components/Page";
@@ -24,9 +18,7 @@ import * as queries from "src/graphql/queries.js";
 import { API, graphqlOperation } from "aws-amplify";
 import { useUser } from "src/components/context/usercontext.js";
 import moment from "moment";
-import getInitials from "src/utils/getInitials";
 import { green, orange } from "@mui/material/colors";
-import NumberFormat from "react-number-format";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -52,9 +44,7 @@ const TransactionListView = () => {
   const context = useUser();
   const sub = context.sub;
   const [request, setRequest] = useState([]);
-
-  const [limit, setLimit] = useState(10);
-  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(40);
 
   React.useEffect(() => {
     async function loadRequest() {
@@ -87,199 +77,209 @@ const TransactionListView = () => {
     test();
   }, [sub]);
 
-  const handleLimitChange = (event) => {
-    setLimit(event.target.value);
-  };
+  const columns = [
+    {
+      field: "buyer_name",
+      headerName: "Buyer's Name",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_number",
+      headerName: "Invoice Number",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_amount",
+      headerName: "Invoice Amount",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
 
-  const handlePageChange = (event, newPage) => {
-    setPage(newPage);
-  };
+        const valueFormatted = Number(params.value).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "discount_fee_amount",
+      headerName: "Total Discount",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
 
-  function checkstatus(request) {
-    if (request === "Submitted") {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip label={request} color="primary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    } else if (request === "Under Review" || request === "Documents Pending") {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip label={request} color="secondary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={greenTheme}>
-              <Chip label={request} color="primary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    }
-  }
+        const valueFormatted = Number(params.value).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "transaction_fee_amount",
+      headerName: "Platform Fee",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
 
-  function checkpayout(date) {
-    if (date !== null) {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip
-                label={moment(date).format("DD/MM/YYYY")}
-                color="secondary"
-              />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={orangeTheme}>
-              <Chip label="N/A" color="secondary" />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </>
-      );
-    }
-  }
+        const valueFormatted = Number(params.value).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "interest_fee_amount",
+      headerName: "Interest Fee",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
+
+        const valueFormatted = Number(params.value).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
+      field: "request_status",
+      headerName: "Status",
+      minWidth: 150,
+      editable: false,
+      renderCell: (cellValues) => {
+        if (cellValues.row.request_status === "Submitted") {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={orangeTheme}>
+                  <Chip label={cellValues.row.request_status} color="primary" />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (
+          cellValues.row.request_status === "Under Review" ||
+          cellValues.row.request_status === "Documents Pending"
+        ) {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={orangeTheme}>
+                  <Chip
+                    label={cellValues.row.request_status}
+                    color="secondary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else if (cellValues.row.request_status === "Approved") {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip
+                    label={cellValues.row.request_status}
+                    color="secondary"
+                  />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <StyledEngineProvider injectFirst>
+                <ThemeProvider theme={greenTheme}>
+                  <Chip label={cellValues.row.request_status} color="primary" />
+                </ThemeProvider>
+              </StyledEngineProvider>
+            </>
+          );
+        }
+      },
+    },
+    {
+      field: "payout_date",
+      headerName: "Payout Date",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "invoice_due_date",
+      headerName: "Due Date",
+      minWidth: 150,
+      editable: false,
+    },
+    {
+      field: "payback_date",
+      headerName: "Actual Payback Date",
+      minWidth: 150,
+      editable: false,
+    },
+  ];
+
+  const rows = request.map((request) => ({
+    id: request.id,
+    buyer_name: request.buyer_name,
+    supplier_name: request.supplier_name,
+    invoice_number: request.invoice_number,
+    invoice_amount: request.invoice_amount,
+    discount_fee_amount: request.discount_fee_amount,
+    transaction_fee_amount: request.transaction_fee_amount,
+    interest_fee_amount:
+      Number(request.discount_fee_amount) -
+      Number(request.transaction_fee_amount),
+    request_status: request.request_status,
+    payout_date: moment(request.payout_date).format("MM/DD/YYYY"),
+    invoice_due_date: moment(request.invoice_due_date).format("MM/DD/YYYY"),
+    payback_date: moment(request.payback_date).format("MM/DD/YYYY"),
+  }));
 
   return (
-    <Page className={clsx(classes.root)} title="Customers">
-      <Container maxWidth={false}>
-        <Box mt={3}>
-          <Card>
-            <PerfectScrollbar>
-              <Box minWidth={1050}>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell>Buyer's Name</TableCell>
-                      <TableCell>Invoice Number</TableCell>
-                      <TableCell>Amount</TableCell>
-                      <TableCell>Total Discount</TableCell>
-                      <TableCell>Platfrom Fee</TableCell>
-                      <TableCell>Discount Fee</TableCell>
-                      <TableCell>Currency</TableCell>
-                      <TableCell>Status</TableCell>
-                      <TableCell>Invoice Date</TableCell>
-                      <TableCell>Invoice Due Date</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {request
-                      .slice(page * limit, page * limit + limit)
-                      .map((request) => (
-                        <TableRow hover key={request.requestId}>
-                          <TableCell>
-                            <Box alignItems="center" display="flex">
-                              <Avatar
-                                className={classes.avatar}
-                                src={request.avatarUrl}
-                              >
-                                {getInitials(request.buyer_name)}
-                              </Avatar>
-                              <Typography color="textPrimary" variant="body1">
-                                {request.buyer_name}
-                              </Typography>
-                            </Box>
-                          </TableCell>
-                          <TableCell>{`${request.invoice_number}`}</TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              color="textPrimary"
-                              variant="h3"
-                              value={request.invoice_amount}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                              decimalScale="2"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              color="textPrimary"
-                              variant="h3"
-                              value={request.discount_fee_amount}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                              decimalScale="2"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              color="textPrimary"
-                              variant="h3"
-                              value={request.transaction_fee_amount}
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                              decimalScale="2"
-                            />
-                          </TableCell>
-                          <TableCell>
-                            <NumberFormat
-                              color="textPrimary"
-                              variant="h3"
-                              value={
-                                Number(request.discount_fee_amount) -
-                                Number(request.transaction_fee_amount)
-                              }
-                              displayType={"text"}
-                              thousandSeparator={true}
-                              prefix={"$"}
-                              decimalScale="2"
-                            />
-                          </TableCell>
-                          <TableCell>{`${request.invoice_currency}`}</TableCell>
-                          <TableCell>
-                            {checkstatus(request.request_status)}
-                          </TableCell>
-                          <TableCell>
-                            <StyledEngineProvider injectFirst>
-                              <ThemeProvider theme={greenTheme}>
-                                <Chip
-                                  label={moment(request.invoice_date).format("DD/MM/YYYY")}
-                                  color="secondary"
-                                />
-                              </ThemeProvider>
-                            </StyledEngineProvider>
-                          </TableCell>
-                          <TableCell>
-                            {checkpayout(request.invoice_due_date)}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </Box>
-            </PerfectScrollbar>
-            <TablePagination
-              component="div"
-              count={request.length}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleLimitChange}
-              page={page}
-              rowsPerPage={limit}
-              rowsPerPageOptions={[5, 10, 25]}
-            />
-          </Card>
-        </Box>
-      </Container>
-    </Page>
+    <React.Fragment>
+      <Page className={clsx(classes.root)} title="Invoices">
+        <Container maxWidth={false}>
+          <Box mt={3}>
+            <Card>
+              <PerfectScrollbar>
+                <Grid item>
+                  <Box sx={{ height: 800, width: "100%" }}>
+                    <div style={{ display: "flex", height: "100%" }}>
+                      <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                          components={{
+                            Toolbar: GridToolbar,
+                          }}
+                          componentsProps={{
+                            toolbar: { showQuickFilter: true },
+                          }}
+                          rows={rows}
+                          columns={columns}
+                          pageSize={pageSize}
+                          onPageSizeChange={(newPageSize) =>
+                            setPageSize(newPageSize)
+                          }
+                          rowsPerPageOptions={[5, 10, 20, 40]}
+                          pagination
+                          checkboxSelection
+                          disableSelectionOnClick
+                        />
+                      </div>
+                    </div>
+                  </Box>
+                </Grid>
+              </PerfectScrollbar>
+            </Card>
+          </Box>
+        </Container>
+      </Page>
+    </React.Fragment>
   );
 };
 

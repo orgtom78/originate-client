@@ -53,7 +53,7 @@ const Limits = ({ className, ...rest }) => {
           listBuyers: { items: itemsPage1, nextToken },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listBuyers, { filter: filter })
+        graphqlOperation(queries.listBuyers, { filter: filter, limit: 10000 })
       );
       const n = { data: { listBuyers: { items: itemsPage1, nextToken } } };
       const items = await n.data.listBuyers.items;
