@@ -468,7 +468,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                         "recipient_name": "tobias.pfuetze@originatecapital.co",
                         "recipient_email": "tobias.pfuetze@originatecapital.co",
                         "action_id": "${raa_offer_oc_action_id}",
-                        "signing_order": 2,
+                        "signing_order": 1,
                         "role": "SPV",
                         "verify_recipient": false,
                         "private_notes": ""
@@ -476,8 +476,8 @@ const RequestForm = ({ className, value, ...rest }) => {
                     {
                         "recipient_name": "${investor_email}",
                         "recipient_email": "${investor_email}",
-                        "action_id": "277418000000108048",
-                        "signing_order": 3,
+                        "action_id": "277418000000237024",
+                        "signing_order": 2,
                         "role": "Investor",
                         "verify_recipient": false,
                         "private_notes": ""
