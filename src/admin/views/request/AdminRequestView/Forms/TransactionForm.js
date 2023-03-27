@@ -21,7 +21,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import { AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
+import { AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
@@ -198,7 +198,7 @@ const RequestForm = ({ className, value, ...rest }) => {
         const purchaseduration = moment(invoice_due_date).diff(
           moment(payout_date),
           "days"
-        );
+        ) +1;
         const momentipusigned = moment(invoice_ipu_signed).utc().startOf("day");
         setInvoice_ipu_signed(momentipusigned);
         setInvoice_purchase_duration(purchaseduration);
@@ -543,7 +543,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
                           value={payout_date || ""}
                           margin="normal"
@@ -569,7 +569,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
                           value={payback_date || ""}
                           margin="normal"
@@ -601,7 +601,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
                           value={invoice_date || ""}
                           margin="normal"
@@ -633,7 +633,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
                           value={invoice_due_date || ""}
                           margin="normal"
@@ -665,7 +665,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterMoment}>
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DesktopDatePicker
                           value={invoice_ipu_signed || ""}
                           margin="normal"

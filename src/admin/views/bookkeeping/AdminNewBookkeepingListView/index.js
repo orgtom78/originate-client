@@ -100,7 +100,7 @@ const AdminTransactionListView = () => {
         data: {
           listBookkeepings: { items: itemsPage1, nextToken },
         },
-      } = await API.graphql(graphqlOperation(queries.listBookkeepings));
+      } = await API.graphql(graphqlOperation(queries.listBookkeepings, {limit: 10000}));
       const n = {
         data: { listBookkeepings: { items: itemsPage1, nextToken } },
       };
