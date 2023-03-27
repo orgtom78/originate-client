@@ -50,6 +50,7 @@ export default function NewAccount() {
   const [dynamic_discount, setDynamic_discount] = useState("");
   const [payout_date, setPayout_date] = useState("");
   const [advance_rate, setAdvance_rate] = useState("");
+  const [buyId, setBuyId] = useState("");
   const { id } = useParams();
   const { supId } = useParams();
   const requestId = "request-" + uuid();
@@ -62,6 +63,7 @@ export default function NewAccount() {
         data: {
           getBuyer: {
             buyer_name,
+            buyerId,
             investorId,
             brokerId,
             spvId,
@@ -76,6 +78,7 @@ export default function NewAccount() {
       } = buyer;
       const buyername = await buyer_name;
       setIdent(identityId);
+      setBuyId(buyerId);
       setInvestid(investorId);
       setBrokerid(brokerId);
       setSpvid(spvId);
@@ -152,7 +155,7 @@ export default function NewAccount() {
           listSOFRs: { items },
         },
       } = await API.graphql(
-        graphqlOperation(queries.listSOFRs, { filter: filter })
+        graphqlOperation(queries.listSOFRs, { filter: filter, limit: 10000 })
       );
       if (items === null || items === undefined || items.length <= 0) {
         return 0;
@@ -202,7 +205,7 @@ export default function NewAccount() {
       const supplierId = supId;
       const identityId = ident;
       const investorId = investid;
-      const buyerId = id;
+      const buyerId = buyId;
       const brokerId = brokerid;
       const spvId = spvid;
       const investor_email = investEmail;

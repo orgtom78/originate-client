@@ -110,7 +110,7 @@ const RequestForm = ({ className, value, ...rest }) => {
           requestId: { eq: input.id },
         };
         const request = await API.graphql(
-          graphqlOperation(queries.listRequests, { filter: filter })
+          graphqlOperation(queries.listRequests, { filter: filter, limit: 10000 })
         );
         const items = request.data.listRequests.items[0];
         const {
@@ -193,7 +193,7 @@ const RequestForm = ({ className, value, ...rest }) => {
             listEsigns: { items: itemsPage1, nextToken },
           },
         } = await API.graphql(
-          graphqlOperation(queries.listEsigns, { filter: filter })
+          graphqlOperation(queries.listEsigns, { filter: filter, limit: 10000 })
         );
         const n = { data: { listEsigns: { items: itemsPage1, nextToken } } };
         const items = n.data.listEsigns.items[0];

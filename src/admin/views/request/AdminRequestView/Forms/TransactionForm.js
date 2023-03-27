@@ -21,7 +21,7 @@ import makeStyles from "@mui/styles/makeStyles";
 import NumberFormat from "react-number-format";
 import { UploadCloud as UploadIcon } from "react-feather";
 import { API, graphqlOperation } from "aws-amplify";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { AdapterMoment} from "@mui/x-date-pickers/AdapterMoment";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { onError } from "src/libs/errorLib.js";
@@ -163,7 +163,6 @@ const RequestForm = ({ className, value, ...rest }) => {
               invoice_date,
               invoice_due_date,
               invoice_ipu_signed,
-              invoice_purchase_duration,
               invoice_number,
               base_rate,
               base_rate_amount,
@@ -192,12 +191,16 @@ const RequestForm = ({ className, value, ...rest }) => {
         setInvoice_date(momentinvoice);
         const momentinvoicedue = moment(invoice_due_date).utc().startOf("day");
         setInvoice_due_date(momentinvoicedue);
-        const momentipusigned = moment(invoice_ipu_signed).utc().startOf("day");
-        setInvoice_ipu_signed(momentipusigned);
+        const momentpayout = moment(payout_date).utc().startOf("day");
+        setPayout_date(momentpayout);
+        const momentpayback = moment(payback_date).utc().startOf("day");
+        setPayback_date(momentpayback);
         const purchaseduration = moment(invoice_due_date).diff(
-          moment(invoice_ipu_signed),
+          moment(payout_date),
           "days"
         );
+        const momentipusigned = moment(invoice_ipu_signed).utc().startOf("day");
+        setInvoice_ipu_signed(momentipusigned);
         setInvoice_purchase_duration(purchaseduration);
         setInvoice_number(invoice_number);
         setBase_rate(base_rate);
@@ -209,10 +212,6 @@ const RequestForm = ({ className, value, ...rest }) => {
         setTransaction_fee_amount(transaction_fee_amount);
         setBroker_fee_rate(broker_fee_rate);
         setBroker_fee_amount(broker_fee_amount);
-        const momentpayout = moment(payout_date).utc().startOf("day");
-        setPayout_date(momentpayout);
-        const momentpayback = moment(payback_date).utc().startOf("day");
-        setPayback_date(momentpayback);
         setAdvance_rate(advance_rate);
         setInvoice_purchase_amount(invoice_purchase_amount);
       } catch (err) {
@@ -238,7 +237,7 @@ const RequestForm = ({ className, value, ...rest }) => {
             listSOFRs: { items },
           },
         } = await API.graphql(
-          graphqlOperation(queries.listSOFRs, { filter: filter })
+          graphqlOperation(queries.listSOFRs, { filter: filter, limit: 10000 })
         );
         if (items === null || items === undefined || items.length <= 0) {
           return 0;
@@ -544,7 +543,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       />
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                           value={payout_date || ""}
                           margin="normal"
@@ -553,7 +552,6 @@ const RequestForm = ({ className, value, ...rest }) => {
                           name="payout_date"
                           label="Payout Date"
                           format="MM/DD/YYYY"
-                          maxDate={new Date()}
                           onChange={(date) => {
                             setPayout_date(date);
                           }}
@@ -571,7 +569,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       </LocalizationProvider>
                     </Grid>
                     <Grid item xs={12} sm={6}>
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                           value={payback_date || ""}
                           margin="normal"
@@ -603,7 +601,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                           value={invoice_date || ""}
                           margin="normal"
@@ -635,7 +633,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                           value={invoice_due_date || ""}
                           margin="normal"
@@ -667,7 +665,7 @@ const RequestForm = ({ className, value, ...rest }) => {
                       xs={12}
                       sm={6}
                     >
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <LocalizationProvider dateAdapter={AdapterMoment}>
                         <DesktopDatePicker
                           value={invoice_ipu_signed || ""}
                           margin="normal"
