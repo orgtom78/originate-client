@@ -110,7 +110,10 @@ const RequestForm = ({ className, value, ...rest }) => {
           requestId: { eq: input.id },
         };
         const request = await API.graphql(
-          graphqlOperation(queries.listRequests, { filter: filter, limit: 10000 })
+          graphqlOperation(queries.listRequests, {
+            filter: filter,
+            limit: 10000,
+          })
         );
         const items = request.data.listRequests.items[0];
         const {
@@ -261,7 +264,6 @@ const RequestForm = ({ className, value, ...rest }) => {
           });
         }
         assignid();
-        await createRAASignRequest();
       }
     } catch (e) {
       onError(e);
@@ -479,6 +481,15 @@ const RequestForm = ({ className, value, ...rest }) => {
                         "action_id": "277418000000237024",
                         "signing_order": 2,
                         "role": "Investor",
+                        "verify_recipient": false,
+                        "private_notes": ""
+                    },
+                    {
+                        "recipient_name": "bruno.botelho@originatecapital.co",
+                        "recipient_email": "bruno.botelho@originatecapital.co",
+                        "action_id": "277418000000398002",
+                        "signing_order": 3,
+                        "role": "SPV2",
                         "verify_recipient": false,
                         "private_notes": ""
                     }
