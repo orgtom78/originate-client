@@ -23,7 +23,7 @@
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "ac990b93abfb9d201235ad31854371",
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
-          "s3Key": "amplify-builds/plaid-5251724d336c4e445a66-build.zip"
+          "s3Key": "amplify-builds/plaid-41324e514374684c4b63-build.zip"
         },
         "zoho": {
           "deploymentBucketName": "amplify-originateclient-test-115620-deployment",
