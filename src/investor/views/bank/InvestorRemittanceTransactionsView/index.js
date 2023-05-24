@@ -103,6 +103,72 @@ const InvestorBankTransactionListView = (input) => {
   }, [id]);
 
   useEffect(() => {
+    async function checkexistingtokenstillvalid() {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        let id = user.attributes["custom:groupid"];
+        const data = await API.graphql(
+          graphqlOperation(queries.getPlaidauth, { id })
+        );
+        const {
+          data: {
+            getPlaidauth: { accessToken1: token },
+          },
+        } = data;
+        console.log(data);
+        if (token) {
+          const user = await Auth.currentAuthenticatedUser();
+          const { attributes = {} } = user;
+          const sub = attributes["custom:groupid"];
+          const acc = id;
+          const format = "YYYY-MM-DD";
+          const start = moment().subtract(2, "year").format(format);
+          const end = moment().format(format);
+          const myInit = {
+            queryStringParameters: {
+              id: sub,
+              bankid: acc,
+              startDate: start,
+              endDate: end,
+            },
+          };
+          const plaidtransactionresponse = await API.get(
+            apiName,
+            "/api/transactions1",
+            myInit
+          );
+          if (plaidtransactionresponse.transactions) {
+            return;
+          } else {
+            const myInit2 = {
+              queryStringParameters: {
+                id: sub,
+                access_token: token,
+              },
+            };
+            const updated_token = await API.get(
+              apiName,
+              "/api/update_link_token",
+              myInit2
+            );
+            var t = updated_token.link_token;
+            const myInit = {
+              queryStringParameters: {
+                token: t,
+                id: sub,
+              },
+            };
+            API.get(apiName, "/api/exchange_public_token1", myInit);
+          }
+        }
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    checkexistingtokenstillvalid();
+  }, []);
+
+  useEffect(() => {
     if (trans === undefined || trans.length <= 0 || trans === null) {
       async function getplaid() {
         const user = await Auth.currentAuthenticatedUser();
@@ -125,52 +191,56 @@ const InvestorBankTransactionListView = (input) => {
           "/api/transactions1",
           myInit
         );
-        const array = plaidresponse.transactions;
-        const n = array.map((item) => {
-          const userId = sub;
-          const transactionId = item.transaction_id;
-          const investorId = sub;
-          const authorized_date = item.authorized_date;
-          const category = item.category[0];
-          const iso_currency_code = item.iso_currency_code;
-          const location = JSON.stringify(item.location);
-          const merchant_name = item.merchant_name;
-          const payment_channel = item.payment_channel;
-          const pending = item.pending;
-          const recipient_account_name = item.payment_meta.payee;
-          const senderaccountId = item.account_id;
-          const transaction_code = item.transaction_code;
-          const transaction_date = item.authorized_date;
-          const transaction_description = item.name;
-          const transaction_source_amount = item.amount;
-          const transaction_source_currency = item.iso_currency_code;
-          const response = API.graphql(
-            graphqlOperation(mutations.createTransaction, {
-              input: {
-                userId,
-                transactionId,
-                investorId,
-                authorized_date,
-                category,
-                iso_currency_code,
-                location,
-                merchant_name,
-                payment_channel,
-                pending,
-                recipient_account_name,
-                senderaccountId,
-                transaction_code,
-                transaction_date,
-                transaction_description,
-                transaction_source_amount,
-                transaction_source_currency,
-              },
-            })
-          );
-          return response;
-        });
-        await Promise.all(n);
-        window.location.reload();
+        if (plaidresponse.transactions) {
+          const array = plaidresponse.transactions;
+          const n = array.map((item) => {
+            const userId = sub;
+            const transactionId = item.transaction_id;
+            const investorId = sub;
+            const authorized_date = item.authorized_date;
+            const category = item.category[0];
+            const iso_currency_code = item.iso_currency_code;
+            const location = JSON.stringify(item.location);
+            const merchant_name = item.merchant_name;
+            const payment_channel = item.payment_channel;
+            const pending = item.pending;
+            const recipient_account_name = item.payment_meta.payee;
+            const senderaccountId = item.account_id;
+            const transaction_code = item.transaction_code;
+            const transaction_date = item.authorized_date;
+            const transaction_description = item.name;
+            const transaction_source_amount = item.amount;
+            const transaction_source_currency = item.iso_currency_code;
+            const response = API.graphql(
+              graphqlOperation(mutations.createTransaction, {
+                input: {
+                  userId,
+                  transactionId,
+                  investorId,
+                  authorized_date,
+                  category,
+                  iso_currency_code,
+                  location,
+                  merchant_name,
+                  payment_channel,
+                  pending,
+                  recipient_account_name,
+                  senderaccountId,
+                  transaction_code,
+                  transaction_date,
+                  transaction_description,
+                  transaction_source_amount,
+                  transaction_source_currency,
+                },
+              })
+            );
+            return response;
+          });
+          await Promise.all(n);
+          window.location.reload();
+        } else {
+          return;
+        }
       }
       getplaid();
     } else {

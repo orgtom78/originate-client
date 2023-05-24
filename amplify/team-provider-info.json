@@ -85,7 +85,7 @@
       "function": {
         "plaid": {
           "deploymentBucketName": "amplify-originateclientprod-prod-120522-deployment",
-          "s3Key": "amplify-builds/plaid-4b717242306b487a734c-build.zip",
+          "s3Key": "amplify-builds/plaid-79596f6a793350646d37-build.zip",
           "clientId": "6115d7d22dd19f00105aa78f",
           "plaidSecret": "bf307b6b82edf0b6e709c49e810d16"
         },

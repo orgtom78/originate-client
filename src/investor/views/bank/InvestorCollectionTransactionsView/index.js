@@ -94,13 +94,78 @@ const InvestorBankTransactionListView = (input) => {
         data: { listTransactions: { items: itemsPage1, nextToken } },
       };
       const items = n.data.listTransactions.items;
-      const d = items.sort(function(a, b) {
+      const d = items.sort(function (a, b) {
         return new Date(b.transaction_date) - new Date(a.transaction_date);
       });
       setTrans(d);
     }
     getDynamoTransactions();
   }, [id]);
+
+  useEffect(() => {
+    async function checkexistingtokenstillvalid() {
+      try {
+        let user = await Auth.currentAuthenticatedUser();
+        let id = user.attributes["custom:groupid"];
+        const data = await API.graphql(
+          graphqlOperation(queries.getPlaidauth, { id })
+        );
+        const {
+          data: {
+            getPlaidauth: { accessToken2: token },
+          },
+        } = data;
+        if (token) {
+          const user = await Auth.currentAuthenticatedUser();
+          const { attributes = {} } = user;
+          const sub = attributes["custom:groupid"];
+          const acc = id;
+          const format = "YYYY-MM-DD";
+          const start = moment().subtract(2, "year").format(format);
+          const end = moment().format(format);
+          const myInit = {
+            queryStringParameters: {
+              id: sub,
+              bankid: acc,
+              startDate: start,
+              endDate: end,
+            },
+          };
+          const plaidtransactionresponse = await API.get(
+            apiName,
+            "/api/transactions2",
+            myInit
+          );
+          if (plaidtransactionresponse.transactions) {
+            return;
+          } else {
+            const myInit2 = {
+              queryStringParameters: {
+                id: sub,
+                access_token: token,
+              },
+            };
+            const updated_token = await API.get(
+              apiName,
+              "/api/update_link_token",
+              myInit2
+            );
+            var t = updated_token.link_token;
+            const myInit3 = {
+              queryStringParameters: {
+                token: t,
+                id: sub,
+              },
+            };
+            API.get(apiName, "/api/exchange_public_token2", myInit3);
+          }
+        }
+      } catch (err) {
+        console.log("error fetching data..", err);
+      }
+    }
+    checkexistingtokenstillvalid();
+  }, []);
 
   useEffect(() => {
     async function getplaid() {
@@ -111,9 +176,7 @@ const InvestorBankTransactionListView = (input) => {
           const sub = attributes["custom:groupid"];
           const acc = id;
           const format = "YYYY-MM-DD";
-          const start = moment()
-            .subtract(2, "year")
-            .format(format);
+          const start = moment().subtract(2, "year").format(format);
           const end = moment().format(format);
           const myInit = {
             queryStringParameters: {
@@ -137,8 +200,7 @@ const InvestorBankTransactionListView = (input) => {
             const investorId = sub;
             const format = "YYYY-MM-DD";
             const a_date = new Date(item.date);
-            const authorized_date = moment(a_date)
-            .format(format);
+            const authorized_date = moment(a_date).format(format);
             const category = item.category[0];
             const iso_currency_code = item.iso_currency_code;
             const location = JSON.stringify(item.location);
@@ -149,8 +211,7 @@ const InvestorBankTransactionListView = (input) => {
             const senderaccountId = item.account_id;
             const transaction_code = item.transaction_code;
             const t_date = new Date(item.date);
-            const transaction_date = moment(t_date)
-            .format(format);
+            const transaction_date = moment(t_date).format(format);
             const transaction_description = item.name;
             const transaction_source_amount = item.amount;
             const transaction_source_currency = item.iso_currency_code;
@@ -180,7 +241,7 @@ const InvestorBankTransactionListView = (input) => {
             return response;
           });
           await Promise.all(n);
-          window.location.reload();
+          setTrans([]);
         }
         createDynamoTransactions();
       } else {
@@ -193,9 +254,7 @@ const InvestorBankTransactionListView = (input) => {
   useEffect(() => {
     async function checkDynDates() {
       const format = "YYYY-MM-DD";
-      const start = moment()
-        .subtract(1, "year")
-        .format(format);
+      const start = moment().subtract(1, "year").format(format);
       const end = moment().format(format);
       let filter = {
         senderaccountId: { eq: id },
@@ -215,7 +274,7 @@ const InvestorBankTransactionListView = (input) => {
         data: { listTransactions: { items: itemsPage1, nextToken } },
       };
       const items = n.data.listTransactions.items;
-      const d = items.sort(function(a, b) {
+      const d = items.sort(function (a, b) {
         return new Date(b.transaction_date) - new Date(a.transaction_date);
       });
       return d;
@@ -227,9 +286,7 @@ const InvestorBankTransactionListView = (input) => {
       const sub = attributes["custom:groupid"];
       const acc = id;
       const format = "YYYY-MM-DD";
-      const start = moment()
-        .subtract(1, "year")
-        .format(format);
+      const start = moment().subtract(1, "year").format(format);
       const end = moment().format(format);
       const myInit = {
         queryStringParameters: {
@@ -240,7 +297,7 @@ const InvestorBankTransactionListView = (input) => {
         },
       };
       const array = await API.get(apiName, "/api/transactions2", myInit);
-      const e = array.transactions.sort(function(a, b) {
+      const e = array.transactions.sort(function (a, b) {
         return new Date(b.date) - new Date(a.date);
       });
       return e;
@@ -266,8 +323,7 @@ const InvestorBankTransactionListView = (input) => {
           const investorId = sub;
           const format = "YYYY-MM-DD";
           const a_date = new Date(item.date);
-          const authorized_date = moment(a_date)
-            .format(format);
+          const authorized_date = moment(a_date).format(format);
           const category = item.category[0];
           const iso_currency_code = item.iso_currency_code;
           const location = JSON.stringify(item.location);
@@ -278,8 +334,7 @@ const InvestorBankTransactionListView = (input) => {
           const senderaccountId = item.account_id;
           const transaction_code = item.transaction_code;
           const t_date = new Date(item.date);
-          const transaction_date = moment(t_date)
-            .format(format);
+          const transaction_date = moment(t_date).format(format);
           const transaction_description = item.name;
           const transaction_source_amount = item.amount;
           const transaction_source_currency = item.iso_currency_code;
@@ -309,7 +364,7 @@ const InvestorBankTransactionListView = (input) => {
           return response;
         });
         await Promise.all(n);
-        window.location.reload();
+        setTrans([]);
       }
     }
     compareArrays();

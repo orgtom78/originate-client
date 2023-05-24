@@ -142,7 +142,7 @@ const TransactionForm = ({ className, value, ...rest }) => {
 
   async function getRequests(input) {
     const format = "YYYY-MM-DD";
-    const start = moment(input).subtract(30, "days").format(format);
+    const start = moment(input).subtract(45, "days").format(format);
     const end = moment(input).add(14, "days").format(format);
     let filter = {
       invoice_due_date: { between: [start, end] },
