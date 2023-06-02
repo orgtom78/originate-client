@@ -1,231 +1,393 @@
 {
-  "auth": {
-    "originateclientprod796edffc": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [],
-      "customAuth": false,
-      "frontendAuthConfig": {
-        "socialProviders": [],
-        "usernameAttributes": [
-          "EMAIL",
-          "PHONE_NUMBER"
-        ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
-        "passwordProtectionSettings": {
-          "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
-        },
-        "mfaConfiguration": "OFF",
-        "mfaTypes": [
-          "SMS"
-        ],
-        "verificationMechanisms": [
-          "EMAIL"
-        ]
-      }
-    }
-  },
+  "analytics": {},
   "api": {
     "originateclientprod": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        }
+      ],
       "output": {
         "authConfig": {
-          "defaultAuthentication": {
-            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
-            "userPoolConfig": {
-              "userPoolId": "authoriginateclientprod796edffc"
-            }
-          },
           "additionalAuthenticationProviders": [
             {
               "authenticationType": "AWS_IAM"
             },
             {
-              "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "apiKeyExpirationDays": 365,
                 "apiKeyExpirationDate": "2023-06-29T07:01:37.456Z",
+                "apiKeyExpirationDays": 365,
                 "description": "search-api-key-prod"
-              }
+              },
+              "authenticationType": "API_KEY"
             }
-          ]
+          ],
+          "defaultAuthentication": {
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authoriginateclientprod796edffc"
+            }
+          }
         }
       },
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        }
-      ]
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
     },
     "plaid": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
       "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "plaid",
           "attributes": [
             "Name",
             "Arn"
-          ]
+          ],
+          "category": "function",
+          "resourceName": "plaid"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    },
+    "zoho": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "zoho"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "originateclientprod796edffc": {
+      "customAuth": false,
+      "dependsOn": [],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL",
+          "PHONE_NUMBER"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "dueinvoicenot": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "newinvoicenot": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        },
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "plaid": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "sofr": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "zoho": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "originateclientprod796edffc"
+        },
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput",
+            "GraphQLAPIKeyOutput"
+          ],
+          "category": "api",
+          "resourceName": "originateclientprod"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_dueinvoicenot_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dueinvoicenot"
         }
       ]
     },
-    "zoho": {
-      "service": "API Gateway",
-      "providerPlugin": "awscloudformation",
-      "dependsOn": [
+    "AMPLIFY_function_dueinvoicenot_s3Key": {
+      "usedBy": [
         {
           "category": "function",
-          "resourceName": "zoho",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
+          "resourceName": "dueinvoicenot"
+        }
+      ]
+    },
+    "AMPLIFY_function_dueinvoicenotification_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dueinvoicenotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_dueinvoicenotification_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "dueinvoicenotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_newinvoicenot_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "newinvoicenot"
+        }
+      ]
+    },
+    "AMPLIFY_function_newinvoicenot_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "newinvoicenot"
+        }
+      ]
+    },
+    "AMPLIFY_function_ocdefi_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ocdefi"
+        }
+      ]
+    },
+    "AMPLIFY_function_ocdefi_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "ocdefi"
+        }
+      ]
+    },
+    "AMPLIFY_function_plaid_clientId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "plaid"
+        }
+      ]
+    },
+    "AMPLIFY_function_plaid_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "plaid"
+        }
+      ]
+    },
+    "AMPLIFY_function_plaid_plaidSecret": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "plaid"
+        }
+      ]
+    },
+    "AMPLIFY_function_plaid_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "plaid"
+        }
+      ]
+    },
+    "AMPLIFY_function_sofr_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "sofr"
+        }
+      ]
+    },
+    "AMPLIFY_function_sofr_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "sofr"
+        }
+      ]
+    },
+    "AMPLIFY_function_sofr_scrapingantApiKey": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "sofr"
+        }
+      ]
+    },
+    "AMPLIFY_function_zoho_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "zoho"
+        }
+      ]
+    },
+    "AMPLIFY_function_zoho_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "zoho"
+        }
+      ]
+    },
+    "AMPLIFY_function_zoho_zohoClientId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "zoho"
+        }
+      ]
+    },
+    "AMPLIFY_function_zoho_zohoClientSecret": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "zoho"
+        }
+      ]
+    },
+    "AMPLIFY_function_zoho_zohoToken": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "zoho"
         }
       ]
     }
   },
   "storage": {
     "originateprodstorage": {
-      "service": "S3",
-      "providerPlugin": "awscloudformation"
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
     },
     "s330286d4d": {
       "dependsOn": []
     }
-  },
-  "function": {
-    "plaid": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        }
-      ]
-    },
-    "zoho": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "sofr": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "newinvoicenot": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput"
-          ]
-        },
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    },
-    "dueinvoicenot": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda",
-      "dependsOn": [
-        {
-          "category": "auth",
-          "resourceName": "originateclientprod796edffc",
-          "attributes": [
-            "UserPoolId"
-          ]
-        },
-        {
-          "category": "api",
-          "resourceName": "originateclientprod",
-          "attributes": [
-            "GraphQLAPIIdOutput",
-            "GraphQLAPIEndpointOutput",
-            "GraphQLAPIKeyOutput"
-          ]
-        }
-      ]
-    }
-  },
-  "analytics": {}
+  }
 }
