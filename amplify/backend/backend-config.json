@@ -236,6 +236,7 @@
         }
       ]
     },
+<<<<<<< HEAD
     "AMPLIFY_function_dueinvoicenotification_deploymentBucketName": {
       "usedBy": [
         {
@@ -252,6 +253,8 @@
         }
       ]
     },
+=======
+>>>>>>> 598c7d898d5a4fa1ceed58808288b4c789de0f18
     "AMPLIFY_function_newinvoicenot_deploymentBucketName": {
       "usedBy": [
         {
@@ -268,6 +271,7 @@
         }
       ]
     },
+<<<<<<< HEAD
     "AMPLIFY_function_ocdefi_deploymentBucketName": {
       "usedBy": [
         {
@@ -281,6 +285,21 @@
         {
           "category": "function",
           "resourceName": "ocdefi"
+=======
+    "AMPLIFY_function_newinvoicenotification_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "newinvoicenotification"
+        }
+      ]
+    },
+    "AMPLIFY_function_newinvoicenotification_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "newinvoicenotification"
+>>>>>>> 598c7d898d5a4fa1ceed58808288b4c789de0f18
         }
       ]
     },
