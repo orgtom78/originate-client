@@ -111,6 +111,21 @@ const AdminTransactionListView = () => {
       },
     },
     {
+      field: "transaction_fee_amount",
+      headerName: "Platform Fee",
+      type: "number",
+      minWidth: 150,
+      editable: false,
+      valueFormatter: (params) => {
+        if (params.value == null) {
+          return "";
+        }
+
+        const valueFormatted = Number(params.value).toFixed(2).toLocaleString();
+        return `${valueFormatted}`;
+      },
+    },
+    {
       field: "request_status",
       headerName: "Status",
       minWidth: 150,
@@ -287,6 +302,7 @@ const AdminTransactionListView = () => {
     supplier_name: request.supplier_name,
     invoice_number: request.invoice_number,
     invoice_amount: request.invoice_amount,
+    transaction_fee_amount: request.transaction_fee_amount,
     request_status: request.request_status,
     invoice_purchase_duration: moment(request.invoice_due_date).diff(
       moment(request.payout_date),
